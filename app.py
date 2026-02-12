@@ -109,7 +109,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-    """
+"""
     <div class='card'>
       <div class='small'>
         Designed for neurodiverse learners. Calm colours. Clear feedback. No overstimulation.
