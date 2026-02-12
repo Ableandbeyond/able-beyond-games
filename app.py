@@ -88,9 +88,24 @@ IMG_DIR = os.path.join(BASE_DIR, "images")
 # ---------- HEADER ----------
 st.markdown(
     """
+   st.markdown(
+    """
     <div class="ab-header">
-      <div class="ab-title">Able & Beyond – Life Skills Games</div>
-      <div class="ab-sub">Tap-to-play games with calm visuals and simple feedback.</div>
+      <div class="ab-title">Able & Beyond – Life Skills Lab</div>
+      <div class="ab-sub">
+        Play-based tools designed to support focus, emotional regulation, and independent thinking.
+      </div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+
+st.markdown(
+    """
+    <div class='card'>
+      <div class='small'>
+        Designed for neurodiverse learners. Calm colours. Clear feedback. No overstimulation.
+      </div>
     </div>
     """,
     unsafe_allow_html=True,
