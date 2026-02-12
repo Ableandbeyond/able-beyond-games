@@ -88,11 +88,8 @@ IMG_DIR = os.path.join(BASE_DIR, "images")
 # ---------- HEADER ----------
 st.markdown(
     """
-   st.markdown(
-    """
     <div class="ab-header">
-      <div class="ab-title">Able & Beyond - Life Skills Lab
-</div>
+      <div class="ab-title">Able & Beyond - Life Skills Lab</div>
       <div class="ab-sub">
         Play-based tools designed to support focus, emotional regulation, and independent thinking.
       </div>
@@ -102,6 +99,16 @@ st.markdown(
 )
 
 st.markdown(
+    """
+    <div class='card'>
+      <div class='small'>
+        Designed for neurodiverse learners. Calm colours. Clear feedback. No overstimulation.
+      </div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+
     """
     <div class='card'>
       <div class='small'>
