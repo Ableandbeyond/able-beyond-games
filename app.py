@@ -91,7 +91,8 @@ st.markdown(
    st.markdown(
     """
     <div class="ab-header">
-      <div class="ab-title">Able & Beyond – Life Skills Lab</div>
+      <div class="ab-title">Able & Beyond - Life Skills Lab
+</div>
       <div class="ab-sub">
         Play-based tools designed to support focus, emotional regulation, and independent thinking.
       </div>
