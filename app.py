@@ -126,16 +126,13 @@ unsafe_allow_html=True,
 
 
 st.markdown(
-    "<div class='card'><div class='big'>Visual Matching Activity. Supports attention, visual scanning, and working memory.)
-
- 🧦</div>")
-
-# ---------- LEVEL SELECT ----------
-st.markdown(
-    "<div class='card'><div class='big'>Choose difficulty</div>"
-    "<div class='small'>Easy = 4 socks • Medium = 6 socks</div></div>",
+    "<div class='card'>"
+    "<div class='big'>Visual Matching Activity 🧦</div>"
+    "<div class='small'>Supports attention, visual scanning, and working memory.</div>"
+    "</div>",
     unsafe_allow_html=True,
 )
+
 
 level = st.radio(
     "Difficulty",
