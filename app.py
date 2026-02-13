@@ -5,87 +5,93 @@ import streamlit as st
 st.set_page_config(page_title="Able & Beyond – Life Skills Games", layout="centered")
 
 # ========= BRAND COLOURS (change later) =========
-PRIMARY = "#2F6BFF"
-ACCENT  = "#19C37D"
-BG      = "#F6F8FF"
-TEXT    = "#0F172A"
+PRIMARY = "#C97C5D"   # terracotta
+ACCENT  = "#A8BFA3"   # sage green
+BG      = "#F5F2ED"   # warm neutral
+TEXT    = "#2F2F2F"
+CARD    = "#FFFFFF"
+
 
 # ---------- STYLE ----------
 st.markdown(
     f"""
     <style>
-      .stApp {{
+    .stApp {{
         background: {BG};
-      }}
+        max-width: 900px;
+        margin: auto;
+    }}
 
-      .ab-header {{
-        background: linear-gradient(135deg, {PRIMARY}, #6A5CFF);
-        padding: 18px 18px;
-        border-radius: 16px;
-        color: white;
-        margin-bottom: 14px;
-        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.10);
-      }}
-      .ab-title {{
-        font-size: 2.0rem;
-        font-weight: 900;
-        margin: 0;
-        line-height: 1.15;
-      }}
-      .ab-sub {{
-        margin: 6px 0 0 0;
-        opacity: 0.92;
-        font-size: 1.05rem;
-      }}
-
-      .card {{
-        background: white;
-        border: 2px solid rgba(15, 23, 42, 0.06);
+    .ab-header {{
+        background: {CARD};
+        padding: 28px 26px;
         border-radius: 18px;
-        padding: 14px 16px;
-        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
-        margin-bottom: 12px;
-      }}
-      .big {{
-        font-size: 1.25rem;
-        font-weight: 900;
-        color: {TEXT};
-      }}
-      .small {{
-        font-size: 1rem;
-        color: rgba(15, 23, 42, 0.72);
-      }}
+        margin-bottom: 20px;
+        text-align: center;
+        border: 1px solid rgba(0,0,0,0.05);
+    }}
 
-      div.stButton > button {{
-        width: 100%;
-        padding: 0.95rem 1rem;
+    .ab-title {{
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: {PRIMARY};
+        margin-bottom: 6px;
+    }}
+
+    .ab-sub {{
         font-size: 1.05rem;
-        font-weight: 900;
-        border-radius: 14px;
-        border: 0;
-      }}
+        color: {TEXT};
+        opacity: 0.85;
+    }}
 
-      div.stButton > button[kind="primary"] {{
+    .card {{
+        background: {CARD};
+        border-radius: 16px;
+        padding: 18px;
+        margin-bottom: 14px;
+        border: 1px solid rgba(0,0,0,0.05);
+        text-align: center;
+    }}
+
+    .big {{
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: {TEXT};
+    }}
+
+    .small {{
+        font-size: 0.95rem;
+        color: {TEXT};
+        opacity: 0.7;
+    }}
+
+    div.stButton > button {{
+        background: {ACCENT};
+        color: {TEXT};
+        border-radius: 12px;
+        font-weight: 700;
+        border: none;
+    }}
+
+    div.stButton > button:hover {{
         background: {PRIMARY};
         color: white;
-      }}
-      div.stButton > button[kind="primary"]:hover {{
-        background: #2457D6;
-        color: white;
-      }}
-
-      div[data-testid="stProgress"] > div > div > div > div {{
-        background-color: {ACCENT};
-      }}
+    }}
     </style>
     """,
     unsafe_allow_html=True,
 )
 
+
 BASE_DIR = os.path.dirname(__file__)
 IMG_DIR = os.path.join(BASE_DIR, "images")
 
 # ---------- HEADER ----------
+st.markdown(
+    "<div class='small'>Part of the Able & Beyond therapeutic learning tools</div>",
+    unsafe_allow_html=True,
+)
+
 st.markdown(
     """
     <div class="ab-header">
@@ -120,10 +126,9 @@ unsafe_allow_html=True,
 
 
 st.markdown(
-    "<div class='card'><div class='big'>Match the Socks 🧦</div>"
-    "<div class='small'>Tap two socks to find a matching pair.</div></div>",
-    unsafe_allow_html=True,
-)
+    "<div class='card'><div class='big'>Visual Matching Activity. Supports attention, visual scanning, and working memory.)
+
+ 🧦</div>")
 
 # ---------- LEVEL SELECT ----------
 st.markdown(
