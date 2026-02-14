@@ -4,11 +4,17 @@ import streamlit as st
 
 st.set_page_config(page_title="Able & Beyond - Life Skills Lab", layout="centered")
 
-# ---------- NAV ----------
+# ---------- NAV STATE ----------
+PAGES = ["Home", "Visual Matching (Socks)"]
+if "page" not in st.session_state:
+    st.session_state.page = "Home"
+
+# ---------- SIDEBAR NAV (DESKTOP) ----------
 st.sidebar.markdown("## Activities")
-page = st.sidebar.radio(
+st.session_state.page = st.sidebar.radio(
     "Choose an activity",
-    ["Home", "Visual Matching (Socks)"],
+    PAGES,
+    index=PAGES.index(st.session_state.page),
     label_visibility="collapsed",
 )
 
@@ -72,7 +78,11 @@ st.markdown(
         opacity: 0.7;
     }}
 
+    /* Bigger touch targets */
     div.stButton > button {{
+        width: 100%;
+        min-height: 3.2rem;
+        font-size: 1.05rem;
         background: {ACCENT};
         color: {TEXT};
         border-radius: 12px;
@@ -130,34 +140,53 @@ def render_intro_card():
 
 
 # ---------- HOME ----------
-if page == "Home":
+if st.session_state.page == "Home":
     render_header()
     render_intro_card()
 
+    # Mobile-friendly start card (works on all devices)
     st.markdown(
         """
         <div class='card'>
-          <div class='big'>Choose an activity</div>
-          <div class='small'>Use the menu on the left to start.</div>
+          <div class='big'>Start an activity</div>
+          <div class='small'>Tap below to begin.</div>
         </div>
         """,
         unsafe_allow_html=True,
     )
 
+    # Calm selector (simple now; we can replace with big buttons later)
+    mobile_activity = st.selectbox(
+        "Select",
+        PAGES,
+        index=PAGES.index("Home"),
+        label_visibility="collapsed",
+    )
+
+    if mobile_activity != "Home":
+        st.session_state.page = mobile_activity
+        st.rerun()
+
     st.markdown(
         """
         <div class='card'>
-          <div class='big'>Visual Matching (Socks)</div>
-          <div class='small'>Supports attention, visual scanning, and working memory.</div>
+          <div class='big'>Available now</div>
+          <div class='small'>Visual Matching (Socks) — supports attention and working memory.</div>
         </div>
         """,
         unsafe_allow_html=True,
     )
+
 
 # ---------- VISUAL MATCHING (SOCKS) ----------
-elif page == "Visual Matching (Socks)":
+elif st.session_state.page == "Visual Matching (Socks)":
     render_header()
     render_intro_card()
+
+    # Back button (mobile friendly)
+    if st.button("← Back to Home"):
+        st.session_state.page = "Home"
+        st.rerun()
 
     st.markdown(
         "<div class='card'>"
@@ -167,7 +196,6 @@ elif page == "Visual Matching (Socks)":
         unsafe_allow_html=True,
     )
 
-    # ---------- LEVEL SELECT ----------
     level = st.radio(
         "Difficulty",
         ["Easy (4 socks)", "Medium (6 socks)"],
@@ -187,7 +215,6 @@ elif page == "Visual Matching (Socks)":
     for pid in pair_ids:
         SOCKS.extend(PAIRS[pid])
 
-    # ---------- FUNCTIONS ----------
     def reset_game():
         st.session_state.order = random.sample(SOCKS, k=len(SOCKS))
         st.session_state.first_pick = None
@@ -245,7 +272,6 @@ elif page == "Visual Matching (Socks)":
             unsafe_allow_html=True,
         )
 
-    # Progress
     st.progress(len(st.session_state.matched) / len(st.session_state.order))
 
     # ---------- GRID ----------
@@ -284,7 +310,6 @@ elif page == "Visual Matching (Socks)":
                     st.session_state.first_pick = None
                     reshuffle_unmatched()
 
-    # ---------- FINISH ----------
     if len(st.session_state.matched) == len(st.session_state.order):
         st.balloons()
         st.success("All pairs found. Well done.")
