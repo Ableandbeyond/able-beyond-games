@@ -10,13 +10,14 @@ if "page" not in st.session_state:
     st.session_state.page = "Home"
 
 # ---------- SIDEBAR NAV (DESKTOP) ----------
-st.sidebar.markdown("## Activities")
-st.session_state.page = st.sidebar.radio(
-    "Choose an activity",
-    PAGES,
-    index=PAGES.index(st.session_state.page),
-    label_visibility="collapsed",
-)
+if st.session_state.page == "Home":
+    st.sidebar.markdown("## Activities")
+    st.session_state.page = st.sidebar.radio(
+        "Choose an activity",
+        PAGES,
+        index=PAGES.index(st.session_state.page),
+        label_visibility="collapsed",
+    )
 
 # ========= BRAND COLOURS (Able & Beyond) =========
 PRIMARY = "#C97C5D"   # terracotta
@@ -173,6 +174,19 @@ if st.session_state.page == "Home":
 
 # ---------- VISUAL MATCHING (SOCKS) ----------
 elif st.session_state.page == "Visual Matching (Socks)":
+    col1, col2 = st.columns([1, 4])
+
+with col1:
+    if st.button("← Home"):
+        st.session_state.page = "Home"
+        st.rerun()
+
+with col2:
+    st.markdown(
+        "<div class='small' style='padding-top:8px;'>Visual Matching</div>",
+        unsafe_allow_html=True,
+    )
+
     render_header()
     render_intro_card()
 
