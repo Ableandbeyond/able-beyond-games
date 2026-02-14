@@ -174,21 +174,23 @@ if st.session_state.page == "Home":
 
 # ---------- VISUAL MATCHING (SOCKS) ----------
 elif st.session_state.page == "Visual Matching (Socks)":
+
     col1, col2 = st.columns([1, 4])
 
-with col1:
-    if st.button("← Home"):
-        st.session_state.page = "Home"
-        st.rerun()
+    with col1:
+        if st.button("← Home"):
+            st.session_state.page = "Home"
+            st.rerun()
 
-with col2:
-    st.markdown(
-        "<div class='small' style='padding-top:8px;'>Visual Matching</div>",
-        unsafe_allow_html=True,
-    )
+    with col2:
+        st.markdown(
+            "<div class='small' style='padding-top:8px;'>Visual Matching</div>",
+            unsafe_allow_html=True,
+        )
 
     render_header()
     render_intro_card()
+
 
     # Back button (mobile friendly)
     if st.button("← Back to Home"):
