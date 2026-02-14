@@ -5,19 +5,9 @@ import streamlit as st
 st.set_page_config(page_title="Able & Beyond - Life Skills Lab", layout="centered")
 
 # ---------- NAV STATE ----------
-PAGES = ["Home", "Visual Matching (Socks)"]
 if "page" not in st.session_state:
     st.session_state.page = "Home"
 
-# ---------- SIDEBAR NAV (DESKTOP) ----------
-if st.session_state.page == "Home":
-    st.sidebar.markdown("## Activities")
-    st.session_state.page = st.sidebar.radio(
-        "Choose an activity",
-        PAGES,
-        index=PAGES.index(st.session_state.page),
-        label_visibility="collapsed",
-    )
 
 # ========= BRAND COLOURS (Able & Beyond) =========
 PRIMARY = "#C97C5D"   # terracotta
