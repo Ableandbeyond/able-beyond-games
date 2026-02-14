@@ -144,34 +144,27 @@ if st.session_state.page == "Home":
     render_header()
     render_intro_card()
 
-    # Mobile-friendly start card (works on all devices)
     st.markdown(
         """
         <div class='card'>
           <div class='big'>Start an activity</div>
-          <div class='small'>Tap below to begin.</div>
+          <div class='small'>Choose a calm activity below.</div>
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-    # Calm selector (simple now; we can replace with big buttons later)
-    mobile_activity = st.selectbox(
-        "Select",
-        PAGES,
-        index=PAGES.index("Home"),
-        label_visibility="collapsed",
-    )
-
-    if mobile_activity != "Home":
-        st.session_state.page = mobile_activity
+    # BIG THERAPEUTIC BUTTON
+    if st.button("Visual Matching 🧦"):
+        st.session_state.page = "Visual Matching (Socks)"
         st.rerun()
 
     st.markdown(
         """
         <div class='card'>
-          <div class='big'>Available now</div>
-          <div class='small'>Visual Matching (Socks) — supports attention and working memory.</div>
+          <div class='small'>
+            More activities coming soon.
+          </div>
         </div>
         """,
         unsafe_allow_html=True,
