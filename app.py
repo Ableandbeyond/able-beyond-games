@@ -1,13 +1,19 @@
 import os
 import random
+from pathlib import Path
 import streamlit as st
 
+# ---------- CONFIG ----------
 st.set_page_config(page_title="Able & Beyond - Life Skills Lab", layout="centered")
+
+# ---------- PATHS ----------
+# This ensures the app finds the 'images' folder regardless of how it's launched
+BASE_DIR = Path(__file__).resolve().parent
+IMG_DIR = BASE_DIR / "images"
 
 # ---------- NAV STATE ----------
 if "page" not in st.session_state:
     st.session_state.page = "Home"
-
 
 # ========= BRAND COLOURS (Able & Beyond) =========
 PRIMARY = "#C97C5D"   # terracotta
@@ -69,7 +75,6 @@ st.markdown(
         opacity: 0.7;
     }}
 
-    /* Bigger touch targets */
     div.stButton > button {{
         width: 100%;
         min-height: 3.2rem;
@@ -95,17 +100,13 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-from pathlib import Path
-BASE_DIR = Path(__file__).resolve().parent
-IMG_DIR = BASE_DIR / "images"
-
 def render_header():
     st.markdown(
         "<div class='small'>Part of the Able & Beyond therapeutic learning tools</div>",
         unsafe_allow_html=True,
     )
     st.markdown(
-        """
+        f"""
         <div class="ab-header">
           <div class="ab-title">Able & Beyond - Life Skills Lab</div>
           <div class="ab-sub">
@@ -115,7 +116,6 @@ def render_header():
         """,
         unsafe_allow_html=True,
     )
-
 
 def render_intro_card():
     st.markdown(
@@ -129,8 +129,7 @@ def render_intro_card():
         unsafe_allow_html=True,
     )
 
-
-# ---------- HOME ----------
+# ---------- HOME PAGE ----------
 if st.session_state.page == "Home":
     render_header()
     render_intro_card()
@@ -145,7 +144,6 @@ if st.session_state.page == "Home":
         unsafe_allow_html=True,
     )
 
-    # BIG THERAPEUTIC BUTTON
     if st.button("Visual Matching 🧦"):
         st.session_state.page = "Visual Matching (Socks)"
         st.rerun()
@@ -153,39 +151,25 @@ if st.session_state.page == "Home":
     st.markdown(
         """
         <div class='card'>
-          <div class='small'>
-            More activities coming soon.
-          </div>
+          <div class='small'>More activities coming soon.</div>
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-
 # ---------- VISUAL MATCHING (SOCKS) ----------
 elif st.session_state.page == "Visual Matching (Socks)":
 
     col1, col2 = st.columns([1, 4])
-
     with col1:
         if st.button("← Home"):
             st.session_state.page = "Home"
             st.rerun()
-
     with col2:
-        st.markdown(
-            "<div class='small' style='padding-top:8px;'>Visual Matching</div>",
-            unsafe_allow_html=True,
-        )
+        st.markdown("<div class='small' style='padding-top:8px;'>Visual Matching</div>", unsafe_allow_html=True)
 
     render_header()
     render_intro_card()
-
-
-    # Back button (mobile friendly)
-    if st.button("← Back to Home"):
-        st.session_state.page = "Home"
-        st.rerun()
 
     st.markdown(
         "<div class='card'>"
@@ -195,13 +179,7 @@ elif st.session_state.page == "Visual Matching (Socks)":
         unsafe_allow_html=True,
     )
 
-    level = st.radio(
-        "Difficulty",
-        ["Easy (4 socks)", "Medium (6 socks)"],
-        horizontal=True,
-        key="sock_level",
-    )
-
+    level = st.radio("Difficulty", ["Easy (4 socks)", "Medium (6 socks)"], horizontal=True, key="sock_level")
     pair_ids = ["A", "B"] if level.startswith("Easy") else ["A", "B", "C"]
 
     PAIRS = {
@@ -214,6 +192,7 @@ elif st.session_state.page == "Visual Matching (Socks)":
     for pid in pair_ids:
         SOCKS.extend(PAIRS[pid])
 
+    # --- GAME LOGIC FUNCTIONS ---
     def reset_game():
         st.session_state.order = random.sample(SOCKS, k=len(SOCKS))
         st.session_state.first_pick = None
@@ -221,12 +200,9 @@ elif st.session_state.page == "Visual Matching (Socks)":
         st.session_state.message = "New round. Tap a sock."
 
     def reshuffle_unmatched():
-        unmatched = []
-        for i, item in enumerate(st.session_state.order):
-            if i not in st.session_state.matched:
-                unmatched.append(item)
+        unmatched = [item for i, item in enumerate(st.session_state.order) if i not in st.session_state.matched]
         random.shuffle(unmatched)
-
+        
         new_order = []
         u = 0
         for i in range(len(st.session_state.order)):
@@ -237,84 +213,71 @@ elif st.session_state.page == "Visual Matching (Socks)":
                 u += 1
         st.session_state.order = new_order
 
-    # ---------- STATE ----------
+    # --- INITIALIZE STATE ---
     if "order" not in st.session_state:
-        st.session_state.order = random.sample(SOCKS, k=len(SOCKS))
-    if "first_pick" not in st.session_state:
-        st.session_state.first_pick = None
-    if "matched" not in st.session_state:
-        st.session_state.matched = set()
-    if "message" not in st.session_state:
-        st.session_state.message = "Tap a sock to start."
-
-    # Reset game if level changes
-    if "level" not in st.session_state:
-        st.session_state.level = level
-    if st.session_state.level != level:
+        reset_game()
+    if "level" not in st.session_state or st.session_state.level != level:
         st.session_state.level = level
         reset_game()
 
-    # ---------- CONTROLS ----------
+    # --- CONTROLS ---
     c1, c2, c3 = st.columns(3)
     with c1:
         if st.button("New round", type="primary"):
             reset_game()
+            st.rerun()
     with c2:
         if st.session_state.first_pick is None:
             if st.button("Mix socks"):
                 reshuffle_unmatched()
+                st.rerun()
         else:
             st.write("Find the pair")
     with c3:
-        st.markdown(
-            f"<div class='card'><div class='big'>{st.session_state.message}</div></div>",
-            unsafe_allow_html=True,
-        )
+        st.markdown(f"<div class='card'><div class='big'>{st.session_state.message}</div></div>", unsafe_allow_html=True)
 
     st.progress(len(st.session_state.matched) / len(st.session_state.order))
 
-    # ---------- GRID ----------
+    # --- GRID DISPLAY ---
     cols = st.columns(3)
 
     for i, (fname, pid) in enumerate(st.session_state.order):
         col = cols[i % 3]
-
-        if i in st.session_state.matched:
-            with col:
-                st.image(os.path.join(IMG_DIR, fname), use_container_width=True)
-                st.success("Paired ✓")
-            continue
+        img_path = IMG_DIR / fname
 
         with col:
-            img_path = IMG_DIR / fname
+            # 1. Check if the image exists
             if img_path.exists():
-<<<<<<< HEAD
+                # Convert Path to String for Streamlit stability
                 st.image(str(img_path), use_container_width=True)
-=======
-    st.image(str(img_path), use_container_width=True)
-else:
-    st.error(f"Missing image: {fname} (looked in: {img_path})")
->>>>>>> 52ec564 (Fix image paths (Pathlib))
             else:
-                st.error(f"Missing image: {fname} (looked in: {img_path})")
+                st.error(f"Missing: {fname}")
+                st.caption(f"Path: {img_path}")
 
-            if st.button("Tap", key=f"pick_{i}"):
-                if st.session_state.first_pick is None:
-                    st.session_state.first_pick = (i, pid)
-                    st.session_state.message = "Good. Now find the matching sock."
-                else:
-                    first_i, first_pid = st.session_state.first_pick
-                    if i == first_i:
-                        st.session_state.message = "Pick a different sock."
-                    elif pid == first_pid:
-                        st.session_state.matched.add(first_i)
-                        st.session_state.matched.add(i)
-                        st.session_state.message = "That’s a pair. Well spotted."
+            # 2. Display Paired status or Button
+            if i in st.session_state.matched:
+                st.success("Paired ✓")
+            else:
+                if st.button("Tap", key=f"pick_{i}"):
+                    if st.session_state.first_pick is None:
+                        st.session_state.first_pick = (i, pid)
+                        st.session_state.message = "Good. Now find the matching sock."
+                        st.rerun()
                     else:
-                        st.session_state.message = "Not the same yet. Try again."
-                    st.session_state.first_pick = None
-                    reshuffle_unmatched()
+                        first_i, first_pid = st.session_state.first_pick
+                        if i == first_i:
+                            st.session_state.message = "Pick a different sock."
+                        elif pid == first_pid:
+                            st.session_state.matched.add(first_i)
+                            st.session_state.matched.add(i)
+                            st.session_state.message = "That’s a pair. Well spotted."
+                        else:
+                            st.session_state.message = "Not the same yet. Try again."
+                        
+                        st.session_state.first_pick = None
+                        reshuffle_unmatched()
+                        st.rerun()
 
-    if len(st.session_state.matched) == len(st.session_state.order):
+    if len(st.session_state.matched) == len(st.session_state.order) and len(st.session_state.order) > 0:
         st.balloons()
         st.success("All pairs found. Well done.")
