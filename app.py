@@ -288,7 +288,13 @@ elif st.session_state.page == "Visual Matching (Socks)":
         with col:
             img_path = IMG_DIR / fname
             if img_path.exists():
+<<<<<<< HEAD
                 st.image(str(img_path), use_container_width=True)
+=======
+    st.image(str(img_path), use_container_width=True)
+else:
+    st.error(f"Missing image: {fname} (looked in: {img_path})")
+>>>>>>> 52ec564 (Fix image paths (Pathlib))
             else:
                 st.error(f"Missing image: {fname} (looked in: {img_path})")
 
