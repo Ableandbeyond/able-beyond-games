@@ -95,9 +95,9 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-BASE_DIR = os.path.dirname(__file__)
-IMG_DIR = os.path.join(BASE_DIR, "images")
-
+from pathlib import Path
+BASE_DIR = Path(__file__).resolve().parent
+IMG_DIR = BASE_DIR / "images"
 
 def render_header():
     st.markdown(
@@ -286,11 +286,11 @@ elif st.session_state.page == "Visual Matching (Socks)":
             continue
 
         with col:
-            img_path = os.path.join(IMG_DIR, fname)
-            if os.path.exists(img_path):
-                st.image(img_path, use_container_width=True)
+            img_path = IMG_DIR / fname
+            if img_path.exists():
+                st.image(str(img_path), use_container_width=True)
             else:
-                st.error(f"Missing image: {fname}")
+                st.error(f"Missing image: {fname} (looked in: {img_path})")
 
             if st.button("Tap", key=f"pick_{i}"):
                 if st.session_state.first_pick is None:
