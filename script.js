@@ -12,6 +12,10 @@ let state = {
     },
     sandwich: {
         step: 0
+    },
+    bus: {
+        stage: 1,
+        timer: null
     }
 };
 
@@ -24,7 +28,9 @@ function render() {
         ? "Play-based tools designed to support focus, emotional regulation, and independent thinking."
         : state.page === 'Socks' 
             ? "Supports attention, visual scanning, and working memory."
-            : "Building sequences and following multi-step instructions.";
+            : state.page === 'Sandwich'
+                ? "Building sequences and following multi-step instructions."
+                : "Learning public transport routines and timing.";
 
     app.innerHTML += `
         <div class="ab-header">
@@ -36,6 +42,7 @@ function render() {
     if (state.page === 'Home') renderHome();
     else if (state.page === 'Socks') renderSocks();
     else if (state.page === 'Sandwich') renderSandwich();
+    else if (state.page === 'Bus') renderBus();
 }
 
 function renderHome() {
@@ -44,9 +51,10 @@ function renderHome() {
             <div class="big">Start an activity</div>
             <div class="small">Choose a calm activity below.</div>
         </div>
-        <div class="grid-2">
+        <div class="grid-3">
             <button onclick="navTo('Socks')">Matching Socks 🧦</button>
             <button onclick="navTo('Sandwich')">Sandwich Maker 🥪</button>
+            <button onclick="navTo('Bus')">Bus Buddy 🚌</button>
         </div>
         <div class="card" style="margin-top:20px;">
             <div class="small">Designed for neurodiverse learners. Calm colours. Clear feedback.</div>
@@ -60,6 +68,9 @@ function navTo(page) {
         initSocks(state.socks.difficulty);
     } else if (page === 'Sandwich') {
         state.sandwich.step = 0;
+    } else if (page === 'Bus') {
+        state.bus.stage = 1;
+        clearTimeout(state.bus.timer);
     }
     render();
 }
@@ -211,6 +222,105 @@ function renderSandwich() {
         </div>`;
     }
     content += `</div>`;
+
+    app.innerHTML += content;
+}
+
+// ------ BUS BUDDY ------
+window.busActions = {
+    catchBus: function() {
+        state.bus.stage = 2;
+        render();
+    },
+    paymentDragStart: function(e) {
+        e.dataTransfer.setData('text/plain', 'card');
+    },
+    paymentDragOver: function(e) {
+        e.preventDefault();
+        e.currentTarget.classList.add('drag-over');
+    },
+    paymentDragLeave: function(e) {
+        e.currentTarget.classList.remove('drag-over');
+    },
+    paymentDrop: function(e) {
+        e.preventDefault();
+        e.currentTarget.classList.remove('drag-over');
+        const data = e.dataTransfer.getData('text/plain');
+        if (data === 'card') {
+            e.currentTarget.classList.add('scanner-success');
+            e.currentTarget.innerHTML = "Payment Accepted! ✅";
+            setTimeout(() => {
+                state.bus.stage = 3;
+                render();
+            }, 1000);
+        }
+    },
+    pressStop: function() {
+        clearTimeout(state.bus.timer);
+        state.bus.stage = 4;
+        confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
+        render();
+    }
+}
+
+function renderBus() {
+    let content = `<button class="btn-secondary" style="width: 200px; min-height: 3rem; margin-bottom: 20px;" onclick="navTo('Home')">← Back Home</button>`;
+
+    if (state.bus.stage === 1) {
+        content += `
+            <div class="card">
+                <div class="big">Stage 1: The Stop</div>
+                <div class="small">Wait for Bus 42, then click it to get on!</div>
+            </div>
+            <div class="bus-container">
+                <div class="bus-sprite" onclick="busActions.catchBus()" id="bus42">🚌 <span style="font-size:1.5rem; font-weight:bold; position:absolute; top:20px; left:40px; color:white; background:red; border-radius:4px; padding:2px;">42</span></div>
+            </div>
+        `;
+        setTimeout(() => {
+            const bus = document.getElementById('bus42');
+            if(bus) bus.style.left = '40%';
+        }, 100);
+    } 
+    else if (state.bus.stage === 2) {
+        content += `
+            <div class="card">
+                <div class="big">Stage 2: The Payment</div>
+                <div class="small">Drag your Travel Card onto the green scanner.</div>
+            </div>
+            <div class="travel-card" draggable="true" ondragstart="busActions.paymentDragStart(event)">Transit Card 💳</div>
+            <div class="scanner-zone" ondragover="busActions.paymentDragOver(event)" ondragleave="busActions.paymentDragLeave(event)" ondrop="busActions.paymentDrop(event)">
+                Scanner Ready
+            </div>
+        `;
+    }
+    else if (state.bus.stage === 3) {
+        content += `
+            <div class="card">
+                <div class="big">Stage 3: The Journey</div>
+                <div class="small">Press the STOP button when you see the Library sign!</div>
+            </div>
+            <div class="scenery-view">
+                <div class="scenery-road"></div>
+                <div class="sign-library" id="librarySign">🏛️ <div style="font-size:1rem; font-weight:bold; text-align:center; background:#B91C1C; color:white; padding:2px; border-radius:4px;">LIBRARY</div></div>
+            </div>
+            <button class="stop-btn" onclick="busActions.pressStop()">STOP</button>
+        `;
+        
+        clearTimeout(state.bus.timer);
+        state.bus.timer = setTimeout(() => {
+            const sign = document.getElementById('librarySign');
+            if(sign) sign.style.right = '100%';
+        }, 3000);
+    }
+    else if (state.bus.stage === 4) {
+        content += `
+            <div class="card">
+                <div class="big text-success">🎉 Safe Travels!</div>
+                <div class="small">You successfully completed the bus journey.</div>
+            </div>
+            <button onclick="navTo('Bus')">Play Again</button>
+        `;
+    }
 
     app.innerHTML += content;
 }
