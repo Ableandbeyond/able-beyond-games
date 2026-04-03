@@ -29,23 +29,150 @@ if "sock_selected" not in st.session_state:
     st.session_state.sock_selected = None
 
 # ========= BRAND COLOURS =========
-PRIMARY, ACCENT, BG, TEXT, CARD = "#C97C5D", "#A8BFA3", "#F5F2ED", "#2F2F2F", "#FFFFFF"
+PRIMARY, ACCENT, BG, TEXT, CARD = "#C97C5D", "#A8BFA3", "#F5F2ED", "#1E293B", "#FFFFFF"
 
 # ---------- STYLE ----------
-st.markdown(f"""<style>
-    .stApp {{ background: {BG}; max-width: 900px; margin: auto; }}
-    .ab-header {{ background: {CARD}; padding: 28px 26px; border-radius: 18px; text-align: center; border: 1px solid rgba(0,0,0,0.05); margin-bottom: 20px; }}
-    .ab-title {{ font-size: 2.2rem; font-weight: 800; color: {PRIMARY}; margin-bottom: 6px; }}
-    .ab-sub {{ font-size: 1.05rem; color: {TEXT}; opacity: 0.85; }}
-    .card {{ background: {CARD}; border-radius: 16px; padding: 18px; margin-bottom: 14px; text-align: center; border: 1px solid rgba(0,0,0,0.05); }}
-    .big {{ font-size: 1.25rem; font-weight: 700; color: {TEXT}; }}
-    .small {{ font-size: 0.95rem; color: {TEXT}; opacity: 0.7; }}
-    div.stButton > button {{ width: 100%; min-height: 3.5rem; background: {ACCENT}; color: {TEXT}; font-weight: 700; border-radius: 12px; border: none; }}
-    div.stButton > button:hover {{ background: {PRIMARY}; color: white; }}
-</style>""", unsafe_allow_html=True)
+st.markdown(f"""
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap');
+
+    /* Hide Default Streamlit Elements */
+    header {{visibility: hidden;}}
+    footer {{visibility: hidden;}}
+    #MainMenu {{visibility: hidden;}}
+
+    /* Global Typography & Background */
+    html, body, [class*="css"] {{
+        font-family: 'Outfit', sans-serif !important;
+    }}
+    .stApp {{ 
+        background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%); 
+        background-attachment: fixed;
+    }}
+
+    /* Container Styling */
+    .block-container {{
+        max-width: 900px;
+        padding-top: 2rem !important;
+        padding-bottom: 2rem !important;
+        background: rgba(255, 255, 255, 0.4);
+        backdrop-filter: blur(16px);
+        border-radius: 30px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.04);
+        margin-top: 2rem;
+        border: 1px solid rgba(255,255,255,0.7);
+        animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }}
+
+    /* Animations */
+    @keyframes slideUpFade {{
+        0% {{ opacity: 0; transform: translateY(20px); }}
+        100% {{ opacity: 1; transform: translateY(0); }}
+    }}
+    @keyframes popIn {{
+        0% {{ opacity: 0; transform: scale(0.9); }}
+        100% {{ opacity: 1; transform: scale(1); }}
+    }}
+
+    /* Header Styling */
+    .ab-header {{ 
+        background: linear-gradient(135deg, #ffffff, #f8fafc);
+        padding: 40px 30px; 
+        border-radius: 20px; 
+        text-align: center; 
+        border: 1px solid rgba(255,255,255,1); 
+        box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+        margin-bottom: 30px; 
+    }}
+    .ab-title {{ 
+        font-size: 2.6rem; 
+        font-weight: 800; 
+        background: linear-gradient(45deg, {PRIMARY}, #FF9A76); 
+        -webkit-background-clip: text; 
+        -webkit-text-fill-color: transparent; 
+        margin-bottom: 12px; 
+        letter-spacing: -1px;
+    }}
+    .ab-sub {{ 
+        font-size: 1.15rem; 
+        color: #475569; 
+        line-height: 1.5;
+        max-width: 80%;
+        margin: 0 auto;
+    }}
+
+    /* Card Elements */
+    .card {{ 
+        background: rgba(255, 255, 255, 0.85); 
+        border-radius: 20px; 
+        padding: 24px; 
+        margin-bottom: 20px; 
+        text-align: center; 
+        border: 1px solid rgba(255,255,255,0.9);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.04); 
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        animation: popIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }}
+    .card:hover {{
+        transform: translateY(-4px);
+        box-shadow: 0 14px 30px rgba(0,0,0,0.08);
+    }}
+    .big {{ font-size: 1.45rem; font-weight: 800; color: {TEXT}; margin-bottom: 8px; letter-spacing: -0.5px;}}
+    .small {{ font-size: 1rem; color: #64748B; font-weight: 400; line-height: 1.6;}}
+
+    /* Native Buttons */
+    div.stButton > button {{ 
+        width: 100%; 
+        min-height: 4.5rem; 
+        background: linear-gradient(135deg, {ACCENT}, #8BA885); 
+        color: white; 
+        font-family: 'Outfit', sans-serif;
+        font-weight: 700; 
+        font-size: 1.15rem;
+        border-radius: 16px; 
+        border: none; 
+        box-shadow: 0 6px 16px rgba(168, 191, 163, 0.4);
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }}
+    div.stButton > button:hover {{ 
+        transform: translateY(-4px) scale(1.02);
+        box-shadow: 0 12px 24px rgba(168, 191, 163, 0.6);
+        background: linear-gradient(135deg, #96B090, #7A9573);
+        color: white !important;
+        border-color: transparent !important;
+    }}
+    div.stButton > button:active {{
+        transform: translateY(1px) scale(0.98);
+        box-shadow: 0 4px 10px rgba(168, 191, 163, 0.3);
+    }}
+    div.stButton > button:focus:not(:focus-visible) {{
+        color: white;
+        background: linear-gradient(135deg, {ACCENT}, #8BA885);
+    }}
+
+    /* Global Image Styling */
+    [data-testid="stImage"] {{
+        text-align: center;
+        display: flex;
+        justify-content: center;
+    }}
+    [data-testid="stImage"] img {{
+        border-radius: 16px;
+        background: white;
+        padding: 10px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.06);
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        border: 1px solid rgba(0,0,0,0.03);
+    }}
+    [data-testid="stImage"] img:hover {{
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 15px 25px rgba(0,0,0,0.1);
+    }}
+</style>
+""", unsafe_allow_html=True)
 
 def render_header(subtitle="Play-based tools designed to support focus, emotional regulation, and independent thinking."):
-    st.markdown(f"""<div class="ab-header"><div class="ab-title">Able & Beyond - Life Skills Lab</div><div class="ab-sub">{subtitle}</div></div>""", unsafe_allow_html=True)
+    st.markdown(f"""<div class="ab-header"><div class="ab-title">Able & Beyond<br>Life Skills Lab</div><div class="ab-sub">{subtitle}</div></div>""", unsafe_allow_html=True)
 
 # ---------- HOME PAGE ----------
 if st.session_state.page == "Home":
