@@ -16,8 +16,26 @@ let state = {
     bus: {
         stage: 1,
         timer: null
+    },
+    pharmacy: {
+        stage: 1,
+        simpleView: false,
+        day: new Date().getDay() || 7 // 1-7
     }
 };
+
+function playTTS(text) {
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text);
+        u.rate = 0.9;
+        window.speechSynthesis.speak(u);
+    }
+}
+
+function playHaptic() {
+    if ('vibrate' in navigator) navigator.vibrate([200]);
+}
 
 function render() {
     app.innerHTML = ''; // clear
@@ -30,7 +48,9 @@ function render() {
             ? "Supports attention, visual scanning, and working memory."
             : state.page === 'Sandwich'
                 ? "Building sequences and following multi-step instructions."
-                : "Learning public transport routines and timing.";
+                : state.page === 'Bus'
+                    ? "Learning public transport routines and timing."
+                    : "Practicing communication, daily routines and pharmacy visits.";
 
     app.innerHTML += `
         <div class="ab-header">
@@ -43,6 +63,13 @@ function render() {
     else if (state.page === 'Socks') renderSocks();
     else if (state.page === 'Sandwich') renderSandwich();
     else if (state.page === 'Bus') renderBus();
+    else if (state.page === 'Pharmacy') renderPharmacy();
+
+    if (state.pharmacy && state.pharmacy.simpleView) {
+        document.body.classList.add('simple-view');
+    } else {
+        document.body.classList.remove('simple-view');
+    }
 }
 
 function renderHome() {
@@ -51,10 +78,11 @@ function renderHome() {
             <div class="big">Start an activity</div>
             <div class="small">Choose a calm activity below.</div>
         </div>
-        <div class="grid-3">
+        <div class="grid-4">
             <button onclick="navTo('Socks')">Matching Socks 🧦</button>
             <button onclick="navTo('Sandwich')">Sandwich Maker 🥪</button>
             <button onclick="navTo('Bus')">Bus Buddy 🚌</button>
+            <button onclick="navTo('Pharmacy')">Healthy Hero 🏥</button>
         </div>
         <div class="card" style="margin-top:20px;">
             <div class="small">Designed for neurodiverse learners. Calm colours. Clear feedback.</div>
@@ -72,6 +100,10 @@ function navTo(page) {
         state.bus.stage = 1;
         state.bus.target = null;
         clearTimeout(state.bus.timer);
+    } else if (page === 'Pharmacy') {
+        state.pharmacy.stage = 1;
+        state.pharmacy.simpleView = false;
+        playTTS("Welcome to Healthy Hero");
     }
     render();
 }
@@ -372,6 +404,146 @@ function renderBus() {
                 <div class="small">You successfully completed the bus journey.</div>
             </div>
             <button onclick="navTo('Bus')">Play Again</button>
+        `;
+    }
+
+    app.innerHTML += content;
+}
+
+// ------ THE HEALTHY HERO ------
+window.pharmacyActions = {
+    toggleSimpleView: function() {
+        state.pharmacy.simpleView = !state.pharmacy.simpleView;
+        render();
+    },
+    pickSymptom: function(symptom) {
+        playHaptic();
+        playTTS(`I have a ${symptom}.`);
+        setTimeout(() => {
+            state.pharmacy.stage = 2;
+            playTTS("How can I help you?");
+            render();
+        }, 1200);
+    },
+    dragStart: function(e, id) {
+        e.dataTransfer.setData('text/plain', id);
+        playHaptic();
+    },
+    dragOver: function(e) {
+        e.preventDefault();
+        e.currentTarget.classList.add('drag-over');
+    },
+    dragLeave: function(e) {
+        e.currentTarget.classList.remove('drag-over');
+    },
+    dropPrescription: function(e) {
+        e.preventDefault();
+        e.currentTarget.classList.remove('drag-over');
+        const data = e.dataTransfer.getData('text/plain');
+        if (data === 'prescription') {
+            playHaptic();
+            e.currentTarget.innerHTML = "Processing... ⏳";
+            playTTS("Thank you, let me get that for you.");
+            setTimeout(() => {
+                state.pharmacy.stage = 3;
+                playTTS("Remember to take your vitamins each day.");
+                render();
+            }, 2000);
+        }
+    },
+    dropVitamin: function(e, day) {
+        e.preventDefault();
+        e.currentTarget.classList.remove('drag-over');
+        const data = e.dataTransfer.getData('text/plain');
+        if (data === 'vitamin') {
+            if (day === state.pharmacy.day) {
+                playHaptic();
+                e.currentTarget.innerHTML = "💊";
+                playTTS("Great job! All set for today.");
+                confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
+                setTimeout(() => {
+                    state.pharmacy.stage = 4;
+                    render();
+                }, 2000);
+            } else {
+                playTTS("Oops, wrong day!");
+                alert("That's the wrong day slot!");
+            }
+        }
+    }
+}
+
+function renderPharmacy() {
+    let content = `
+        <div style="display:flex; justify-content:space-between; margin-bottom: 20px;">
+            <button class="btn-secondary" style="width: 200px; min-height: 3rem;" onclick="navTo('Home')">← Back Home</button>
+            <button class="btn-secondary" style="width: 200px; min-height: 3rem; background: ${state.pharmacy.simpleView ? '#F59E0B' : '#94A3B8'};" onclick="pharmacyActions.toggleSimpleView()">
+                ${state.pharmacy.simpleView ? 'Normal View' : 'Simple View'}
+            </button>
+        </div>
+    `;
+
+    if (state.pharmacy.stage === 1) {
+        content += `
+            <div class="card">
+                <div class="big">Stage 1: Arrival</div>
+                <div class="small">How are you feeling today? Check in with the receptionist.</div>
+            </div>
+            <div class="grid-3" style="margin-top:20px;">
+                <button class="symptom-btn" onclick="pharmacyActions.pickSymptom('Fever')">🤒 <span>Fever</span></button>
+                <button class="symptom-btn" onclick="pharmacyActions.pickSymptom('Headache')">🤕 <span>Headache</span></button>
+                <button class="symptom-btn" onclick="pharmacyActions.pickSymptom('Cough')">🤧 <span>Cough</span></button>
+            </div>
+        `;
+    }
+    else if (state.pharmacy.stage === 2) {
+        content += `
+            <div class="card">
+                <div class="big">Stage 2: The Counter</div>
+                <div class="small">Hand over your prescription to the pharmacist.</div>
+            </div>
+            <div class="pharmacy-counter">
+                🧑‍⚕️ <span style="font-size:4rem; margin-left:20px;">🏥</span>
+                <div class="counter-dropzone" ondragover="pharmacyActions.dragOver(event)" ondragleave="pharmacyActions.dragLeave(event)" ondrop="pharmacyActions.dropPrescription(event)">
+                    Drop Prescription Here
+                </div>
+            </div>
+            <div class="prescription-drag" draggable="true" ondragstart="pharmacyActions.dragStart(event, 'prescription')">📄</div>
+        `;
+    }
+    else if (state.pharmacy.stage === 3) {
+        const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+        const todayIdx = state.pharmacy.day - 1; // 0-6
+        let slotsHTML = "";
+        
+        days.forEach((dayLabel, idx) => {
+            let addClass = (idx === todayIdx) ? "active-day" : "";
+            slotsHTML += `
+                <div class="pill-slot ${addClass}" ondragover="pharmacyActions.dragOver(event)" ondragleave="pharmacyActions.dragLeave(event)" ondrop="pharmacyActions.dropVitamin(event, ${idx + 1})">
+                    ${dayLabel}
+                    ${idx === todayIdx ? '<div>(Today)</div>' : ''}
+                </div>
+            `;
+        });
+
+        content += `
+            <div class="card">
+                <div class="big">Stage 3: The Routine</div>
+                <div class="small">Sort your daily vitamin! Drag the token to Today's slot.</div>
+            </div>
+            <div class="pill-organizer">
+                ${slotsHTML}
+            </div>
+            <div class="vitamin-token" draggable="true" ondragstart="pharmacyActions.dragStart(event, 'vitamin')">V</div>
+        `;
+    }
+    else if (state.pharmacy.stage === 4) {
+        content += `
+            <div class="card">
+                <div class="big text-success">🎉 Healthy Hero!</div>
+                <div class="small">You successfully visited the pharmacy and sorted your medicine.</div>
+            </div>
+            <button onclick="navTo('Pharmacy')">Play Again</button>
         `;
     }
 
