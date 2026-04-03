@@ -70,6 +70,7 @@ function navTo(page) {
         state.sandwich.step = 0;
     } else if (page === 'Bus') {
         state.bus.stage = 1;
+        state.bus.target = null;
         clearTimeout(state.bus.timer);
     }
     render();
@@ -256,10 +257,18 @@ window.busActions = {
         }
     },
     pressStop: function() {
-        clearTimeout(state.bus.timer);
-        state.bus.stage = 4;
-        confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
-        render();
+        if (!window.busActions.currentActiveSign) {
+            alert("Wait for a stop!");
+            return;
+        }
+        if (window.busActions.currentActiveSign.id === state.bus.target.id) {
+            clearTimeout(state.bus.timer);
+            state.bus.stage = 4;
+            confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
+            render();
+        } else {
+            alert("Oops! That was the " + window.busActions.currentActiveSign.text + " stop. Wait for your real stop.");
+        }
     }
 }
 
@@ -294,23 +303,67 @@ function renderBus() {
         `;
     }
     else if (state.bus.stage === 3) {
+        const stops = [
+            { id: "school", icon: "🏫", text: "SCHOOL", color: "#B91C1C" },
+            { id: "home", icon: "🏠", text: "HOME", color: "#15803D" },
+            { id: "cinema", icon: "🎬", text: "CINEMA", color: "#4338CA" },
+            { id: "library", icon: "🏛️", text: "LIBRARY", color: "#A16207" }
+        ];
+
+        if (!state.bus.target) {
+            state.bus.target = stops.find(s => s.id === "home");
+            state.bus.sequence = [
+                stops.find(s => s.id === "school"),
+                stops.find(s => s.id === "cinema"),
+                stops.find(s => s.id === "home")
+            ];
+        }
+
         content += `
             <div class="card">
                 <div class="big">Stage 3: The Journey</div>
-                <div class="small">Press the STOP button when you see the Library sign!</div>
+                <div class="small">Press the STOP button when you reach the <strong>${state.bus.target.icon} ${state.bus.target.text}</strong>!</div>
             </div>
-            <div class="scenery-view">
+            <div class="scenery-view" id="scenery-view">
                 <div class="scenery-road"></div>
-                <div class="sign-library" id="librarySign">🏛️ <div style="font-size:1rem; font-weight:bold; text-align:center; background:#B91C1C; color:white; padding:2px; border-radius:4px;">LIBRARY</div></div>
             </div>
             <button class="stop-btn" onclick="busActions.pressStop()">STOP</button>
         `;
         
         clearTimeout(state.bus.timer);
+        window.busActions.currentActiveSign = null;
+        
         state.bus.timer = setTimeout(() => {
-            const sign = document.getElementById('librarySign');
-            if(sign) sign.style.right = '100%';
-        }, 3000);
+            const view = document.getElementById('scenery-view');
+            if(!view) return;
+            state.bus.sequence.forEach((stop, index) => {
+                const delay = index * 4000;
+                setTimeout(() => {
+                    window.busActions.currentActiveSign = stop;
+                    const signEl = document.createElement('div');
+                    signEl.innerHTML = `${stop.icon} <div style="font-size:1rem; font-weight:bold; text-align:center; background:${stop.color}; color:white; padding:2px; border-radius:4px;">${stop.text}</div>`;
+                    signEl.style.position = 'absolute';
+                    signEl.style.bottom = '40px';
+                    signEl.style.right = '-200px';
+                    signEl.style.fontSize = '5rem';
+                    signEl.style.transition = 'right 3.5s linear';
+                    view.appendChild(signEl);
+                    
+                    setTimeout(() => { signEl.style.right = '120%'; }, 50);
+                    
+                    setTimeout(() => {
+                        if (window.busActions.currentActiveSign === stop) {
+                            window.busActions.currentActiveSign = null;
+                            if (stop.id === state.bus.target.id && state.bus.stage === 3) {
+                                alert("Oh no! You missed your stop.");
+                                state.bus.target = null;
+                                render();
+                            }
+                        }
+                    }, 3500);
+                }, delay + 500); 
+            });
+        }, 100);
     }
     else if (state.bus.stage === 4) {
         content += `
