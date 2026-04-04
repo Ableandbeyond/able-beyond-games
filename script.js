@@ -101,7 +101,7 @@ function renderHome() {
         </div>
         <div class="grid-2" style="margin-bottom: 20px;">
             <button style="margin-top:0;" onclick="navTo('Zen')">The Zen Zone 🧹</button>
-            <button style="margin-top:0; background: linear-gradient(135deg, #0ea5e9, #0284c7);" onclick="navTo('Bubble')">Bubble Guard 🫧</button>
+            <button style="margin-top:0;" onclick="navTo('Bubble')">Bubble Guard 🫧</button>
         </div>
         <div class="card">
             <div class="small">Designed for neurodiverse learners. Calm colours. Clear feedback.</div>
