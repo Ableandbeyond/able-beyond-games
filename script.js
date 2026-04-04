@@ -839,17 +839,29 @@ function initBubbleGuard() {
     player.position.set(0, 0, 6);
     scene.add(player);
 
-    // NPCs
+    // NPCs (Humans)
     const npcs = [];
+    const bodyGeo = new THREE.CylinderGeometry(0.4, 0.4, 1.2, 16);
+    const headGeo = new THREE.SphereGeometry(0.3, 16, 16);
+
     for(let i=0; i<6; i++) {
-        let n = new THREE.Mesh(sphereGeo, npcMat);
-        n.position.set((Math.random() - 0.5) * 12, 0, (Math.random() - 0.5) * 8 - 1);
-        n.userData = { 
-            speed: (Math.random() * 0.06) + 0.02, 
+        let humanGroup = new THREE.Group();
+        
+        let body = new THREE.Mesh(bodyGeo, npcMat);
+        body.position.y = 0.6; // half height
+        humanGroup.add(body);
+        
+        let head = new THREE.Mesh(headGeo, npcMat);
+        head.position.y = 1.5; // sit on body
+        humanGroup.add(head);
+
+        humanGroup.position.set((Math.random() - 0.5) * 12, 0, (Math.random() - 0.5) * 8 - 1);
+        humanGroup.userData = { 
+            speed: (Math.random() * 0.02) + 0.015, // Much slower walking speed
             dir: Math.random() > 0.5 ? 1 : -1 
         };
-        scene.add(n);
-        npcs.push(n);
+        scene.add(humanGroup);
+        npcs.push(humanGroup);
     }
 
     // Raycaster for Input

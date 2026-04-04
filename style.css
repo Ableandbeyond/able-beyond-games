@@ -527,6 +527,7 @@ button:disabled {
     height: 100% !important;
     outline: none;
     -webkit-tap-highlight-color: transparent;
+    touch-action: none; /* Crucial fix for mobile touch-dragging */
 }
 
 .screen-shake {
