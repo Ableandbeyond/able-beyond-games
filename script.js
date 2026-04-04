@@ -757,7 +757,7 @@ function renderBubbleGuard() {
         </div>
         <div class="card">
             <div class="big">The Bubble Guard</div>
-            <div class="small">Drag the blue bubble carefully to the Green Zone! Keep your personal space away from the gray spheres!</div>
+            <div class="small">Drag the blue bubble carefully to the Green Zone! Keep your personal space away from the other people!</div>
             <div id="bubbleWin" class="big text-success" style="display:none; margin-top:20px;">🎉 Reached the Goal safely!</div>
         </div>
         <div id="bubbleContainer" class="bubble-container"></div>
@@ -766,10 +766,8 @@ function renderBubbleGuard() {
 }
 
 function initBubbleGuard() {
-    if (!window.THREE) {
-        console.error("Three.js not loaded.");
-        return;
-    }
+    if (!window.THREE) return;
+    
     state.bubble.running = true;
     state.bubble.completed = false;
     state.bubble.warning = false;
@@ -777,171 +775,190 @@ function initBubbleGuard() {
     const container = document.getElementById('bubbleContainer');
     if(!container) return;
 
-    // Scene setup
+    // SCENE & CAMERA
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xdce0e5); // Calming gray
+    scene.background = new THREE.Color(0xdce0e5);
     scene.fog = new THREE.Fog(0xdce0e5, 10, 50);
 
-    // Camera setup
     const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100);
-    camera.position.set(0, 15, 10);
+    camera.position.set(0, 16, 12);
     camera.lookAt(0, 0, 0);
 
-    // Renderer setup
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+    // RENDERER
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(container.clientWidth, container.clientHeight);
     container.innerHTML = '';
     container.appendChild(renderer.domElement);
 
-    // Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
-    scene.add(ambientLight);
-    const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
+    // LIGHTING
+    scene.add(new THREE.AmbientLight(0xffffff, 0.8));
+    const dirLight = new THREE.DirectionalLight(0xffffff, 0.5);
     dirLight.position.set(10, 20, 10);
     scene.add(dirLight);
 
-    // Materials (Clay aesthetic)
-    const bubbleMat = new THREE.MeshStandardMaterial({ 
-        color: 0x00CCFF, 
-        roughness: 1, 
-        transparent: true, 
-        opacity: 0.8 
-    });
-    const npcMat = new THREE.MeshStandardMaterial({ 
-        color: 0x94A3B8, 
-        roughness: 1 
-    });
-    const floorMat = new THREE.MeshStandardMaterial({
-        color: 0xE2E8F0,
-        roughness: 1
-    });
-    const finishMat = new THREE.MeshStandardMaterial({
-        color: 0x22C55E,
-        roughness: 1
-    });
+    // MATERIALS
+    const bubbleMat = new THREE.MeshStandardMaterial({ color: 0x00CCFF, transparent: true, opacity: 0.4, roughness: 0.3 });
+    const npcMat = new THREE.MeshStandardMaterial({ color: 0x64748B, roughness: 1 });
+    const playerMat = new THREE.MeshStandardMaterial({ color: 0x3B82F6, roughness: 1 });
+    const floorMat = new THREE.MeshStandardMaterial({ color: 0xF1F5F9, roughness: 1 });
+    const finishMat = new THREE.MeshStandardMaterial({ color: 0x22C55E, roughness: 1 });
 
-    const sphereGeo = new THREE.SphereGeometry(1, 32, 32);
+    // HUMAN FACTORY
+    const bodyGeo = new THREE.CylinderGeometry(0.3, 0.4, 1.0, 12);
+    const headGeo = new THREE.SphereGeometry(0.25, 12, 12);
+    const armGeo = new THREE.CylinderGeometry(0.08, 0.08, 0.8, 8);
 
-    // Floor
-    const floorGeo = new THREE.PlaneGeometry(100, 100);
-    const floor = new THREE.Mesh(floorGeo, floorMat);
-    floor.rotation.x = -Math.PI / 2;
-    floor.position.y = -1;
-    scene.add(floor);
-
-    // Finish Zone
-    const finishZone = new THREE.Mesh(new THREE.BoxGeometry(20, 0.2, 4), finishMat);
-    finishZone.position.set(0, -0.9, -8);
-    scene.add(finishZone);
-
-    // Player Bubble
-    const player = new THREE.Mesh(sphereGeo, bubbleMat);
-    player.position.set(0, 0, 6);
-    scene.add(player);
-
-    // NPCs (Humans)
-    const npcs = [];
-    const bodyGeo = new THREE.CylinderGeometry(0.4, 0.4, 1.2, 16);
-    const headGeo = new THREE.SphereGeometry(0.3, 16, 16);
-
-    for(let i=0; i<6; i++) {
-        let humanGroup = new THREE.Group();
+    function createHuman(material) {
+        const group = new THREE.Group();
+        const body = new THREE.Mesh(bodyGeo, material);
+        body.position.y = 0.5;
+        group.add(body);
         
-        let body = new THREE.Mesh(bodyGeo, npcMat);
-        body.position.y = 0.6; // half height
-        humanGroup.add(body);
-        
-        let head = new THREE.Mesh(headGeo, npcMat);
-        head.position.y = 1.5; // sit on body
-        humanGroup.add(head);
+        const head = new THREE.Mesh(headGeo, material);
+        head.position.y = 1.3;
+        group.add(head);
 
-        humanGroup.position.set((Math.random() - 0.5) * 12, 0, (Math.random() - 0.5) * 8 - 1);
-        humanGroup.userData = { 
-            speed: (Math.random() * 0.02) + 0.015, // Much slower walking speed
-            dir: Math.random() > 0.5 ? 1 : -1 
-        };
-        scene.add(humanGroup);
-        npcs.push(humanGroup);
+        const leftArm = new THREE.Mesh(armGeo, material);
+        leftArm.position.set(-0.5, 0.6, 0);
+        leftArm.rotation.z = Math.PI / 8;
+        group.add(leftArm);
+
+        const rightArm = new THREE.Mesh(armGeo, material);
+        rightArm.position.set(0.5, 0.6, 0);
+        rightArm.rotation.z = -Math.PI / 8;
+        group.add(rightArm);
+        
+        return group;
     }
 
-    // Raycaster for Input
+    // GROUND & GOAL
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), floorMat);
+    floor.rotation.x = -Math.PI/2;
+    floor.position.y = -0.01;
+    scene.add(floor);
+
+    const finishZone = new THREE.Mesh(new THREE.BoxGeometry(20, 0.1, 4), finishMat);
+    finishZone.position.set(0, 0, -10);
+    scene.add(finishZone);
+
+    // PLAYER PROTAGONIST
+    const playerRoot = new THREE.Group();
+    const bubbleMesh = new THREE.Mesh(new THREE.SphereGeometry(1.8, 32, 32), bubbleMat);
+    playerRoot.add(bubbleMesh);
+    
+    const humanInside = createHuman(playerMat);
+    humanInside.scale.set(0.8, 0.8, 0.8);
+    playerRoot.add(humanInside);
+
+    // PERSONAL SPACE RING
+    const ringGeo = new THREE.RingGeometry(1.75, 1.85, 64);
+    const ringMat = new THREE.MeshBasicMaterial({ color: 0x00CCFF, side: THREE.DoubleSide });
+    const spaceRing = new THREE.Mesh(ringGeo, ringMat);
+    spaceRing.rotation.x = -Math.PI / 2;
+    spaceRing.position.y = 0.05;
+    playerRoot.add(spaceRing);
+
+    playerRoot.position.set(0, 0, 6);
+    scene.add(playerRoot);
+
+    // NPCs
+    const npcs = [];
+    for(let i=0; i<7; i++) {
+        const npc = createHuman(npcMat);
+        npc.position.set((Math.random()-0.5)*14, 0, (Math.random()-0.5)*10 - 2);
+        npc.userData = { 
+            speed: (Math.random() * 0.015) + 0.01, // Gentler pacing
+            dir: Math.random() > 0.5 ? 1 : -1 
+        };
+        scene.add(npc);
+        npcs.push(npc);
+    }
+
+    // INTERACTION (Pointer Events)
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
     let isDragging = false;
     const dragPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
     const planeIntersect = new THREE.Vector3();
 
-    function onPointerDown(event) {
-        isDragging = true;
-        onPointerMove(event);
-    }
-    function onPointerMove(event) {
+    function onMove(e) {
         if(!isDragging || state.bubble.completed) return;
-        
-        let rect = renderer.domElement.getBoundingClientRect();
-        mouse.x = ( (event.clientX - rect.left) / rect.width ) * 2 - 1;
-        mouse.y = - ( (event.clientY - rect.top) / rect.height ) * 2 + 1;
+        const rect = renderer.domElement.getBoundingClientRect();
+        mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
 
         raycaster.setFromCamera(mouse, camera);
-        raycaster.ray.intersectPlane(dragPlane, planeIntersect);
-        
-        if (planeIntersect) {
-            player.position.x = planeIntersect.x;
-            player.position.z = planeIntersect.z;
+        if(raycaster.ray.intersectPlane(dragPlane, planeIntersect)) {
+            playerRoot.position.x = THREE.MathUtils.clamp(planeIntersect.x, -8, 8);
+            playerRoot.position.z = THREE.MathUtils.clamp(planeIntersect.z, -12, 8);
         }
     }
-    function onPointerUp() {
-        isDragging = false;
+
+    function onDown(e) {
+        isDragging = true;
+        window.addEventListener('pointermove', onMove);
+        window.addEventListener('pointerup', onUp);
+        onMove(e);
     }
 
-    container.addEventListener('pointerdown', onPointerDown);
-    container.addEventListener('pointermove', onPointerMove);
-    window.addEventListener('pointerup', onPointerUp);
+    function onUp() {
+        isDragging = false;
+        window.removeEventListener('pointermove', onMove);
+        window.removeEventListener('pointerup', onUp);
+    }
 
-    // Game Loop
+    container.addEventListener('pointerdown', onDown);
+
+    // LOOP
     function animate() {
         if(!state.bubble.running) return;
         requestAnimationFrame(animate);
 
-        // Move NPCs
+        const time = Date.now() * 0.003;
+
+        // Animate NPCs
         npcs.forEach(n => {
             n.position.x += n.userData.speed * n.userData.dir;
-            if(n.position.x > 8 || n.position.x < -8) {
-                n.userData.dir *= -1;
-            }
+            if(Math.abs(n.position.x) > 8) n.userData.dir *= -1;
+            // Subtle Bobbing
+            n.position.y = Math.abs(Math.sin(time + n.position.x)) * 0.15;
         });
 
-        if(!state.bubble.completed) {
-            // Check Collision
-            let collision = false;
-            npcs.forEach(n => {
-                if (player.position.distanceTo(n.position) < 2.0) {
-                    collision = true;
-                }
-            });
-
-            if (collision && !state.bubble.warning) {
-                state.bubble.warning = true;
-                player.material.color.setHex(0xFF9900); // Orange
-                container.classList.add('screen-shake');
-                playHaptic();
-                setTimeout(() => container.classList.remove('screen-shake'), 300);
-            } else if (!collision && state.bubble.warning) {
-                state.bubble.warning = false;
-                player.material.color.setHex(0x00CCFF); // Blue
-            }
-
-            // Check Win condition (reaching z = -6 over the green line)
-            if (player.position.z < -6) {
-                state.bubble.completed = true;
-                player.material.color.setHex(0x22C55E); // Green
-                confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
-                playTTS("Great job navigating your personal space!");
-                let winmsg = document.getElementById('bubbleWin');
-                if (winmsg) winmsg.style.display = 'block';
-            }
+        // Player Bobbing if dragging
+        if(isDragging) {
+            humanInside.position.y = Math.abs(Math.sin(time * 2)) * 0.2;
+        } else {
+            humanInside.position.y = THREE.MathUtils.lerp(humanInside.position.y, 0, 0.1);
         }
 
+        if(!state.bubble.completed) {
+            let collision = false;
+            npcs.forEach(n => {
+                if(playerRoot.position.distanceTo(n.position) < 2.5) collision = true;
+            });
+
+            if(collision && !state.bubble.warning) {
+                state.bubble.warning = true;
+                bubbleMesh.material.color.setHex(0xFF9900);
+                spaceRing.material.color.setHex(0xFF9900);
+                container.classList.add('screen-shake');
+                playHaptic();
+                setTimeout(() => container.classList.remove('screen-shake'), 400);
+            } else if(!collision && state.bubble.warning) {
+                state.bubble.warning = false;
+                bubbleMesh.material.color.setHex(0x00CCFF);
+                spaceRing.material.color.setHex(0x00CCFF);
+            }
+
+            if(playerRoot.position.z < -8) {
+                state.bubble.completed = true;
+                bubbleMesh.material.color.setHex(0x22C55E);
+                spaceRing.material.color.setHex(0x22C55E);
+                confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
+                playTTS("Great job! You stayed safe!");
+                document.getElementById('bubbleWin').style.display = 'block';
+            }
+        }
         renderer.render(scene, camera);
     }
     animate();
