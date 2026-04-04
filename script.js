@@ -25,6 +25,11 @@ let state = {
     zen: {
         items: [],
         completed: false
+    },
+    bubble: {
+        running: false,
+        warning: false,
+        completed: false
     }
 };
 
@@ -56,7 +61,9 @@ function render() {
                     ? "Learning public transport routines and timing."
                     : state.page === 'Pharmacy'
                         ? "Practicing communication, daily routines and pharmacy visits."
-                        : "Relaxing sorting activity with gentle touch interactions.";
+                        : state.page === 'Zen'
+                            ? "Relaxing sorting activity with gentle touch interactions."
+                            : "Practicing personal space boundaries with tactile 3D feedback.";
 
     app.innerHTML += `
         <div class="ab-header">
@@ -71,6 +78,7 @@ function render() {
     else if (state.page === 'Bus') renderBus();
     else if (state.page === 'Pharmacy') renderPharmacy();
     else if (state.page === 'Zen') renderZenZone();
+    else if (state.page === 'Bubble') renderBubbleGuard();
 
     if (state.pharmacy && state.pharmacy.simpleView) {
         document.body.classList.add('simple-view');
@@ -91,8 +99,11 @@ function renderHome() {
             <button onclick="navTo('Bus')">Bus Buddy 🚌</button>
             <button onclick="navTo('Pharmacy')">Healthy Hero 🏥</button>
         </div>
-        <button style="margin-top:0;" onclick="navTo('Zen')">The Zen Zone 🧹</button>
-        <div class="card" style="margin-top:20px;">
+        <div class="grid-2" style="margin-bottom: 20px;">
+            <button style="margin-top:0;" onclick="navTo('Zen')">The Zen Zone 🧹</button>
+            <button style="margin-top:0; background: linear-gradient(135deg, #0ea5e9, #0284c7);" onclick="navTo('Bubble')">Bubble Guard 🫧</button>
+        </div>
+        <div class="card">
             <div class="small">Designed for neurodiverse learners. Calm colours. Clear feedback.</div>
         </div>
     `;
@@ -115,7 +126,16 @@ function navTo(page) {
     } else if (page === 'Zen') {
         initZenZone();
     }
+    
+    // Shut down bubble loop if leaving
+    if (page !== 'Bubble') state.bubble.running = false;
+
     render();
+
+    // Boot up Three.js directly after DOM renders
+    if (page === 'Bubble') {
+        setTimeout(initBubbleGuard, 50);
+    }
 }
 
 // ------ SOCKS ------
@@ -727,6 +747,192 @@ function renderZenZone() {
     `;
     
     app.innerHTML += content;
+}
+
+// ------ THE BUBBLE GUARD (Three.js) ------
+function renderBubbleGuard() {
+    let content = `
+        <div style="display:flex; justify-content:space-between; margin-bottom: 20px;">
+            <button class="btn-secondary" style="width: 200px; min-height: 3rem;" onclick="navTo('Home')">← Back Home</button>
+        </div>
+        <div class="card">
+            <div class="big">The Bubble Guard</div>
+            <div class="small">Drag the blue bubble carefully to the Green Zone! Keep your personal space away from the gray spheres!</div>
+            <div id="bubbleWin" class="big text-success" style="display:none; margin-top:20px;">🎉 Reached the Goal safely!</div>
+        </div>
+        <div id="bubbleContainer" class="bubble-container"></div>
+    `;
+    app.innerHTML += content;
+}
+
+function initBubbleGuard() {
+    if (!window.THREE) {
+        console.error("Three.js not loaded.");
+        return;
+    }
+    state.bubble.running = true;
+    state.bubble.completed = false;
+    state.bubble.warning = false;
+
+    const container = document.getElementById('bubbleContainer');
+    if(!container) return;
+
+    // Scene setup
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xdce0e5); // Calming gray
+    scene.fog = new THREE.Fog(0xdce0e5, 10, 50);
+
+    // Camera setup
+    const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100);
+    camera.position.set(0, 15, 10);
+    camera.lookAt(0, 0, 0);
+
+    // Renderer setup
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    container.innerHTML = '';
+    container.appendChild(renderer.domElement);
+
+    // Lighting
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+    scene.add(ambientLight);
+    const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
+    dirLight.position.set(10, 20, 10);
+    scene.add(dirLight);
+
+    // Materials (Clay aesthetic)
+    const bubbleMat = new THREE.MeshStandardMaterial({ 
+        color: 0x00CCFF, 
+        roughness: 1, 
+        transparent: true, 
+        opacity: 0.8 
+    });
+    const npcMat = new THREE.MeshStandardMaterial({ 
+        color: 0x94A3B8, 
+        roughness: 1 
+    });
+    const floorMat = new THREE.MeshStandardMaterial({
+        color: 0xE2E8F0,
+        roughness: 1
+    });
+    const finishMat = new THREE.MeshStandardMaterial({
+        color: 0x22C55E,
+        roughness: 1
+    });
+
+    const sphereGeo = new THREE.SphereGeometry(1, 32, 32);
+
+    // Floor
+    const floorGeo = new THREE.PlaneGeometry(100, 100);
+    const floor = new THREE.Mesh(floorGeo, floorMat);
+    floor.rotation.x = -Math.PI / 2;
+    floor.position.y = -1;
+    scene.add(floor);
+
+    // Finish Zone
+    const finishZone = new THREE.Mesh(new THREE.BoxGeometry(20, 0.2, 4), finishMat);
+    finishZone.position.set(0, -0.9, -8);
+    scene.add(finishZone);
+
+    // Player Bubble
+    const player = new THREE.Mesh(sphereGeo, bubbleMat);
+    player.position.set(0, 0, 6);
+    scene.add(player);
+
+    // NPCs
+    const npcs = [];
+    for(let i=0; i<6; i++) {
+        let n = new THREE.Mesh(sphereGeo, npcMat);
+        n.position.set((Math.random() - 0.5) * 12, 0, (Math.random() - 0.5) * 8 - 1);
+        n.userData = { 
+            speed: (Math.random() * 0.06) + 0.02, 
+            dir: Math.random() > 0.5 ? 1 : -1 
+        };
+        scene.add(n);
+        npcs.push(n);
+    }
+
+    // Raycaster for Input
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+    let isDragging = false;
+    const dragPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+    const planeIntersect = new THREE.Vector3();
+
+    function onPointerDown(event) {
+        isDragging = true;
+        onPointerMove(event);
+    }
+    function onPointerMove(event) {
+        if(!isDragging || state.bubble.completed) return;
+        
+        let rect = renderer.domElement.getBoundingClientRect();
+        mouse.x = ( (event.clientX - rect.left) / rect.width ) * 2 - 1;
+        mouse.y = - ( (event.clientY - rect.top) / rect.height ) * 2 + 1;
+
+        raycaster.setFromCamera(mouse, camera);
+        raycaster.ray.intersectPlane(dragPlane, planeIntersect);
+        
+        if (planeIntersect) {
+            player.position.x = planeIntersect.x;
+            player.position.z = planeIntersect.z;
+        }
+    }
+    function onPointerUp() {
+        isDragging = false;
+    }
+
+    container.addEventListener('pointerdown', onPointerDown);
+    container.addEventListener('pointermove', onPointerMove);
+    window.addEventListener('pointerup', onPointerUp);
+
+    // Game Loop
+    function animate() {
+        if(!state.bubble.running) return;
+        requestAnimationFrame(animate);
+
+        // Move NPCs
+        npcs.forEach(n => {
+            n.position.x += n.userData.speed * n.userData.dir;
+            if(n.position.x > 8 || n.position.x < -8) {
+                n.userData.dir *= -1;
+            }
+        });
+
+        if(!state.bubble.completed) {
+            // Check Collision
+            let collision = false;
+            npcs.forEach(n => {
+                if (player.position.distanceTo(n.position) < 2.0) {
+                    collision = true;
+                }
+            });
+
+            if (collision && !state.bubble.warning) {
+                state.bubble.warning = true;
+                player.material.color.setHex(0xFF9900); // Orange
+                container.classList.add('screen-shake');
+                playHaptic();
+                setTimeout(() => container.classList.remove('screen-shake'), 300);
+            } else if (!collision && state.bubble.warning) {
+                state.bubble.warning = false;
+                player.material.color.setHex(0x00CCFF); // Blue
+            }
+
+            // Check Win condition (reaching z = -6 over the green line)
+            if (player.position.z < -6) {
+                state.bubble.completed = true;
+                player.material.color.setHex(0x22C55E); // Green
+                confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
+                playTTS("Great job navigating your personal space!");
+                let winmsg = document.getElementById('bubbleWin');
+                if (winmsg) winmsg.style.display = 'block';
+            }
+        }
+
+        renderer.render(scene, camera);
+    }
+    animate();
 }
 
 // INIT

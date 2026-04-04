@@ -507,3 +507,36 @@ button:disabled {
     filter: drop-shadow(0 15px 20px rgba(0,0,0,0.25)) scale(1.05);
     z-index: 100;
 }
+
+/* Bubble Guard Specific */
+.bubble-container {
+    width: 100%;
+    height: 400px;
+    background: #dce0e5; /* The clay-like neutral background */
+    border-radius: 20px;
+    border: 2px solid #CBD5E1;
+    overflow: hidden;
+    position: relative;
+    margin-top: 20px;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.05);
+}
+
+.bubble-container canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.screen-shake {
+    animation: shakePulse 0.3s cubic-bezier(.36,.07,.19,.97) both;
+    border-color: #EF4444 !important;
+}
+
+@keyframes shakePulse {
+    10%, 90% { transform: translate3d(-2px, 0, 0); }
+    20%, 80% { transform: translate3d(4px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-8px, 0, 0); }
+    40%, 60% { transform: translate3d(8px, 0, 0); }
+}
