@@ -21,6 +21,10 @@ let state = {
         stage: 1,
         simpleView: false,
         day: new Date().getDay() || 7 // 1-7
+    },
+    zen: {
+        items: [],
+        completed: false
     }
 };
 
@@ -50,7 +54,9 @@ function render() {
                 ? "Building sequences and following multi-step instructions."
                 : state.page === 'Bus'
                     ? "Learning public transport routines and timing."
-                    : "Practicing communication, daily routines and pharmacy visits.";
+                    : state.page === 'Pharmacy'
+                        ? "Practicing communication, daily routines and pharmacy visits."
+                        : "Relaxing sorting activity with gentle touch interactions.";
 
     app.innerHTML += `
         <div class="ab-header">
@@ -64,6 +70,7 @@ function render() {
     else if (state.page === 'Sandwich') renderSandwich();
     else if (state.page === 'Bus') renderBus();
     else if (state.page === 'Pharmacy') renderPharmacy();
+    else if (state.page === 'Zen') renderZenZone();
 
     if (state.pharmacy && state.pharmacy.simpleView) {
         document.body.classList.add('simple-view');
@@ -78,12 +85,13 @@ function renderHome() {
             <div class="big">Start an activity</div>
             <div class="small">Choose a calm activity below.</div>
         </div>
-        <div class="grid-4">
+        <div class="grid-4" style="margin-bottom: 20px;">
             <button onclick="navTo('Socks')">Matching Socks 🧦</button>
             <button onclick="navTo('Sandwich')">Sandwich Maker 🥪</button>
             <button onclick="navTo('Bus')">Bus Buddy 🚌</button>
             <button onclick="navTo('Pharmacy')">Healthy Hero 🏥</button>
         </div>
+        <button style="margin-top:0;" onclick="navTo('Zen')">The Zen Zone 🧹</button>
         <div class="card" style="margin-top:20px;">
             <div class="small">Designed for neurodiverse learners. Calm colours. Clear feedback.</div>
         </div>
@@ -104,6 +112,8 @@ function navTo(page) {
         state.pharmacy.stage = 1;
         state.pharmacy.simpleView = false;
         playTTS("Welcome to Healthy Hero");
+    } else if (page === 'Zen') {
+        initZenZone();
     }
     render();
 }
@@ -547,6 +557,172 @@ function renderPharmacy() {
         `;
     }
 
+    app.innerHTML += content;
+}
+
+// ------ THE ZEN ZONE ------
+function initZenZone() {
+    state.zen.completed = false;
+    state.zen.items = [
+        { id: 'item1', type: 'toys', emoji: '🧸', startX: 120, startY: 50 },
+        { id: 'item2', type: 'clothes', emoji: '👕', startX: 180, startY: 20 },
+        { id: 'item3', type: 'books', emoji: '📖', startX: 250, startY: 60 }
+    ];
+    state.zen.items.forEach(i => {
+        i.x = i.startX;
+        i.y = i.startY;
+        i.isDragging = false;
+        i.snapped = false;
+    });
+}
+
+window.zenActions = {
+    down: function(e, id) {
+        let item = state.zen.items.find(i => i.id === id);
+        if(!item || item.snapped) return;
+
+        item.isDragging = true;
+        const el = e.currentTarget;
+        el.setPointerCapture(e.pointerId);
+        
+        let rect = el.getBoundingClientRect();
+        item.dragOffsetX = e.clientX - rect.left;
+        item.dragOffsetY = e.clientY - rect.top;
+
+        const container = document.getElementById('zenContainer');
+        item.containerRect = container.getBoundingClientRect();
+
+        el.classList.add('zen-dragging');
+        playHaptic();
+    },
+    move: function(e, id) {
+        let item = state.zen.items.find(i => i.id === id);
+        if(!item || !item.isDragging) return;
+
+        let newX = e.clientX - item.containerRect.left - item.dragOffsetX;
+        let newY = e.clientY - item.containerRect.top - item.dragOffsetY;
+
+        item.x = newX;
+        item.y = newY;
+
+        const el = e.currentTarget;
+        el.style.transform = `translate(${item.x}px, ${item.y}px)`;
+    },
+    up: function(e, id) {
+        let item = state.zen.items.find(i => i.id === id);
+        if(!item || !item.isDragging) return;
+
+        item.isDragging = false;
+        const el = e.currentTarget;
+        el.releasePointerCapture(e.pointerId);
+        el.classList.remove('zen-dragging');
+
+        const bins = document.querySelectorAll('.zen-bin');
+        let matchedBin = null;
+
+        let itemRect = el.getBoundingClientRect();
+        let itemCenterX = itemRect.left + itemRect.width/2;
+        let itemCenterY = itemRect.top + itemRect.height/2;
+
+        bins.forEach(bin => {
+            let bRect = bin.getBoundingClientRect();
+            if (itemCenterX > bRect.left && itemCenterX < bRect.right &&
+                itemCenterY > bRect.top && itemCenterY < bRect.bottom) {
+                matchedBin = bin;
+            }
+        });
+
+        if (matchedBin) {
+            let binType = matchedBin.getAttribute('data-type');
+            if (binType === item.type) {
+                item.snapped = true;
+                playHaptic();
+                
+                let bRect = matchedBin.getBoundingClientRect();
+                let parentRect = document.getElementById('zenContainer').getBoundingClientRect();
+                
+                item.x = (bRect.left - parentRect.left) + (bRect.width/2) - (itemRect.width/2);
+                item.y = (bRect.top - parentRect.top) + (bRect.height/2) - (itemRect.height/2);
+                
+                el.style.transition = 'transform 0.3s ease-out';
+                el.style.transform = `translate(${item.x}px, ${item.y}px)`;
+                
+                matchedBin.classList.add('pulse');
+                setTimeout(() => matchedBin.classList.remove('pulse'), 400);
+
+                if(state.zen.items.every(i => i.snapped)){
+                    setTimeout(() => {
+                        confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
+                        playTTS("The room is perfectly clean. Great job.");
+                        let winmsg = document.getElementById('zenWin');
+                        if (winmsg) winmsg.style.display = 'block';
+                    }, 500);
+                }
+            } else {
+                window.floatBack(item, el);
+            }
+        } else {
+            window.floatBack(item, el);
+        }
+    }
+};
+
+window.floatBack = function(item, el) {
+    el.classList.add('zen-floating');
+    item.x = item.startX;
+    item.y = item.startY;
+    el.style.transform = `translate(${item.startX}px, ${item.startY}px)`;
+    setTimeout(() => {
+        el.classList.remove('zen-floating');
+    }, 600);
+}
+
+function renderZenZone() {
+    let content = `
+        <button class="btn-secondary" style="width: 200px; min-height: 3rem;" onclick="navTo('Home')">← Back Home</button>
+        <div class="card" style="margin-top: 20px;">
+            <div class="big">The Zen Zone</div>
+            <div class="small">Tidy the room by dragging objects into their bins. If you make a mistake, they gently float back!</div>
+            <div id="zenWin" class="big text-success" style="display:none; margin-top:20px;">🎉 Room Cleaned!</div>
+        </div>
+        
+        <div class="zen-container" id="zenContainer">
+            <div class="zen-bins-row">
+                <div class="zen-bin" data-type="toys">
+                    <span style="font-size:2rem; margin-bottom:5px;">🧩</span>
+                    Toys
+                </div>
+                <div class="zen-bin" data-type="clothes">
+                    <span style="font-size:2rem; margin-bottom:5px;">👕</span>
+                    Clothes
+                </div>
+                <div class="zen-bin" data-type="books">
+                    <span style="font-size:2rem; margin-bottom:5px;">📚</span>
+                    Books
+                </div>
+            </div>
+            <div class="zen-play-area">
+    `;
+
+    state.zen.items.forEach(item => {
+        let styleStr = `transform: translate(${item.x}px, ${item.y}px);`;
+        content += `
+            <div class="zen-item" id="${item.id}"
+                 style="${styleStr}"
+                 onpointerdown="zenActions.down(event, '${item.id}')"
+                 onpointermove="zenActions.move(event, '${item.id}')"
+                 onpointerup="zenActions.up(event, '${item.id}')"
+                 onpointercancel="zenActions.up(event, '${item.id}')">
+                ${item.emoji}
+            </div>
+        `;
+    });
+
+    content += `
+            </div>
+        </div>
+    `;
+    
     app.innerHTML += content;
 }
 
