@@ -566,7 +566,10 @@ function initZenZone() {
     state.zen.items = [
         { id: 'item1', type: 'toys', emoji: '🧸', startX: 120, startY: 50 },
         { id: 'item2', type: 'clothes', emoji: '👕', startX: 180, startY: 20 },
-        { id: 'item3', type: 'books', emoji: '📖', startX: 250, startY: 60 }
+        { id: 'item3', type: 'books', emoji: '📖', startX: 250, startY: 60 },
+        { id: 'item4', type: 'toys', emoji: '🚗', startX: 100, startY: 100 },
+        { id: 'item5', type: 'clothes', emoji: '🧦', startX: 220, startY: 110 },
+        { id: 'item6', type: 'books', emoji: '📓', startX: 160, startY: 120 }
     ];
     state.zen.items.forEach(i => {
         i.x = i.startX;
