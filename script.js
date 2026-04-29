@@ -30,6 +30,22 @@ let state = {
         running: false,
         warning: false,
         completed: false
+    },
+    grocery: {
+        budget: 10.00,
+        spent: 0.00,
+        basket: [],
+        items: [
+            { id: 1, name: 'Milk', price: 1.50, icon: '🥛' },
+            { id: 2, name: 'Bread', price: 1.20, icon: '🍞' },
+            { id: 3, name: 'Apples', price: 2.00, icon: '🍎' },
+            { id: 4, name: 'Cheese', price: 3.00, icon: '🧀' },
+            { id: 5, name: 'Bananas', price: 1.80, icon: '🍌' },
+            { id: 6, name: 'Juice', price: 2.50, icon: '🧃' }
+        ],
+        startTime: null,
+        decisionTimes: [],
+        completed: false
     }
 };
 
@@ -63,7 +79,9 @@ function render() {
                         ? "Practicing communication, daily routines and pharmacy visits."
                         : state.page === 'Zen'
                             ? "Relaxing sorting activity with gentle touch interactions."
-                            : "Practicing personal space boundaries with tactile 3D feedback.";
+                            : state.page === 'Bubble'
+                                ? "Practicing personal space boundaries with tactile 3D feedback."
+                                : "A low-pressure shopping simulation for financial literacy.";
 
     app.innerHTML += `
         <div class="ab-header">
@@ -79,6 +97,7 @@ function render() {
     else if (state.page === 'Pharmacy') renderPharmacy();
     else if (state.page === 'Zen') renderZenZone();
     else if (state.page === 'Bubble') renderBubbleGuard();
+    else if (state.page === 'Grocery') renderGrocery();
 
     if (state.pharmacy && state.pharmacy.simpleView) {
         document.body.classList.add('simple-view');
@@ -99,9 +118,10 @@ function renderHome() {
             <button onclick="navTo('Bus')">Bus Buddy 🚌</button>
             <button onclick="navTo('Pharmacy')">Healthy Hero 🏥</button>
         </div>
-        <div class="grid-2" style="margin-bottom: 20px;">
+        <div class="grid-3" style="margin-bottom: 20px;">
             <button style="margin-top:0;" onclick="navTo('Zen')">The Zen Zone 🧹</button>
             <button style="margin-top:0;" onclick="navTo('Bubble')">Bubble Guard 🫧</button>
+            <button style="margin-top:0;" onclick="navTo('Grocery')">Grocery Grab 🛒</button>
         </div>
         <div class="card">
             <div class="small">Designed for neurodiverse learners. Calm colours. Clear feedback.</div>
@@ -125,6 +145,8 @@ function navTo(page) {
         playTTS("Welcome to Healthy Hero");
     } else if (page === 'Zen') {
         initZenZone();
+    } else if (page === 'Grocery') {
+        initGrocery();
     }
     
     // Shut down bubble loop if leaving
@@ -135,6 +157,196 @@ function navTo(page) {
     // Boot up Three.js directly after DOM renders
     if (page === 'Bubble') {
         setTimeout(initBubbleGuard, 50);
+    }
+}
+
+// ------ GROCERY GRAB ------
+function initGrocery() {
+    state.grocery.spent = 0.00;
+    state.grocery.basket = [];
+    state.grocery.decisionTimes = [];
+    state.grocery.completed = false;
+    state.grocery.startTime = Date.now();
+}
+
+window.groceryActions = {
+    selectItem: function(itemId, event) {
+        if (state.grocery.completed) return;
+        
+        const item = state.grocery.items.find(i => i.id === itemId);
+        if (!item) return;
+
+        // Calculate decision time
+        const now = Date.now();
+        const decisionTimeSec = ((now - state.grocery.startTime) / 1000).toFixed(1);
+        state.grocery.decisionTimes.push({ item: item.name, time: parseFloat(decisionTimeSec) });
+        state.grocery.startTime = now; // reset timer for next item
+
+        // Update budget
+        state.grocery.spent += item.price;
+        state.grocery.basket.push(item);
+
+        playHaptic();
+
+        // Antigravity visual effect
+        const el = event.currentTarget;
+        const rect = el.getBoundingClientRect();
+        const clone = el.cloneNode(true);
+        
+        // Setup clone for floating
+        clone.style.position = 'fixed';
+        clone.style.left = rect.left + 'px';
+        clone.style.top = rect.top + 'px';
+        clone.style.width = rect.width + 'px';
+        clone.style.height = rect.height + 'px';
+        clone.style.margin = '0';
+        clone.style.zIndex = '1000';
+        clone.style.pointerEvents = 'none';
+        clone.classList.add('antigravity-float');
+        
+        document.body.appendChild(clone);
+
+        // Calculate basket position for animation
+        const basketEl = document.getElementById('grocery-basket');
+        let destY = window.innerHeight;
+        let destX = window.innerWidth / 2;
+        if (basketEl) {
+            const basketRect = basketEl.getBoundingClientRect();
+            destY = basketRect.top + (basketRect.height / 2) - (rect.height / 2);
+            destX = basketRect.left + (basketRect.width / 2) - (rect.width / 2);
+        }
+
+        setTimeout(() => {
+            clone.style.top = destY + 'px';
+            clone.style.left = destX + 'px';
+            clone.style.transform = 'scale(0.5)';
+            clone.style.opacity = '0.5';
+        }, 50);
+
+        setTimeout(() => {
+            if (clone.parentNode) clone.parentNode.removeChild(clone);
+            render(); // re-render to update budget UI and basket
+        }, 1500); // Wait for animation
+
+        // Immediately update budget buffer visual without full re-render
+        renderBudgetBuffer();
+    },
+    checkout: function() {
+        state.grocery.completed = true;
+        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+        render();
+    }
+};
+
+function renderBudgetBuffer() {
+    const fillEl = document.getElementById('budget-fill');
+    const textEl = document.getElementById('budget-text');
+    if (!fillEl || !textEl) return;
+
+    const g = state.grocery;
+    let percentage = (g.spent / g.budget) * 100;
+    if (percentage > 100) percentage = 100;
+
+    fillEl.style.width = percentage + '%';
+
+    let colorClass = 'bg-green';
+    if (percentage > 90) colorClass = 'bg-red';
+    else if (percentage > 60) colorClass = 'bg-amber';
+
+    fillEl.className = 'budget-buffer-fill ' + colorClass;
+    textEl.innerText = \`Spent: £\${g.spent.toFixed(2)} / Budget: £\${g.budget.toFixed(2)}\`;
+}
+
+function renderGrocery() {
+    let content = \`
+        <div style="display:flex; justify-content:space-between; margin-bottom: 20px;">
+            <button class="btn-secondary" style="width: 200px; min-height: 3rem;" onclick="navTo('Home')">← Back Home</button>
+            <button class="btn-secondary" style="width: 200px; min-height: 3rem;" onclick="groceryActions.checkout()">Checkout 🛒</button>
+        </div>
+    \`;
+
+    const g = state.grocery;
+
+    if (!g.completed) {
+        content += \`
+            <div class="card">
+                <div class="big">Grocery Grab</div>
+                <div class="small">Choose items to put in your basket. Keep an eye on your budget!</div>
+            </div>
+
+            <div class="budget-buffer-container">
+                <div id="budget-fill" class="budget-buffer-fill bg-green" style="width: 0%;"></div>
+                <div id="budget-text" class="budget-buffer-text">Spent: £0.00 / Budget: £\${g.budget.toFixed(2)}</div>
+            </div>
+
+            <div class="grid-3" style="margin-top: 20px; gap: 20px;">
+        \`;
+
+        g.items.forEach(item => {
+            content += \`
+                <div class="grocery-item" onclick="groceryActions.selectItem(\${item.id}, event)">
+                    <div class="grocery-icon">\${item.icon}</div>
+                    <div class="grocery-name">\${item.name}</div>
+                    <div class="grocery-price">£\${item.price.toFixed(2)}</div>
+                </div>
+            \`;
+        });
+
+        content += \`
+            </div>
+            
+            <div id="grocery-basket" class="card" style="margin-top: 30px; border-style: dashed; border-width: 4px; border-color: #94A3B8;">
+                <div class="big">Your Basket (\${g.basket.length} items)</div>
+                <div style="display:flex; flex-wrap:wrap; gap: 10px; justify-content:center; margin-top: 10px; font-size: 2rem;">
+                    \${g.basket.map(i => i.icon).join('')}
+                </div>
+            </div>
+        \`;
+    } else {
+        // Completion / SEN Report screen
+        const overBudget = g.spent > g.budget;
+        const accuracyMsg = overBudget ? "Over Budget" : "Within Budget";
+        
+        let avgDecisionTime = 0;
+        if (g.decisionTimes.length > 0) {
+            const sum = g.decisionTimes.reduce((acc, curr) => acc + curr.time, 0);
+            avgDecisionTime = (sum / g.decisionTimes.length).toFixed(1);
+        }
+
+        const reportData = {
+            activity: "Grocery Grab",
+            date: new Date().toISOString().split('T')[0],
+            metrics: {
+                budgetLimit: g.budget,
+                totalSpent: g.spent,
+                budgetAccuracy: overBudget ? (g.budget / g.spent).toFixed(2) : 1.0, // simplified accuracy metric
+                status: accuracyMsg,
+                itemsSelected: g.basket.length,
+                averageDecisionTimeSeconds: parseFloat(avgDecisionTime),
+                detailedTimes: g.decisionTimes
+            }
+        };
+
+        content += \`
+            <div class="card">
+                <div class="big text-success">🎉 Checkout Complete!</div>
+                <div class="small">You spent £\${g.spent.toFixed(2)} out of your £\${g.budget.toFixed(2)} budget.</div>
+                \${overBudget ? '<div class="text-error" style="font-weight:bold; margin-top:10px;">You went a bit over budget! Next time, try to keep the bar green or amber.</div>' : '<div class="text-success" style="font-weight:bold; margin-top:10px;">Great job staying within budget!</div>'}
+            </div>
+
+            <div class="sen-report card" style="text-align:left; background: #F8FAFC;">
+                <div class="big" style="font-size: 1.2rem; margin-bottom: 15px;">SEN Report Sync Data</div>
+                <div class="small" style="margin-bottom: 10px;">Copy this data for the Local Authority Report Generator to demonstrate Independent Living Skills progress.</div>
+                <pre style="background: #E2E8F0; padding: 15px; border-radius: 8px; overflow-x: auto; font-family: monospace; font-size: 0.9rem; color: #1E293B;">\${JSON.stringify(reportData, null, 2)}</pre>
+            </div>
+
+            <button onclick="navTo('Grocery')">Play Again</button>
+        \`;
+    }
+
+    app.innerHTML += content;
+    if (!g.completed) {
+        renderBudgetBuffer(); // Ensure initial state is correct
     }
 }
 
