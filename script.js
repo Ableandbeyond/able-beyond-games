@@ -254,21 +254,21 @@ function renderBudgetBuffer() {
     else if (percentage > 60) colorClass = 'bg-amber';
 
     fillEl.className = 'budget-buffer-fill ' + colorClass;
-    textEl.innerText = \`Spent: £\${g.spent.toFixed(2)} / Budget: £\${g.budget.toFixed(2)}\`;
+    textEl.innerText = `Spent: £${g.spent.toFixed(2)} / Budget: £${g.budget.toFixed(2)}`;
 }
 
 function renderGrocery() {
-    let content = \`
+    let content = `
         <div style="display:flex; justify-content:space-between; margin-bottom: 20px;">
             <button class="btn-secondary" style="width: 200px; min-height: 3rem;" onclick="navTo('Home')">← Back Home</button>
             <button class="btn-secondary" style="width: 200px; min-height: 3rem;" onclick="groceryActions.checkout()">Checkout 🛒</button>
         </div>
-    \`;
+    `;
 
     const g = state.grocery;
 
     if (!g.completed) {
-        content += \`
+        content += `
             <div class="card">
                 <div class="big">Grocery Grab</div>
                 <div class="small">Choose items to put in your basket. Keep an eye on your budget!</div>
@@ -276,32 +276,32 @@ function renderGrocery() {
 
             <div class="budget-buffer-container">
                 <div id="budget-fill" class="budget-buffer-fill bg-green" style="width: 0%;"></div>
-                <div id="budget-text" class="budget-buffer-text">Spent: £0.00 / Budget: £\${g.budget.toFixed(2)}</div>
+                <div id="budget-text" class="budget-buffer-text">Spent: £0.00 / Budget: £${g.budget.toFixed(2)}</div>
             </div>
 
             <div class="grid-3" style="margin-top: 20px; gap: 20px;">
-        \`;
+        `;
 
         g.items.forEach(item => {
-            content += \`
-                <div class="grocery-item" onclick="groceryActions.selectItem(\${item.id}, event)">
-                    <div class="grocery-icon">\${item.icon}</div>
-                    <div class="grocery-name">\${item.name}</div>
-                    <div class="grocery-price">£\${item.price.toFixed(2)}</div>
+            content += `
+                <div class="grocery-item" onclick="groceryActions.selectItem(${item.id}, event)">
+                    <div class="grocery-icon">${item.icon}</div>
+                    <div class="grocery-name">${item.name}</div>
+                    <div class="grocery-price">£${item.price.toFixed(2)}</div>
                 </div>
-            \`;
+            `;
         });
 
-        content += \`
+        content += `
             </div>
             
             <div id="grocery-basket" class="card" style="margin-top: 30px; border-style: dashed; border-width: 4px; border-color: #94A3B8;">
-                <div class="big">Your Basket (\${g.basket.length} items)</div>
+                <div class="big">Your Basket (${g.basket.length} items)</div>
                 <div style="display:flex; flex-wrap:wrap; gap: 10px; justify-content:center; margin-top: 10px; font-size: 2rem;">
-                    \${g.basket.map(i => i.icon).join('')}
+                    ${g.basket.map(i => i.icon).join('')}
                 </div>
             </div>
-        \`;
+        `;
     } else {
         // Completion / SEN Report screen
         const overBudget = g.spent > g.budget;
@@ -327,21 +327,21 @@ function renderGrocery() {
             }
         };
 
-        content += \`
+        content += `
             <div class="card">
                 <div class="big text-success">🎉 Checkout Complete!</div>
-                <div class="small">You spent £\${g.spent.toFixed(2)} out of your £\${g.budget.toFixed(2)} budget.</div>
-                \${overBudget ? '<div class="text-error" style="font-weight:bold; margin-top:10px;">You went a bit over budget! Next time, try to keep the bar green or amber.</div>' : '<div class="text-success" style="font-weight:bold; margin-top:10px;">Great job staying within budget!</div>'}
+                <div class="small">You spent £${g.spent.toFixed(2)} out of your £${g.budget.toFixed(2)} budget.</div>
+                ${overBudget ? '<div class="text-error" style="font-weight:bold; margin-top:10px;">You went a bit over budget! Next time, try to keep the bar green or amber.</div>' : '<div class="text-success" style="font-weight:bold; margin-top:10px;">Great job staying within budget!</div>'}
             </div>
 
             <div class="sen-report card" style="text-align:left; background: #F8FAFC;">
                 <div class="big" style="font-size: 1.2rem; margin-bottom: 15px;">SEN Report Sync Data</div>
                 <div class="small" style="margin-bottom: 10px;">Copy this data for the Local Authority Report Generator to demonstrate Independent Living Skills progress.</div>
-                <pre style="background: #E2E8F0; padding: 15px; border-radius: 8px; overflow-x: auto; font-family: monospace; font-size: 0.9rem; color: #1E293B;">\${JSON.stringify(reportData, null, 2)}</pre>
+                <pre style="background: #E2E8F0; padding: 15px; border-radius: 8px; overflow-x: auto; font-family: monospace; font-size: 0.9rem; color: #1E293B;">${JSON.stringify(reportData, null, 2)}</pre>
             </div>
 
             <button onclick="navTo('Grocery')">Play Again</button>
-        \`;
+        `;
     }
 
     app.innerHTML += content;
