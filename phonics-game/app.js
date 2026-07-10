@@ -45,8 +45,8 @@ const audioMap = {
     'th': { sound: 'th', mnemonic: '👍', display: 'th' },
     'z': { sound: 'z', mnemonic: '🤐', display: 'z' },
     'ch': { sound: 'ch', mnemonic: '🚂', display: 'ch' },
-    'qu': { sound: 'kw', mnemonic: '👑', display: 'qu' },
-    'x': { sound: 'ks', mnemonic: '🦊', display: 'x' },
+    'qu': { sound: 'qu', mnemonic: '👑', display: 'qu' },
+    'x': { sound: 'x', mnemonic: '🦊', display: 'x' },
     'ng': { sound: 'ng', mnemonic: '💍', display: 'ng' },
     'nk': { sound: 'nk', mnemonic: '🚰', display: 'nk' },
     
