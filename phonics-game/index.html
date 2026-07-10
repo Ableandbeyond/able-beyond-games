@@ -67,31 +67,7 @@
         </div>
     </main>
 
-    <!-- Teacher Data Panel -->
-    <aside id="teacher-panel" class="fixed bottom-4 right-4 bg-white shadow-2xl rounded-2xl border-2 border-slate-200 flex flex-col transition-transform duration-300 translate-y-[calc(100%-4rem)] w-[500px] z-50 max-h-[85vh]">
-        <button id="panel-toggle" class="h-16 w-full flex justify-between items-center px-6 font-bold text-xl text-slate-700 bg-slate-100 rounded-t-xl hover:bg-slate-200">
-            <span>📋 Progress Tracker</span>
-            <span id="panel-chevron" class="transform transition-transform">▲</span>
-        </button>
-        <div class="p-4 overflow-y-auto flex-grow flex flex-col gap-4">
-            
-            <!-- Tracker Set Selector Tabs -->
-            <div class="flex gap-2 border-b pb-2" id="tracker-tabs">
-                <button class="px-3 py-1 font-bold text-sm rounded bg-blue-100 text-blue-700" data-target="tracker-set1">Set 1</button>
-                <button class="px-3 py-1 font-bold text-sm rounded text-slate-500 hover:bg-slate-100" data-target="tracker-set2">Set 2</button>
-                <button class="px-3 py-1 font-bold text-sm rounded text-slate-500 hover:bg-slate-100" data-target="tracker-set3">Set 3</button>
-            </div>
-
-            <div id="students-container" class="flex flex-col gap-4">
-                <!-- Student rows generated here -->
-            </div>
-            <div class="flex justify-between mt-4 border-t pt-4">
-                <button id="reset-data-btn" class="text-red-500 font-bold hover:underline">Reset All Data</button>
-            </div>
-        </div>
-    </aside>
-
-    <script src="app.js?v=3"></script>
+    <script src="app.js?v=4"></script>
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {

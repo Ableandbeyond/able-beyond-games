@@ -86,17 +86,7 @@ let currentSetKey = 'set1';
 let isBlendyMode = false;
 let currentWordIndex = 0;
 let currentWordProgress = 0;
-let activeTrackerTab = 'set1'; // For the teacher dashboard
 const debounceTime = 1500; 
-
-let students = JSON.parse(localStorage.getItem('phonicsStudentsV2')) || [
-    { id: 1, name: 'Student 1', scores: {} },
-    { id: 2, name: 'Student 2', scores: {} },
-    { id: 3, name: 'Student 3', scores: {} },
-    { id: 4, name: 'Student 4', scores: {} },
-    { id: 5, name: 'Student 5', scores: {} },
-    { id: 6, name: 'Student 6', scores: {} }
-];
 
 // --- 4. DOM Elements ---
 const gridModeEl = document.getElementById('grid-mode');
@@ -109,8 +99,6 @@ const nextWordBtn = document.getElementById('next-word-btn');
 const rewardStar = document.getElementById('reward-star');
 const rewardAnimation = document.getElementById('reward-animation');
 const setSelectorBtns = document.querySelectorAll('#set-selector .set-btn');
-const studentsContainer = document.getElementById('students-container');
-const trackerTabs = document.querySelectorAll('#tracker-tabs button');
 
 // --- 5. Phoneme Parser Engine ---
 function getPhonemes(word) {
@@ -254,73 +242,7 @@ function triggerReward(wordText) {
     }, 2000);
 }
 
-// --- 8. Teacher Progress Tracker ---
-function saveStudents() {
-    localStorage.setItem('phonicsStudentsV2', JSON.stringify(students));
-}
-
-function renderTracker() {
-    studentsContainer.innerHTML = '';
-    const activeSounds = rwiPhonicsData[activeTrackerTab].sounds;
-
-    students.forEach((student, index) => {
-        const div = document.createElement('div');
-        div.className = 'bg-white border rounded-lg p-3 shadow-sm';
-        
-        div.innerHTML = `
-            <div class="flex items-center gap-2 mb-2">
-                <input type="text" value="${student.name}" class="font-bold text-slate-700 bg-transparent border-b border-dashed border-slate-300 focus:outline-none focus:border-blue-500 w-full" data-index="${index}">
-            </div>
-            <div class="grid grid-cols-6 sm:grid-cols-8 gap-1">
-                ${activeSounds.map(soundKey => {
-                    const status = student.scores[soundKey] || 0; 
-                    let bgClass = 'bg-slate-100 text-slate-400';
-                    if (status === 1) bgClass = 'bg-yellow-200 text-yellow-800 border-yellow-400';
-                    if (status === 2) bgClass = 'bg-green-200 text-green-800 border-green-500';
-                    const display = audioMap[soundKey] ? audioMap[soundKey].display : soundKey;
-                    
-                    return `
-                        <button class="text-xs font-bold py-1 px-1 rounded border border-slate-200 ${bgClass} transition-colors" data-student="${index}" data-letter="${soundKey}">
-                            ${display}
-                        </button>
-                    `;
-                }).join('')}
-            </div>
-        `;
-        studentsContainer.appendChild(div);
-    });
-
-    // Inputs
-    studentsContainer.querySelectorAll('input').forEach(input => {
-        input.addEventListener('input', (e) => {
-            students[e.target.dataset.index].name = e.target.value;
-            saveStudents();
-        });
-    });
-
-    // Scores
-    studentsContainer.querySelectorAll('button[data-student]').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const studentIdx = e.target.dataset.student;
-            const letter = e.target.dataset.letter;
-            let currentScore = students[studentIdx].scores[letter] || 0;
-            currentScore = (currentScore + 1) % 3;
-            students[studentIdx].scores[letter] = currentScore;
-            saveStudents();
-            renderTracker();
-        });
-    });
-}
-
-document.getElementById('reset-data-btn').addEventListener('click', () => {
-    if(confirm('Are you sure you want to reset all student progress?')) {
-        students.forEach(s => s.scores = {});
-        saveStudents();
-        renderTracker();
-    }
-});
-
-// --- 9. Event Listeners & Initialization ---
+// --- 8. Event Listeners & Initialization ---
 setSelectorBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
         setSelectorBtns.forEach(b => b.classList.remove('active', 'bg-white', 'text-blue-600'));
@@ -330,19 +252,6 @@ setSelectorBtns.forEach(btn => {
         
         if (isBlendyMode) renderBlendingWord();
         else renderSoundGrid();
-    });
-});
-
-trackerTabs.forEach(tab => {
-    tab.addEventListener('click', (e) => {
-        trackerTabs.forEach(t => {
-            t.classList.remove('bg-blue-100', 'text-blue-700');
-            t.classList.add('text-slate-500');
-        });
-        e.target.classList.remove('text-slate-500');
-        e.target.classList.add('bg-blue-100', 'text-blue-700');
-        activeTrackerTab = e.target.dataset.target.split('-')[1];
-        renderTracker();
     });
 });
 
@@ -370,13 +279,5 @@ nextWordBtn.addEventListener('click', () => {
     renderBlendingWord();
 });
 
-document.getElementById('panel-toggle').addEventListener('click', () => {
-    const panel = document.getElementById('teacher-panel');
-    const chevron = document.getElementById('panel-chevron');
-    panel.classList.toggle('translate-y-[calc(100%-4rem)]');
-    chevron.style.transform = panel.classList.contains('translate-y-[calc(100%-4rem)]') ? 'rotate(0deg)' : 'rotate(180deg)';
-});
-
 // Initialize
 renderSoundGrid();
-renderTracker();
