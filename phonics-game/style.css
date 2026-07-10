@@ -55,49 +55,37 @@
 
 /* Reward Animation */
 @keyframes rewardPop {
-    0% {
-        transform: scale(0.5);
-        opacity: 0;
-    }
-    50% {
-        transform: scale(1.5);
-        opacity: 1;
-    }
-    100% {
-        transform: scale(1.2);
-        opacity: 0;
-    }
+    0% { transform: scale(0.5); opacity: 0; }
+    50% { transform: scale(1.5); opacity: 1; }
+    100% { transform: scale(1.2); opacity: 0; }
 }
 
 .animate-reward {
     animation: rewardPop 1.5s ease-in-out forwards;
 }
 
+/* Set Nav Buttons */
+.set-btn.active {
+    background-color: #ffffff;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    color: #2563eb; /* blue-600 */
+}
+
 /* Mnemonic Icon */
 .mnemonic-icon {
-    font-size: 3rem;
+    font-size: 2.5rem;
     line-height: 1;
-    margin-bottom: -10px;
+    margin-bottom: -5px;
 }
 
 .letter-text {
-    font-size: 5rem;
+    font-size: 4rem;
     line-height: 1;
     font-weight: 700;
 }
 
-/* Custom Scrollbar for Panel */
-::-webkit-scrollbar {
-    width: 8px;
-}
-::-webkit-scrollbar-track {
-    background: #f1f5f9; 
-    border-radius: 4px;
-}
-::-webkit-scrollbar-thumb {
-    background: #cbd5e1; 
-    border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8; 
-}
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
