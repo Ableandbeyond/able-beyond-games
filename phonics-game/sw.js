@@ -1,4 +1,4 @@
-const CACHE_NAME = 'phonics-game-v1';
+const CACHE_NAME = 'phonics-game-v2';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',

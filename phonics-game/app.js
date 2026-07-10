@@ -20,7 +20,7 @@ const audioMap = {
     // Set 1
     'm': { sound: 'm', mnemonic: '⛰️', display: 'm' },
     'a': { sound: 'ah', mnemonic: '🍎', display: 'a' },
-    's': { sound: 'ss', mnemonic: '🐍', display: 's' },
+    's': { sound: 's', mnemonic: '🐍', display: 's' },
     'd': { sound: 'd', mnemonic: '🦖', display: 'd' },
     't': { sound: 't', mnemonic: '🗼', display: 't' },
     'i': { sound: 'ih', mnemonic: '🐛', display: 'i' },
@@ -34,7 +34,7 @@ const audioMap = {
     'b': { sound: 'b', mnemonic: '👢', display: 'b' },
     'f': { sound: 'fff', mnemonic: '🌻', display: 'f' },
     'e': { sound: 'eh', mnemonic: '🥚', display: 'e' },
-    'l': { sound: 'ul', mnemonic: '🦵', display: 'l' },
+    'l': { sound: 'l', mnemonic: '🦵', display: 'l' },
     'h': { sound: 'h', mnemonic: '🐎', display: 'h' },
     'sh': { sound: 'sssshhhh', mnemonic: '🤫', display: 'sh' },
     'r': { sound: 'rrr', mnemonic: '🤖', display: 'r' },
