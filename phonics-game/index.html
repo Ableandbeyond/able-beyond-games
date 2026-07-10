@@ -38,31 +38,33 @@
         </div>
     </header>
 
-    <main class="flex-grow relative flex justify-center items-start p-8 pb-48 overflow-y-auto w-full">
-        <!-- Sound Grid Mode -->
-        <section id="grid-mode" class="w-full max-w-7xl transition-opacity duration-300">
-            <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-[24px] justify-items-center" id="sound-grid">
-                <!-- Sound cards generated here -->
-            </div>
-        </section>
+    <main class="flex-grow relative p-4 sm:p-8 pb-64 overflow-y-auto w-full">
+        <div class="flex flex-col items-center w-full">
+            <!-- Sound Grid Mode -->
+            <section id="grid-mode" class="w-full max-w-7xl transition-opacity duration-300">
+                <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-[24px] justify-items-center" id="sound-grid">
+                    <!-- Sound cards generated here -->
+                </div>
+            </section>
 
-        <!-- Blendy Blending Mode -->
-        <section id="fred-mode" class="hidden w-full max-w-5xl flex-col items-center gap-12 transition-opacity duration-300 text-center mt-10">
-            <div id="reward-animation" class="absolute inset-0 pointer-events-none flex justify-center items-center opacity-0 z-50">
-                <span class="text-9xl scale-50 transition-transform duration-500 origin-center filter drop-shadow-2xl" id="reward-star">⭐</span>
-            </div>
-            <div class="flex flex-col items-center gap-4">
-                <div class="text-8xl animate-bounce mb-4">🤖</div>
-                <h2 class="text-4xl font-bold text-green-600 bg-white px-8 py-4 rounded-3xl shadow-lg border-4 border-green-200">Blend the sounds!</h2>
-            </div>
-            
-            <div class="flex flex-wrap gap-[24px] justify-center" id="blending-grid">
-                <!-- Blending cards generated here -->
-            </div>
-            <div class="h-20 flex justify-center items-center mt-8">
-                <button id="next-word-btn" class="hidden bg-blue-500 hover:bg-blue-600 text-white text-3xl font-bold py-4 px-12 rounded-full shadow-xl transform transition-transform active:scale-95">Next Word</button>
-            </div>
-        </section>
+            <!-- Blendy Blending Mode -->
+            <section id="fred-mode" class="hidden w-full max-w-5xl flex-col items-center gap-6 transition-opacity duration-300 text-center mt-2">
+                <div id="reward-animation" class="absolute inset-0 pointer-events-none flex justify-center items-center opacity-0 z-50">
+                    <span class="text-9xl scale-50 transition-transform duration-500 origin-center filter drop-shadow-2xl" id="reward-star">⭐</span>
+                </div>
+                <div class="flex flex-col items-center gap-2">
+                    <div class="text-6xl animate-bounce mb-2">🤖</div>
+                    <h2 class="text-3xl font-bold text-green-600 bg-white px-6 py-3 rounded-3xl shadow-lg border-4 border-green-200">Blend the sounds!</h2>
+                </div>
+                
+                <div class="flex flex-wrap gap-[24px] justify-center" id="blending-grid">
+                    <!-- Blending cards generated here -->
+                </div>
+                <div class="h-16 flex justify-center items-center mt-4">
+                    <button id="next-word-btn" class="hidden bg-blue-500 hover:bg-blue-600 text-white text-2xl font-bold py-3 px-10 rounded-full shadow-xl transform transition-transform active:scale-95">Next Word</button>
+                </div>
+            </section>
+        </div>
     </main>
 
     <!-- Teacher Data Panel -->
