@@ -118,10 +118,11 @@ function renderHome() {
             <button onclick="navTo('Bus')">Bus Buddy 🚌</button>
             <button onclick="navTo('Pharmacy')">Healthy Hero 🏥</button>
         </div>
-        <div class="grid-3" style="margin-bottom: 20px;">
+        <div class="grid-4" style="margin-bottom: 20px;">
             <button style="margin-top:0;" onclick="navTo('Zen')">The Zen Zone 🧹</button>
             <button style="margin-top:0;" onclick="navTo('Bubble')">Bubble Guard 🫧</button>
             <button style="margin-top:0;" onclick="navTo('Grocery')">Grocery Grab 🛒</button>
+            <button style="margin-top:0;" onclick="window.location.href='phonics-game/'">Blendy Bot 🤖</button>
         </div>
         <div class="card">
             <div class="small">Designed for neurodiverse learners. Calm colours. Clear feedback.</div>
