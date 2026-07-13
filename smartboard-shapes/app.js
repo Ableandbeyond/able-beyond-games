@@ -341,5 +341,20 @@ function setupStep3() {
     });
 }
 
+window.nextStep = function() {
+    let stepNum = parseInt(currentStep);
+    stepNum++;
+    if(stepNum > 3) {
+        stepNum = 1;
+        const shapeKeys = Object.keys(SHAPES);
+        let currentIndex = shapeKeys.indexOf(currentShape);
+        currentIndex = (currentIndex + 1) % shapeKeys.length;
+        currentShape = shapeKeys[currentIndex];
+    }
+    currentStep = stepNum.toString();
+    updateUI();
+    if(currentStep === '2') clearCanvas();
+};
+
 // Start
 init();

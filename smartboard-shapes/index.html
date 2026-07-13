@@ -17,45 +17,45 @@
 <body class="bg-gradient-to-br from-blue-50 to-indigo-100 h-screen w-screen overflow-hidden flex flex-col font-sans select-none touch-none text-gray-800">
 
     <!-- Top Navigation Bar -->
-    <nav class="w-full bg-white shadow-md flex justify-center space-x-6 p-4 z-20 flex-shrink-0 border-b border-gray-200">
-        <button class="nav-shape-btn shape-btn bg-gradient-to-b from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 text-white font-bold py-3 px-8 rounded-xl shadow-md text-2xl border-b-4 border-green-700 flex items-center gap-2" data-shape="triangle">
-            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><polygon points="12,2 22,20 2,20"/></svg> Triangle
+    <nav class="w-full bg-white shadow-md flex flex-wrap justify-center gap-2 md:gap-6 p-2 md:p-4 z-20 flex-shrink-0 border-b border-gray-200">
+        <button class="nav-shape-btn shape-btn bg-gradient-to-b from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 text-white font-bold py-2 md:py-3 px-4 md:px-8 rounded-xl shadow-md text-lg md:text-2xl border-b-4 border-green-700 flex items-center gap-2" data-shape="triangle">
+            <svg class="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 24 24" fill="currentColor"><polygon points="12,2 22,20 2,20"/></svg> <span class="hidden sm:inline">Triangle</span>
         </button>
-        <button class="nav-shape-btn shape-btn bg-gradient-to-b from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white font-bold py-3 px-8 rounded-xl shadow-md text-2xl border-b-4 border-blue-700 flex items-center gap-2" data-shape="square">
-            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Square
+        <button class="nav-shape-btn shape-btn bg-gradient-to-b from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white font-bold py-2 md:py-3 px-4 md:px-8 rounded-xl shadow-md text-lg md:text-2xl border-b-4 border-blue-700 flex items-center gap-2" data-shape="square">
+            <svg class="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> <span class="hidden sm:inline">Square</span>
         </button>
-        <button class="nav-shape-btn shape-btn bg-gradient-to-b from-red-400 to-red-500 hover:from-red-500 hover:to-red-600 text-white font-bold py-3 px-8 rounded-xl shadow-md text-2xl border-b-4 border-red-700 flex items-center gap-2" data-shape="circle">
-            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg> Circle
+        <button class="nav-shape-btn shape-btn bg-gradient-to-b from-red-400 to-red-500 hover:from-red-500 hover:to-red-600 text-white font-bold py-2 md:py-3 px-4 md:px-8 rounded-xl shadow-md text-lg md:text-2xl border-b-4 border-red-700 flex items-center gap-2" data-shape="circle">
+            <svg class="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg> <span class="hidden sm:inline">Circle</span>
         </button>
-        <button class="nav-shape-btn shape-btn bg-gradient-to-b from-yellow-300 to-yellow-400 hover:from-yellow-400 hover:to-yellow-500 text-yellow-900 font-bold py-3 px-8 rounded-xl shadow-md text-2xl border-b-4 border-yellow-600 flex items-center gap-2" data-shape="rectangle">
-            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="6" width="20" height="12" rx="2"/></svg> Rectangle
+        <button class="nav-shape-btn shape-btn bg-gradient-to-b from-yellow-300 to-yellow-400 hover:from-yellow-400 hover:to-yellow-500 text-yellow-900 font-bold py-2 md:py-3 px-4 md:px-8 rounded-xl shadow-md text-lg md:text-2xl border-b-4 border-yellow-600 flex items-center gap-2" data-shape="rectangle">
+            <svg class="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="6" width="20" height="12" rx="2"/></svg> <span class="hidden sm:inline">Rectangle</span>
         </button>
     </nav>
 
     <div class="flex flex-1 overflow-hidden relative min-h-0">
         
         <!-- Floating Makaton Reference Sidebar -->
-        <aside class="w-48 glass-panel border-r border-gray-200 flex flex-col p-3 shadow-lg flex-shrink-0 z-20 overflow-y-auto">
-            <div class="text-center font-bold text-gray-500 mb-2 uppercase tracking-wider text-sm">Makaton</div>
+        <aside class="w-24 md:w-32 lg:w-48 glass-panel border-r border-gray-200 flex flex-col p-2 md:p-3 shadow-lg flex-shrink-0 z-20 overflow-y-auto">
+            <div class="text-center font-bold text-gray-500 mb-2 uppercase tracking-wider text-xs md:text-sm">Makaton</div>
             
-            <button class="makaton-card bg-white p-3 rounded-xl shadow-sm border-2 border-transparent flex flex-col items-center justify-center transition-all hover:bg-blue-50 active:scale-95 mb-3" data-sign="look">
-                <svg class="w-12 h-12 text-blue-500 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                <span class="text-lg font-black text-gray-700 uppercase">Look</span>
+            <button class="makaton-card bg-white p-2 md:p-3 rounded-xl shadow-sm border-2 border-transparent flex flex-col items-center justify-center transition-all hover:bg-blue-50 active:scale-95 mb-2 md:mb-3" data-sign="look">
+                <svg class="w-8 h-8 md:w-12 md:h-12 text-blue-500 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                <span class="text-sm md:text-lg font-black text-gray-700 uppercase">Look</span>
             </button>
             
-            <button class="makaton-card bg-white p-3 rounded-xl shadow-sm border-2 border-transparent flex flex-col items-center justify-center transition-all hover:bg-green-50 active:scale-95 mb-3" data-sign="touch">
-                <svg class="w-12 h-12 text-green-500 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11"></path></svg>
-                <span class="text-lg font-black text-gray-700 uppercase">Touch</span>
+            <button class="makaton-card bg-white p-2 md:p-3 rounded-xl shadow-sm border-2 border-transparent flex flex-col items-center justify-center transition-all hover:bg-green-50 active:scale-95 mb-2 md:mb-3" data-sign="touch">
+                <svg class="w-8 h-8 md:w-12 md:h-12 text-green-500 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11"></path></svg>
+                <span class="text-sm md:text-lg font-black text-gray-700 uppercase">Touch</span>
             </button>
 
-            <button class="makaton-card bg-white p-3 rounded-xl shadow-sm border-2 border-transparent flex flex-col items-center justify-center transition-all hover:bg-red-50 active:scale-95 mb-3" data-sign="cut">
-                <svg class="w-12 h-12 text-red-500 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"></path></svg>
-                <span class="text-lg font-black text-gray-700 uppercase">Cut</span>
+            <button class="makaton-card bg-white p-2 md:p-3 rounded-xl shadow-sm border-2 border-transparent flex flex-col items-center justify-center transition-all hover:bg-red-50 active:scale-95 mb-2 md:mb-3" data-sign="cut">
+                <svg class="w-8 h-8 md:w-12 md:h-12 text-red-500 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"></path></svg>
+                <span class="text-sm md:text-lg font-black text-gray-700 uppercase">Cut</span>
             </button>
 
-            <button class="makaton-card bg-white p-3 rounded-xl shadow-sm border-2 border-transparent flex flex-col items-center justify-center transition-all hover:bg-yellow-50 active:scale-95" data-sign="good">
-                <svg class="w-12 h-12 text-yellow-500 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.514"></path></svg>
-                <span class="text-lg font-black text-gray-700 uppercase">Good</span>
+            <button class="makaton-card bg-white p-2 md:p-3 rounded-xl shadow-sm border-2 border-transparent flex flex-col items-center justify-center transition-all hover:bg-yellow-50 active:scale-95" data-sign="good">
+                <svg class="w-8 h-8 md:w-12 md:h-12 text-yellow-500 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.514"></path></svg>
+                <span class="text-sm md:text-lg font-black text-gray-700 uppercase">Good</span>
             </button>
         </aside>
 
@@ -63,14 +63,14 @@
         <main class="flex-1 flex flex-col relative overflow-hidden min-h-0 bg-white/50">
             
             <!-- Step Tabs -->
-            <div class="flex justify-center mt-4 mb-2 z-10 space-x-4 flex-shrink-0">
-                <button class="step-tab-btn shape-btn active bg-indigo-600 text-white font-bold py-2 px-6 rounded-full shadow text-lg transition-all border-b-4 border-indigo-800" data-step="1">
+            <div class="flex justify-center mt-4 mb-2 z-10 gap-2 md:gap-4 flex-wrap flex-shrink-0 px-2">
+                <button class="step-tab-btn shape-btn active bg-indigo-600 text-white font-bold py-2 px-4 md:px-6 rounded-full shadow text-sm md:text-lg transition-all border-b-4 border-indigo-800" data-step="1">
                     1. LOOK & MATCH
                 </button>
-                <button class="step-tab-btn shape-btn bg-white text-gray-600 font-bold py-2 px-6 rounded-full shadow text-lg transition-all border-b-4 border-gray-200 hover:bg-gray-50" data-step="2">
+                <button class="step-tab-btn shape-btn bg-white text-gray-600 font-bold py-2 px-4 md:px-6 rounded-full shadow text-sm md:text-lg transition-all border-b-4 border-gray-200 hover:bg-gray-50" data-step="2">
                     2. TRACE & DRAW
                 </button>
-                <button class="step-tab-btn shape-btn bg-white text-gray-600 font-bold py-2 px-6 rounded-full shadow text-lg transition-all border-b-4 border-gray-200 hover:bg-gray-50" data-step="3">
+                <button class="step-tab-btn shape-btn bg-white text-gray-600 font-bold py-2 px-4 md:px-6 rounded-full shadow text-sm md:text-lg transition-all border-b-4 border-gray-200 hover:bg-gray-50" data-step="3">
                     3. MAKE & COUNT
                 </button>
             </div>
@@ -78,57 +78,65 @@
             <!-- Viewport: Step 1 (Look & Match) -->
             <div id="viewport-step-1" class="viewport active flex-1 flex flex-col items-center justify-center p-4 min-h-0">
                 <div class="text-center mb-6 flex-shrink-0">
-                    <h2 class="text-4xl md:text-5xl font-black text-gray-700 drop-shadow-sm">Tap the <span id="match-target-name" class="text-green-600 uppercase">TRIANGLE</span></h2>
+                    <h2 class="text-3xl md:text-5xl font-black text-gray-700 drop-shadow-sm">Tap the <span id="match-target-name" class="text-green-600 uppercase">TRIANGLE</span></h2>
                 </div>
                 
                 <!-- Match Options Container -->
-                <div class="flex justify-center items-center gap-10 w-full flex-1 min-h-0">
+                <div class="flex justify-center items-center gap-6 md:gap-10 w-full flex-1 min-h-0">
                     <button id="match-option-1" class="match-option flex-1 max-w-[28vh] aspect-square rounded-3xl shadow-xl transition-transform transform hover:scale-105 active:scale-95 flex justify-center items-center bg-white border-4 border-gray-100">
-                        <!-- Shape injected via JS -->
                     </button>
                     <button id="match-option-2" class="match-option flex-1 max-w-[28vh] aspect-square rounded-3xl shadow-xl transition-transform transform hover:scale-105 active:scale-95 flex justify-center items-center bg-white border-4 border-gray-100">
-                        <!-- Shape injected via JS -->
                     </button>
                 </div>
                 
-                <div class="mt-6 flex-shrink-0">
-                    <button id="aac-btn" class="shape-btn bg-gradient-to-b from-purple-400 to-purple-500 hover:from-purple-500 hover:to-purple-600 text-white font-bold py-3 px-8 rounded-full shadow-lg text-2xl flex items-center gap-3 border-b-4 border-purple-700">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
+                <div class="mt-4 md:mt-6 flex flex-wrap justify-center gap-4 flex-shrink-0">
+                    <button id="aac-btn" class="shape-btn bg-gradient-to-b from-purple-400 to-purple-500 hover:from-purple-500 hover:to-purple-600 text-white font-bold py-3 px-6 md:px-8 rounded-full shadow-lg text-xl md:text-2xl flex items-center gap-3 border-b-4 border-purple-700">
+                        <svg class="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
                         <span class="uppercase tracking-wider">Speak Shape</span>
+                    </button>
+                    <button onclick="window.nextStep()" class="shape-btn bg-gray-800 hover:bg-gray-900 text-white font-bold py-3 px-6 rounded-full shadow-lg text-xl flex items-center gap-2 border-b-4 border-gray-950">
+                        Next <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
                     </button>
                 </div>
             </div>
 
             <!-- Viewport: Step 2 (Trace & Draw) -->
-            <div id="viewport-step-2" class="viewport hidden flex-1 flex flex-col items-center justify-center w-full p-6 min-h-0">
+            <div id="viewport-step-2" class="viewport hidden flex-1 flex flex-col items-center justify-center w-full p-4 md:p-6 min-h-0">
                 <div class="text-center mb-4 flex-shrink-0">
-                    <h2 id="trace-title" class="text-4xl font-black text-gray-700 drop-shadow-sm">Trace the <span class="uppercase text-indigo-500">Shape</span></h2>
+                    <h2 id="trace-title" class="text-3xl md:text-4xl font-black text-gray-700 drop-shadow-sm">Trace the <span class="uppercase text-indigo-500">Shape</span></h2>
                 </div>
                 <div class="relative w-full flex-1 rounded-3xl bg-white border-4 border-dashed border-gray-300 shadow-inner overflow-hidden min-h-0" id="canvas-container">
                     <div id="trace-template-container" class="absolute inset-0 flex justify-center items-center pointer-events-none opacity-30 z-0 p-8">
-                        <!-- Large shape template injected via JS -->
                     </div>
                     <canvas id="drawing-canvas" class="absolute inset-0 w-full h-full z-10 touch-none cursor-crosshair"></canvas>
                     
-                    <button id="clear-canvas-btn" class="absolute bottom-6 right-6 shape-btn bg-red-500 hover:bg-red-600 text-white p-4 rounded-full shadow-xl z-20 border-b-4 border-red-700">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    <button id="clear-canvas-btn" class="absolute bottom-4 left-4 md:bottom-6 md:left-6 shape-btn bg-red-500 hover:bg-red-600 text-white p-3 md:p-4 rounded-full shadow-xl z-20 border-b-4 border-red-700">
+                        <svg class="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    </button>
+
+                    <button onclick="window.nextStep()" class="absolute bottom-4 right-4 md:bottom-6 md:right-6 shape-btn bg-gray-800 hover:bg-gray-900 text-white font-bold py-3 px-6 rounded-full shadow-lg text-xl flex items-center gap-2 border-b-4 border-gray-950 z-20">
+                        Next <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
                     </button>
                 </div>
             </div>
 
             <!-- Viewport: Step 3 (Make & Count) -->
-            <div id="viewport-step-3" class="viewport hidden flex-1 flex flex-col items-center justify-center p-6 min-h-0">
+            <div id="viewport-step-3" class="viewport hidden flex-1 flex flex-col items-center justify-center p-4 md:p-6 min-h-0">
                 <div class="text-center mb-4 flex-shrink-0">
-                    <h2 class="text-4xl font-black text-gray-700 drop-shadow-sm">Count the Corners</h2>
+                    <h2 class="text-3xl md:text-4xl font-black text-gray-700 drop-shadow-sm">Count the Corners</h2>
                 </div>
                 <div class="flex-1 flex justify-center items-center w-full min-h-0">
                     <div id="count-shape-container" class="relative w-[40vh] h-[40vh] flex justify-center items-center">
-                        <!-- Shape and dots injected via JS -->
                     </div>
                 </div>
-                <div class="mt-4 flex-shrink-0 flex items-center gap-4 text-gray-700 text-2xl font-black bg-white p-4 rounded-2xl shadow border-2 border-gray-100">
-                    <div class="cut-animation text-4xl">✂️</div>
-                    <div class="uppercase tracking-wide">Make Time! Cut or stamp the shape.</div>
+                <div class="mt-4 flex flex-wrap justify-center items-center gap-4 flex-shrink-0">
+                    <div class="flex items-center gap-4 text-gray-700 text-lg md:text-2xl font-black bg-white p-3 md:p-4 rounded-2xl shadow border-2 border-gray-100">
+                        <div class="cut-animation text-2xl md:text-4xl">✂️</div>
+                        <div class="uppercase tracking-wide">Make Time! Cut or stamp the shape.</div>
+                    </div>
+                    <button onclick="window.nextStep()" class="shape-btn bg-gray-800 hover:bg-gray-900 text-white font-bold py-3 px-6 rounded-full shadow-lg text-xl flex items-center gap-2 border-b-4 border-gray-950">
+                        Next <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
                 </div>
             </div>
 
@@ -136,21 +144,21 @@
     </div>
 
     <!-- Active Differentiated Instruction Cards -->
-    <footer class="w-full flex-shrink-0 flex text-gray-800 text-sm font-medium border-t-4 border-gray-200 z-30 relative bg-white shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.05)]">
-        <div class="flex-1 border-t-4 border-orange-400 p-3 text-center hover:bg-orange-50 transition-colors">
-            <h3 class="text-orange-700 text-lg font-black mb-1 uppercase tracking-widest">Level 1</h3>
+    <footer class="w-full flex-shrink-0 flex flex-col lg:flex-row text-gray-800 text-xs md:text-sm font-medium border-t-4 border-gray-200 z-30 relative bg-white shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.05)]">
+        <div class="flex-1 border-b lg:border-b-0 lg:border-t-4 border-orange-400 p-2 md:p-3 text-center hover:bg-orange-50 transition-colors">
+            <h3 class="text-orange-700 text-base md:text-lg font-black mb-1 uppercase tracking-widest">Level 1</h3>
             <p class="text-gray-600 leading-tight">LOOK & MATCH (choices of 2)<br>TRACE (finger-trace)<br>MAKE (tear/stamp)</p>
         </div>
-        <div class="flex-1 border-t-4 border-green-400 p-3 text-center border-l border-r border-gray-200 hover:bg-green-50 transition-colors">
-            <h3 class="text-green-700 text-lg font-black mb-1 uppercase tracking-widest">Level 2</h3>
+        <div class="flex-1 border-b lg:border-b-0 lg:border-t-4 border-green-400 p-2 md:p-3 text-center lg:border-l lg:border-r border-gray-200 hover:bg-green-50 transition-colors">
+            <h3 class="text-green-700 text-base md:text-lg font-black mb-1 uppercase tracking-widest">Level 2</h3>
             <p class="text-gray-600 leading-tight">MATCH & SAY (vocalize/AAC)<br>TRACE (marker trace)<br>MAKE (cut straight lines)</p>
         </div>
-        <div class="flex-1 border-t-4 border-purple-400 p-3 text-center hover:bg-purple-50 transition-colors">
-            <h3 class="text-purple-700 text-lg font-black mb-1 uppercase tracking-widest">Level 3</h3>
+        <div class="flex-1 border-b lg:border-b-0 lg:border-t-4 border-purple-400 p-2 md:p-3 text-center hover:bg-purple-50 transition-colors">
+            <h3 class="text-purple-700 text-base md:text-lg font-black mb-1 uppercase tracking-widest">Level 3</h3>
             <p class="text-gray-600 leading-tight">DISCOVER (count corners)<br>TRACE & DRAW (freehand)<br>MAKE (cut outline)</p>
         </div>
     </footer>
 
-    <script src="app.js?v=3"></script>
+    <script src="app.js?v=5"></script>
 </body>
 </html>
