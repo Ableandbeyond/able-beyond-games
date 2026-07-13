@@ -203,7 +203,7 @@ function setupStep1() {
 
     const activeShapeData = SHAPES[currentShape];
     matchNameEl.textContent = activeShapeData.name;
-    matchNameEl.className = "uppercase text-" + activeShapeData.name.toLowerCase(); // Just keep uppercase
+    matchNameEl.className = "uppercase drop-shadow-sm"; 
     matchNameEl.style.color = activeShapeData.color;
 
     // Pick a wrong shape
