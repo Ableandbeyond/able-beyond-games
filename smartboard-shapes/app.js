@@ -323,8 +323,8 @@ function setupStep3() {
     data.dots.forEach((dot, index) => {
         const dotEl = document.createElement('div');
         dotEl.className = 'counting-dot';
-        dotEl.style.left = \`\${dot.x}%\`;
-        dotEl.style.top = \`\${dot.y}%\`;
+        dotEl.style.left = `${dot.x}%`;
+        dotEl.style.top = `${dot.y}%`;
         dotEl.dataset.number = index + 1;
         
         dotEl.addEventListener('click', function() {
