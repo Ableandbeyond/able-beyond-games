@@ -319,19 +319,21 @@ function setupStep3() {
     const data = SHAPES[currentShape];
     countShapeContainer.innerHTML = data.countSvg;
     
+    let currentCount = 1; // Tracks the sequential order of taps
+    
     // Add dots
-    data.dots.forEach((dot, index) => {
+    data.dots.forEach((dot) => {
         const dotEl = document.createElement('div');
         dotEl.className = 'counting-dot';
         dotEl.style.left = `${dot.x}%`;
         dotEl.style.top = `${dot.y}%`;
-        dotEl.dataset.number = index + 1;
         
         dotEl.addEventListener('click', function() {
             if(!this.classList.contains('active')) {
                 this.classList.add('active');
-                this.textContent = this.dataset.number;
-                speak(this.dataset.number);
+                this.textContent = currentCount;
+                speak(currentCount.toString());
+                currentCount++;
             }
         });
 
