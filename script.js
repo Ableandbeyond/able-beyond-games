@@ -124,6 +124,9 @@ function renderHome() {
             <button style="margin-top:0;" onclick="navTo('Grocery')">Grocery Grab 🛒</button>
             <button style="margin-top:0;" onclick="window.location.href='phonics-game/'">Blendy Bot 🤖</button>
         </div>
+        <div class="grid-4" style="margin-bottom: 20px;">
+            <button style="margin-top:0; background: #8b5cf6; color: white; border-color: #7c3aed;" onclick="window.location.href='smartboard-shapes/'">Smartboard Shapes 🔺</button>
+        </div>
         <div class="card">
             <div class="small">Designed for neurodiverse learners. Calm colours. Clear feedback.</div>
         </div>
