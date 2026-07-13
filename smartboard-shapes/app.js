@@ -57,7 +57,6 @@ let currentShape = 'triangle';
 let currentStep = '1';
 
 // DOM Elements
-const titleEl = document.getElementById('current-shape-title');
 const navBtns = document.querySelectorAll('.nav-shape-btn');
 const stepBtns = document.querySelectorAll('.step-tab-btn');
 const viewports = document.querySelectorAll('.viewport');
@@ -65,8 +64,8 @@ const makatonCards = document.querySelectorAll('.makaton-card');
 
 // Step 1 Elements
 const matchNameEl = document.getElementById('match-target-name');
-const matchOption1 = document.getElementById('match-option-1');
-const matchOption2 = document.getElementById('match-option-2');
+let matchOption1 = document.getElementById('match-option-1');
+let matchOption2 = document.getElementById('match-option-2');
 const aacBtn = document.getElementById('aac-btn');
 
 // Step 2 Elements
@@ -155,7 +154,8 @@ function setupEventListeners() {
 
 function updateUI() {
     // Update Title
-    titleEl.textContent = SHAPES[currentShape].name;
+    const titleEl = document.getElementById('current-shape-title');
+    if (titleEl) titleEl.textContent = SHAPES[currentShape].name;
     
     // Update Nav Buttons
     navBtns.forEach(btn => {
@@ -172,16 +172,16 @@ function updateUI() {
     stepBtns.forEach(btn => {
         if (btn.dataset.step === currentStep) {
             btn.classList.add('bg-indigo-600', 'text-white', 'border-indigo-800');
-            btn.classList.remove('bg-gray-200', 'text-gray-600', 'border-gray-300');
+            btn.classList.remove('bg-white', 'text-gray-600', 'border-gray-200');
         } else {
             btn.classList.remove('bg-indigo-600', 'text-white', 'border-indigo-800');
-            btn.classList.add('bg-gray-200', 'text-gray-600', 'border-gray-300');
+            btn.classList.add('bg-white', 'text-gray-600', 'border-gray-200');
         }
     });
 
     // Show active viewport
     viewports.forEach(vp => {
-        if (vp.id === \`viewport-step-\${currentStep}\`) {
+        if (vp.id === `viewport-step-${currentStep}`) {
             vp.classList.remove('hidden');
             vp.classList.add('active');
         } else {
@@ -197,8 +197,13 @@ function updateUI() {
 }
 
 function setupStep1() {
+    // Refresh DOM elements in case they were replaced
+    matchOption1 = document.getElementById('match-option-1');
+    matchOption2 = document.getElementById('match-option-2');
+
     const activeShapeData = SHAPES[currentShape];
     matchNameEl.textContent = activeShapeData.name;
+    matchNameEl.className = "uppercase text-" + activeShapeData.name.toLowerCase(); // Just keep uppercase
     matchNameEl.style.color = activeShapeData.color;
 
     // Pick a wrong shape
@@ -216,14 +221,9 @@ function setupStep1() {
     matchOption1.innerHTML = isCorrectFirst ? activeShapeData.svg : wrongShapeData.svg;
     matchOption2.innerHTML = isCorrectFirst ? wrongShapeData.svg : activeShapeData.svg;
 
-    // Remove old listeners by cloning
-    const newOpt1 = matchOption1.cloneNode(true);
-    const newOpt2 = matchOption2.cloneNode(true);
-    matchOption1.replaceWith(newOpt1);
-    matchOption2.replaceWith(newOpt2);
-
-    newOpt1.addEventListener('click', () => handleMatchClick(isCorrectFirst, newOpt1));
-    newOpt2.addEventListener('click', () => handleMatchClick(!isCorrectFirst, newOpt2));
+    // Use standard onclick to avoid cloneNode issues accumulating
+    matchOption1.onclick = () => handleMatchClick(isCorrectFirst, matchOption1);
+    matchOption2.onclick = () => handleMatchClick(!isCorrectFirst, matchOption2);
 }
 
 function handleMatchClick(isCorrect, element) {
