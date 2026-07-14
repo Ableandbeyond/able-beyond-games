@@ -126,6 +126,7 @@ function renderHome() {
         </div>
         <div class="grid-4" style="margin-bottom: 20px;">
             <button style="margin-top:0;" onclick="window.location.href='smartboard-shapes/'">Smartboard Shapes 🔺</button>
+            <button style="margin-top:0;" onclick="window.location.href='my-future-launchpad/'">My Future Launchpad 🚀</button>
         </div>
         <div class="card">
             <div class="small">Designed for neurodiverse learners. Calm colours. Clear feedback.</div>
