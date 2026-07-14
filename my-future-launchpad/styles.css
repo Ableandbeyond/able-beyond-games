@@ -1,0 +1,80 @@
+body {
+    margin: 0;
+    overflow-x: hidden;
+    font-family: 'Inter', sans-serif;
+    background-color: #f0fdf4; /* Light green soothing background */
+}
+
+/* Custom massive buttons */
+.massive-btn {
+    min-height: 120px;
+    border-radius: 1.5rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+    touch-action: manipulation; /* Optimizes for touch screens */
+}
+
+.massive-btn:active {
+    transform: scale(0.95);
+}
+
+/* Animations */
+@keyframes burst {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.2); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.animate-burst {
+    animation: burst 0.5s ease-out;
+}
+
+/* Confetti particles */
+.particle {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: fade-out 1s ease-out forwards;
+}
+
+@keyframes fade-out {
+    0% { opacity: 1; transform: translate(0, 0) scale(1); }
+    100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0); }
+}
+
+/* Hobby flying animation */
+.flying-hobby {
+    position: fixed;
+    z-index: 50;
+    transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Rocket Launch */
+@keyframes launch {
+    0% { transform: translateY(0); }
+    20% { transform: translateY(10px); }
+    100% { transform: translateY(-1500px); }
+}
+
+.rocket-launching {
+    animation: launch 2s ease-in forwards;
+}
+
+/* Rocket outline */
+.rocket-container {
+    border: 4px dashed #94a3b8;
+    border-radius: 50% 50% 10% 10% / 40% 40% 10% 10%;
+    position: relative;
+    overflow: hidden;
+}
+
+.hobby-in-rocket {
+    animation: pop-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes pop-in {
+    0% { transform: scale(0); }
+    80% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
