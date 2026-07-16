@@ -1,84 +1,19 @@
 <!DOCTYPE html>
-<html lang="en-GB">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Able and Beyond Games</title>
-  <style>
-    :root {
-      --bg-color: #f7f9fc;
-      --text-color: #333;
-      --card-bg: #fff;
-      --font-main: 'Inter', sans-serif;
-    }
-    body {
-      font-family: var(--font-main);
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      margin: 0;
-    }
-    h1 {
-      font-size: 3rem;
-      margin-bottom: 2rem;
-    }
-    .games-container {
-      display: flex;
-      gap: 2rem;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .game-card {
-      background-color: var(--card-bg);
-      border-radius: 24px;
-      padding: 2rem;
-      width: 300px;
-      text-align: center;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-      text-decoration: none;
-      color: var(--text-color);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .game-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 12px 32px rgba(0,0,0,0.15);
-    }
-    .game-icon {
-      font-size: 5rem;
-      margin-bottom: 1rem;
-    }
-    .game-title {
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-    }
-    .game-desc {
-      font-size: 1rem;
-      opacity: 0.8;
-    }
-  </style>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Able & Beyond - Life Skills Lab</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
-  <h1>Able and Beyond Games</h1>
-  <div class="games-container">
-    <a href="colours/" class="game-card">
-      <div class="game-icon">🎨</div>
-      <div class="game-title">Colour Sorting Game</div>
-      <div class="game-desc">A calming, autism-friendly colour matching and sorting activity.</div>
-    </a>
-    <a href="maths/" class="game-card">
-      <div class="game-icon">🔢</div>
-      <div class="game-title">Maths Game</div>
-      <div class="game-desc">Interactive maths activities based on TEACCH and "Hit the Button".</div>
-    </a>
-  </div>
+    <div id="app" class="block-container">
+        <!-- Rendered by JS -->
+    </div>
+    <script src="script.js?v=2"></script>
 </body>
 </html>
