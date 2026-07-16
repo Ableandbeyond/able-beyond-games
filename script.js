@@ -11,7 +11,7 @@ const objectsData = {
   ],
   blue: [
     { name: 'Fish', icon: '🐟' },
-    { name: 'Shirt', icon: '👕' },
+    { name: 'Blue Book', icon: '📘' },
     { name: 'Blueberry', icon: '🫐' },
     { name: 'Wave', icon: '🌊' },
     { name: 'Diamond', icon: '💎' }
