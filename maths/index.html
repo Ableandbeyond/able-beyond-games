@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SEN Maths Game</title>
+  <meta name="description" content="An evidence-based educational maths game for SEND learners.">
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body data-theme="recognition">
+
+  <div id="app">
+    
+    <!-- TOP NAVIGATION: SUBJECTS -->
+    <header id="top-nav">
+      <button class="subject-tab" data-subject="recognition" aria-label="Number Recognition" style="background-color: var(--color-recognition);">Number Recognition</button>
+      <button class="subject-tab" data-subject="counting" aria-label="Counting" style="background-color: var(--color-counting);">Counting</button>
+      <button class="subject-tab" data-subject="addition" aria-label="Addition" style="background-color: var(--color-addition); color: #000;">Addition</button>
+      <button class="subject-tab" data-subject="subtraction" aria-label="Subtraction" style="background-color: var(--color-subtraction);">Subtraction</button>
+      <button class="subject-tab" data-subject="multiplication" aria-label="Multiplication" style="background-color: var(--color-multiplication);">Multiplication</button>
+      <button class="subject-tab" data-subject="division" aria-label="Division" style="background-color: var(--color-division);">Division</button>
+      <button class="subject-tab" data-subject="bonds" aria-label="Number Bonds" style="background-color: var(--color-bonds); color: #000;">Number Bonds</button>
+    </header>
+
+    <div class="main-layout">
+      
+      <!-- LEFT MENU -->
+      <aside id="left-menu">
+        <button class="action-btn" data-action="look" aria-label="Look">
+          <span class="icon">👀</span>
+          <span class="label">LOOK</span>
+        </button>
+        <button class="action-btn" data-action="touch" aria-label="Touch">
+          <span class="icon">✋</span>
+          <span class="label">TOUCH</span>
+        </button>
+        <button class="action-btn" data-action="count" aria-label="Count">
+          <span class="icon">➕</span>
+          <span class="label">COUNT</span>
+        </button>
+        <button class="action-btn" data-action="say" aria-label="Say">
+          <span class="icon">🗣</span>
+          <span class="label">SAY</span>
+        </button>
+        <button class="action-btn" data-action="finished" aria-label="Finished">
+          <span class="icon">👍</span>
+          <span class="label">FINISHED</span>
+        </button>
+      </aside>
+
+      <!-- CENTER CONTENT -->
+      <main id="center-content">
+        
+        <!-- ACTIVITY TABS -->
+        <nav id="activity-tabs">
+          <button class="activity-tab active" data-level="1">1. LOOK & CHOOSE</button>
+          <button class="activity-tab" data-level="2">2. BUILD & SOLVE</button>
+          <button class="activity-tab" data-level="3">3. HIT THE BUTTON</button>
+        </nav>
+
+        <!-- INSTRUCTION -->
+        <h1 id="instruction-text">Tap Number <span class="highlight">7</span></h1>
+
+        <!-- GAME AREA -->
+        <div id="game-area">
+          <!-- Dynamically populated by JS -->
+        </div>
+
+      </main>
+
+    </div>
+
+    <!-- BOTTOM PROGRESS -->
+    <footer id="bottom-progress">
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+      <div class="stars-container" id="stars-container">
+        <!-- Stars will appear here -->
+      </div>
+      <button id="teacher-mode-toggle" aria-label="Teacher Mode Settings">⚙️</button>
+    </footer>
+
+    <!-- TEACHER MODE MODAL -->
+    <div id="teacher-modal" class="modal hidden">
+      <div class="modal-content">
+        <h2>Teacher Mode</h2>
+        <div class="settings-group">
+          <label><input type="checkbox" id="setting-speech" checked> Enable Voice Support</label>
+        </div>
+        <div class="settings-group">
+          <label><input type="checkbox" id="setting-timer"> Enable Timer (Level 3)</label>
+        </div>
+        <div class="settings-group">
+          <label>Number Range:
+            <select id="setting-range">
+              <option value="5">0 - 5 (Beginner)</option>
+              <option value="10">0 - 10 (Emerging)</option>
+              <option value="20" selected>0 - 20 (Developing)</option>
+              <option value="100">0 - 100 (Secure)</option>
+            </select>
+          </label>
+        </div>
+        <div class="settings-group">
+          <label>Answer Choices:
+            <select id="setting-choices">
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4" selected>4</option>
+              <option value="6">6</option>
+            </select>
+          </label>
+        </div>
+        <div class="settings-group">
+          <button id="reset-progress">Reset Progress</button>
+        </div>
+        <button id="close-teacher-modal" class="btn-primary">Close</button>
+      </div>
+    </div>
+
+    <!-- REINFORCEMENT OVERLAY -->
+    <div id="reinforcement-overlay" class="overlay hidden">
+      <div class="sparkle-container">
+        <div class="sparkle">⭐</div>
+        <div class="sparkle" style="animation-delay: 0.2s">⭐</div>
+        <div class="sparkle" style="animation-delay: 0.4s">⭐</div>
+      </div>
+      <h2 id="praise-text" class="praise-text">Great Job!</h2>
+      <div class="smiley-face">😊</div>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SEN Colour Sorting Game</title>
+  <meta name="description" content="A calming, autism-friendly colour sorting game for children working between Engagement Model, EYFS and KS2.">
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body data-theme="red">
+
+  <div id="app">
+    
+    <!-- TOP NAVIGATION: COLORS -->
+    <header id="top-nav">
+      <button class="color-tab" data-color="red" aria-label="Red" style="background-color: var(--color-red);">Red</button>
+      <button class="color-tab" data-color="blue" aria-label="Blue" style="background-color: var(--color-blue);">Blue</button>
+      <button class="color-tab" data-color="yellow" aria-label="Yellow" style="background-color: var(--color-yellow); color: #000;">Yellow</button>
+      <button class="color-tab" data-color="green" aria-label="Green" style="background-color: var(--color-green);">Green</button>
+      <button class="color-tab" data-color="orange" aria-label="Orange" style="background-color: var(--color-orange);">Orange</button>
+      <button class="color-tab" data-color="purple" aria-label="Purple" style="background-color: var(--color-purple);">Purple</button>
+      <button class="color-tab" data-color="white" aria-label="White" style="background-color: var(--color-white); color: #000;">White</button>
+      <button class="color-tab" data-color="black" aria-label="Black" style="background-color: var(--color-black); color: #fff;">Black</button>
+    </header>
+
+    <div class="main-layout">
+      
+      <!-- LEFT MENU -->
+      <aside id="left-menu">
+        <button class="action-btn" data-action="look" aria-label="Look">
+          <span class="icon">👀</span>
+          <span class="label">LOOK</span>
+        </button>
+        <button class="action-btn" data-action="touch" aria-label="Touch">
+          <span class="icon">✋</span>
+          <span class="label">TOUCH</span>
+        </button>
+        <button class="action-btn" data-action="drag" aria-label="Drag">
+          <span class="icon">👇</span>
+          <span class="label">DRAG</span>
+        </button>
+        <button class="action-btn" data-action="say" aria-label="Say">
+          <span class="icon">🗣</span>
+          <span class="label">SAY</span>
+        </button>
+        <button class="action-btn" data-action="finished" aria-label="Finished">
+          <span class="icon">👍</span>
+          <span class="label">FINISHED</span>
+        </button>
+      </aside>
+
+      <!-- CENTER CONTENT -->
+      <main id="center-content">
+        
+        <!-- ACTIVITY TABS -->
+        <nav id="activity-tabs">
+          <button class="activity-tab active" data-level="1">1. LOOK & MATCH</button>
+          <button class="activity-tab" data-level="2">2. MATCH & SORT</button>
+          <button class="activity-tab" data-level="3">3. CATEGORISE</button>
+        </nav>
+
+        <!-- INSTRUCTION -->
+        <h1 id="instruction-text">Tap the <span id="instruction-color-word">RED</span> object</h1>
+
+        <!-- GAME AREA -->
+        <div id="game-area">
+          <!-- Dynamically populated by JS -->
+        </div>
+
+      </main>
+
+    </div>
+
+    <!-- BOTTOM PROGRESS -->
+    <footer id="bottom-progress">
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+      <div class="stars-container" id="stars-container">
+        <!-- Stars will appear here -->
+      </div>
+      <button id="teacher-mode-toggle" aria-label="Teacher Mode Settings">⚙️</button>
+    </footer>
+
+    <!-- TEACHER MODE MODAL (Hidden by default) -->
+    <div id="teacher-modal" class="modal hidden">
+      <div class="modal-content">
+        <h2>Teacher Mode</h2>
+        <div class="settings-group">
+          <label><input type="checkbox" id="setting-speech" checked> Enable Voice Prompts</label>
+        </div>
+        <div class="settings-group">
+          <label><input type="checkbox" id="setting-text" checked> Show Instruction Text</label>
+        </div>
+        <div class="settings-group">
+          <label>Difficulty:
+            <select id="setting-difficulty">
+              <option value="beginner">Beginner</option>
+              <option value="intermediate">Intermediate</option>
+              <option value="advanced">Advanced</option>
+            </select>
+          </label>
+        </div>
+        <div class="settings-group">
+          <button id="reset-progress">Reset Progress</button>
+        </div>
+        <button id="close-teacher-modal" class="btn-primary">Close</button>
+      </div>
+    </div>
+
+    <!-- REINFORCEMENT OVERLAY -->
+    <div id="reinforcement-overlay" class="overlay hidden">
+      <div class="sparkle-container">
+        <div class="sparkle">✨</div>
+        <div class="sparkle" style="animation-delay: 0.2s">✨</div>
+        <div class="sparkle" style="animation-delay: 0.4s">✨</div>
+      </div>
+      <h2 class="praise-text">Great job!</h2>
+      <div class="makaton-thumbs-up">👍</div>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
