@@ -115,7 +115,11 @@ class App {
         });
 
         document.getElementById('btn-next').addEventListener('click', () => {
-            if (this.currentPage < this.totalPages - 1) this.loadPage(this.currentPage + 1);
+            if (this.currentPage < this.totalPages - 1) {
+                this.loadPage(this.currentPage + 1);
+            } else {
+                this.loadPage(0); // Start Again
+            }
         });
     }
 
@@ -134,7 +138,17 @@ class App {
 
     updatePagination() {
         document.getElementById('btn-prev').disabled = this.currentPage === 0;
-        document.getElementById('btn-next').disabled = this.currentPage === this.totalPages - 1;
+        const btnNext = document.getElementById('btn-next');
+        
+        if (this.currentPage === this.totalPages - 1) {
+            btnNext.disabled = false;
+            btnNext.textContent = 'Start Again 🔄';
+            btnNext.setAttribute('aria-label', 'Start Again');
+        } else {
+            btnNext.disabled = false;
+            btnNext.textContent = 'Next ▶';
+            btnNext.setAttribute('aria-label', 'Next page');
+        }
     }
 
     handleCardInteraction(id, type, cardElement) {
