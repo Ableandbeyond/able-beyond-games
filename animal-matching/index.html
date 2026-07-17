@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animal Matching & Identification</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <!-- Font OpenDyslexic fallback if available locally, otherwise Comic Neue is good for SEN -->
+</head>
+<body>
+    <header class="toolbar" role="banner">
+        <div class="toolbar-left">
+            <h1 class="visually-hidden">Animal Matching Game</h1>
+            <button id="btn-home" class="btn-icon" aria-label="Home" title="Home">🏠</button>
+        </div>
+        <div class="toolbar-right">
+            <button id="btn-mute" class="btn-icon" aria-label="Toggle Animal Sounds" aria-pressed="false" title="Animal Sounds">🔊</button>
+            <button id="btn-tts" class="btn-icon" aria-label="Toggle Text to Speech" aria-pressed="true" title="Text to Speech">🗣️</button>
+            <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="0.5" aria-label="Master Volume" title="Master Volume">
+            <button id="btn-theme" class="btn-icon" aria-label="Toggle Dark Theme" aria-pressed="false" title="Dark Theme">🌙</button>
+            <button id="btn-contrast" class="btn-icon" aria-label="Toggle High Contrast" aria-pressed="false" title="High Contrast">◑</button>
+            <button id="btn-fullscreen" class="btn-icon" aria-label="Toggle Fullscreen" aria-pressed="false" title="Fullscreen">⛶</button>
+        </div>
+    </header>
+
+    <main class="game-container" role="main">
+        <div class="panels">
+            <section class="panel panel-left" aria-label="Animal Images">
+                <!-- Animal cards injected here -->
+                <div id="image-container" class="card-grid"></div>
+            </section>
+            
+            <section class="panel panel-right" aria-label="Animal Names">
+                <!-- Word cards injected here -->
+                <div id="word-container" class="card-grid"></div>
+            </section>
+        </div>
+
+        <nav class="pagination" aria-label="Pagination">
+            <button id="btn-prev" class="btn-nav" aria-label="Previous page" disabled>◀ Previous</button>
+            <button id="btn-next" class="btn-nav" aria-label="Next page">Next ▶</button>
+        </nav>
+    </main>
+
+    <!-- App Scripts -->
+    <script type="module" src="app.js"></script>
+</body>
+</html>
