@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Blendy Bot Phonics</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <!-- SVGs for PWA icon placeholder -->
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤖</text></svg>">
+</head>
+<body class="bg-blue-50 text-slate-800 font-phonics selection:bg-transparent">
+
+    <header class="p-4 md:p-6 flex flex-col md:flex-row justify-between items-center bg-white shadow-md sticky top-0 z-50 gap-4">
+        <h1 class="text-3xl font-bold text-blue-600 flex items-center gap-2">
+            <span class="text-4xl">🤖</span> Blendy Bot Phonics
+        </h1>
+        
+        <!-- Set Selector -->
+        <div class="flex bg-slate-100 p-1 rounded-xl shadow-inner" id="set-selector">
+            <button class="set-btn active px-6 py-2 rounded-lg font-bold text-slate-700 hover:bg-slate-200 transition-colors" data-set="set1">Set 1</button>
+            <button class="set-btn px-6 py-2 rounded-lg font-bold text-slate-700 hover:bg-slate-200 transition-colors" data-set="set2">Set 2</button>
+            <button class="set-btn px-6 py-2 rounded-lg font-bold text-slate-700 hover:bg-slate-200 transition-colors" data-set="set3">Set 3</button>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <span class="text-xl font-bold" id="mode-label">Sound Grid</span>
+            <label class="relative inline-flex items-center cursor-pointer min-w-[80px] min-h-[40px] p-2">
+                <input type="checkbox" id="mode-toggle" class="sr-only peer">
+                <div class="w-16 h-8 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-3 after:left-3 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-green-500 shadow-inner"></div>
+            </label>
+        </div>
+    </header>
+
+    <main class="w-full relative p-4 sm:p-8 pb-32">
+        <div class="flex flex-col items-center w-full">
+            <!-- Sound Grid Mode -->
+            <section id="grid-mode" class="w-full max-w-7xl transition-opacity duration-300">
+                <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-[24px] justify-items-center" id="sound-grid">
+                    <!-- Sound cards generated here -->
+                </div>
+            </section>
+
+            <!-- Blendy Blending Mode -->
+            <section id="fred-mode" class="hidden w-full max-w-5xl flex-col items-center gap-6 transition-opacity duration-300 text-center mt-2">
+                <div id="reward-animation" class="absolute inset-0 pointer-events-none flex justify-center items-center opacity-0 z-50">
+                    <span class="text-9xl scale-50 transition-transform duration-500 origin-center filter drop-shadow-2xl" id="reward-star">⭐</span>
+                </div>
+                <div class="flex flex-col items-center gap-2">
+                    <div class="text-6xl animate-bounce mb-2">🤖</div>
+                    <h2 class="text-3xl font-bold text-green-600 bg-white px-6 py-3 rounded-3xl shadow-lg border-4 border-green-200">Blend the sounds!</h2>
+                </div>
+                
+                <div class="flex flex-wrap gap-[24px] justify-center" id="blending-grid">
+                    <!-- Blending cards generated here -->
+                </div>
+                <div class="h-16 flex justify-center items-center mt-4">
+                    <button id="next-word-btn" class="hidden bg-blue-500 hover:bg-blue-600 text-white text-2xl font-bold py-3 px-10 rounded-full shadow-xl transform transition-transform active:scale-95">Next Word</button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="app.js?v=6"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').then(registration => {
+                    console.log('SW registered');
+                });
+            });
+        }
+    </script>
+</body>
+</html>

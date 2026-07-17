@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .font-phonics {
+    font-family: 'Comic Neue', cursive;
+  }
+}
+
+/* Base custom styles for Sound Cards to enforce size and spacing */
+.sound-card {
+    width: 150px;
+    height: 150px;
+    min-width: 120px;
+    min-height: 120px;
+    border-radius: 24px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    border: 4px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.sound-card:active {
+    transform: scale(0.95);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+}
+
+.sound-card.active-highlight {
+    border-color: #3b82f6; /* Tailwind blue-500 */
+    background-color: #eff6ff; /* Tailwind blue-50 */
+    transform: scale(1.05);
+}
+
+.sound-card.blended-success {
+    border-color: #22c55e; /* Tailwind green-500 */
+    background-color: #f0fdf4; /* Tailwind green-50 */
+}
+
+/* Debounce disabled state */
+.sound-card:disabled,
+.sound-card[data-cooling="true"] {
+    cursor: not-allowed;
+    opacity: 0.8;
+}
+
+/* Reward Animation */
+@keyframes rewardPop {
+    0% { transform: scale(0.5); opacity: 0; }
+    50% { transform: scale(1.5); opacity: 1; }
+    100% { transform: scale(1.2); opacity: 0; }
+}
+
+.animate-reward {
+    animation: rewardPop 1.5s ease-in-out forwards;
+}
+
+/* Set Nav Buttons */
+.set-btn.active {
+    background-color: #ffffff;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    color: #2563eb; /* blue-600 */
+}
+
+/* Mnemonic Icon */
+.mnemonic-icon {
+    font-size: 2.5rem;
+    line-height: 1;
+    margin-bottom: -5px;
+}
+
+.letter-text {
+    font-size: 4rem;
+    line-height: 1;
+    font-weight: 700;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }

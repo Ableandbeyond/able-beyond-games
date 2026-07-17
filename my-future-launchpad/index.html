@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Future Launchpad</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body class="bg-green-50 overflow-hidden text-slate-800 flex flex-col h-screen">
+
+<!-- Progress Bar Header -->
+<div class="p-4 bg-white shadow-sm z-10 shrink-0">
+    <h1 class="text-2xl font-black text-center text-blue-600 mb-4 tracking-tight">🚀 My Future Launchpad</h1>
+    <div class="flex justify-between items-center max-w-3xl mx-auto">
+        <button id="nav-step1" class="px-6 py-2 rounded-full font-bold text-lg transition-colors bg-blue-500 text-white shadow-md" onclick="goToStep(1)">1. How I Feel</button>
+        <div class="h-1 flex-1 bg-gray-200 mx-4 rounded-full"></div>
+        <button id="nav-step2" class="px-6 py-2 rounded-full font-bold text-lg transition-colors bg-gray-200 text-gray-500" onclick="goToStep(2)">2. Explore Rooms</button>
+        <div class="h-1 flex-1 bg-gray-200 mx-4 rounded-full"></div>
+        <button id="nav-step3" class="px-6 py-2 rounded-full font-bold text-lg transition-colors bg-gray-200 text-gray-500" onclick="goToStep(3)">3. Build Future</button>
+    </div>
+</div>
+
+<!-- Main Content Area -->
+<div class="flex-1 overflow-y-auto p-4 md:p-8 relative">
+    
+    <!-- Step 1: How I Feel -->
+    <div id="step1" class="step-content max-w-4xl mx-auto h-full flex flex-col justify-center">
+        <h2 class="text-3xl md:text-4xl font-extrabold text-center mb-8 text-slate-700">How are you feeling today?</h2>
+        <div class="grid grid-cols-2 lg:grid-cols-3 gap-6">
+            <button class="massive-btn emotion-btn bg-white shadow-lg flex flex-col items-center justify-center text-2xl md:text-3xl gap-2 font-bold border-4 border-transparent hover:border-blue-400 focus:outline-none rounded-2xl" data-word="Excited"><span class="text-4xl mb-1">🚀</span><span>Excited</span></button>
+            <button class="massive-btn emotion-btn bg-white shadow-lg flex flex-col items-center justify-center text-2xl md:text-3xl gap-2 font-bold border-4 border-transparent hover:border-yellow-400 focus:outline-none rounded-2xl" data-word="Happy"><span class="text-4xl mb-1">😊</span><span>Happy</span></button>
+            <button class="massive-btn emotion-btn bg-white shadow-lg flex flex-col items-center justify-center text-2xl md:text-3xl gap-2 font-bold border-4 border-transparent hover:border-purple-400 focus:outline-none rounded-2xl" data-word="Nervous"><span class="text-4xl mb-1">😟</span><span>Nervous</span></button>
+            <button class="massive-btn emotion-btn bg-white shadow-lg flex flex-col items-center justify-center text-2xl md:text-3xl gap-2 font-bold border-4 border-transparent hover:border-orange-400 focus:outline-none rounded-2xl" data-word="Proud"><span class="text-4xl mb-1">👑</span><span>Proud</span></button>
+            <button class="massive-btn emotion-btn bg-white shadow-lg flex flex-col items-center justify-center text-2xl md:text-3xl gap-2 font-bold border-4 border-transparent hover:border-green-400 focus:outline-none rounded-2xl" data-word="Curious"><span class="text-4xl mb-1">🔍</span><span>Curious</span></button>
+            <button class="massive-btn emotion-btn bg-white shadow-lg flex flex-col items-center justify-center text-2xl md:text-3xl gap-2 font-bold border-4 border-transparent hover:border-red-400 focus:outline-none rounded-2xl" data-word="Ready"><span class="text-4xl mb-1">🏁</span><span>Ready</span></button>
+        </div>
+    </div>
+
+    <!-- Step 2: Explore the Rooms -->
+    <div id="step2" class="step-content max-w-4xl mx-auto h-full hidden flex-col justify-center">
+        <h2 class="text-3xl md:text-4xl font-extrabold text-center mb-8 text-slate-700">Explore the School Map</h2>
+        <div class="grid grid-cols-2 gap-6 pb-10">
+            <button class="massive-btn room-btn bg-gradient-to-br from-green-100 to-green-200 shadow-lg flex flex-col items-center justify-center text-2xl md:text-3xl gap-2 font-bold border-4 border-green-500 rounded-3xl" data-room="Science Lab" data-desc="We do experiments here!" data-video="https://www.youtube.com/embed/qyzjDEPIUuA">
+                <span class="text-4xl mb-1">🔬</span><span class="text-center">Science Lab</span>
+            </button>
+            <button class="massive-btn room-btn bg-gradient-to-br from-pink-100 to-pink-200 shadow-lg flex flex-col items-center justify-center text-2xl md:text-3xl gap-2 font-bold border-4 border-pink-500 rounded-3xl" data-room="Art Studio" data-desc="We paint and draw here!" data-video="https://www.youtube.com/embed/lLWEXRAnQd0">
+                <span class="text-4xl mb-1">🎨</span><span class="text-center">Art Studio</span>
+            </button>
+            <button class="massive-btn room-btn bg-gradient-to-br from-orange-100 to-orange-200 shadow-lg flex flex-col items-center justify-center text-2xl md:text-3xl gap-2 font-bold border-4 border-orange-500 rounded-3xl" data-room="Library" data-desc="We read quiet stories here!" data-video="https://www.youtube.com/embed/xZYn7-3uC8w">
+                <span class="text-4xl mb-1">📚</span><span class="text-center">Library</span>
+            </button>
+            <button class="massive-btn room-btn bg-gradient-to-br from-blue-100 to-blue-200 shadow-lg flex flex-col items-center justify-center text-2xl md:text-3xl gap-2 font-bold border-4 border-blue-500 rounded-3xl" data-room="Playground" data-desc="We run and play here!" data-video="https://www.youtube.com/embed/d3LPrhI0v-w">
+                <span class="text-4xl mb-1">🛝</span><span class="text-center">Playground</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Step 3: Build My Future -->
+    <div id="step3" class="step-content max-w-5xl mx-auto h-full hidden flex-col justify-center">
+        <h2 class="text-3xl md:text-4xl font-extrabold text-center mb-6 text-slate-700">Build Your Future Rocket</h2>
+        <div class="flex flex-col md:flex-row gap-8">
+            <div class="w-full md:w-1/2 grid grid-cols-2 md:grid-cols-3 gap-4">
+                <button class="massive-btn hobby-btn bg-white shadow-md flex flex-col items-center justify-center text-xl gap-2 font-bold border-2 border-gray-200 rounded-2xl" data-hobby="Music"><span class="text-3xl">🎵</span><span>Music</span></button>
+                <button class="massive-btn hobby-btn bg-white shadow-md flex flex-col items-center justify-center text-xl gap-2 font-bold border-2 border-gray-200 rounded-2xl" data-hobby="Computers"><span class="text-3xl">💻</span><span class="text-center">Computers</span></button>
+                <button class="massive-btn hobby-btn bg-white shadow-md flex flex-col items-center justify-center text-xl gap-2 font-bold border-2 border-gray-200 rounded-2xl" data-hobby="Cooking"><span class="text-3xl">🍳</span><span>Cooking</span></button>
+                <button class="massive-btn hobby-btn bg-white shadow-md flex flex-col items-center justify-center text-xl gap-2 font-bold border-2 border-gray-200 rounded-2xl" data-hobby="Swimming"><span class="text-3xl">🏊</span><span class="text-center">Swimming</span></button>
+                <button class="massive-btn hobby-btn bg-white shadow-md flex flex-col items-center justify-center text-xl gap-2 font-bold border-2 border-gray-200 rounded-2xl" data-hobby="Art"><span class="text-3xl">🎨</span><span>Art</span></button>
+                <button class="massive-btn hobby-btn bg-white shadow-md flex flex-col items-center justify-center text-xl gap-2 font-bold border-2 border-gray-200 rounded-2xl" data-hobby="Reading"><span class="text-3xl">📚</span><span>Reading</span></button>
+            </div>
+            <div class="w-full md:w-1/2 flex flex-col items-center justify-center bg-blue-50 rounded-3xl border-4 border-dashed border-blue-300 p-6 relative rocket-container min-h-[300px]" id="rocket-zone">
+                <div class="text-8xl mb-4 opacity-20">🚀</div>
+                <div id="rocket-items" class="absolute inset-0 p-4 flex flex-wrap gap-3 items-center justify-center overflow-hidden"></div>
+                <button id="launch-btn" class="absolute bottom-6 px-8 py-4 bg-red-500 text-white rounded-full text-2xl font-black shadow-[0_6px_0_rgb(185,28,28)] active:shadow-[0_0px_0_rgb(185,28,28)] active:translate-y-[6px] transition-all hidden z-10">LAUNCH!</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Makaton Bottom Bar (Horizontal) -->
+<div class="w-full bg-yellow-50 flex flex-row items-center justify-center p-3 border-t-4 border-yellow-400 shadow-inner z-20 shrink-0 gap-4 overflow-x-auto">
+    <div class="flex items-center gap-2 bg-white px-3 py-1 rounded-full shadow-sm">
+        <div class="text-2xl">👀</div><div class="font-bold text-sm">LOOK</div>
+    </div>
+    <div class="flex items-center gap-2 bg-white px-3 py-1 rounded-full shadow-sm">
+        <div class="text-2xl">👇</div><div class="font-bold text-sm">TOUCH</div>
+    </div>
+    <div class="flex items-center gap-2 bg-white px-3 py-1 rounded-full shadow-sm">
+        <div class="text-2xl">✂️</div><div class="font-bold text-sm">CUT</div>
+    </div>
+    <div class="flex items-center gap-2 bg-white px-3 py-1 rounded-full shadow-sm">
+        <div class="text-2xl">👍</div><div class="font-bold text-sm">GOOD</div>
+    </div>
+</div>
+
+<!-- TA Differentiation Footer -->
+<div class="bg-slate-800 text-white p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-10 shrink-0">
+    <div class="max-w-5xl mx-auto flex flex-row items-center justify-between gap-4">
+        <div class="w-full">
+            <h3 class="text-sm font-bold text-yellow-400 mb-1 uppercase tracking-wider">TA Differentiation Guide</h3>
+            <div id="ta-guide-1" class="ta-guide grid grid-cols-1 md:grid-cols-3 gap-2 text-xs md:text-sm">
+                <p><span class="font-bold text-blue-300">Level 1:</span> Point and match choice of 2.</p>
+                <p><span class="font-bold text-green-300">Level 2:</span> Identify emotion and press AAC.</p>
+                <p><span class="font-bold text-purple-300">Level 3:</span> Explain why they feel that way.</p>
+            </div>
+            <div id="ta-guide-2" class="ta-guide hidden grid grid-cols-1 md:grid-cols-3 gap-2 text-xs md:text-sm">
+                <p><span class="font-bold text-blue-300">Level 1:</span> Look at room and finger-trace door.</p>
+                <p><span class="font-bold text-green-300">Level 2:</span> Identify room and say activity.</p>
+                <p><span class="font-bold text-purple-300">Level 3:</span> Read room description aloud.</p>
+            </div>
+            <div id="ta-guide-3" class="ta-guide hidden grid grid-cols-1 md:grid-cols-3 gap-2 text-xs md:text-sm">
+                <p><span class="font-bold text-blue-300">Level 1:</span> Tap screen with hand-under-hand help.</p>
+                <p><span class="font-bold text-green-300">Level 2:</span> Point to icon for TA to tap.</p>
+                <p><span class="font-bold text-purple-300">Level 3:</span> Tap choices and talk about goals.</p>
+            </div>
+        </div>
+        <button class="bg-white text-slate-800 px-6 py-2 rounded-lg text-lg font-bold shadow-sm hover:bg-gray-100 whitespace-nowrap" id="next-step-btn" onclick="nextStep()">Next ➡️</button>
+    </div>
+</div>
+
+<!-- Modal for Step 2 -->
+<div id="room-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center backdrop-blur-sm p-4">
+    <div class="bg-white p-6 rounded-[2rem] max-w-3xl w-full mx-auto shadow-2xl transform transition-transform scale-95 flex flex-col" id="modal-content">
+        <div class="flex justify-between items-center mb-4 shrink-0">
+            <h2 id="modal-title" class="text-3xl md:text-4xl font-black text-blue-600">Room Name</h2>
+            <button onclick="closeModal()" class="w-12 h-12 bg-red-100 text-red-600 rounded-full text-2xl font-bold flex items-center justify-center hover:bg-red-200 shrink-0">X</button>
+        </div>
+        <!-- IMPORTANT: The iframe needs allow="autoplay; encrypted-media; picture-in-picture" to load standard YouTube videos -->
+        <div class="aspect-video bg-gray-200 rounded-xl mb-4 overflow-hidden shrink-0">
+            <iframe id="modal-video" class="w-full h-full" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+        <p id="modal-desc" class="text-xl md:text-3xl font-bold text-center text-slate-700 bg-gray-100 py-4 rounded-xl shrink-0"></p>
+    </div>
+</div>
+
+<!-- Fullscreen Rocket Launch Overlay -->
+<div id="launch-overlay" class="fixed inset-0 bg-slate-900 z-[100] hidden flex flex-col items-center justify-center overflow-hidden">
+    <div id="flying-rocket" class="text-[120px] md:text-[200px] mb-8">🚀</div>
+    <h1 class="text-5xl md:text-8xl font-black text-white text-center animate-pulse">BLAST OFF!</h1>
+    <button onclick="location.reload()" class="mt-8 px-8 py-4 bg-white text-slate-900 rounded-full text-2xl font-bold shadow-lg">Start Over</button>
+</div>
+
+<script src="./app.js"></script>
+</body>
+</html>
