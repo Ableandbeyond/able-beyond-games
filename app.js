@@ -1,208 +1,190 @@
-/**
- * app.js
- * Core application state, UI logic, and Settings management.
- */
+import { animals } from './data.js';
+import { SpeechService } from './speech.js';
+import { AudioService } from './audio.js';
+import { UIManager } from './ui.js';
 
-const AppState = {
-  mode: 'bubble', // 'bubble', 'disco', 'soundboard'
-  isMuted: false,
-  isFrozen: false,
-  isFullscreen: false,
-  
-  settings: {
-    masterVolume: 0.5,
-    animationSpeed: 1,
-    density: 1,
-    highContrast: false,
-    reducedMotion: false
-  }
-};
-
-// Elements
-const elModes = {
-  bubble: document.getElementById('mode-bubble'),
-  disco: document.getElementById('mode-disco'),
-  soundboard: document.getElementById('mode-soundboard')
-};
-const elNavBtns = document.querySelectorAll('.nav-modes .nav-btn');
-const btnMute = document.getElementById('btn-mute');
-const btnFreeze = document.getElementById('btn-freeze');
-const btnFullscreen = document.getElementById('btn-fullscreen');
-const btnSettings = document.getElementById('btn-settings');
-const btnCloseSettings = document.getElementById('btn-close-settings');
-const settingsOverlay = document.getElementById('settings-overlay');
-const settingsPanel = document.getElementById('settings-panel');
-
-// Input Elements
-const inputVolume = document.getElementById('master-volume');
-const inputSpeed = document.getElementById('animation-speed');
-const inputDensity = document.getElementById('bubble-density');
-const inputHighContrast = document.getElementById('high-contrast');
-const inputReducedMotion = document.getElementById('reduced-motion');
-
-// Initialize
-function init() {
-  loadSettings();
-  bindEvents();
-  applySettings();
-  switchMode(AppState.mode);
-}
-
-// Event Bindings
-function bindEvents() {
-  // Navigation
-  elNavBtns.forEach(btn => {
-    btn.addEventListener('click', () => switchMode(btn.dataset.mode));
-  });
-
-  // Controls
-  btnMute.addEventListener('click', toggleMute);
-  btnFreeze.addEventListener('click', toggleFreeze);
-  btnFullscreen.addEventListener('click', toggleFullscreen);
-
-  // Settings
-  btnSettings.addEventListener('click', openSettings);
-  btnCloseSettings.addEventListener('click', closeSettings);
-  settingsOverlay.addEventListener('click', closeSettings);
-  
-  // Prevent closing when clicking inside panel
-  settingsPanel.addEventListener('click', e => e.stopPropagation());
-
-  // Input changes
-  inputVolume.addEventListener('input', e => updateSetting('masterVolume', parseFloat(e.target.value)));
-  inputSpeed.addEventListener('input', e => updateSetting('animationSpeed', parseFloat(e.target.value)));
-  inputDensity.addEventListener('input', e => updateSetting('density', parseFloat(e.target.value)));
-  inputHighContrast.addEventListener('change', e => updateSetting('highContrast', e.target.checked));
-  inputReducedMotion.addEventListener('change', e => updateSetting('reducedMotion', e.target.checked));
-}
-
-function switchMode(newMode) {
-  if (AppState.mode === newMode && !elModes[newMode].classList.contains('hidden')) return;
-
-  // Update State
-  AppState.mode = newMode;
-
-  // Update UI Buttons
-  elNavBtns.forEach(btn => {
-    const isActive = btn.dataset.mode === newMode;
-    btn.classList.toggle('active', isActive);
-    btn.setAttribute('aria-pressed', isActive.toString());
-  });
-
-  // Update Containers
-  Object.keys(elModes).forEach(key => {
-    if (key === newMode) {
-      elModes[key].classList.remove('hidden');
-      elModes[key].setAttribute('aria-hidden', 'false');
-    } else {
-      elModes[key].classList.add('hidden');
-      elModes[key].setAttribute('aria-hidden', 'true');
+class App {
+    constructor() {
+        this.speech = new SpeechService();
+        this.audio = new AudioService();
+        this.ui = new UIManager(this.handleCardInteraction.bind(this));
+        
+        this.pairsPerPage = 4;
+        this.currentPage = 0;
+        this.totalPages = Math.ceil(animals.length / this.pairsPerPage);
+        
+        this.selection = {
+            image: null,
+            word: null
+        };
+        
+        this.matchedCount = 0;
+        
+        this.initPreferences();
+        this.initToolbar();
+        this.loadPage(0);
     }
-  });
 
-  // Dispatch custom event for modes to hook into (start/stop rendering)
-  window.dispatchEvent(new CustomEvent('modeChange', { detail: { mode: newMode } }));
+    initPreferences() {
+        const theme = localStorage.getItem('theme') || 'light';
+        const highContrast = localStorage.getItem('highContrast') === 'true';
+        const volume = localStorage.getItem('volume') || '0.5';
+        const muteSounds = localStorage.getItem('muteSounds') === 'true';
+        const tts = localStorage.getItem('tts') !== 'false'; // default true
+        
+        this.applyTheme(theme, highContrast);
+        
+        document.getElementById('volume-slider').value = volume;
+        this.audio.setVolume(volume);
+        
+        this.audio.setAnimalSoundsMuted(muteSounds);
+        document.getElementById('btn-mute').setAttribute('aria-pressed', muteSounds.toString());
+        
+        this.speech.setEnabled(tts);
+        document.getElementById('btn-tts').setAttribute('aria-pressed', tts.toString());
+    }
+
+    savePreference(key, value) {
+        localStorage.setItem(key, value);
+    }
+
+    applyTheme(theme, highContrast) {
+        const root = document.documentElement;
+        if (highContrast) {
+            root.setAttribute('data-theme', 'high-contrast');
+        } else {
+            root.setAttribute('data-theme', theme);
+        }
+        
+        document.getElementById('btn-theme').setAttribute('aria-pressed', (theme === 'dark').toString());
+        document.getElementById('btn-contrast').setAttribute('aria-pressed', highContrast.toString());
+        
+        this.savePreference('theme', theme);
+        this.savePreference('highContrast', highContrast);
+    }
+
+    initToolbar() {
+        document.getElementById('btn-home').addEventListener('click', () => {
+            this.loadPage(0);
+        });
+
+        document.getElementById('btn-theme').addEventListener('click', (e) => {
+            const isDark = e.currentTarget.getAttribute('aria-pressed') === 'true';
+            this.applyTheme(isDark ? 'light' : 'dark', localStorage.getItem('highContrast') === 'true');
+        });
+
+        document.getElementById('btn-contrast').addEventListener('click', (e) => {
+            const isHc = e.currentTarget.getAttribute('aria-pressed') === 'true';
+            this.applyTheme(localStorage.getItem('theme') || 'light', !isHc);
+        });
+
+        document.getElementById('volume-slider').addEventListener('input', (e) => {
+            const val = e.target.value;
+            this.audio.setVolume(val);
+            this.savePreference('volume', val);
+        });
+
+        document.getElementById('btn-mute').addEventListener('click', (e) => {
+            const isMuted = e.currentTarget.getAttribute('aria-pressed') === 'true';
+            this.audio.setAnimalSoundsMuted(!isMuted);
+            e.currentTarget.setAttribute('aria-pressed', (!isMuted).toString());
+            this.savePreference('muteSounds', !isMuted);
+        });
+
+        document.getElementById('btn-tts').addEventListener('click', (e) => {
+            const isTts = e.currentTarget.getAttribute('aria-pressed') === 'true';
+            this.speech.setEnabled(!isTts);
+            e.currentTarget.setAttribute('aria-pressed', (!isTts).toString());
+            this.savePreference('tts', !isTts);
+        });
+
+        document.getElementById('btn-fullscreen').addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.log(`Error attempting to enable full-screen mode: ${err.message}`);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        });
+
+        document.getElementById('btn-prev').addEventListener('click', () => {
+            if (this.currentPage > 0) this.loadPage(this.currentPage - 1);
+        });
+
+        document.getElementById('btn-next').addEventListener('click', () => {
+            if (this.currentPage < this.totalPages - 1) this.loadPage(this.currentPage + 1);
+        });
+    }
+
+    loadPage(pageIndex) {
+        this.currentPage = pageIndex;
+        this.matchedCount = 0;
+        this.selection = { image: null, word: null };
+        
+        const start = pageIndex * this.pairsPerPage;
+        const end = start + this.pairsPerPage;
+        const pairs = animals.slice(start, end);
+        
+        this.ui.renderPairs(pairs);
+        this.updatePagination();
+    }
+
+    updatePagination() {
+        document.getElementById('btn-prev').disabled = this.currentPage === 0;
+        document.getElementById('btn-next').disabled = this.currentPage === this.totalPages - 1;
+    }
+
+    handleCardInteraction(id, type, cardElement) {
+        // Init audio context on first interaction
+        this.audio.init();
+
+        const animal = animals.find(a => a.id === id);
+
+        if (type === 'word') {
+            this.speech.speak(animal.name);
+        } else if (type === 'image') {
+            this.audio.playAnimalSound(animal.sound);
+        }
+
+        // Handle Selection Logic
+        if (this.selection[type]) {
+            // Deselect previous of same type
+            this.ui.deselectCard(this.selection[type].cardElement);
+        }
+        
+        this.selection[type] = { id, cardElement };
+        this.ui.selectCard(cardElement);
+
+        // Check Match
+        if (this.selection.image && this.selection.word) {
+            if (this.selection.image.id === this.selection.word.id) {
+                // Correct Match
+                this.audio.playChime();
+                this.ui.markMatched(this.selection.image.cardElement, this.selection.word.cardElement);
+                this.matchedCount++;
+                this.selection = { image: null, word: null };
+                
+                // If all matched, maybe pre-load next?
+                // Left intentionally empty to avoid rushing the learner
+            } else {
+                // Incorrect Match - clear gently after a tiny delay
+                const imgCard = this.selection.image.cardElement;
+                const wordCard = this.selection.word.cardElement;
+                this.selection = { image: null, word: null };
+                
+                setTimeout(() => {
+                    this.ui.deselectCard(imgCard);
+                    this.ui.deselectCard(wordCard);
+                }, 800);
+            }
+        }
+    }
 }
 
-function toggleMute() {
-  AppState.isMuted = !AppState.isMuted;
-  btnMute.setAttribute('aria-pressed', AppState.isMuted.toString());
-  
-  const iconUse = btnMute.querySelector('use');
-  if (AppState.isMuted) {
-    iconUse.setAttribute('href', '#icon-mute');
-  } else {
-    iconUse.setAttribute('href', '#icon-unmute');
-  }
-  
-  window.dispatchEvent(new CustomEvent('muteChange', { detail: { isMuted: AppState.isMuted } }));
-}
-
-function toggleFreeze() {
-  AppState.isFrozen = !AppState.isFrozen;
-  btnFreeze.setAttribute('aria-pressed', AppState.isFrozen.toString());
-  
-  const iconUse = btnFreeze.querySelector('use');
-  if (AppState.isFrozen) {
-    iconUse.setAttribute('href', '#icon-play');
-  } else {
-    iconUse.setAttribute('href', '#icon-freeze');
-  }
-
-  window.dispatchEvent(new CustomEvent('freezeChange', { detail: { isFrozen: AppState.isFrozen } }));
-}
-
-function toggleFullscreen() {
-  if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen().catch(err => {
-      console.warn(`Error attempting to enable fullscreen: ${err.message}`);
-    });
-  } else {
-    document.exitFullscreen();
-  }
-}
-
-document.addEventListener('fullscreenchange', () => {
-  AppState.isFullscreen = !!document.fullscreenElement;
+// Initialize on DOM Load
+document.addEventListener('DOMContentLoaded', () => {
+    window.app = new App();
 });
-
-// Settings Management
-function openSettings() {
-  settingsOverlay.classList.remove('hidden');
-  settingsPanel.classList.remove('hidden');
-  settingsOverlay.setAttribute('aria-hidden', 'false');
-  settingsPanel.setAttribute('aria-hidden', 'false');
-  btnSettings.setAttribute('aria-expanded', 'true');
-  btnCloseSettings.focus();
-}
-
-function closeSettings() {
-  settingsOverlay.classList.add('hidden');
-  settingsPanel.classList.add('hidden');
-  settingsOverlay.setAttribute('aria-hidden', 'true');
-  settingsPanel.setAttribute('aria-hidden', 'true');
-  btnSettings.setAttribute('aria-expanded', 'false');
-  btnSettings.focus();
-}
-
-function updateSetting(key, value) {
-  AppState.settings[key] = value;
-  saveSettings();
-  applySettings();
-  window.dispatchEvent(new CustomEvent('settingsChange', { detail: { settings: AppState.settings } }));
-}
-
-function applySettings() {
-  // UI Updates
-  document.body.classList.toggle('high-contrast', AppState.settings.highContrast);
-  document.body.classList.toggle('reduced-motion', AppState.settings.reducedMotion);
-  
-  // Set values to inputs
-  inputVolume.value = AppState.settings.masterVolume;
-  inputSpeed.value = AppState.settings.animationSpeed;
-  inputDensity.value = AppState.settings.density;
-  inputHighContrast.checked = AppState.settings.highContrast;
-  inputReducedMotion.checked = AppState.settings.reducedMotion;
-}
-
-function loadSettings() {
-  try {
-    const saved = localStorage.getItem('sensoryRoomSettings');
-    if (saved) {
-      AppState.settings = { ...AppState.settings, ...JSON.parse(saved) };
-    }
-  } catch (e) {
-    console.warn("Could not load settings", e);
-  }
-}
-
-function saveSettings() {
-  try {
-    localStorage.setItem('sensoryRoomSettings', JSON.stringify(AppState.settings));
-  } catch (e) {
-    console.warn("Could not save settings", e);
-  }
-}
-
-// Start app
-window.addEventListener('DOMContentLoaded', init);

@@ -130,9 +130,6 @@ function renderHome() {
             <button style="margin-top:0;" onclick="window.location.href='colours/'">Colour Sorting 🎨</button>
             <button style="margin-top:0;" onclick="window.location.href='maths/'">Maths Game 🔢</button>
         </div>
-        <div class="grid-4" style="margin-bottom: 20px;">
-            <button style="margin-top:0;" onclick="window.location.href='sensory-room.html'">Sensory Room ✨</button>
-        </div>
         <div class="card">
             <div class="small">Designed for neurodiverse learners. Calm colours. Clear feedback.</div>
         </div>

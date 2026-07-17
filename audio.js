@@ -1,118 +1,67 @@
-/**
- * audio.js
- * Procedural Audio Engine using Web Audio API.
- * Generates soft sine waves with gentle envelopes.
- */
-
-const AudioEngine = (function() {
-  let ctx = null;
-  let masterGain = null;
-  let limiter = null;
-  let isInitialized = false;
-
-  // Pentatonic scale frequencies (C Major Pentatonic, starting around C4)
-  const PENTATONIC_FREQUENCIES = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33];
-
-  function init() {
-    if (isInitialized) return;
-    
-    try {
-      const AudioContext = window.AudioContext || window.webkitAudioContext;
-      ctx = new AudioContext();
-
-      // Master Gain for volume control
-      masterGain = ctx.createGain();
-      
-      // Dynamics Compressor acting as a limiter to prevent harsh clipping
-      limiter = ctx.createDynamicsCompressor();
-      limiter.threshold.setValueAtTime(-10, ctx.currentTime);
-      limiter.knee.setValueAtTime(40, ctx.currentTime);
-      limiter.ratio.setValueAtTime(12, ctx.currentTime);
-      limiter.attack.setValueAtTime(0, ctx.currentTime);
-      limiter.release.setValueAtTime(0.25, ctx.currentTime);
-
-      masterGain.connect(limiter);
-      limiter.connect(ctx.destination);
-
-      updateVolume();
-      isInitialized = true;
-    } catch (e) {
-      console.warn('Web Audio API not supported in this browser', e);
+// Audio Module
+export class AudioService {
+    constructor() {
+        this.audioContext = null; // Initialize on first interaction
+        this.masterVolume = 0.5;
+        this.animalSoundsMuted = false;
     }
-  }
 
-  function resumeContext() {
-    if (ctx && ctx.state === 'suspended') {
-      ctx.resume();
+    init() {
+        if (!this.audioContext) {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (AudioContext) {
+                this.audioContext = new AudioContext();
+            }
+        }
+        if (this.audioContext && this.audioContext.state === 'suspended') {
+            this.audioContext.resume();
+        }
     }
-  }
 
-  function updateVolume() {
-    if (!masterGain || !ctx) return;
-    
-    // Mute or set volume based on AppState
-    const targetVolume = AppState.isMuted ? 0 : AppState.settings.masterVolume;
-    
-    // Smooth transition
-    masterGain.gain.setTargetAtTime(targetVolume, ctx.currentTime, 0.1);
-  }
+    setVolume(value) {
+        this.masterVolume = parseFloat(value);
+    }
 
-  // Listen to state changes from app.js
-  window.addEventListener('muteChange', updateVolume);
-  window.addEventListener('settingsChange', updateVolume);
+    setAnimalSoundsMuted(isMuted) {
+        this.animalSoundsMuted = isMuted;
+    }
 
-  // Initialize audio context on first user interaction
-  const initEvents = ['mousedown', 'touchstart', 'keydown'];
-  const onUserInteraction = () => {
-    init();
-    resumeContext();
-    initEvents.forEach(evt => document.removeEventListener(evt, onUserInteraction));
-  };
-  initEvents.forEach(evt => document.addEventListener(evt, onUserInteraction, { once: true }));
+    playChime() {
+        this.init();
+        if (!this.audioContext || this.masterVolume === 0) return;
+        
+        // Create a gentle, positive chime using Web Audio API
+        const osc = this.audioContext.createOscillator();
+        const gainNode = this.audioContext.createGain();
+        
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(523.25, this.audioContext.currentTime); // C5
+        osc.frequency.exponentialRampToValueAtTime(1046.50, this.audioContext.currentTime + 0.1); // C6
+        
+        gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+        gainNode.gain.linearRampToValueAtTime(this.masterVolume * 0.3, this.audioContext.currentTime + 0.1);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 1.5);
+        
+        osc.connect(gainNode);
+        gainNode.connect(this.audioContext.destination);
+        
+        osc.start();
+        osc.stop(this.audioContext.currentTime + 1.5);
+    }
 
-  /**
-   * Play a soft procedural tone.
-   * @param {number} freq - Frequency in Hz
-   * @param {number} duration - Total duration in seconds
-   * @param {string} type - Oscillator type (sine, triangle)
-   */
-  function playTone(freq, duration = 2.0, type = 'sine') {
-    if (!isInitialized || !ctx || AppState.isMuted) return;
-
-    const osc = ctx.createOscillator();
-    const envelope = ctx.createGain();
-
-    osc.type = type;
-    osc.frequency.setValueAtTime(freq, ctx.currentTime);
-
-    // Envelope shaping (gentle attack, soft release)
-    // Reduce volume heavily so it's ambient
-    const maxVolume = 0.15; 
-    
-    envelope.gain.setValueAtTime(0, ctx.currentTime);
-    envelope.gain.linearRampToValueAtTime(maxVolume, ctx.currentTime + 0.1); // Attack
-    
-    // Sustain
-    envelope.gain.setValueAtTime(maxVolume, ctx.currentTime + duration * 0.5); 
-    
-    // Release
-    envelope.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
-
-    osc.connect(envelope);
-    envelope.connect(masterGain);
-
-    osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime + duration);
-
-    // Cleanup
-    osc.onended = () => {
-      osc.disconnect();
-      envelope.disconnect();
-    };
-  }
-
-  return {
-    playTone,
-    getPentaFreq: (index) => PENTATONIC_FREQUENCIES[index % PENTATONIC_FREQUENCIES.length]
-  };
-})();
+    async playAnimalSound(soundUrl) {
+        if (this.animalSoundsMuted || this.masterVolume === 0) return;
+        this.init();
+        
+        try {
+            // For MVP and missing assets, gracefully catch 404s
+            const audio = new Audio(soundUrl);
+            audio.volume = this.masterVolume;
+            await audio.play();
+        } catch (e) {
+            console.log(`Animal sound not available yet: ${soundUrl}`);
+            // Fallback: we could synthesize an approximation or just fail silently.
+            // Silently failing is best for SEN as unexpected errors are disruptive.
+        }
+    }
+}

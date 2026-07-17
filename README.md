@@ -1,50 +1,43 @@
-# Sensory Room
+# Animal Matching & Identification
 
-A calming sensory web application designed for children with Special Educational Needs (SEN), Autism (ASD), PMLD, and learning disabilities.
+An interactive, accessible, vanilla web application designed for Special Educational Needs (SEN) classrooms, early years, and PMLD learners. 
 
-## Features
-- **Bubble Tube Room**: Gentle, colourful bubble tubes with soothing sounds.
-- **Cosmic Disco**: Calming nebula blobs with interactive stardust.
-- **Interactive Soundboard**: Large glowing shapes playing pentatonic notes.
-- **Zero Dependencies**: Pure HTML, CSS, and JS.
-- **Procedural Audio**: Soft sounds generated in real-time via the Web Audio API.
+## Educational Objectives
+- **Animal Recognition**: Learn to identify animals visually.
+- **Vocabulary & Reading**: Associate written words with corresponding animals.
+- **Communication**: Hear animal names spoken aloud via Text-to-Speech to support speech and language intervention.
+- **Cause and Effect**: Provide immediate, calm, and positive feedback for every interaction.
 
-## Accessibility
-Compliant with WCAG 2.2 AA:
-- Fully keyboard & switch accessible.
-- Screen reader support via ARIA attributes.
-- High contrast and reduced motion options.
-- No flashing or sudden sounds.
-- Large touch targets for interactive whiteboards and tablets.
+## Features & Controls
+- **Calm Learning**: No timers, scores, buzzing, shaking, or failure states. Incorrect matches simply clear smoothly.
+- **Accessibility**: Meets WCAG 2.2 AA standards. Includes full keyboard navigation, switch-scanning compatibility, screen reader support via ARIA tags, High Contrast mode, and Reduced Motion support.
+- **Persistent Toolbar**: Allows users to toggle Mute, Text-to-Speech, Master Volume, Dark Theme, High Contrast, and Fullscreen. Settings are saved to `localStorage`.
+- **Offline Capable**: Written in vanilla HTML, CSS, and JS. Can be run locally by opening `index.html`.
 
-## Deployment
-This project is configured to automatically deploy to GitHub Pages via GitHub Actions.
-- Ensure the repository is pushed to `main`.
-- The GitHub action will build and deploy the static site.
+## Installation & Usage
+1. Clone the repository.
+2. Open `index.html` in any modern web browser.
+3. No build tools or Node.js dependencies are required.
+
+## GitHub Pages Deployment
+This repository is configured to automatically deploy to GitHub Pages on every push to the `main` branch via a GitHub Actions workflow (`deploy.yml`).
 
 ## Folder Structure
 ```
 /
-├── index.html
-├── styles.css
-├── app.js
-├── audio.js
-├── particles.js
-├── bubbletube.js
-├── disco.js
-├── soundboard.js
-├── assets/
-│   ├── sounds/
-│   ├── icons/
-│   └── images/
-├── README.md
-├── tasks.md
-└── .github/
-    └── workflows/
-        └── deploy.yml
+├── index.html        # Main entry point
+├── styles.css        # Vanilla CSS, fully responsive
+├── app.js            # Main application logic
+├── data.js           # Animal database (JSON structure)
+├── audio.js          # Audio context and playback handling
+├── speech.js         # Speech synthesis (Text-to-Speech)
+├── ui.js             # DOM manipulation and event binding
+├── assets/           # Images, sounds, and icons
+├── tasks.md          # Project roadmap and checklist
+└── .github/          # GitHub Actions workflows
 ```
 
 ## Future Improvements
-- Add PWA manifest and Service Worker for true offline installation.
-- Implement more sensory rooms (e.g., fiber optics, rain window).
-- Localize interface strings.
+- Expand the animal database.
+- Add support for custom image uploads for personalized learning.
+- Introduce advanced reporting features for educators (if required, keeping in mind the "no score" philosophy).

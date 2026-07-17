@@ -1,30 +1,44 @@
-# Sensory Room Tasks
+# Project Roadmap & Tasks
 
 ## Architecture
-- [x] Create project structure
-- [x] Configure GitHub Actions Deployment
-- [x] Implement robust CSS/HTML shell
-- [x] Build JS engine with procedural audio
-- [x] Build Sensory Mode A (Bubble Tubes)
-- [x] Build Sensory Mode B (Cosmic Disco)
-- [x] Build Sensory Mode C (Soundboard)
-- [x] Accessibility pass
+- **Vanilla SPA**: Single Page Application using vanilla ES2023.
+- **State Management**: Centralized state object in `app.js` holding current page, selected items, and preferences.
+- **Modular Design**: Separation of concerns via ES6 modules (`ui.js`, `audio.js`, `speech.js`, `data.js`).
 
 ## Development Phases
-1. **Foundation**: Repo structure, HTML, CSS, GitHub Actions.
-2. **Core Logic**: JS navigation, audio engine, settings state.
-3. **Modes**: Implement visual and interactive modes.
-4. **Polish**: Accessibility validation, performance checking.
+1. **Foundation**: Setup directory structure, files, and basic HTML layout.
+2. **Styling (CSS)**: Implement CSS variables, layout grid, themes (Dark, Light, High Contrast), and responsive design.
+3. **Core Logic**: Load data, render cards, handle pagination (3-4 pairs per page).
+4. **Interaction**: Implement the matching logic (image <-> word), animations, and positive feedback.
+5. **Accessibility & Media**: Integrate Web Speech API, Audio API, keyboard navigation, and ARIA labels.
+6. **Polish**: Save preferences to `localStorage`, optimize performance, verify validation checklist.
 
-## Roadmap
-- Phase 1: Foundation (Completed)
-- Phase 2: Logic & Audio Engine (Completed)
-- Phase 3: Visual Modes (Completed)
-- Phase 4: Final Testing (Completed)
+## Feature Checklist
+- [ ] 30 animals across 6 categories
+- [ ] 3-4 pairs per page
+- [ ] Next/Previous pagination
+- [ ] Soft animations and positive feedback
+- [ ] Persistent settings toolbar
+- [ ] LocalStorage preferences saving
+- [ ] Text-to-Speech for names
+- [ ] Animal sounds / UI chimes
+- [ ] Fully responsive layout
 
-## Checklists
-- [x] Ensure folder structure is correct.
-- [x] No external dependencies are used.
-- [x] App is responsive and mobile-first.
-- [x] WCAG 2.2 AA compliant.
-- [x] Runs smoothly at 60 FPS.
+## Deployment Checklist
+- [ ] `deploy.yml` created and using v4 actions.
+- [ ] No local build tools required.
+- [ ] Ready for GitHub Pages.
+
+## Validation Checklist
+- [ ] No JavaScript syntax errors
+- [ ] No console errors
+- [ ] All navigation works
+- [ ] Matching logic works
+- [ ] Speech synthesis works
+- [ ] Animal sounds play
+- [ ] Accessibility labels exist
+- [ ] Keyboard navigation functions
+- [ ] Mobile responsive
+- [ ] GitHub Pages compatible
+- [ ] localStorage saves settings
+- [ ] reduced motion works
