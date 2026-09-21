@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Timetable Orbit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #F8FAFC;
+            --text-main: #1E293B;
+            --primary: #3B82F6;
+            --primary-hover: #2563EB;
+            --card-bg: #FFFFFF;
+            --past-color: #94A3B8;
+            --now-color: #10B981;
+            --next-color: #F59E0B;
+            --border-radius: 16px;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            padding: 20px;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 { margin: 0; font-size: 1.8rem; }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            transition: 0.2s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover { background-color: var(--primary-hover); }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Setup View */
+        #setup-view {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .settings-panel {
+            background: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .presets {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .chip {
+            padding: 8px 16px;
+            background: #E2E8F0;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            user-select: none;
+        }
+        
+        .chip:hover { background: #CBD5E1; }
+
+        .schedule-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .schedule-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .item-controls button {
+            background: #EF4444;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 12px;
+            cursor: pointer;
+        }
+
+        /* Run View */
+        #run-view {
+            display: none;
+            flex: 1;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .orbit-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: nowrap;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 24px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .card.past {
+            width: 200px;
+            height: 250px;
+            opacity: 0.6;
+            transform: scale(0.8);
+            border: 4px solid var(--past-color);
+        }
+
+        .card.now {
+            width: 350px;
+            height: 400px;
+            z-index: 10;
+            border: 8px solid var(--now-color);
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(16, 185, 129, 0.3);
+        }
+
+        .card.next {
+            width: 200px;
+            height: 250px;
+            opacity: 0.8;
+            transform: scale(0.9);
+            border: 4px solid var(--next-color);
+        }
+
+        .card-label {
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .past .card-label { color: var(--past-color); }
+        .now .card-label { color: var(--now-color); }
+        .next .card-label { color: var(--next-color); }
+
+        .task-name {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-top: 20px;
+            z-index: 2;
+        }
+        
+        .now .task-name { font-size: 3rem; }
+
+        .time-display {
+            font-size: 1.5rem;
+            color: #64748B;
+            margin-top: 10px;
+            z-index: 2;
+        }
+
+        /* Liquid Depletion Effect */
+        .liquid-fill {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%; /* controlled by JS */
+            background: linear-gradient(180deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.3) 100%);
+            z-index: 1;
+            transition: height 1s linear;
+        }
+        
+        .liquid-wave {
+            position: absolute;
+            top: -10px;
+            left: 0;
+            width: 200%;
+            height: 20px;
+            background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 20" xmlns="http://www.w3.org/2000/svg"><path d="M0 10 Q 25 20, 50 10 T 100 10 L 100 20 L 0 20 Z" fill="rgba(16,185,129,0.3)"/></svg>') repeat-x;
+            background-size: 50% 100%;
+            animation: wave 4s linear infinite;
+        }
+        
+        @keyframes wave {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Sensory Chime Pulse */
+        @keyframes visualPulse {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); border-color: #10B981; }
+            70% { box-shadow: 0 0 0 40px rgba(16, 185, 129, 0); border-color: #34D399; }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); border-color: #10B981; }
+        }
+
+        .pulse-active {
+            animation: visualPulse 1.5s ease-out 3;
+        }
+        
+        .run-controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="../index.html" class="btn btn-outline" style="text-decoration:none;">← Back Home</a>
+    <h1>Visual Timetable Orbit</h1>
+    <div style="width:100px;"></div>
+</header>
+
+<div class="container">
+    <!-- SETUP VIEW -->
+    <div id="setup-view">
+        <div class="settings-panel">
+            <h2>Daily Setup</h2>
+            <p>Add tasks for today's schedule. Adjust the duration (in minutes).</p>
+            
+            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                <input type="text" id="task-name" placeholder="Task Name (e.g. Maths)" style="flex:1; padding:10px; border-radius:8px; border:1px solid #CBD5E1;">
+                <input type="number" id="task-dur" value="15" min="1" style="width:80px; padding:10px; border-radius:8px; border:1px solid #CBD5E1;" title="Duration in minutes">
+                <button class="btn btn-primary" onclick="addTask()">Add</button>
+            </div>
+
+            <div>
+                <strong>Presets:</strong>
+                <div class="presets">
+                    <div class="chip" onclick="addPreset('Registration', 10)">👋 Registration</div>
+                    <div class="chip" onclick="addPreset('Literacy', 45)">📚 Literacy</div>
+                    <div class="chip" onclick="addPreset('Maths', 45)">🔢 Maths</div>
+                    <div class="chip" onclick="addPreset('Break', 15)">🍎 Break</div>
+                    <div class="chip" onclick="addPreset('Assembly', 20)">🎤 Assembly</div>
+                    <div class="chip" onclick="addPreset('Lunch', 45)">🍱 Lunch</div>
+                    <div class="chip" onclick="addPreset('Sensory Room', 20)">✨ Sensory Room</div>
+                    <div class="chip" onclick="addPreset('Home Time', 5)">🏠 Home Time</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-panel">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <h2 style="margin:0;">Today's Routine</h2>
+                <div>
+                    <button class="btn btn-outline" onclick="saveRoutine()">Save Routine</button>
+                    <button class="btn btn-outline" onclick="loadRoutine()">Load Routine</button>
+                    <button class="btn btn-outline" onclick="clearRoutine()" style="color:#EF4444; border-color:#EF4444;">Clear</button>
+                </div>
+            </div>
+            <ul class="schedule-list" id="schedule-list">
+                <!-- Items populated by JS -->
+            </ul>
+        </div>
+        
+        <div class="settings-panel">
+            <h2>Transition Preferences</h2>
+            <div style="display:flex; gap: 20px; align-items:center;">
+                <label style="display:flex; align-items:center; gap:8px;">
+                    <input type="checkbox" id="pref-audio" checked>
+                    Spoken Cues ("Halfway there", "5 minutes left")
+                </label>
+                <label style="display:flex; align-items:center; gap:8px;">
+                    <input type="checkbox" id="pref-visual" checked>
+                    Visual Chime (Gentle pulse effect & subtle tone)
+                </label>
+            </div>
+        </div>
+
+        <button class="btn btn-primary" style="font-size:1.2rem; padding: 15px;" onclick="startSchedule()">🚀 Start Visual Schedule</button>
+    </div>
+
+    <!-- RUN VIEW -->
+    <div id="run-view">
+        <div class="orbit-container">
+            <div class="card past" id="card-past">
+                <div class="card-label">Past</div>
+                <div class="task-name" id="past-name">---</div>
+            </div>
+            
+            <div class="card now" id="card-now">
+                <div class="card-label">Now</div>
+                <div class="task-name" id="now-name">---</div>
+                <div class="time-display" id="now-time">00:00</div>
+                <div class="liquid-fill" id="now-liquid">
+                    <div class="liquid-wave"></div>
+                </div>
+            </div>
+            
+            <div class="card next" id="card-next">
+                <div class="card-label">Next</div>
+                <div class="task-name" id="next-name">---</div>
+            </div>
+        </div>
+
+        <div class="run-controls">
+            <button class="btn btn-primary" onclick="prevTask()">⏮ Previous</button>
+            <button class="btn btn-primary" onclick="nextTask()">Next ⏭</button>
+            <button class="btn btn-outline" onclick="stopSchedule()">🛑 End Schedule</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // State
+    let tasks = [];
+    let currentIndex = 0;
+    
+    // Timer state
+    let timerInterval = null;
+    let timeRemaining = 0;
+    let totalTimeForTask = 0;
+    let cuesGiven = { halfway: false, fiveMin: false, oneMin: false, over: false };
+
+    // Setup functions
+    function addTask() {
+        const nameInput = document.getElementById('task-name');
+        const durInput = document.getElementById('task-dur');
+        const name = nameInput.value.trim();
+        const duration = parseInt(durInput.value, 10);
+        
+        if (name && duration > 0) {
+            tasks.push({ name, duration });
+            nameInput.value = '';
+            renderList();
+        }
+    }
+
+    function addPreset(name, duration) {
+        tasks.push({ name, duration });
+        renderList();
+    }
+
+    function removeTask(index) {
+        tasks.splice(index, 1);
+        renderList();
+    }
+
+    function renderList() {
+        const list = document.getElementById('schedule-list');
+        list.innerHTML = '';
+        if (tasks.length === 0) {
+            list.innerHTML = '<li style="color:#94A3B8; text-align:center;">No tasks added yet.</li>';
+            return;
+        }
+        
+        tasks.forEach((t, i) => {
+            list.innerHTML += `
+                <li class="schedule-item">
+                    <div><strong>${t.name}</strong> <span style="color:#64748B;">(${t.duration} min)</span></div>
+                    <div class="item-controls">
+                        <button onclick="removeTask(${i})">Remove</button>
+                    </div>
+                </li>
+            `;
+        });
+    }
+
+    function saveRoutine() {
+        localStorage.setItem('orbit_routine', JSON.stringify(tasks));
+        alert('Routine saved!');
+    }
+
+    function loadRoutine() {
+        const saved = localStorage.getItem('orbit_routine');
+        if (saved) {
+            tasks = JSON.parse(saved);
+            renderList();
+        } else {
+            alert('No saved routine found.');
+        }
+    }
+    
+    function clearRoutine() {
+        tasks = [];
+        renderList();
+    }
+
+    // Run functions
+    function startSchedule() {
+        if (tasks.length === 0) {
+            alert('Please add at least one task.');
+            return;
+        }
+        document.getElementById('setup-view').style.display = 'none';
+        document.getElementById('run-view').style.display = 'flex';
+        currentIndex = 0;
+        updateOrbit();
+    }
+
+    function stopSchedule() {
+        clearInterval(timerInterval);
+        document.getElementById('setup-view').style.display = 'flex';
+        document.getElementById('run-view').style.display = 'none';
+    }
+
+    function nextTask() {
+        if (currentIndex < tasks.length - 1) {
+            currentIndex++;
+            updateOrbit();
+        }
+    }
+
+    function prevTask() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            updateOrbit();
+        }
+    }
+
+    function playCue(text) {
+        const useAudio = document.getElementById('pref-audio').checked;
+        const useVisual = document.getElementById('pref-visual').checked;
+        
+        if (useAudio && 'speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const msg = new SpeechSynthesisUtterance(text);
+            msg.rate = 0.9; // Calming pace
+            window.speechSynthesis.speak(msg);
+        }
+        
+        if (useVisual) {
+            const nowCard = document.getElementById('card-now');
+            nowCard.classList.remove('pulse-active');
+            void nowCard.offsetWidth; // trigger reflow
+            nowCard.classList.add('pulse-active');
+            
+            // Web Audio API subtle chime (Optional extra for visual chime)
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(440, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 1);
+                gain.gain.setValueAtTime(0.1, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 1);
+            } catch(e) {}
+        }
+    }
+
+    function formatTime(seconds) {
+        const m = Math.floor(seconds / 60);
+        const s = seconds % 60;
+        return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    }
+
+    function updateOrbit() {
+        clearInterval(timerInterval);
+        
+        const pastName = document.getElementById('past-name');
+        const nowName = document.getElementById('now-name');
+        const nextName = document.getElementById('next-name');
+        
+        const pastTask = currentIndex > 0 ? tasks[currentIndex - 1] : null;
+        const nowTask = tasks[currentIndex];
+        const nextTask = currentIndex < tasks.length - 1 ? tasks[currentIndex + 1] : null;
+        
+        pastName.innerText = pastTask ? pastTask.name : '---';
+        nowName.innerText = nowTask.name;
+        nextName.innerText = nextTask ? nextTask.name : 'Finished';
+        
+        // Setup timer
+        totalTimeForTask = nowTask.duration * 60;
+        timeRemaining = totalTimeForTask;
+        cuesGiven = { halfway: false, fiveMin: false, oneMin: false, over: false };
+        
+        document.getElementById('card-now').classList.remove('pulse-active');
+        
+        // Announce start
+        playCue(`${nowTask.name} starting now.`);
+        
+        timerInterval = setInterval(tick, 1000);
+        tick(); // initial call
+    }
+
+    function tick() {
+        if (timeRemaining > 0) {
+            timeRemaining--;
+        }
+
+        document.getElementById('now-time').innerText = formatTime(timeRemaining);
+        
+        // Liquid drain effect (100% full at start, 0% at end)
+        const pct = (timeRemaining / totalTimeForTask) * 100;
+        document.getElementById('now-liquid').style.height = `${pct}%`;
+
+        // Checkpoints
+        const remainingMinutes = timeRemaining / 60;
+        
+        if (!cuesGiven.halfway && timeRemaining > 0 && timeRemaining <= (totalTimeForTask / 2) && totalTimeForTask > 120) {
+            playCue(`Halfway through ${tasks[currentIndex].name}.`);
+            cuesGiven.halfway = true;
+        }
+        
+        if (!cuesGiven.fiveMin && timeRemaining > 0 && timeRemaining <= 300 && totalTimeForTask > 300) {
+            playCue("Five minutes remaining.");
+            cuesGiven.fiveMin = true;
+        }
+
+        if (!cuesGiven.oneMin && timeRemaining > 0 && timeRemaining <= 60 && totalTimeForTask > 60) {
+            playCue("One minute left. Time to start packing away.");
+            cuesGiven.oneMin = true;
+        }
+        
+        if (!cuesGiven.over && timeRemaining === 0) {
+            const nextT = currentIndex < tasks.length - 1 ? tasks[currentIndex + 1].name : "the end of the schedule";
+            playCue(`Time is up. Next is ${nextT}.`);
+            cuesGiven.over = true;
+            clearInterval(timerInterval);
+        }
+    }
+
+    // Try load on start
+    window.onload = () => {
+        const saved = localStorage.getItem('orbit_routine');
+        if (saved) {
+            tasks = JSON.parse(saved);
+            renderList();
+        } else {
+            renderList();
+        }
+    };
+</script>
+</body>
+</html>
