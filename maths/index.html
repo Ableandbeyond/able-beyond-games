@@ -14,6 +14,29 @@
     
     <!-- TOP NAVIGATION: SUBJECTS -->
     <header id="top-nav">
+<style>
+.back-home-btn {
+    padding: 0.5rem 1rem;
+    font-size: 1.1rem;
+    color: #3b82f6;
+    background-color: white;
+    border: 2px solid #3b82f6;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: none;
+    transition: all 0.2s;
+    display: inline-block;
+    margin: 10px;
+    z-index: 9999;
+    position: relative;
+}
+.back-home-btn:hover {
+    background-color: #3b82f6;
+    color: white;
+}
+</style>
+<button class="back-home-btn" onclick="window.location.href='../'">← Back Home</button>
       <button class="subject-tab" data-subject="recognition" aria-label="Number Recognition" style="background-color: var(--color-recognition);">Number Recognition</button>
       <button class="subject-tab" data-subject="counting" aria-label="Counting" style="background-color: var(--color-counting);">Counting</button>
       <button class="subject-tab" data-subject="addition" aria-label="Addition" style="background-color: var(--color-addition); color: #000;">Addition</button>
