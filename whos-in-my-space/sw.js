@@ -1,4 +1,4 @@
-const CACHE_NAME = 'whos-in-my-space-v1';
+const CACHE_NAME = 'whos-in-my-space-v2';
 const urlsToCache = [
   './',
   './index.html',
