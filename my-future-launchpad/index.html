@@ -10,6 +10,32 @@
 </head>
 <body class="bg-green-50 overflow-hidden text-slate-800 flex flex-col h-screen">
 
+<style>
+.back-home-btn {
+    padding: 0.5rem 1rem;
+    font-size: 1.1rem;
+    color: #3b82f6;
+    background-color: white;
+    border: 2px solid #3b82f6;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: none;
+    transition: all 0.2s;
+    display: inline-block;
+    margin: 10px;
+    z-index: 9999;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+.back-home-btn:hover {
+    background-color: #3b82f6;
+    color: white;
+}
+</style>
+<button class="back-home-btn" onclick="window.location.href='../'">← Back Home</button>
+
 <!-- Progress Bar Header -->
 <div class="p-4 bg-white shadow-sm z-10 shrink-0">
     <h1 class="text-2xl font-black text-center text-blue-600 mb-4 tracking-tight">🚀 My Future Launchpad</h1>

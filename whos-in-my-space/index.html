@@ -9,7 +9,7 @@
     <meta name="theme-color" content="#ffffff">
 </head>
 <body>
-    <header>
+
 <style>
 .back-home-btn {
     padding: 0.5rem 1rem;
@@ -25,7 +25,9 @@
     display: inline-block;
     margin: 10px;
     z-index: 9999;
-    position: relative;
+    position: absolute;
+    top: 10px;
+    left: 10px;
 }
 .back-home-btn:hover {
     background-color: #3b82f6;
@@ -33,6 +35,8 @@
 }
 </style>
 <button class="back-home-btn" onclick="window.location.href='../'">← Back Home</button>
+    <header>
+
         <h1>Who's In My Space?</h1>
         <div class="header-controls">
             <button id="add-staff-btn">➕ Add Person</button>

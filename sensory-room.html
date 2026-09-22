@@ -9,6 +9,32 @@
 </head>
 <body class="theme-default">
 
+<style>
+.back-home-btn {
+    padding: 0.5rem 1rem;
+    font-size: 1.1rem;
+    color: #3b82f6;
+    background-color: white;
+    border: 2px solid #3b82f6;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: none;
+    transition: all 0.2s;
+    display: inline-block;
+    margin: 10px;
+    z-index: 9999;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+.back-home-btn:hover {
+    background-color: #3b82f6;
+    color: white;
+}
+</style>
+<button class="back-home-btn" onclick="window.location.href='index.html'">← Back Home</button>
+
   <!-- SVG Sprite for Icons (Zero external dependencies) -->
   <svg style="display: none;" aria-hidden="true">
     <symbol id="icon-bubble" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -118,29 +144,7 @@
   <div id="settings-overlay" class="overlay hidden" aria-hidden="true"></div>
   <aside id="settings-panel" class="panel hidden" aria-hidden="true" aria-label="Settings panel">
     <header class="panel-header">
-<style>
-.back-home-btn {
-    padding: 0.5rem 1rem;
-    font-size: 1.1rem;
-    color: #3b82f6;
-    background-color: white;
-    border: 2px solid #3b82f6;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    text-decoration: none;
-    transition: all 0.2s;
-    display: inline-block;
-    margin: 10px;
-    z-index: 9999;
-    position: relative;
-}
-.back-home-btn:hover {
-    background-color: #3b82f6;
-    color: white;
-}
-</style>
-<button class="back-home-btn" onclick="window.location.href='index.html'">← Back Home</button>
+
       <h2>Settings</h2>
       <button id="btn-close-settings" class="nav-btn icon-only" aria-label="Close Settings">
         <svg aria-hidden="true"><use href="#icon-close"></use></svg>

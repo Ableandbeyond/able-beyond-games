@@ -9,7 +9,7 @@
     <!-- Font OpenDyslexic fallback if available locally, otherwise Comic Neue is good for SEN -->
 </head>
 <body>
-    <header class="toolbar" role="banner">
+
 <style>
 .back-home-btn {
     padding: 0.5rem 1rem;
@@ -25,7 +25,9 @@
     display: inline-block;
     margin: 10px;
     z-index: 9999;
-    position: relative;
+    position: absolute;
+    top: 10px;
+    left: 10px;
 }
 .back-home-btn:hover {
     background-color: #3b82f6;
@@ -33,6 +35,8 @@
 }
 </style>
 <button class="back-home-btn" onclick="window.location.href='../'">← Back Home</button>
+    <header class="toolbar" role="banner">
+
         <div class="toolbar-left">
             <h1 class="visually-hidden">Animal Matching Game</h1>
             <button id="btn-home" class="btn-icon" aria-label="Home" title="Home">🏠</button>

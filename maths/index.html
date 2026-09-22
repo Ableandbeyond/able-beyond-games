@@ -10,10 +10,6 @@
 </head>
 <body data-theme="recognition">
 
-  <div id="app">
-    
-    <!-- TOP NAVIGATION: SUBJECTS -->
-    <header id="top-nav">
 <style>
 .back-home-btn {
     padding: 0.5rem 1rem;
@@ -29,7 +25,9 @@
     display: inline-block;
     margin: 10px;
     z-index: 9999;
-    position: relative;
+    position: absolute;
+    top: 10px;
+    left: 10px;
 }
 .back-home-btn:hover {
     background-color: #3b82f6;
@@ -37,6 +35,12 @@
 }
 </style>
 <button class="back-home-btn" onclick="window.location.href='../'">← Back Home</button>
+
+  <div id="app">
+    
+    <!-- TOP NAVIGATION: SUBJECTS -->
+    <header id="top-nav">
+
       <button class="subject-tab" data-subject="recognition" aria-label="Number Recognition" style="background-color: var(--color-recognition);">Number Recognition</button>
       <button class="subject-tab" data-subject="counting" aria-label="Counting" style="background-color: var(--color-counting);">Counting</button>
       <button class="subject-tab" data-subject="addition" aria-label="Addition" style="background-color: var(--color-addition); color: #000;">Addition</button>
