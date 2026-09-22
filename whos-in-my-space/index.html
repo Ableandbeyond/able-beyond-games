@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Who's In My Space?</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#ffffff">
+</head>
+<body>
+    <header>
+        <h1>Who's In My Space?</h1>
+        <div class="header-controls">
+            <button id="add-staff-btn">➕ Add Person</button>
+            <button id="reset-board-btn" style="background-color: var(--status-busy); color: white; border:none;">🔄 Reset Day</button>
+            <button id="toggle-stim-btn" aria-label="Toggle Low Stimulation Mode">🌙 Low Stim</button>
+        </div>
+    </header>
+
+    <main>
+        <!-- The Active Room -->
+        <section id="active-room" class="dropzone" data-zone="active">
+            <h2>🏠 Here Today</h2>
+            <div class="staff-container" id="active-staff-container">
+                <!-- Active staff cards will be generated here -->
+            </div>
+        </section>
+
+        <!-- The Absence / Off-Duty Bench -->
+        <section id="bench" class="dropzone" data-zone="bench">
+            <h2>🌙 Resting / Away</h2>
+            <div class="staff-container" id="bench-staff-container">
+                <!-- Away staff cards will be generated here -->
+            </div>
+        </section>
+    </main>
+
+    <!-- My Needs / Action Bar -->
+    <nav id="quick-filters">
+        <button data-action="toilet" style="border-color: #4299e1;">🚽 I need the toilet</button>
+        <button data-action="nurse" style="border-color: #f56565;">🩺 I need to see a nurse</button>
+        <button data-action="snack" style="border-color: #48bb78;">🧃 I need a snack</button>
+        <button data-action="break" style="border-color: #ed8936;">🧘 I need a break</button>
+        <button data-action="help" style="border-color: #9f7aea;">🙋 I need help</button>
+        <button data-action="reset">🔄 Show Everyone</button>
+    </nav>
+
+    <!-- Template for a staff card -->
+    <template id="staff-card-template">
+        <div class="staff-card" draggable="true">
+            <button class="delete-card-btn" title="Remove Person">✖</button>
+            <div class="avatar-container">
+                <div class="avatar" title="Click to change emoji">
+                    <input type="text" class="emoji-avatar-input" maxlength="2" placeholder="👋" />
+                </div>
+                <button class="status-indicator" title="Toggle Availability"></button>
+            </div>
+            <div class="info">
+                <input type="text" class="name-input" placeholder="Type Name..." />
+                <input type="text" class="role-input" placeholder="Type Position..." />
+                <button class="speak-btn" title="Listen">🔊 Speak</button>
+            </div>
+        </div>
+    </template>
+
+    <script src="app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js');
+            });
+        }
+    </script>
+</body>
+</html>
