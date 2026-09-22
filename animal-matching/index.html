@@ -9,8 +9,18 @@
     <!-- Font OpenDyslexic fallback if available locally, otherwise Comic Neue is good for SEN -->
 </head>
 <body>
-
+<div class="ab-back-home-wrapper">
 <style>
+.ab-back-home-wrapper {
+    width: 100%;
+    text-align: left;
+    padding: 10px;
+    z-index: 99999;
+    position: relative;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    background: transparent;
+}
 .back-home-btn {
     padding: 0.5rem 1rem;
     font-size: 1.1rem;
@@ -23,18 +33,16 @@
     text-decoration: none;
     transition: all 0.2s;
     display: inline-block;
-    margin: 10px;
-    z-index: 9999;
-    position: absolute;
-    top: 10px;
-    left: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 .back-home-btn:hover {
     background-color: #3b82f6;
     color: white;
 }
 </style>
-<button class="back-home-btn" onclick="window.location.href='../'">← Back Home</button>
+<button class="back-home-btn" onclick="window.location.href='../'">← Back Home</button></div>
+
+
     <header class="toolbar" role="banner">
 
         <div class="toolbar-left">
