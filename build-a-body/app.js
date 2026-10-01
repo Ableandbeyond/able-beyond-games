@@ -70,31 +70,44 @@ const partsData = {
     head: { 
         id: 'head', name: 'Head', 
         path: `
+        <!-- Ears -->
+        <circle cx="150" cy="95" r="10" fill="${skin}" stroke="${skinOutline}" stroke-width="4"/>
+        <circle cx="250" cy="95" r="10" fill="${skin}" stroke="${skinOutline}" stroke-width="4"/>
         <!-- Neck -->
-        <rect x="185" y="130" width="30" height="20" fill="${skin}" stroke="${skinOutline}" stroke-width="4"/>
+        <rect x="185" y="130" width="30" height="25" fill="${skin}" stroke="${skinOutline}" stroke-width="4"/>
         <!-- Face -->
-        <circle cx="200" cy="90" r="50" fill="${skin}" stroke="${skinOutline}" stroke-width="4"/>
-        <!-- Hair -->
-        <path d="M 150 90 C 150 40 250 40 250 90 C 230 50 170 50 150 90 Z" fill="#78350F"/>
+        <ellipse cx="200" cy="90" rx="45" ry="55" fill="${skin}" stroke="${skinOutline}" stroke-width="4"/>
+        <!-- Hair (More realistic cut) -->
+        <path d="M 155 70 C 150 20 250 20 245 70 C 230 40 170 40 155 70 Z" fill="#451A03"/>
+        <path d="M 150 70 Q 155 85 160 80 Q 155 60 170 45 Q 150 45 150 70 Z" fill="#451A03"/>
+        <path d="M 250 70 Q 245 85 240 80 Q 245 60 230 45 Q 250 45 250 70 Z" fill="#451A03"/>
+        <!-- Eyebrows -->
+        <path d="M 170 70 Q 180 65 190 70" fill="none" stroke="#451A03" stroke-width="3" stroke-linecap="round"/>
+        <path d="M 210 70 Q 220 65 230 70" fill="none" stroke="#451A03" stroke-width="3" stroke-linecap="round"/>
         <!-- Eyes -->
-        <circle cx="180" cy="85" r="6" fill="#1E293B"/>
-        <circle cx="220" cy="85" r="6" fill="#1E293B"/>
+        <ellipse cx="180" cy="85" rx="5" ry="7" fill="#1E293B"/>
+        <ellipse cx="220" cy="85" rx="5" ry="7" fill="#1E293B"/>
+        <!-- Nose -->
+        <path d="M 200 90 L 195 105 L 205 105 Z" fill="${skinOutline}" opacity="0.5"/>
         <!-- Cheeks -->
-        <circle cx="165" cy="95" r="8" fill="#FCA5A5" opacity="0.6"/>
-        <circle cx="235" cy="95" r="8" fill="#FCA5A5" opacity="0.6"/>
+        <circle cx="165" cy="100" r="8" fill="#FCA5A5" opacity="0.5"/>
+        <circle cx="235" cy="100" r="8" fill="#FCA5A5" opacity="0.5"/>
         <!-- Smile -->
-        <path d="M 185 110 Q 200 125 215 110" fill="none" stroke="#1E293B" stroke-width="4" stroke-linecap="round"/>
+        <path d="M 185 115 Q 200 130 215 115" fill="none" stroke="#1E293B" stroke-width="4" stroke-linecap="round"/>
+        <!-- Lower lip -->
+        <path d="M 195 122 Q 200 126 205 122" fill="none" stroke="#F43F5E" stroke-width="2" stroke-linecap="round"/>
         `
     },
     torso: { 
         id: 'torso', name: 'Torso', 
         path: `
         <!-- T-Shirt Body -->
-        <path d="M 150 145 L 250 145 L 260 270 L 140 270 Z" fill="${shirt}" stroke="${shirtOutline}" stroke-width="4" stroke-linejoin="round"/>
+        <path d="M 150 145 C 160 145 240 145 250 145 C 265 150 260 260 260 270 L 140 270 C 140 260 135 150 150 145 Z" fill="${shirt}" stroke="${shirtOutline}" stroke-width="4" stroke-linejoin="round"/>
         <!-- Collar -->
-        <path d="M 180 145 Q 200 160 220 145" fill="none" stroke="${shirtOutline}" stroke-width="4" stroke-linecap="round"/>
-        <!-- Star Graphic -->
-        <polygon points="200,180 205,195 220,195 208,205 212,220 200,210 188,220 192,205 180,195 195,195" fill="#FDE047"/>
+        <path d="M 180 145 Q 200 165 220 145" fill="none" stroke="${shirtOutline}" stroke-width="4" stroke-linecap="round"/>
+        <!-- Wrinkles -->
+        <path d="M 160 250 Q 170 260 180 250" fill="none" stroke="${shirtOutline}" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+        <path d="M 240 245 Q 230 255 220 245" fill="none" stroke="${shirtOutline}" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
         `
     },
     l_arm: { 
@@ -118,53 +131,95 @@ const partsData = {
     l_hand: { 
         id: 'l_hand', name: 'Left Hand', 
         path: `
-        <!-- Hand / Mitten -->
-        <circle cx="95" cy="265" r="18" fill="${skin}" stroke="${skinOutline}" stroke-width="4"/>
-        <path d="M 85 255 Q 75 260 80 270" fill="none" stroke="${skinOutline}" stroke-width="3" stroke-linecap="round"/>
+        <!-- Hand Outline (Thick Stroke) -->
+        <g stroke="${skinOutline}" stroke-width="11" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Fingers -->
+            <line x1="83" y1="260" x2="78" y2="278"/> <!-- Pinky -->
+            <line x1="90" y1="260" x2="86" y2="288"/> <!-- Ring -->
+            <line x1="98" y1="262" x2="96" y2="293"/> <!-- Middle -->
+            <line x1="106" y1="260" x2="108" y2="285"/> <!-- Index -->
+            <line x1="106" y1="250" x2="122" y2="265"/> <!-- Thumb -->
+            <!-- Palm Base -->
+            <polygon points="85,242 105,248 108,262 82,258" />
+        </g>
+        <!-- Hand Fill (Inner Stroke) -->
+        <g stroke="${skin}" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="83" y1="260" x2="78" y2="278"/>
+            <line x1="90" y1="260" x2="86" y2="288"/>
+            <line x1="98" y1="262" x2="96" y2="293"/>
+            <line x1="106" y1="260" x2="108" y2="285"/>
+            <line x1="106" y1="250" x2="122" y2="265"/>
+            <polygon points="85,242 105,248 108,262 82,258" fill="${skin}" stroke="none"/>
+        </g>
         `
     },
     r_hand: { 
         id: 'r_hand', name: 'Right Hand', 
         path: `
-        <!-- Hand / Mitten -->
-        <circle cx="305" cy="265" r="18" fill="${skin}" stroke="${skinOutline}" stroke-width="4"/>
-        <path d="M 315 255 Q 325 260 320 270" fill="none" stroke="${skinOutline}" stroke-width="3" stroke-linecap="round"/>
+        <!-- Hand Outline (Thick Stroke) -->
+        <g stroke="${skinOutline}" stroke-width="11" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="317" y1="260" x2="322" y2="278"/> <!-- Pinky -->
+            <line x1="310" y1="260" x2="314" y2="288"/> <!-- Ring -->
+            <line x1="302" y1="262" x2="304" y2="293"/> <!-- Middle -->
+            <line x1="294" y1="260" x2="292" y2="285"/> <!-- Index -->
+            <line x1="294" y1="250" x2="278" y2="265"/> <!-- Thumb -->
+            <polygon points="295,248 315,242 318,258 292,262" />
+        </g>
+        <!-- Hand Fill (Inner Stroke) -->
+        <g stroke="${skin}" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="317" y1="260" x2="322" y2="278"/>
+            <line x1="310" y1="260" x2="314" y2="288"/>
+            <line x1="302" y1="262" x2="304" y2="293"/>
+            <line x1="294" y1="260" x2="292" y2="285"/>
+            <line x1="294" y1="250" x2="278" y2="265"/>
+            <polygon points="295,248 315,242 318,258 292,262" fill="${skin}" stroke="none"/>
+        </g>
         `
     },
     l_leg: { 
         id: 'l_leg', name: 'Left Leg', 
         path: `
-        <!-- Pant Leg -->
-        <path d="M 145 270 L 200 270 L 190 380 L 140 380 Z" fill="${pants}" stroke="${pantsOutline}" stroke-width="4" stroke-linejoin="round"/>
+        <!-- Pant Leg with slight bell/taper -->
+        <path d="M 145,270 L 200,270 L 195,385 L 140,385 Z" fill="${pants}" stroke="${pantsOutline}" stroke-width="4" stroke-linejoin="round"/>
+        <!-- Knee wrinkle -->
+        <path d="M 160 330 Q 170 325 180 330" fill="none" stroke="${pantsOutline}" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
         <!-- Calf/Ankle -->
-        <rect x="150" y="380" width="30" height="40" fill="${skin}" stroke="${skinOutline}" stroke-width="4"/>
+        <rect x="155" y="385" width="25" height="35" fill="${skin}" stroke="${skinOutline}" stroke-width="4"/>
         `
     },
     r_leg: { 
         id: 'r_leg', name: 'Right Leg', 
         path: `
         <!-- Pant Leg -->
-        <path d="M 200 270 L 255 270 L 260 380 L 210 380 Z" fill="${pants}" stroke="${pantsOutline}" stroke-width="4" stroke-linejoin="round"/>
+        <path d="M 200,270 L 255,270 L 260,385 L 205,385 Z" fill="${pants}" stroke="${pantsOutline}" stroke-width="4" stroke-linejoin="round"/>
+        <!-- Knee wrinkle -->
+        <path d="M 220 330 Q 230 325 240 330" fill="none" stroke="${pantsOutline}" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
         <!-- Calf/Ankle -->
-        <rect x="220" y="380" width="30" height="40" fill="${skin}" stroke="${skinOutline}" stroke-width="4"/>
+        <rect x="220" y="385" width="25" height="35" fill="${skin}" stroke="${skinOutline}" stroke-width="4"/>
         `
     },
     l_foot: { 
         id: 'l_foot', name: 'Left Foot', 
         path: `
-        <!-- Sneaker -->
-        <path d="M 165 420 L 130 420 Q 120 420 120 435 L 120 450 L 180 450 L 180 435 Z" fill="${shoe}" stroke="${shoeOutline}" stroke-width="4" stroke-linejoin="round"/>
+        <!-- Sneaker Main -->
+        <path d="M 165 415 L 130 425 Q 115 430 115 445 L 115 455 L 180 455 L 180 435 Z" fill="${shoe}" stroke="${shoeOutline}" stroke-width="4" stroke-linejoin="round"/>
+        <!-- Laces -->
+        <line x1="145" y1="425" x2="160" y2="435" stroke="#FFF" stroke-width="3" stroke-linecap="round"/>
+        <line x1="140" y1="430" x2="155" y2="440" stroke="#FFF" stroke-width="3" stroke-linecap="round"/>
         <!-- Sole -->
-        <rect x="118" y="450" width="64" height="10" rx="4" fill="#FFFFFF" stroke="#94A3B8" stroke-width="3"/>
+        <path d="M 115 455 L 180 455 L 180 465 Q 115 465 115 455 Z" fill="#FFFFFF" stroke="#94A3B8" stroke-width="3"/>
         `
     },
     r_foot: { 
         id: 'r_foot', name: 'Right Foot', 
         path: `
-        <!-- Sneaker -->
-        <path d="M 235 420 L 270 420 Q 280 420 280 435 L 280 450 L 220 450 L 220 435 Z" fill="${shoe}" stroke="${shoeOutline}" stroke-width="4" stroke-linejoin="round"/>
+        <!-- Sneaker Main -->
+        <path d="M 235 415 L 270 425 Q 285 430 285 445 L 285 455 L 220 455 L 220 435 Z" fill="${shoe}" stroke="${shoeOutline}" stroke-width="4" stroke-linejoin="round"/>
+        <!-- Laces -->
+        <line x1="255" y1="425" x2="240" y2="435" stroke="#FFF" stroke-width="3" stroke-linecap="round"/>
+        <line x1="260" y1="430" x2="245" y2="440" stroke="#FFF" stroke-width="3" stroke-linecap="round"/>
         <!-- Sole -->
-        <rect x="218" y="450" width="64" height="10" rx="4" fill="#FFFFFF" stroke="#94A3B8" stroke-width="3"/>
+        <path d="M 220 455 L 285 455 L 285 465 Q 220 465 220 455 Z" fill="#FFFFFF" stroke="#94A3B8" stroke-width="3"/>
         `
     },
 };
