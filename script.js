@@ -134,6 +134,7 @@ function renderHome() {
             <button style="margin-top:0;" onclick="window.location.href='sensory-room.html'">Sensory Room ✨</button>
             <button style="margin-top:0;" onclick="window.location.href='animal-matching/'">Animal Matching 🦁</button>
             <button style="margin-top:0;" onclick="window.location.href='whos-in-my-space/'">Who's In My Space? 🏫</button>
+            <button style="margin-top:0;" onclick="window.location.href='sensory-physics-board/'">Physics Board 🪐</button>
         </div>
         <div class="game-card card" style="text-align: center; margin-bottom: 20px;">
           <h3>Visual Timetable Orbit</h3>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sensory Physics Board</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;800&display=swap" rel="stylesheet">
+    <!-- Matter.js for Physics -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+</head>
+<body>
+    <div id="app-container">
+        <!-- Main Physics Canvas Area -->
+        <div id="canvas-container">
+            <!-- Overlays for states -->
+            <div id="pulse-overlay" class="hidden"></div>
+            <div id="timer-overlay" class="hidden">
+                <svg viewBox="0 0 100 100" class="timer-wheel">
+                    <circle class="timer-bg" cx="50" cy="50" r="45"></circle>
+                    <circle class="timer-progress" cx="50" cy="50" r="45"></circle>
+                </svg>
+                <div id="timer-text">10</div>
+            </div>
+            <div id="break-overlay" class="hidden">
+                <div class="break-text">Relax...</div>
+                <div class="break-timer">60</div>
+            </div>
+        </div>
+
+        <!-- Control Nodes / Buttons -->
+        <div id="controls">
+            <button class="node-btn bg-stop" data-action="STOP">
+                <div class="btn-content"><span class="btn-icon">🛑</span> STOP</div>
+            </button>
+            <button class="node-btn bg-go" data-action="GO">
+                <div class="btn-content"><span class="btn-icon">🟢</span> GO</div>
+            </button>
+            <button class="node-btn bg-break" data-action="BREAK">
+                <div class="btn-content"><span class="btn-icon">🧘</span> BREAK</div>
+            </button>
+            <button class="node-btn bg-sensory" data-action="SENSORY_ROOM">
+                <div class="btn-content"><span class="btn-icon">✨</span> SENSORY</div>
+            </button>
+            <button class="node-btn bg-swing" data-action="SWING">
+                <div class="btn-content"><span class="btn-icon">⚖️</span> SWING</div>
+            </button>
+            <button class="node-btn bg-walk" data-action="WALK">
+                <div class="btn-content"><span class="btn-icon">👣</span> WALK</div>
+            </button>
+            <button class="node-btn bg-time" data-action="TIME">
+                <div class="btn-content"><span class="btn-icon">⏳</span> TIME</div>
+            </button>
+            <button class="node-btn bg-space" data-action="SPACE">
+                <div class="btn-content"><span class="btn-icon">🚀</span> SPACE</div>
+            </button>
+        </div>
+        
+        <button id="home-btn" onclick="window.location.href='../index.html'">← Home</button>
+    </div>
+    
+    <script src="app.js"></script>
+</body>
+</html>
