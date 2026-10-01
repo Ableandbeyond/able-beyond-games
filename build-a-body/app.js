@@ -174,8 +174,10 @@ const levels = {
     1: [
         partsData.head,
         partsData.torso,
-        { id: 'arms', name: 'Arms', path: partsData.l_arm.path + partsData.r_arm.path + partsData.l_hand.path + partsData.r_hand.path },
-        { id: 'legs', name: 'Legs', path: partsData.l_leg.path + partsData.r_leg.path + partsData.l_foot.path + partsData.r_foot.path }
+        { id: 'l_arm', name: 'Left Arm', path: partsData.l_arm.path + partsData.l_hand.path },
+        { id: 'r_arm', name: 'Right Arm', path: partsData.r_arm.path + partsData.r_hand.path },
+        { id: 'l_leg', name: 'Left Leg', path: partsData.l_leg.path + partsData.l_foot.path },
+        { id: 'r_leg', name: 'Right Leg', path: partsData.r_leg.path + partsData.r_foot.path }
     ],
     2: [
         partsData.head, partsData.torso, 
@@ -228,7 +230,7 @@ function initLevel() {
         
         // Strip colors to make it a dashed outline target
         Array.from(g.children).forEach(child => {
-            child.setAttribute('fill', 'transparent');
+            child.setAttribute('fill', 'rgba(241, 245, 249, 0.5)'); // light fill for easier tapping/visibility
             child.setAttribute('stroke', '#94A3B8');
             child.setAttribute('stroke-dasharray', '8 8');
             child.setAttribute('stroke-width', '5');
@@ -305,18 +307,25 @@ function onDragEnd(e) {
     window.removeEventListener('pointermove', onDragMove);
     window.removeEventListener('pointerup', onDragEnd);
     
-    // Hide piece momentarily to see what SVG zone is underneath the cursor
-    draggedPiece.el.style.display = 'none';
-    const elementBelow = document.elementFromPoint(e.clientX, e.clientY);
-    draggedPiece.el.style.display = 'flex';
+    // Distance-based collision detection (highly forgiving for SEND)
+    const draggedRect = draggedPiece.el.getBoundingClientRect();
+    const draggedCenterX = draggedRect.left + (draggedRect.width / 2);
+    const draggedCenterY = draggedRect.top + (draggedRect.height / 2);
     
-    const zone = elementBelow ? elementBelow.closest('.drop-zone') : null;
+    const zone = document.getElementById(`zone-${draggedPiece.id}`);
+    const zoneRect = zone.getBoundingClientRect();
+    const zoneCenterX = zoneRect.left + (zoneRect.width / 2);
+    const zoneCenterY = zoneRect.top + (zoneRect.height / 2);
     
-    if (zone && zone.id === `zone-${draggedPiece.id}`) {
+    // Calculate distance between centers
+    const distance = Math.hypot(draggedCenterX - zoneCenterX, draggedCenterY - zoneCenterY);
+    
+    // 150px threshold is very generous for smartboards
+    if (distance < 150) {
         // Correct Placement
         placePart(draggedPiece.id);
     } else {
-        // Incorrect: Bounce back to dock
+        // Incorrect: Bounce back to dock smoothly
         playTone('error');
         draggedPiece.el.style.position = 'static';
         draggedPiece.el.style.zIndex = 'auto';
