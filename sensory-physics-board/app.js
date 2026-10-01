@@ -105,13 +105,20 @@ window.addEventListener('resize', () => {
     resetBoundaries();
 });
 
-function playTTS(text) {
-    if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-        const u = new SpeechSynthesisUtterance(text);
-        u.rate = 0.9;
-        window.speechSynthesis.speak(u);
-    }
+function playVoice(text, actionName) {
+    const audioUrl = `audio/${actionName.toLowerCase()}.mp3`;
+    const audio = new Audio(audioUrl);
+    audio.play().catch(e => {
+        // Fallback to TTS if file is missing
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const u = new SpeechSynthesisUtterance(text);
+            u.rate = 0.9;
+            u.pitch = 1.1; // Friendly tone
+            u.volume = 1.0; // Max volume
+            window.speechSynthesis.speak(u);
+        }
+    });
 }
 
 let boundaries = [];
@@ -241,9 +248,9 @@ document.querySelectorAll('.node-btn').forEach(btn => {
 function handleAction(action) {
     clearState();
     
-    // Text-to-Speech the action name
+    // Speak the action name
     const friendlyName = action.replace('_', ' ');
-    playTTS(friendlyName);
+    playVoice(friendlyName, action);
     
     switch (action) {
         case 'STOP':
