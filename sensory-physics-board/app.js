@@ -105,6 +105,15 @@ window.addEventListener('resize', () => {
     resetBoundaries();
 });
 
+function playTTS(text) {
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text);
+        u.rate = 0.9;
+        window.speechSynthesis.speak(u);
+    }
+}
+
 let boundaries = [];
 let defaultShapes = [];
 let sensoryInterval, walkInterval, timerInterval, breakInterval;
@@ -127,6 +136,18 @@ function resetBoundaries() {
 const colors = ['#EF4444', '#3B82F6', '#10B981', '#F59E0B', '#8B5CF6'];
 
 function spawnDefaultShapes() {
+    // If shapes already exist, just move them to center
+    if (defaultShapes.length > 0) {
+        defaultShapes.forEach(b => {
+            Body.setPosition(b, {
+                x: width / 2 + (Math.random() - 0.5) * 100,
+                y: height / 2 + (Math.random() - 0.5) * 100
+            });
+            Body.setVelocity(b, { x: 0, y: 0 });
+            Matter.Sleeping.set(b, false);
+        });
+        return;
+    }
     for (let i = 0; i < 8; i++) {
         const size = 60 + Math.random() * 60;
         const color = colors[Math.floor(Math.random() * colors.length)];
@@ -155,10 +176,16 @@ function clearState() {
     clearInterval(timerInterval);
     clearInterval(breakInterval);
     
-    // Reset Engine & Gravity (Matter.js 0.19.0 uses engine.gravity)
+    // Reset Engine & Gravity (Matter.js 0.19.0 uses engine.gravity, some older use world.gravity)
     engine.timing.timeScale = 1;
-    engine.gravity.y = 1;
-    engine.gravity.x = 0;
+    if (engine.gravity) {
+        engine.gravity.y = 1;
+        engine.gravity.x = 0;
+    }
+    if (world.gravity) {
+        world.gravity.y = 1;
+        world.gravity.x = 0;
+    }
     
     // Reset UI Overlays
     document.getElementById('pulse-overlay').classList.add('hidden');
@@ -172,17 +199,24 @@ function clearState() {
         pendulumElements = [];
     }
     
-    // Ensure default shapes exist and are visible
+    // Ensure default shapes exist and are visible in bounds
     if (defaultShapes.length === 0) {
         spawnDefaultShapes();
     } else {
         defaultShapes.forEach(b => {
             Body.setStatic(b, false);
-            // reset visibility and style
             b.render.visible = true;
             b.render.opacity = 1;
-            // wake them up
             Matter.Sleeping.set(b, false);
+            
+            // If body fell out of bounds somehow, reset to center
+            if (b.position.y > height + 200 || b.position.y < -200 || b.position.x > width + 200 || b.position.x < -200) {
+                Body.setPosition(b, {
+                    x: width / 2 + (Math.random() - 0.5) * 100,
+                    y: height / 2 + (Math.random() - 0.5) * 100
+                });
+                Body.setVelocity(b, { x: 0, y: 0 });
+            }
         });
     }
 }
@@ -207,6 +241,10 @@ document.querySelectorAll('.node-btn').forEach(btn => {
 function handleAction(action) {
     clearState();
     
+    // Text-to-Speech the action name
+    const friendlyName = action.replace('_', ' ');
+    playTTS(friendlyName);
+    
     switch (action) {
         case 'STOP':
             playSound('deep');
@@ -217,7 +255,8 @@ function handleAction(action) {
         case 'GO':
             playSound('chime');
             engine.timing.timeScale = 1.2;
-            engine.gravity.y = 0; // Remove gravity so they float around actively
+            if (engine.gravity) engine.gravity.y = 0; // Remove gravity so they float around actively
+            if (world.gravity) world.gravity.y = 0;
             
             defaultShapes.forEach(b => {
                 Matter.Sleeping.set(b, false);
@@ -249,7 +288,8 @@ function handleAction(action) {
         case 'SENSORY_ROOM':
             playSound('chime');
             document.body.classList.add('dark-mode');
-            engine.gravity.y = 0.05; // Float gently
+            if (engine.gravity) engine.gravity.y = 0.05; // Float gently
+            if (world.gravity) world.gravity.y = 0.05;
             
             // Turn default shapes into 'glow' mode
             defaultShapes.forEach(b => {
@@ -351,8 +391,14 @@ function handleAction(action) {
             
         case 'SPACE':
             playSound('chime');
-            engine.gravity.y = -1; // Reverse gravity (fly to ceiling)
-            engine.gravity.x = 0;
+            if (engine.gravity) {
+                engine.gravity.y = -1; // Reverse gravity (fly to ceiling)
+                engine.gravity.x = 0;
+            }
+            if (world.gravity) {
+                world.gravity.y = -1;
+                world.gravity.x = 0;
+            }
             
             defaultShapes.forEach(b => {
                 Matter.Sleeping.set(b, false);
