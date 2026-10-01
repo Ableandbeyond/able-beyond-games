@@ -36,11 +36,9 @@ function playTone(type) {
 }
 
 function playVoice(text, audioFileUrl = null) {
-    // Modular audio implementation: Try audio file first, fallback to TTS
     if (audioFileUrl) {
         const audio = new Audio(audioFileUrl);
         audio.play().catch(e => {
-            console.log("Audio file failed or missing, falling back to TTS", e);
             speakTTS(text);
         });
     } else {
@@ -58,18 +56,117 @@ function speakTTS(text) {
     }
 }
 
-// Geometry for 10 distinct parts (viewBox 0 0 400 600)
+// Improved, cute character SVGs
+const skin = "#FFDCA8";
+const skinOutline = "#D29D64";
+const shirt = "#34D399";
+const shirtOutline = "#059669";
+const pants = "#3B82F6";
+const pantsOutline = "#1D4ED8";
+const shoe = "#F43F5E";
+const shoeOutline = "#BE123C";
+
 const partsData = {
-    head: { id: 'head', name: 'Head', path: '<ellipse cx="200" cy="100" rx="45" ry="55" fill="#FDE047" stroke="#CA8A04" stroke-width="4"/> <circle cx="185" cy="95" r="5" fill="#000"/> <circle cx="215" cy="95" r="5" fill="#000"/> <path d="M 190 120 Q 200 130 210 120" fill="transparent" stroke="#000" stroke-width="3" stroke-linecap="round"/>' },
-    torso: { id: 'torso', name: 'Torso', path: '<rect x="145" y="160" width="110" height="160" rx="20" fill="#60A5FA" stroke="#2563EB" stroke-width="4"/>' },
-    l_arm: { id: 'l_arm', name: 'Left Arm', path: '<rect x="95" y="170" width="35" height="130" rx="17.5" fill="#FDE047" stroke="#CA8A04" stroke-width="4" transform="rotate(15, 112, 170)"/>' },
-    r_arm: { id: 'r_arm', name: 'Right Arm', path: '<rect x="270" y="170" width="35" height="130" rx="17.5" fill="#FDE047" stroke="#CA8A04" stroke-width="4" transform="rotate(-15, 287, 170)"/>' },
-    l_hand: { id: 'l_hand', name: 'Left Hand', path: '<circle cx="70" cy="310" r="22" fill="#FDE047" stroke="#CA8A04" stroke-width="4"/>' },
-    r_hand: { id: 'r_hand', name: 'Right Hand', path: '<circle cx="330" cy="310" r="22" fill="#FDE047" stroke="#CA8A04" stroke-width="4"/>' },
-    l_leg: { id: 'l_leg', name: 'Left Leg', path: '<rect x="155" y="325" width="40" height="150" rx="20" fill="#34D399" stroke="#059669" stroke-width="4"/>' },
-    r_leg: { id: 'r_leg', name: 'Right Leg', path: '<rect x="205" y="325" width="40" height="150" rx="20" fill="#34D399" stroke="#059669" stroke-width="4"/>' },
-    l_foot: { id: 'l_foot', name: 'Left Foot', path: '<rect x="135" y="480" width="60" height="35" rx="15" fill="#F87171" stroke="#DC2626" stroke-width="4"/>' },
-    r_foot: { id: 'r_foot', name: 'Right Foot', path: '<rect x="205" y="480" width="60" height="35" rx="15" fill="#F87171" stroke="#DC2626" stroke-width="4"/>' },
+    head: { 
+        id: 'head', name: 'Head', 
+        path: `
+        <!-- Neck -->
+        <rect x="185" y="130" width="30" height="20" fill="${skin}" stroke="${skinOutline}" stroke-width="4"/>
+        <!-- Face -->
+        <circle cx="200" cy="90" r="50" fill="${skin}" stroke="${skinOutline}" stroke-width="4"/>
+        <!-- Hair -->
+        <path d="M 150 90 C 150 40 250 40 250 90 C 230 50 170 50 150 90 Z" fill="#78350F"/>
+        <!-- Eyes -->
+        <circle cx="180" cy="85" r="6" fill="#1E293B"/>
+        <circle cx="220" cy="85" r="6" fill="#1E293B"/>
+        <!-- Cheeks -->
+        <circle cx="165" cy="95" r="8" fill="#FCA5A5" opacity="0.6"/>
+        <circle cx="235" cy="95" r="8" fill="#FCA5A5" opacity="0.6"/>
+        <!-- Smile -->
+        <path d="M 185 110 Q 200 125 215 110" fill="none" stroke="#1E293B" stroke-width="4" stroke-linecap="round"/>
+        `
+    },
+    torso: { 
+        id: 'torso', name: 'Torso', 
+        path: `
+        <!-- T-Shirt Body -->
+        <path d="M 150 145 L 250 145 L 260 270 L 140 270 Z" fill="${shirt}" stroke="${shirtOutline}" stroke-width="4" stroke-linejoin="round"/>
+        <!-- Collar -->
+        <path d="M 180 145 Q 200 160 220 145" fill="none" stroke="${shirtOutline}" stroke-width="4" stroke-linecap="round"/>
+        <!-- Star Graphic -->
+        <polygon points="200,180 205,195 220,195 208,205 212,220 200,210 188,220 192,205 180,195 195,195" fill="#FDE047"/>
+        `
+    },
+    l_arm: { 
+        id: 'l_arm', name: 'Left Arm', 
+        path: `
+        <!-- Sleeve -->
+        <path d="M 148 145 L 110 170 L 125 195 L 158 175 Z" fill="${shirt}" stroke="${shirtOutline}" stroke-width="4" stroke-linejoin="round"/>
+        <!-- Arm -->
+        <path d="M 115 180 L 85 240 L 105 250 L 135 190 Z" fill="${skin}" stroke="${skinOutline}" stroke-width="4" stroke-linejoin="round"/>
+        `
+    },
+    r_arm: { 
+        id: 'r_arm', name: 'Right Arm', 
+        path: `
+        <!-- Sleeve -->
+        <path d="M 252 145 L 290 170 L 275 195 L 242 175 Z" fill="${shirt}" stroke="${shirtOutline}" stroke-width="4" stroke-linejoin="round"/>
+        <!-- Arm -->
+        <path d="M 285 180 L 315 240 L 295 250 L 265 190 Z" fill="${skin}" stroke="${skinOutline}" stroke-width="4" stroke-linejoin="round"/>
+        `
+    },
+    l_hand: { 
+        id: 'l_hand', name: 'Left Hand', 
+        path: `
+        <!-- Hand / Mitten -->
+        <circle cx="95" cy="265" r="18" fill="${skin}" stroke="${skinOutline}" stroke-width="4"/>
+        <path d="M 85 255 Q 75 260 80 270" fill="none" stroke="${skinOutline}" stroke-width="3" stroke-linecap="round"/>
+        `
+    },
+    r_hand: { 
+        id: 'r_hand', name: 'Right Hand', 
+        path: `
+        <!-- Hand / Mitten -->
+        <circle cx="305" cy="265" r="18" fill="${skin}" stroke="${skinOutline}" stroke-width="4"/>
+        <path d="M 315 255 Q 325 260 320 270" fill="none" stroke="${skinOutline}" stroke-width="3" stroke-linecap="round"/>
+        `
+    },
+    l_leg: { 
+        id: 'l_leg', name: 'Left Leg', 
+        path: `
+        <!-- Pant Leg -->
+        <path d="M 145 270 L 200 270 L 190 380 L 140 380 Z" fill="${pants}" stroke="${pantsOutline}" stroke-width="4" stroke-linejoin="round"/>
+        <!-- Calf/Ankle -->
+        <rect x="150" y="380" width="30" height="40" fill="${skin}" stroke="${skinOutline}" stroke-width="4"/>
+        `
+    },
+    r_leg: { 
+        id: 'r_leg', name: 'Right Leg', 
+        path: `
+        <!-- Pant Leg -->
+        <path d="M 200 270 L 255 270 L 260 380 L 210 380 Z" fill="${pants}" stroke="${pantsOutline}" stroke-width="4" stroke-linejoin="round"/>
+        <!-- Calf/Ankle -->
+        <rect x="220" y="380" width="30" height="40" fill="${skin}" stroke="${skinOutline}" stroke-width="4"/>
+        `
+    },
+    l_foot: { 
+        id: 'l_foot', name: 'Left Foot', 
+        path: `
+        <!-- Sneaker -->
+        <path d="M 165 420 L 130 420 Q 120 420 120 435 L 120 450 L 180 450 L 180 435 Z" fill="${shoe}" stroke="${shoeOutline}" stroke-width="4" stroke-linejoin="round"/>
+        <!-- Sole -->
+        <rect x="118" y="450" width="64" height="10" rx="4" fill="#FFFFFF" stroke="#94A3B8" stroke-width="3"/>
+        `
+    },
+    r_foot: { 
+        id: 'r_foot', name: 'Right Foot', 
+        path: `
+        <!-- Sneaker -->
+        <path d="M 235 420 L 270 420 Q 280 420 280 435 L 280 450 L 220 450 L 220 435 Z" fill="${shoe}" stroke="${shoeOutline}" stroke-width="4" stroke-linejoin="round"/>
+        <!-- Sole -->
+        <rect x="218" y="450" width="64" height="10" rx="4" fill="#FFFFFF" stroke="#94A3B8" stroke-width="3"/>
+        `
+    },
 };
 
 // Level configurations
@@ -90,7 +187,6 @@ const levels = {
 };
 
 let currentLevel = 1;
-let selectedPartId = null;
 let partsPlaced = 0;
 let totalParts = 0;
 
@@ -113,41 +209,35 @@ function startGame(level) {
     gameScreen.classList.remove('hidden');
     celebrationOverlay.classList.add('hidden');
     
-    // Resume audio context on first user interaction
     if (audioCtx.state === 'suspended') audioCtx.resume();
-    
     initLevel();
 }
 
 function initLevel() {
-    selectedPartId = null;
     partsPlaced = 0;
-    
     const parts = levels[currentLevel];
     totalParts = parts.length;
     
-    // 1. Render Drop Zones in SVG Workspace
+    // 1. Render Drop Zones
     bodySvg.innerHTML = '';
     parts.forEach(part => {
-        // Create an invisible drop zone hit box by wrapping the path in a group
         const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
         g.setAttribute('class', 'drop-zone');
         g.setAttribute('id', `zone-${part.id}`);
-        g.innerHTML = part.path; // Generates the dashed outline version
+        g.innerHTML = part.path;
         
-        // Strip fills and set outline classes via JS
+        // Strip colors to make it a dashed outline target
         Array.from(g.children).forEach(child => {
             child.setAttribute('fill', 'transparent');
-            child.setAttribute('stroke', '#94A3B8'); // dashed line color
-            child.setAttribute('stroke-dasharray', '10 10');
-            child.setAttribute('stroke-width', '6');
+            child.setAttribute('stroke', '#94A3B8');
+            child.setAttribute('stroke-dasharray', '8 8');
+            child.setAttribute('stroke-width', '5');
         });
         
-        g.addEventListener('click', () => handleZoneClick(part.id));
         bodySvg.appendChild(g);
     });
 
-    // 2. Render Dock Pieces (Randomized Order)
+    // 2. Render Dock Pieces (Randomized)
     dock.innerHTML = '';
     let shuffledParts = [...parts].sort(() => Math.random() - 0.5);
     
@@ -155,74 +245,103 @@ function initLevel() {
         const piece = document.createElement('div');
         piece.className = 'piece';
         piece.id = `dock-${part.id}`;
+        piece.setAttribute('data-id', part.id);
         
-        // Need to calculate bounding box to scale SVG nicely in dock
-        // For simplicity, we just use the same 400x600 viewbox and scale it down via CSS
         piece.innerHTML = `
-            <svg viewBox="0 0 400 600" style="width: 100px; height: 150px;">
+            <svg viewBox="0 0 400 600" style="width: 100px; height: 150px; pointer-events: none;">
                 ${part.path}
             </svg>
         `;
         
-        piece.addEventListener('click', () => selectPart(part.id));
+        // Setup Drag Events
+        piece.addEventListener('pointerdown', onDragStart);
         dock.appendChild(piece);
     });
 }
 
-function selectPart(partId) {
-    if (selectedPartId === partId) {
-        // Deselect
-        document.getElementById(`dock-${partId}`).classList.remove('selected');
-        selectedPartId = null;
-        return;
-    }
+// --- Drag and Drop Logic ---
+let draggedPiece = null;
+let dragStartX = 0, dragStartY = 0;
+let initialLeft = 0, initialTop = 0;
+
+function onDragStart(e) {
+    const piece = e.currentTarget;
+    draggedPiece = { id: piece.getAttribute('data-id'), el: piece };
     
-    // Remove previous selection
-    if (selectedPartId) {
-        document.getElementById(`dock-${selectedPartId}`).classList.remove('selected');
-    }
+    const rect = piece.getBoundingClientRect();
     
-    selectedPartId = partId;
-    document.getElementById(`dock-${partId}`).classList.add('selected');
+    // Lock size and position it absolutely over the mouse
+    piece.style.position = 'fixed';
+    piece.style.width = rect.width + 'px';
+    piece.style.height = rect.height + 'px';
+    piece.style.left = rect.left + 'px';
+    piece.style.top = rect.top + 'px';
+    piece.style.zIndex = '1000';
+    piece.classList.add('selected');
     
-    // Play a tiny selection blip
-    playTone('success'); 
+    dragStartX = e.clientX;
+    dragStartY = e.clientY;
+    initialLeft = rect.left;
+    initialTop = rect.top;
+    
+    playTone('success'); // Pick up sound
+    
+    // Bind move/up to window to catch fast dragging
+    window.addEventListener('pointermove', onDragMove);
+    window.addEventListener('pointerup', onDragEnd);
 }
 
-function handleZoneClick(zoneId) {
-    if (!selectedPartId) return; // Nothing selected
+function onDragMove(e) {
+    if (!draggedPiece) return;
+    const dx = e.clientX - dragStartX;
+    const dy = e.clientY - dragStartY;
+    draggedPiece.el.style.left = (initialLeft + dx) + 'px';
+    draggedPiece.el.style.top = (initialTop + dy) + 'px';
+}
+
+function onDragEnd(e) {
+    if (!draggedPiece) return;
     
-    if (selectedPartId === zoneId) {
+    window.removeEventListener('pointermove', onDragMove);
+    window.removeEventListener('pointerup', onDragEnd);
+    
+    // Hide piece momentarily to see what SVG zone is underneath the cursor
+    draggedPiece.el.style.display = 'none';
+    const elementBelow = document.elementFromPoint(e.clientX, e.clientY);
+    draggedPiece.el.style.display = 'flex';
+    
+    const zone = elementBelow ? elementBelow.closest('.drop-zone') : null;
+    
+    if (zone && zone.id === `zone-${draggedPiece.id}`) {
         // Correct Placement
-        placePart(zoneId);
+        placePart(draggedPiece.id);
     } else {
-        // Wrong Placement - silent fail or gentle error
+        // Incorrect: Bounce back to dock
         playTone('error');
-        // Visually shake the zone
-        const zone = document.getElementById(`zone-${zoneId}`);
-        zone.style.transform = "translateX(5px)";
-        setTimeout(() => zone.style.transform = "translateX(-5px)", 100);
-        setTimeout(() => zone.style.transform = "translateX(0)", 200);
+        draggedPiece.el.style.position = 'static';
+        draggedPiece.el.style.zIndex = 'auto';
+        draggedPiece.el.style.left = 'auto';
+        draggedPiece.el.style.top = 'auto';
+        draggedPiece.el.style.width = 'auto';
+        draggedPiece.el.style.height = 'auto';
+        draggedPiece.el.classList.remove('selected');
     }
+    
+    draggedPiece = null;
 }
 
 function placePart(partId) {
-    // 1. Remove from dock
     const dockPiece = document.getElementById(`dock-${partId}`);
     if (dockPiece) dockPiece.remove();
-    selectedPartId = null;
     
-    // 2. Fill the drop zone with the actual colored SVG path
     const zone = document.getElementById(`zone-${partId}`);
     const partData = levels[currentLevel].find(p => p.id === partId);
     zone.innerHTML = partData.path; // Restores original colors
     zone.classList.remove('drop-zone'); // removes dashed outline styles
     
-    // 3. Audio Feedback (Name the part!)
     playVoice(partData.name, `audio/${partId}.mp3`);
     playTone('success');
     
-    // 4. Check Win Condition
     partsPlaced++;
     if (partsPlaced === totalParts) {
         setTimeout(celebrate, 1000);
