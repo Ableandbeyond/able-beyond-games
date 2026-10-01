@@ -1,0 +1,235 @@
+* {
+    box-sizing: border-box;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    font-family: 'Outfit', sans-serif;
+    background-color: #F8FAFC;
+    overflow: hidden;
+    touch-action: none;
+}
+
+#app {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.screen {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Home Screen */
+#home-screen h1 {
+    font-size: 4rem;
+    color: #0F172A;
+    margin-bottom: 10px;
+}
+#home-screen p {
+    font-size: 1.5rem;
+    color: #475569;
+    margin-bottom: 40px;
+}
+
+.level-select {
+    display: flex;
+    gap: 30px;
+}
+
+.level-btn {
+    background-color: #3B82F6;
+    color: white;
+    border: 4px solid #1D4ED8;
+    border-radius: 20px;
+    padding: 30px 50px;
+    cursor: pointer;
+    transition: transform 0.1s, background-color 0.2s;
+    text-align: center;
+    box-shadow: 0 8px 0 #1E3A8A;
+}
+.level-btn h2 { margin: 0; font-size: 3rem; }
+.level-btn p { margin: 10px 0 0 0; font-size: 1.5rem; color: #DBEAFE; }
+
+.level-btn:active {
+    transform: translateY(8px);
+    box-shadow: 0 0 0 #1E3A8A;
+}
+
+.level-btn:nth-child(2) {
+    background-color: #8B5CF6;
+    border-color: #6D28D9;
+    box-shadow: 0 8px 0 #4C1D95;
+}
+.level-btn:nth-child(2):active {
+    box-shadow: 0 0 0 #4C1D95;
+}
+
+.back-home-btn, .back-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background-color: #E2E8F0;
+    color: #0F172A;
+    border: 3px solid #CBD5E1;
+    border-radius: 12px;
+    padding: 15px 30px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #94A3B8;
+}
+.back-home-btn:active, .back-btn:active {
+    transform: translateY(4px);
+    box-shadow: 0 0 0 #94A3B8;
+}
+
+/* Game Layout */
+.game-layout {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    padding-top: 80px; /* Space for back button */
+}
+
+@media (max-width: 900px) {
+    .game-layout {
+        flex-direction: column;
+    }
+}
+
+/* Workspace */
+.workspace {
+    flex: 2;
+    background-color: #FFFFFF;
+    border-right: 4px solid #E2E8F0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+@media (max-width: 900px) {
+    .workspace {
+        border-right: none;
+        border-bottom: 4px solid #E2E8F0;
+    }
+}
+
+#body-svg {
+    width: 100%;
+    max-width: 500px;
+    height: 100%;
+    max-height: 800px;
+}
+
+.drop-zone {
+    fill: #F1F5F9;
+    stroke: #94A3B8;
+    stroke-width: 4;
+    stroke-dasharray: 10 10;
+    transition: fill 0.3s, stroke 0.3s;
+    cursor: pointer;
+}
+.drop-zone.active-target {
+    fill: #FEF08A;
+    stroke: #EAB308;
+    stroke-dasharray: none;
+}
+.drop-zone.filled {
+    opacity: 0; /* Hide drop zone once filled to let piece show */
+}
+
+/* Dock */
+.dock-container {
+    flex: 1;
+    background-color: #F8FAFC;
+    display: flex;
+    flex-direction: column;
+}
+
+.dock-title {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    padding: 15px;
+    background-color: #E2E8F0;
+    color: #334155;
+    border-bottom: 4px solid #CBD5E1;
+}
+
+.dock {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    justify-content: center;
+    gap: 15px;
+    overflow-y: auto;
+}
+
+/* Draggable / Selectable Pieces */
+.piece {
+    background-color: #FFFFFF;
+    border: 4px solid #CBD5E1;
+    border-radius: 12px;
+    padding: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 0 #94A3B8;
+    transition: transform 0.1s, border-color 0.2s;
+    touch-action: none;
+}
+.piece svg {
+    pointer-events: none;
+}
+.piece.selected {
+    border-color: #3B82F6;
+    box-shadow: 0 4px 0 #1D4ED8;
+    transform: scale(1.05);
+    background-color: #EFF6FF;
+}
+
+/* Placed Pieces in Workspace */
+.placed-piece {
+    position: absolute;
+    pointer-events: none;
+    transition: opacity 0.3s, transform 0.3s;
+    transform-origin: center;
+}
+
+/* Celebration Overlay */
+#celebration-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(255, 255, 255, 0.9);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+#celebration-overlay h2 {
+    font-size: 5rem;
+    color: #16A34A;
+    margin-bottom: 30px;
+}

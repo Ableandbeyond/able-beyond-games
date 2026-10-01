@@ -136,6 +136,9 @@ function renderHome() {
             <button style="margin-top:0;" onclick="window.location.href='whos-in-my-space/'">Who's In My Space? 🏫</button>
             <button style="margin-top:0;" onclick="window.location.href='sensory-physics-board/'">Physics Board 🪐</button>
         </div>
+        <div class="grid-4" style="margin-bottom: 20px;">
+            <button style="margin-top:0;" onclick="window.location.href='build-a-body/'">Build a Body 🧍</button>
+        </div>
         <div class="game-card card" style="text-align: center; margin-bottom: 20px;">
           <h3>Visual Timetable Orbit</h3>
           <p style="margin: 10px 0;">Predictable daily visual schedule with spoken transition reminders.</p>
