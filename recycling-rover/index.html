@@ -156,19 +156,14 @@
   </div>
 
   <div class="controls-panel">
-    <div style="font-size: 18px; font-weight: bold; margin-bottom: -10px; color: #FFEB3B; text-align: center;">Queue commands, then press EXECUTE!</div>
-    <div class="command-queue" id="queue">
-      <!-- Commands go here -->
-    </div>
     <div class="buttons-grid">
-      <button class="btn-left" onclick="addCommand('left')"><span style="font-size: 30px;">⬅️</span> TURN LEFT</button>
-      <button class="btn-forward" onclick="addCommand('forward')"><span style="font-size: 30px;">⬆️</span> FORWARD</button>
-      <button class="btn-collect" onclick="addCommand('collect')"><span style="font-size: 30px;">⭐</span> COLLECT</button>
-      <button class="btn-right" onclick="addCommand('right')"><span style="font-size: 30px;">➡️</span> TURN RIGHT</button>
+      <button class="btn-left" onclick="executeAction('left')"><span style="font-size: 30px;">⬅️</span> TURN LEFT</button>
+      <button class="btn-forward" onclick="executeAction('forward')"><span style="font-size: 30px;">⬆️</span> FORWARD</button>
+      <button class="btn-collect" onclick="executeAction('collect')"><span style="font-size: 30px;">⭐</span> COLLECT</button>
+      <button class="btn-right" onclick="executeAction('right')"><span style="font-size: 30px;">➡️</span> TURN RIGHT</button>
     </div>
     <div class="action-buttons">
-      <button class="btn-reset" onclick="resetGame()">🔄 RESET</button>
-      <button class="btn-execute" onclick="executeCommands()">▶️ EXECUTE</button>
+      <button class="btn-reset" onclick="initGame()" style="flex: 1; padding: 20px; font-size: 24px;">🔄 RESTART GAME</button>
     </div>
   </div>
 </main>
@@ -228,7 +223,6 @@ const SIZE = 5;
 let rover = { x: 0, y: 0, dir: 0 }; // dir: 0=East, 1=South, 2=West, 3=North
 const DIRS = [ {dx:1, dy:0}, {dx:0, dy:1}, {dx:-1, dy:0}, {dx:0, dy:-1} ];
 let gridData = [];
-let queue = [];
 let isExecuting = false;
 let score = 0;
 let totalItems = 3;
@@ -236,7 +230,6 @@ let totalItems = 3;
 // DOM Elements
 const gridEl = document.getElementById('grid');
 const roverEl = document.getElementById('rover');
-const queueEl = document.getElementById('queue');
 const scoreEl = document.getElementById('score');
 const winScreen = document.getElementById('win-screen');
 const totalItemsEl = document.getElementById('total-items');
@@ -245,9 +238,6 @@ function initGame() {
   score = 0;
   scoreEl.innerText = score;
   rover = { x: 0, y: 0, dir: 0 };
-  queue = [];
-  updateQueueUI();
-  updateRoverUI();
   isExecuting = false;
   winScreen.style.display = 'none';
 
@@ -286,6 +276,8 @@ function initGame() {
       puddlesPlaced++;
     }
   }
+  
+  updateRoverUI();
 }
 
 function updateRoverUI() {
@@ -305,108 +297,72 @@ async function shakeRover() {
   await sleep(200);
 }
 
-function addCommand(cmd) {
+async function executeAction(cmd) {
   if (isExecuting) return;
-  if (queue.length >= 4) {
-    sounds.error();
-    return; // Max 4 commands as requested
-  }
-  sounds.click();
-  queue.push(cmd);
-  updateQueueUI();
-}
-
-function updateQueueUI() {
-  queueEl.innerHTML = '';
-  queue.forEach((cmd, idx) => {
-    const el = document.createElement('div');
-    el.className = 'queue-item';
-    const icons = { 'forward': '⬆️', 'left': '⬅️', 'right': '➡️', 'collect': '⭐' };
-    el.innerText = icons[cmd];
-    queueEl.appendChild(el);
-  });
-}
-
-function resetGame() {
-  if (isExecuting) return;
-  sounds.click();
-  queue = [];
-  updateQueueUI();
-}
-
-async function executeCommands() {
-  if (isExecuting || queue.length === 0) return;
   initAudio();
   isExecuting = true;
 
-  for (let i = 0; i < queue.length; i++) {
-    const cmd = queue[i];
+  if (cmd === 'forward') {
+    let nx = rover.x + DIRS[rover.dir].dx;
+    let ny = rover.y + DIRS[rover.dir].dy;
     
-    // Highlight command
-    if (queueEl.children[i]) {
-      queueEl.children[i].style.background = '#FF9800';
-    }
-
-    if (cmd === 'forward') {
-      let nx = rover.x + DIRS[rover.dir].dx;
-      let ny = rover.y + DIRS[rover.dir].dy;
-      
-      if (nx >= 0 && nx < SIZE && ny >= 0 && ny < SIZE) {
-        if (gridData[ny][nx] === 'puddle') {
-          sounds.bop();
-          await shakeRover();
-          break; // Stop execution safely
-        } else {
-          rover.x = nx;
-          rover.y = ny;
-          sounds.forward();
-        }
-      } else {
-        sounds.bop(); // Hit wall
+    if (nx >= 0 && nx < SIZE && ny >= 0 && ny < SIZE) {
+      if (gridData[ny][nx] === 'puddle') {
+        sounds.bop();
         await shakeRover();
-        break;
-      }
-    } 
-    else if (cmd === 'left') {
-      rover.dir = (rover.dir + 3) % 4;
-      sounds.turn();
-    } 
-    else if (cmd === 'right') {
-      rover.dir = (rover.dir + 1) % 4;
-      sounds.turn();
-    }
-    else if (cmd === 'collect') {
-      if (gridData[rover.y][rover.x] === 'item') {
-        gridData[rover.y][rover.x] = '';
-        document.getElementById(`cell-${rover.x}-${rover.y}`).innerHTML = '';
-        score++;
-        scoreEl.innerText = score;
-        sounds.collect();
-        createParticles(rover.x, rover.y);
-        
-        if (score >= totalItems) {
-          setTimeout(() => {
-            sounds.win();
-            winScreen.style.display = 'flex';
-          }, 500);
-        }
       } else {
-        sounds.error();
+        rover.x = nx;
+        rover.y = ny;
+        sounds.forward();
+        updateRoverUI();
+        
+        // Auto-collect logic (simpler for SEN students)
+        await sleep(400); // wait for move animation
+        if (gridData[rover.y][rover.x] === 'item') {
+          collectItem();
+        }
       }
+    } else {
+      sounds.bop(); // Hit wall
+      await shakeRover();
     }
-
+  } 
+  else if (cmd === 'left') {
+    rover.dir = (rover.dir + 3) % 4;
+    sounds.turn();
     updateRoverUI();
-    await sleep(600); // Wait for animation
-    
-    // Remove highlight
-    if (queueEl.children[i]) {
-      queueEl.children[i].style.background = '#444';
-    }
+  } 
+  else if (cmd === 'right') {
+    rover.dir = (rover.dir + 1) % 4;
+    sounds.turn();
+    updateRoverUI();
+  }
+  else if (cmd === 'collect') {
+    collectItem();
   }
 
-  queue = [];
-  updateQueueUI();
+  await sleep(200); // Short debounce to prevent double-clicking issues
   isExecuting = false;
+}
+
+function collectItem() {
+  if (gridData[rover.y][rover.x] === 'item') {
+    gridData[rover.y][rover.x] = '';
+    document.getElementById(`cell-${rover.x}-${rover.y}`).innerHTML = '';
+    score++;
+    scoreEl.innerText = score;
+    sounds.collect();
+    createParticles(rover.x, rover.y);
+    
+    if (score >= totalItems) {
+      setTimeout(() => {
+        sounds.win();
+        winScreen.style.display = 'flex';
+      }, 500);
+    }
+  } else {
+    sounds.error();
+  }
 }
 
 function sleep(ms) {
