@@ -289,17 +289,21 @@ function initGame() {
 }
 
 function updateRoverUI() {
-  const cellSize = gridEl.children[0].offsetWidth || 80;
   const gap = 5;
   const padding = 10;
-  roverEl.style.left = `${padding + rover.x * (cellSize + gap)}px`;
-  roverEl.style.top = `${padding + rover.y * (cellSize + gap)}px`;
+  roverEl.style.left = `calc(${padding}px + ${rover.x} * (var(--cell-size) + ${gap}px))`;
+  roverEl.style.top = `calc(${padding}px + ${rover.y} * (var(--cell-size) + ${gap}px))`;
   roverEl.style.transform = `rotate(${rover.dir * 90}deg)`;
 }
 
-// Ensure resize updates UI accurately
-window.addEventListener('resize', updateRoverUI);
-setTimeout(updateRoverUI, 100);
+async function shakeRover() {
+  roverEl.style.transform = `rotate(${rover.dir * 90}deg) translateX(10px)`;
+  await sleep(100);
+  roverEl.style.transform = `rotate(${rover.dir * 90}deg) translateX(-10px)`;
+  await sleep(100);
+  roverEl.style.transform = `rotate(${rover.dir * 90}deg) translateX(0px)`;
+  await sleep(200);
+}
 
 function addCommand(cmd) {
   if (isExecuting) return;
@@ -350,9 +354,7 @@ async function executeCommands() {
       if (nx >= 0 && nx < SIZE && ny >= 0 && ny < SIZE) {
         if (gridData[ny][nx] === 'puddle') {
           sounds.bop();
-          roverEl.style.transform = `rotate(${rover.dir * 90}deg) scale(0.8)`;
-          await sleep(200);
-          roverEl.style.transform = `rotate(${rover.dir * 90}deg) scale(1)`;
+          await shakeRover();
           break; // Stop execution safely
         } else {
           rover.x = nx;
@@ -361,6 +363,7 @@ async function executeCommands() {
         }
       } else {
         sounds.bop(); // Hit wall
+        await shakeRover();
         break;
       }
     } 
