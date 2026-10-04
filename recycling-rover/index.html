@@ -95,14 +95,27 @@
   }
 
   .buttons-grid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
+    display: none; /* Removing old grid */
+  }
+
+  .d-pad {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    width: 250px;
+    margin: 0 auto 20px;
+  }
+
+  .pad-empty {
+    visibility: hidden;
   }
 
   button {
     border: none; border-radius: 12px; padding: 15px; font-size: 20px; font-weight: bold;
     color: white; cursor: pointer; transition: transform 0.1s, filter 0.1s;
-    display: flex; flex-direction: column; align-items: center; gap: 5px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
     box-shadow: 0 6px 0px rgba(0,0,0,0.3);
+    aspect-ratio: 1 / 1;
   }
   
   button:active { transform: translateY(6px); box-shadow: 0 0px 0px; }
@@ -110,10 +123,14 @@
   .btn-forward { background-color: var(--btn-forward); box-shadow: 0 6px 0px #2e7031; }
   .btn-left { background-color: var(--btn-left); box-shadow: 0 6px 0px #12548a; }
   .btn-right { background-color: var(--btn-right); box-shadow: 0 6px 0px #5c1669; }
+  .btn-down { background-color: #E91E63; box-shadow: 0 6px 0px #881139; }
   .btn-collect { background-color: var(--btn-collect); box-shadow: 0 6px 0px #9e5e00; }
   
   .action-buttons {
     display: flex; gap: 15px; margin-top: 5px;
+  }
+  .action-buttons button {
+    aspect-ratio: auto;
   }
   .btn-execute { background-color: var(--btn-execute); flex: 2; font-size: 24px; padding: 20px; box-shadow: 0 6px 0px #881139;}
   .btn-reset { background-color: var(--btn-reset); flex: 1; box-shadow: 0 6px 0px #962820;}
@@ -126,7 +143,7 @@
   }
   
   #win-screen h1 { font-size: 48px; text-shadow: 0 0 20px #FFEB3B; text-align: center; margin: 20px; }
-  #win-screen button { background: #4CAF50; font-size: 32px; padding: 20px 40px; margin-top: 30px; box-shadow: 0 6px 0px #2e7031;}
+  #win-screen button { background: #4CAF50; font-size: 32px; padding: 20px 40px; margin-top: 30px; box-shadow: 0 6px 0px #2e7031; aspect-ratio: auto;}
 
   /* Particles */
   .particle {
@@ -156,11 +173,18 @@
   </div>
 
   <div class="controls-panel">
-    <div class="buttons-grid">
-      <button class="btn-left" onclick="executeAction('left')"><span style="font-size: 30px;">⬅️</span> TURN LEFT</button>
-      <button class="btn-forward" onclick="executeAction('forward')"><span style="font-size: 30px;">⬆️</span> FORWARD</button>
-      <button class="btn-collect" onclick="executeAction('collect')"><span style="font-size: 30px;">⭐</span> COLLECT</button>
-      <button class="btn-right" onclick="executeAction('right')"><span style="font-size: 30px;">➡️</span> TURN RIGHT</button>
+    <div class="d-pad">
+      <div class="pad-empty"></div>
+      <button class="btn-forward" onclick="executeAction('up')"><span style="font-size: 40px;">⬆️</span></button>
+      <div class="pad-empty"></div>
+      
+      <button class="btn-left" onclick="executeAction('left')"><span style="font-size: 40px;">⬅️</span></button>
+      <div class="pad-empty"></div>
+      <button class="btn-right" onclick="executeAction('right')"><span style="font-size: 40px;">➡️</span></button>
+      
+      <div class="pad-empty"></div>
+      <button class="btn-down" onclick="executeAction('down')"><span style="font-size: 40px;">⬇️</span></button>
+      <div class="pad-empty"></div>
     </div>
     <div class="action-buttons">
       <button class="btn-reset" onclick="initGame()" style="flex: 1; padding: 20px; font-size: 24px;">🔄 RESTART GAME</button>
@@ -200,8 +224,7 @@ function playTone(freq, type, duration, vol=0.5) {
 
 const sounds = {
   click: () => playTone(600, 'sine', 0.1, 0.3),
-  forward: () => playTone(400, 'triangle', 0.15, 0.4),
-  turn: () => playTone(500, 'triangle', 0.1, 0.3),
+  move: () => playTone(400, 'triangle', 0.15, 0.4),
   collect: () => {
     playTone(800, 'sine', 0.1);
     setTimeout(() => playTone(1200, 'sine', 0.2), 100);
@@ -221,7 +244,6 @@ const sounds = {
 // Game State
 const SIZE = 5;
 let rover = { x: 0, y: 0, dir: 0 }; // dir: 0=East, 1=South, 2=West, 3=North
-const DIRS = [ {dx:1, dy:0}, {dx:0, dy:1}, {dx:-1, dy:0}, {dx:0, dy:-1} ];
 let gridData = [];
 let isExecuting = false;
 let score = 0;
@@ -302,43 +324,46 @@ async function executeAction(cmd) {
   initAudio();
   isExecuting = true;
 
-  if (cmd === 'forward') {
-    let nx = rover.x + DIRS[rover.dir].dx;
-    let ny = rover.y + DIRS[rover.dir].dy;
-    
-    if (nx >= 0 && nx < SIZE && ny >= 0 && ny < SIZE) {
-      if (gridData[ny][nx] === 'puddle') {
-        sounds.bop();
-        await shakeRover();
-      } else {
-        rover.x = nx;
-        rover.y = ny;
-        sounds.forward();
-        updateRoverUI();
-        
-        // Auto-collect logic (simpler for SEN students)
-        await sleep(400); // wait for move animation
-        if (gridData[rover.y][rover.x] === 'item') {
-          collectItem();
-        }
-      }
-    } else {
-      sounds.bop(); // Hit wall
-      await shakeRover();
-    }
-  } 
-  else if (cmd === 'left') {
-    rover.dir = (rover.dir + 3) % 4;
-    sounds.turn();
-    updateRoverUI();
-  } 
-  else if (cmd === 'right') {
-    rover.dir = (rover.dir + 1) % 4;
-    sounds.turn();
-    updateRoverUI();
+  let nx = rover.x;
+  let ny = rover.y;
+  let newDir = rover.dir;
+
+  if (cmd === 'up') {
+    ny -= 1;
+    newDir = 3;
+  } else if (cmd === 'down') {
+    ny += 1;
+    newDir = 1;
+  } else if (cmd === 'left') {
+    nx -= 1;
+    newDir = 2;
+  } else if (cmd === 'right') {
+    nx += 1;
+    newDir = 0;
   }
-  else if (cmd === 'collect') {
-    collectItem();
+
+  rover.dir = newDir;
+  updateRoverUI(); // Turn first visually
+
+  if (nx >= 0 && nx < SIZE && ny >= 0 && ny < SIZE) {
+    if (gridData[ny][nx] === 'puddle') {
+      sounds.bop();
+      await shakeRover();
+    } else {
+      rover.x = nx;
+      rover.y = ny;
+      sounds.move();
+      updateRoverUI();
+      
+      // Auto-collect
+      await sleep(400); // wait for move animation
+      if (gridData[rover.y][rover.x] === 'item') {
+        collectItem();
+      }
+    }
+  } else {
+    sounds.bop(); // Hit wall
+    await shakeRover();
   }
 
   await sleep(200); // Short debounce to prevent double-clicking issues
