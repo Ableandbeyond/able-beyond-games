@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Recycling Rover: Playground Ops</title>
+<style>
+  :root {
+    --bg-color: #121212;
+    --grid-bg: #2a2a2a;
+    --cell-bg: #3d3d3d;
+    --text-color: #ffffff;
+    --btn-forward: #4CAF50;
+    --btn-left: #2196F3;
+    --btn-right: #9C27B0;
+    --btn-collect: #FF9800;
+    --btn-execute: #E91E63;
+    --btn-reset: #F44336;
+    --grid-size: 5;
+    --cell-size: 15vmin;
+  }
+  
+  * { box-sizing: border-box; touch-action: manipulation; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+  
+  body {
+    margin: 0; padding: 0; background-color: var(--bg-color); color: var(--text-color);
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+    min-height: 100vh; overflow-x: hidden;
+  }
+
+  header {
+    text-align: center; padding: 10px; width: 100%; background: #1a1a1a; margin-bottom: 10px;
+  }
+  header h1 { margin: 0; font-size: 24px; color: #FFEB3B; }
+  header p { margin: 5px 0 0; font-size: 18px; }
+
+  main {
+    display: flex; flex-direction: column; width: 100%; max-width: 900px;
+    align-items: center; gap: 20px; flex: 1; padding: 10px;
+  }
+
+  @media (min-width: 768px) {
+    main { flex-direction: row; align-items: flex-start; justify-content: center; }
+    :root { --cell-size: 80px; }
+  }
+
+  #grid-container {
+    background-color: var(--grid-bg);
+    padding: 10px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+    position: relative;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(var(--grid-size), var(--cell-size));
+    grid-template-rows: repeat(var(--grid-size), var(--cell-size));
+    gap: 5px;
+  }
+
+  .cell {
+    background-color: var(--cell-bg);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: calc(var(--cell-size) * 0.5);
+    position: relative;
+  }
+
+  #rover {
+    position: absolute;
+    width: var(--cell-size);
+    height: var(--cell-size);
+    display: flex; align-items: center; justify-content: center;
+    font-size: calc(var(--cell-size) * 0.6);
+    transition: transform 0.4s ease-in-out, top 0.4s ease-in-out, left 0.4s ease-in-out;
+    z-index: 10;
+  }
+
+  .puddle { background-color: #03A9F4; border-radius: 50%; width: 80%; height: 80%; }
+  
+  .controls-panel {
+    display: flex; flex-direction: column; gap: 15px; width: 100%; max-width: 400px;
+  }
+
+  .command-queue {
+    background: #222; min-height: 70px; border-radius: 8px; padding: 10px;
+    display: flex; gap: 10px; align-items: center; overflow-x: auto;
+    border: 3px dashed #555;
+  }
+
+  .queue-item {
+    font-size: 24px; background: #444; padding: 10px; border-radius: 8px;
+    min-width: 50px; text-align: center;
+  }
+
+  .buttons-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
+  }
+
+  button {
+    border: none; border-radius: 12px; padding: 15px; font-size: 20px; font-weight: bold;
+    color: white; cursor: pointer; transition: transform 0.1s, filter 0.1s;
+    display: flex; flex-direction: column; align-items: center; gap: 5px;
+    box-shadow: 0 6px 0px rgba(0,0,0,0.3);
+  }
+  
+  button:active { transform: translateY(6px); box-shadow: 0 0px 0px; }
+  
+  .btn-forward { background-color: var(--btn-forward); box-shadow: 0 6px 0px #2e7031; }
+  .btn-left { background-color: var(--btn-left); box-shadow: 0 6px 0px #12548a; }
+  .btn-right { background-color: var(--btn-right); box-shadow: 0 6px 0px #5c1669; }
+  .btn-collect { background-color: var(--btn-collect); box-shadow: 0 6px 0px #9e5e00; }
+  
+  .action-buttons {
+    display: flex; gap: 15px; margin-top: 5px;
+  }
+  .btn-execute { background-color: var(--btn-execute); flex: 2; font-size: 24px; padding: 20px; box-shadow: 0 6px 0px #881139;}
+  .btn-reset { background-color: var(--btn-reset); flex: 1; box-shadow: 0 6px 0px #962820;}
+
+  #win-screen {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.9); z-index: 100;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    color: #FFEB3B; display: none;
+  }
+  
+  #win-screen h1 { font-size: 48px; text-shadow: 0 0 20px #FFEB3B; text-align: center; margin: 20px; }
+  #win-screen button { background: #4CAF50; font-size: 32px; padding: 20px 40px; margin-top: 30px; box-shadow: 0 6px 0px #2e7031;}
+
+  /* Particles */
+  .particle {
+    position: absolute;
+    width: 10px; height: 10px;
+    background: #FFEB3B;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 50;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>♻️ Recycling Rover</h1>
+  <p>Score: <span id="score">0</span> / <span id="total-items">3</span></p>
+</header>
+
+<main>
+  <div id="grid-container">
+    <div class="grid" id="grid">
+      <!-- Cells generated by JS -->
+    </div>
+    <div id="rover">🤖</div>
+  </div>
+
+  <div class="controls-panel">
+    <div class="command-queue" id="queue">
+      <!-- Commands go here -->
+    </div>
+    <div class="buttons-grid">
+      <button class="btn-left" onclick="addCommand('left')"><span style="font-size: 30px;">⬅️</span> TURN LEFT</button>
+      <button class="btn-forward" onclick="addCommand('forward')"><span style="font-size: 30px;">⬆️</span> FORWARD</button>
+      <button class="btn-collect" onclick="addCommand('collect')"><span style="font-size: 30px;">⭐</span> COLLECT</button>
+      <button class="btn-right" onclick="addCommand('right')"><span style="font-size: 30px;">➡️</span> TURN RIGHT</button>
+    </div>
+    <div class="action-buttons">
+      <button class="btn-reset" onclick="resetGame()">🔄 RESET</button>
+      <button class="btn-execute" onclick="executeCommands()">▶️ EXECUTE</button>
+    </div>
+  </div>
+</main>
+
+<div id="win-screen">
+  <h1>🎉 ALL RECYCLING COLLECTED! 🎉</h1>
+  <button onclick="initGame()">🔄 PLAY AGAIN</button>
+</div>
+
+<script>
+// Web Audio API for sounds
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+let audioCtx;
+
+function initAudio() {
+  if (!audioCtx) audioCtx = new AudioContext();
+}
+
+function playTone(freq, type, duration, vol=0.5) {
+  if (!audioCtx) initAudio();
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = type;
+  osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+  
+  gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+  
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start();
+  osc.stop(audioCtx.currentTime + duration);
+}
+
+const sounds = {
+  click: () => playTone(600, 'sine', 0.1, 0.3),
+  forward: () => playTone(400, 'triangle', 0.15, 0.4),
+  turn: () => playTone(500, 'triangle', 0.1, 0.3),
+  collect: () => {
+    playTone(800, 'sine', 0.1);
+    setTimeout(() => playTone(1200, 'sine', 0.2), 100);
+  },
+  bop: () => {
+    playTone(200, 'square', 0.1);
+    setTimeout(() => playTone(150, 'square', 0.2), 100);
+  },
+  error: () => playTone(150, 'sawtooth', 0.3),
+  win: () => {
+    [523, 659, 783, 1046].forEach((f, i) => {
+      setTimeout(() => playTone(f, 'sine', 0.3), i * 150);
+    });
+  }
+};
+
+// Game State
+const SIZE = 5;
+let rover = { x: 0, y: 0, dir: 0 }; // dir: 0=East, 1=South, 2=West, 3=North
+const DIRS = [ {dx:1, dy:0}, {dx:0, dy:1}, {dx:-1, dy:0}, {dx:0, dy:-1} ];
+let gridData = [];
+let queue = [];
+let isExecuting = false;
+let score = 0;
+let totalItems = 3;
+
+// DOM Elements
+const gridEl = document.getElementById('grid');
+const roverEl = document.getElementById('rover');
+const queueEl = document.getElementById('queue');
+const scoreEl = document.getElementById('score');
+const winScreen = document.getElementById('win-screen');
+const totalItemsEl = document.getElementById('total-items');
+
+function initGame() {
+  score = 0;
+  scoreEl.innerText = score;
+  rover = { x: 0, y: 0, dir: 0 };
+  queue = [];
+  updateQueueUI();
+  updateRoverUI();
+  isExecuting = false;
+  winScreen.style.display = 'none';
+
+  // Generate grid
+  gridData = Array(SIZE).fill().map(() => Array(SIZE).fill(''));
+  gridEl.innerHTML = '';
+  
+  for(let y=0; y<SIZE; y++){
+    for(let x=0; x<SIZE; x++){
+      const cell = document.createElement('div');
+      cell.className = 'cell';
+      cell.id = `cell-${x}-${y}`;
+      gridEl.appendChild(cell);
+    }
+  }
+
+  // Place items and puddles
+  let itemsPlaced = 0;
+  while(itemsPlaced < totalItems) {
+    let rx = Math.floor(Math.random() * SIZE);
+    let ry = Math.floor(Math.random() * SIZE);
+    if ((rx !== 0 || ry !== 0) && gridData[ry][rx] === '') {
+      gridData[ry][rx] = 'item';
+      document.getElementById(`cell-${rx}-${ry}`).innerHTML = ['🥤','🥫','🧴'][Math.floor(Math.random()*3)];
+      itemsPlaced++;
+    }
+  }
+
+  let puddlesPlaced = 0;
+  while(puddlesPlaced < 2) {
+    let rx = Math.floor(Math.random() * SIZE);
+    let ry = Math.floor(Math.random() * SIZE);
+    if ((rx !== 0 || ry !== 0) && gridData[ry][rx] === '') {
+      gridData[ry][rx] = 'puddle';
+      document.getElementById(`cell-${rx}-${ry}`).innerHTML = '<div class="puddle"></div>';
+      puddlesPlaced++;
+    }
+  }
+}
+
+function updateRoverUI() {
+  const cellSize = gridEl.children[0].offsetWidth || 80;
+  const gap = 5;
+  roverEl.style.left = `${rover.x * (cellSize + gap)}px`;
+  roverEl.style.top = `${rover.y * (cellSize + gap)}px`;
+  roverEl.style.transform = `rotate(${rover.dir * 90}deg)`;
+}
+
+// Ensure resize updates UI accurately
+window.addEventListener('resize', updateRoverUI);
+setTimeout(updateRoverUI, 100);
+
+function addCommand(cmd) {
+  if (isExecuting) return;
+  if (queue.length >= 4) {
+    sounds.error();
+    return; // Max 4 commands as requested
+  }
+  sounds.click();
+  queue.push(cmd);
+  updateQueueUI();
+}
+
+function updateQueueUI() {
+  queueEl.innerHTML = '';
+  queue.forEach((cmd, idx) => {
+    const el = document.createElement('div');
+    el.className = 'queue-item';
+    const icons = { 'forward': '⬆️', 'left': '⬅️', 'right': '➡️', 'collect': '⭐' };
+    el.innerText = icons[cmd];
+    queueEl.appendChild(el);
+  });
+}
+
+function resetGame() {
+  if (isExecuting) return;
+  sounds.click();
+  queue = [];
+  updateQueueUI();
+}
+
+async function executeCommands() {
+  if (isExecuting || queue.length === 0) return;
+  initAudio();
+  isExecuting = true;
+
+  for (let i = 0; i < queue.length; i++) {
+    const cmd = queue[i];
+    
+    // Highlight command
+    if (queueEl.children[i]) {
+      queueEl.children[i].style.background = '#FF9800';
+    }
+
+    if (cmd === 'forward') {
+      let nx = rover.x + DIRS[rover.dir].dx;
+      let ny = rover.y + DIRS[rover.dir].dy;
+      
+      if (nx >= 0 && nx < SIZE && ny >= 0 && ny < SIZE) {
+        if (gridData[ny][nx] === 'puddle') {
+          sounds.bop();
+          roverEl.style.transform = `rotate(${rover.dir * 90}deg) scale(0.8)`;
+          await sleep(200);
+          roverEl.style.transform = `rotate(${rover.dir * 90}deg) scale(1)`;
+          break; // Stop execution safely
+        } else {
+          rover.x = nx;
+          rover.y = ny;
+          sounds.forward();
+        }
+      } else {
+        sounds.bop(); // Hit wall
+        break;
+      }
+    } 
+    else if (cmd === 'left') {
+      rover.dir = (rover.dir + 3) % 4;
+      sounds.turn();
+    } 
+    else if (cmd === 'right') {
+      rover.dir = (rover.dir + 1) % 4;
+      sounds.turn();
+    }
+    else if (cmd === 'collect') {
+      if (gridData[rover.y][rover.x] === 'item') {
+        gridData[rover.y][rover.x] = '';
+        document.getElementById(`cell-${rover.x}-${rover.y}`).innerHTML = '';
+        score++;
+        scoreEl.innerText = score;
+        sounds.collect();
+        createParticles(rover.x, rover.y);
+        
+        if (score >= totalItems) {
+          setTimeout(() => {
+            sounds.win();
+            winScreen.style.display = 'flex';
+          }, 500);
+        }
+      } else {
+        sounds.error();
+      }
+    }
+
+    updateRoverUI();
+    await sleep(600); // Wait for animation
+    
+    // Remove highlight
+    if (queueEl.children[i]) {
+      queueEl.children[i].style.background = '#444';
+    }
+  }
+
+  queue = [];
+  updateQueueUI();
+  isExecuting = false;
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function createParticles(x, y) {
+  const cellSize = gridEl.children[0].offsetWidth;
+  const gap = 5;
+  const px = x * (cellSize + gap) + cellSize/2;
+  const py = y * (cellSize + gap) + cellSize/2;
+  
+  for(let i=0; i<15; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = px + 'px';
+    p.style.top = py + 'px';
+    document.getElementById('grid-container').appendChild(p);
+    
+    const angle = Math.random() * Math.PI * 2;
+    const dist = Math.random() * 50 + 20;
+    const tx = px + Math.cos(angle) * dist;
+    const ty = py + Math.sin(angle) * dist;
+    
+    p.animate([
+      { transform: 'translate(-50%, -50%) scale(1)', opacity: 1 },
+      { transform: `translate(${tx - px}px, ${ty - py}px) scale(0)`, opacity: 0 }
+    ], { duration: 600, easing: 'ease-out' });
+    
+    setTimeout(() => p.remove(), 600);
+  }
+}
+
+// Initialize on load
+window.onload = initGame;
+</script>
+</body>
+</html>
