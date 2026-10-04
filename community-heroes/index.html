@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Community Heroes</title>
+<style>
+/* CSS */
+:root {
+  --bg: #121212;
+  --text: #ffffff;
+}
+body { margin: 0; font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); color: var(--text); user-select: none; overflow-x: hidden; touch-action: manipulation; }
+header { padding: 15px; text-align: center; position: relative; }
+.back-btn { position: absolute; left: 15px; top: 15px; background: #2196F3; color: #fff; padding: 15px 30px; border-radius: 12px; text-decoration: none; font-weight: bold; font-size: 24px; box-shadow: 0 6px 0 #12548a; border: 2px solid white; }
+.mode-toggle { display: flex; justify-content: center; gap: 20px; margin-top: 15px; }
+.mode-btn { background: #333; color: #fff; border: 4px solid transparent; padding: 15px 30px; font-size: 24px; border-radius: 12px; cursor: pointer; transition: 0.2s; font-weight: bold; }
+.mode-btn.active { border-color: #FFEB3B; background: #444; }
+
+#prompt-container { margin: 20px auto; text-align: center; font-size: 32px; font-weight: bold; color: #FFEB3B; min-height: 40px; }
+
+.grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 20px; max-width: 1200px; margin: 0 auto; }
+@media (max-width: 1000px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 700px) { .grid { grid-template-columns: repeat(2, 1fr); } .back-btn { padding: 10px 15px; font-size: 16px; position: static; display: inline-block; margin-bottom: 15px;} }
+
+.card { 
+  background: #2a2a2a; border-radius: 16px; padding: 20px; text-align: center; cursor: pointer;
+  box-shadow: 0 8px 0 rgba(0,0,0,0.5); transition: transform 0.1s;
+  display: flex; flex-direction: column; justify-content: center; align-items: center; aspect-ratio: 1;
+}
+.card:active { transform: translateY(8px); box-shadow: 0 0px 0; }
+.card-icon { font-size: 80px; margin-bottom: 10px; }
+.card-title { font-size: 24px; font-weight: bold; }
+
+/* Modal */
+#modal {
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.95);
+  display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 1000;
+  padding: 20px; box-sizing: border-box; text-align: center;
+}
+#modal-content {
+  background: #333; border-radius: 30px; padding: 40px; max-width: 600px; width: 100%;
+  animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+@keyframes pop { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+#modal-icon { font-size: 150px; margin: 0; }
+#modal-title { font-size: 48px; color: #FFEB3B; margin: 20px 0; }
+#modal-desc { font-size: 32px; line-height: 1.4; }
+#modal-close { margin-top: 40px; background: #FF5722; color: #fff; border: 2px solid white; padding: 20px 40px; font-size: 32px; font-weight: bold; border-radius: 16px; cursor: pointer; box-shadow: 0 8px 0 #bf360c; }
+#modal-close:active { transform: translateY(8px); box-shadow: 0 0 0; }
+
+/* Confetti */
+.confetti { position: absolute; width: 15px; height: 15px; z-index: 999; pointer-events: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="../index.html" class="back-btn">🏠 BACK TO MAIN MENU</a>
+  <h1 style="font-size: 40px; margin: 10px 0 0 0;">Community Heroes</h1>
+  <div class="mode-toggle">
+    <button class="mode-btn active" id="btn-explore" onclick="setMode('explore')">🔍 Explore Mode</button>
+    <button class="mode-btn" id="btn-find" onclick="setMode('find')">❓ Find Mode</button>
+  </div>
+</header>
+
+<div id="prompt-container"></div>
+<div class="grid" id="grid"></div>
+
+<div id="modal">
+  <div id="modal-content">
+    <div id="modal-icon"></div>
+    <div id="modal-title"></div>
+    <div id="modal-desc"></div>
+    <button id="modal-close" onclick="closeModal()">👍 AWESOME!</button>
+  </div>
+</div>
+
+<script>
+// Web Audio API
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+let audioCtx;
+function initAudio() { if (!audioCtx) audioCtx = new AudioContext(); }
+function playTone(freq, type, duration, vol=0.5) {
+  if (!audioCtx) initAudio();
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = type;
+  osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+  gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start();
+  osc.stop(audioCtx.currentTime + duration);
+}
+const sounds = {
+  click: () => playTone(600, 'sine', 0.1, 0.3),
+  success: () => {
+    [523, 659, 783, 1046].forEach((f, i) => setTimeout(() => playTone(f, 'sine', 0.2, 0.4), i * 150));
+  },
+  error: () => playTone(200, 'square', 0.2, 0.3),
+  reveal: () => {
+    playTone(400, 'sine', 0.1, 0.2);
+    setTimeout(() => playTone(600, 'sine', 0.2, 0.3), 100);
+  }
+};
+
+function speak(text) {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 0.9;
+    utterance.pitch = 1.1;
+    window.speechSynthesis.speak(utterance);
+  }
+}
+
+const heroes = [
+  { id: 'teacher', name: 'Teacher', desc: 'I help you learn new things every day.', icon: '🧑‍🏫', color: '#4CAF50', shadow: '#2E7D32' },
+  { id: 'police', name: 'Police Officer', desc: 'I help keep our community safe.', icon: '👮', color: '#2196F3', shadow: '#1565C0' },
+  { id: 'doctor', name: 'Doctor & Nurse', desc: 'We help you feel better when you are sick.', icon: '🧑‍⚕️', color: '#E91E63', shadow: '#C2185B' },
+  { id: 'chef', name: 'Chef', desc: 'I cook delicious food for people to eat.', icon: '🧑‍🍳', color: '#FF9800', shadow: '#E65100' },
+  { id: 'shop', name: 'Shop Assistant', desc: 'I help you find and buy things in the store.', icon: '🏪', color: '#9C27B0', shadow: '#6A1B9A' },
+  { id: 'fire', name: 'Firefighter', desc: 'I put out fires and rescue people in danger.', icon: '🧑‍🚒', color: '#F44336', shadow: '#C62828' },
+  { id: 'bus', name: 'Bus Driver', desc: 'I drive people safely where they need to go.', icon: '🚌', color: '#FFC107', shadow: '#F57F17' },
+  { id: 'recycle', name: 'Recycling Operative', desc: 'I collect recycling to help the planet.', icon: '♻️', color: '#8BC34A', shadow: '#558B2F' },
+  { id: 'builder', name: 'Builder', desc: 'I build houses, schools, and hospitals.', icon: '👷', color: '#FF5722', shadow: '#D84315' },
+  { id: 'animal', name: 'Animal Carer', desc: 'I look after pets and wild animals.', icon: '🐾', color: '#795548', shadow: '#4E342E' },
+  { id: 'librarian', name: 'Librarian', desc: 'I help you find amazing books to read.', icon: '📚', color: '#673AB7', shadow: '#4527A0' },
+  { id: 'gardener', name: 'Gardener', desc: 'I plant trees and beautiful flowers.', icon: '🧑‍🌾', color: '#00BCD4', shadow: '#00838F' }
+];
+
+let mode = 'explore'; // 'explore' or 'find'
+let currentTarget = null;
+const gridEl = document.getElementById('grid');
+const promptEl = document.getElementById('prompt-container');
+const modal = document.getElementById('modal');
+
+function renderGrid() {
+  gridEl.innerHTML = '';
+  heroes.forEach(h => {
+    const btn = document.createElement('div');
+    btn.className = 'card';
+    btn.style.backgroundColor = h.color;
+    btn.style.boxShadow = `0 8px 0 ${h.shadow}`;
+    btn.innerHTML = `<div class="card-icon">${h.icon}</div><div class="card-title">${h.name}</div>`;
+    btn.onclick = () => handleCardClick(h, btn);
+    gridEl.appendChild(btn);
+  });
+}
+
+function setMode(newMode) {
+  initAudio();
+  sounds.click();
+  mode = newMode;
+  document.getElementById('btn-explore').className = mode === 'explore' ? 'mode-btn active' : 'mode-btn';
+  document.getElementById('btn-find').className = mode === 'find' ? 'mode-btn active' : 'mode-btn';
+  
+  if (mode === 'find') {
+    pickNewTarget();
+  } else {
+    promptEl.innerText = '';
+    window.speechSynthesis?.cancel();
+  }
+}
+
+function pickNewTarget() {
+  currentTarget = heroes[Math.floor(Math.random() * heroes.length)];
+  const promptText = `Find the ${currentTarget.name}!`;
+  promptEl.innerText = promptText;
+  speak(promptText);
+}
+
+function handleCardClick(hero, btn) {
+  initAudio();
+  if (mode === 'explore') {
+    sounds.reveal();
+    showModal(hero);
+    speak(`${hero.name}. ${hero.desc}`);
+  } else if (mode === 'find') {
+    if (hero.id === currentTarget.id) {
+      sounds.success();
+      createConfetti();
+      showModal(hero);
+      speak(`Great job! You found the ${hero.name}. ${hero.desc}`);
+    } else {
+      sounds.error();
+      btn.style.transform = 'translateX(10px)';
+      setTimeout(() => btn.style.transform = 'translateX(-10px)', 100);
+      setTimeout(() => btn.style.transform = 'translateY(0)', 200);
+      speak(`That is the ${hero.name}. We are looking for the ${currentTarget.name}.`);
+    }
+  }
+}
+
+function showModal(hero) {
+  document.getElementById('modal-icon').innerText = hero.icon;
+  document.getElementById('modal-title').innerText = hero.name;
+  document.getElementById('modal-desc').innerText = hero.desc;
+  document.getElementById('modal-content').style.backgroundColor = hero.color;
+  modal.style.display = 'flex';
+}
+
+function closeModal() {
+  sounds.click();
+  modal.style.display = 'none';
+  window.speechSynthesis?.cancel();
+  if (mode === 'find') {
+    setTimeout(pickNewTarget, 500);
+  }
+}
+
+function createConfetti() {
+  for(let i=0; i<50; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.backgroundColor = ['#FFEB3B', '#4CAF50', '#2196F3', '#E91E63', '#FF9800'][Math.floor(Math.random()*5)];
+    c.style.left = '50vw';
+    c.style.top = '50vh';
+    document.body.appendChild(c);
+    
+    const angle = Math.random() * Math.PI * 2;
+    const velocity = 15 + Math.random() * 20;
+    let vx = Math.cos(angle) * velocity;
+    let vy = Math.sin(angle) * velocity - 10;
+    
+    let x = window.innerWidth / 2;
+    let y = window.innerHeight / 2;
+    
+    const anim = setInterval(() => {
+      vy += 0.5; // gravity
+      x += vx;
+      y += vy;
+      c.style.left = x + 'px';
+      c.style.top = y + 'px';
+      c.style.transform = `rotate(${x}deg)`;
+      
+      if (y > window.innerHeight + 50) {
+        clearInterval(anim);
+        c.remove();
+      }
+    }, 20);
+  }
+}
+
+renderGrid();
+</script>
+</body>
+</html>
