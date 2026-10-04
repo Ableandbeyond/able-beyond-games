@@ -187,7 +187,6 @@
       <div class="pad-empty"></div>
     </div>
     <div class="action-buttons">
-      <button class="btn-collect" onclick="executeAction('collect')" style="flex: 1; padding: 20px; font-size: 24px;">⭐ COLLECT</button>
       <button class="btn-reset" onclick="initGame()" style="flex: 1; padding: 20px; font-size: 24px;">🔄 RESET</button>
     </div>
   </div>
@@ -355,6 +354,12 @@ async function executeAction(cmd) {
       rover.y = ny;
       sounds.move();
       updateRoverUI();
+      
+      // Auto-collect
+      await sleep(400); // wait for move animation
+      if (gridData[rover.y][rover.x] === 'item') {
+        collectItem();
+      }
     }
   } else {
     sounds.bop(); // Hit wall
