@@ -142,6 +142,7 @@
 <body>
 
 <header>
+  <a href="../index.html" style="display: inline-block; background: #333; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; margin-bottom: 15px; font-size: 18px;">⬅️ Back to Home</a>
   <h1>♻️ Recycling Rover</h1>
   <p>Score: <span id="score">0</span> / <span id="total-items">3</span></p>
 </header>
@@ -155,6 +156,7 @@
   </div>
 
   <div class="controls-panel">
+    <div style="font-size: 18px; font-weight: bold; margin-bottom: -10px; color: #FFEB3B; text-align: center;">Queue commands, then press EXECUTE!</div>
     <div class="command-queue" id="queue">
       <!-- Commands go here -->
     </div>
@@ -289,8 +291,9 @@ function initGame() {
 function updateRoverUI() {
   const cellSize = gridEl.children[0].offsetWidth || 80;
   const gap = 5;
-  roverEl.style.left = `${rover.x * (cellSize + gap)}px`;
-  roverEl.style.top = `${rover.y * (cellSize + gap)}px`;
+  const padding = 10;
+  roverEl.style.left = `${padding + rover.x * (cellSize + gap)}px`;
+  roverEl.style.top = `${padding + rover.y * (cellSize + gap)}px`;
   roverEl.style.transform = `rotate(${rover.dir * 90}deg)`;
 }
 
