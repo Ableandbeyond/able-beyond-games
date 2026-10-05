@@ -112,6 +112,11 @@ function renderHome() {
             <div class="big">Start an activity</div>
             <div class="small">Choose a calm activity below.</div>
         </div>
+        <div class="game-card card" style="text-align: center; margin-bottom: 20px; background: #ffe0b2; border-color: #ffb74d;">
+          <h3>🌟 New Feature</h3>
+          <p style="margin: 10px 0; color: #333;">Check out the new professional Teacher Portfolio & IEP Dashboard!</p>
+          <a href="portfolio.html" class="play-btn"><button style="background: #ef6c00;">View Portfolio</button></a>
+        </div>
         <div class="grid-4" style="margin-bottom: 20px;">
             <button onclick="navTo('Socks')">Matching Socks 🧦</button>
             <button onclick="navTo('Sandwich')">Sandwich Maker 🥪</button>

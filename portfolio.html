@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Able & Beyond Support - Portfolio & Templates</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#121212',
+                            light: '#f8fafc',
+                            accent: '#2563eb',
+                            success: '#16a34a',
+                            warning: '#d97706',
+                            highlight: '#fef08a'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Segoe UI', system-ui, sans-serif; }
+        .modal-open { overflow: hidden; }
+        .high-contrast-focus:focus { outline: 4px solid #fef08a; outline-offset: 2px; }
+    </style>
+</head>
+<body class="bg-brand-light text-slate-900 antialiased selection:bg-brand-highlight selection:text-slate-900">
+
+    <!-- Header -->
+    <header class="bg-brand-dark text-white shadow-xl sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="text-center sm:text-left">
+                <h1 class="text-3xl font-extrabold tracking-tight">Able & Beyond Support</h1>
+                <p class="text-slate-300 text-sm mt-1 font-medium">Specialized Educational Interactive Templates</p>
+            </div>
+            <nav class="flex flex-wrap justify-center gap-4 sm:gap-6">
+                <a href="#portfolio" class="text-lg font-semibold hover:text-brand-highlight high-contrast-focus transition-colors flex items-center">Portfolio Grid</a>
+                <a href="#co-creation" class="text-lg font-semibold hover:text-brand-highlight high-contrast-focus transition-colors flex items-center">Request a Build</a>
+                <a href="index.html" class="text-lg font-semibold bg-brand-accent px-5 py-2 rounded-lg hover:bg-blue-500 high-contrast-focus transition-colors shadow-lg flex items-center">Return to Arcade</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
+        <div class="text-center max-w-4xl mx-auto">
+            <h2 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-slate-900 leading-tight mb-6">Empowering Neurodiverse Learners Through Targeted Play</h2>
+            <p class="text-xl sm:text-2xl text-slate-700 mb-10 leading-relaxed font-medium">
+                Accessible, high-contrast, and low-cognitive-load web games designed specifically for SEN, PMLD, and early years education. Fully customizable to meet individual IEP targets.
+            </p>
+            <a href="#portfolio" class="inline-flex items-center justify-center px-8 py-4 text-xl font-bold rounded-xl text-brand-dark bg-brand-highlight hover:bg-yellow-200 shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-1">
+                Explore the Interventions
+            </a>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="bg-white py-16 sm:py-24 border-t border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h3 class="text-3xl sm:text-4xl font-extrabold text-slate-900 border-l-8 border-brand-accent pl-5 mb-16">Live Portfolio Grid</h3>
+            
+            <div id="grid-container" class="space-y-20">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Co-Creation Request Form -->
+    <section id="co-creation" class="bg-slate-900 text-white py-16 sm:py-24 border-t border-brand-accent border-t-8">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl sm:text-4xl font-extrabold mb-4 text-brand-highlight">Co-Creation Request</h3>
+                <p class="text-slate-300 text-xl">Need a bespoke interactive tool for a specific student? Request a pilot build below.</p>
+            </div>
+            
+            <form onsubmit="handleForm(event)" class="bg-slate-800 rounded-2xl shadow-2xl p-6 sm:p-12 border border-slate-700">
+                <div class="space-y-8">
+                    <div>
+                        <label class="block text-xl font-semibold mb-2">Educator Name / Role</label>
+                        <input type="text" required class="w-full bg-slate-900 border border-slate-600 rounded-xl px-5 py-4 text-white text-lg focus:outline-none focus:border-brand-highlight focus:ring-2 focus:ring-brand-highlight transition-colors">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-xl font-semibold mb-2">Target Learning Outcome (IEP Goal)</label>
+                        <textarea required rows="4" placeholder="e.g., Student will independently select a self-regulation activity..." class="w-full bg-slate-900 border border-slate-600 rounded-xl px-5 py-4 text-white text-lg focus:outline-none focus:border-brand-highlight focus:ring-2 focus:ring-brand-highlight transition-colors"></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-xl font-semibold mb-3">Preferred Mechanic Template</label>
+                        <div class="grid sm:grid-cols-2 gap-4">
+                            <label class="flex items-center p-5 border border-slate-600 rounded-xl cursor-pointer hover:bg-slate-700 transition-colors">
+                                <input type="radio" name="mechanic" value="matching" class="w-6 h-6 text-brand-accent" checked>
+                                <span class="ml-4 font-semibold text-lg">Matching / Sorting Cards</span>
+                            </label>
+                            <label class="flex items-center p-5 border border-slate-600 rounded-xl cursor-pointer hover:bg-slate-700 transition-colors">
+                                <input type="radio" name="mechanic" value="choice_board" class="w-6 h-6 text-brand-accent">
+                                <span class="ml-4 font-semibold text-lg">Visual Choice Board</span>
+                            </label>
+                            <label class="flex items-center p-5 border border-slate-600 rounded-xl cursor-pointer hover:bg-slate-700 transition-colors">
+                                <input type="radio" name="mechanic" value="sequencing" class="w-6 h-6 text-brand-accent">
+                                <span class="ml-4 font-semibold text-lg">Sequencing / Navigation</span>
+                            </label>
+                            <label class="flex items-center p-5 border border-slate-600 rounded-xl cursor-pointer hover:bg-slate-700 transition-colors">
+                                <input type="radio" name="mechanic" value="timer" class="w-6 h-6 text-brand-accent">
+                                <span class="ml-4 font-semibold text-lg">Pacing Timer / Transition Tracker</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xl font-semibold mb-2">Accessibility Needs</label>
+                        <input type="text" placeholder="e.g., Ultra-high contrast, switch accessible, no audio" class="w-full bg-slate-900 border border-slate-600 rounded-xl px-5 py-4 text-white text-lg focus:outline-none focus:border-brand-highlight focus:ring-2 focus:ring-brand-highlight transition-colors">
+                    </div>
+
+                    <button type="submit" class="w-full bg-brand-success hover:bg-green-600 text-white font-extrabold text-2xl py-5 rounded-xl shadow-lg hover:shadow-2xl transition-all transform hover:-translate-y-1 flex justify-center items-center gap-3">
+                        <span>Submit Request</span>
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Modal for iFrame -->
+    <div id="game-modal" class="fixed inset-0 bg-slate-900/95 z-50 hidden flex-col items-center justify-center p-2 sm:p-6 backdrop-blur-sm transition-opacity">
+        <div class="w-full max-w-7xl bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col h-full max-h-[95vh]">
+            <div class="px-4 sm:px-6 py-4 bg-slate-100 border-b border-slate-200 flex justify-between items-center shrink-0">
+                <h3 id="modal-title" class="text-2xl font-bold text-slate-900">Game Demo</h3>
+                <button onclick="closeModal()" class="text-slate-500 hover:text-red-600 focus:outline-none p-2 rounded-full hover:bg-red-50 transition-colors">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div class="flex-1 w-full bg-black relative">
+                <iframe id="game-iframe" src="" class="absolute inset-0 w-full h-full border-0"></iframe>
+            </div>
+            <div class="px-4 sm:px-6 py-4 bg-slate-50 border-t border-slate-200 flex flex-wrap justify-between items-center gap-4 shrink-0">
+                <a id="modal-fullscreen-btn" href="#" target="_blank" class="text-brand-accent font-semibold hover:underline flex items-center gap-2 text-lg">
+                    Open fullscreen <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                </a>
+                <button onclick="closeModal()" class="px-8 py-3 bg-slate-800 hover:bg-slate-900 text-white font-bold text-lg rounded-xl transition-colors shadow-lg hover:shadow-xl">Close Preview</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Toast -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-green-500 text-white px-6 py-4 rounded-xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center gap-3">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+        <span class="font-bold text-lg">Request Sent Successfully!</span>
+    </div>
+
+    <script>
+        const categories = [
+            {
+                name: "Life Skills & Pre-Vocational",
+                description: "Simulations designed to build independence and understanding of community roles.",
+                color: "blue",
+                games: [
+                    {
+                        title: "Community Heroes",
+                        url: "community-heroes/index.html",
+                        impact: "Builds vocational awareness and vocabulary. Utilizes errorless learning through distinct visual and auditory feedback loops.",
+                        target: "Student will independently identify 5 community helpers and their roles.",
+                        icon: "👩‍🚒"
+                    },
+                    {
+                        title: "Recycling Rover",
+                        url: "recycling-rover/index.html",
+                        impact: "Teaches multi-step sequencing and direct absolute movement mapping to reduce cognitive load.",
+                        target: "Student will successfully navigate a grid to sort 3 objects without prompts.",
+                        icon: "🤖"
+                    }
+                ]
+            },
+            {
+                name: "Sensory & Emotional Regulation",
+                description: "Calm, cause-and-effect environments to lower anxiety and manage sensory diets.",
+                color: "teal",
+                games: [
+                    {
+                        title: "Sensory Choice Board",
+                        url: "sensory-physics-board/index.html",
+                        impact: "Provides immediate, satisfying visual physics responses to touch, promoting self-advocacy for sensory needs.",
+                        target: "Student will use the board to request a sensory break when showing signs of dysregulation.",
+                        icon: "✨"
+                    }
+                ]
+            },
+            {
+                name: "Cognitive & Early Literacy",
+                description: "Foundational matching, sorting, and identification tasks.",
+                color: "purple",
+                games: [
+                    {
+                        title: "Animal Matching",
+                        url: "animal-matching/index.html",
+                        impact: "Enhances working memory and visual discrimination with an uncluttered, high-contrast UI.",
+                        target: "Student will accurately match identical pictures in a field of 6.",
+                        icon: "🦁"
+                    },
+                    {
+                        title: "Build a Body",
+                        url: "build-a-body/index.html",
+                        impact: "Reinforces bodily autonomy and spatial awareness.",
+                        target: "Student will correctly place 4 major body parts on a blank template.",
+                        icon: "🧍"
+                    }
+                ]
+            },
+            {
+                name: "Routines & Transitions",
+                description: "Structured interventions to reduce transition anxiety.",
+                color: "orange",
+                games: [
+                    {
+                        title: "Visual Timetable Orbit",
+                        url: "timetable-orbit/index.html",
+                        impact: "Provides a predictable daily visual schedule with spoken transition reminders.",
+                        target: "Student will check schedule independently before transitioning to the next activity.",
+                        icon: "📅"
+                    }
+                ]
+            }
+        ];
+
+        function renderPortfolio() {
+            const container = document.getElementById('grid-container');
+            
+            categories.forEach(cat => {
+                const section = document.createElement('div');
+                
+                const bgColors = {
+                    blue: 'bg-blue-500',
+                    teal: 'bg-teal-500',
+                    purple: 'bg-purple-500',
+                    orange: 'bg-orange-500'
+                };
+                
+                let gamesHtml = cat.games.map(game => `
+                    <div class="bg-white rounded-3xl shadow-lg border border-slate-200 overflow-hidden flex flex-col hover:shadow-2xl transition-all duration-300 group transform hover:-translate-y-1">
+                        <div class="p-10 bg-slate-50 flex justify-center items-center border-b border-slate-100 group-hover:bg-slate-100 transition-colors cursor-pointer" onclick="openModal('${game.title}', '${game.url}')">
+                            <span class="text-8xl transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 drop-shadow-md">${game.icon}</span>
+                        </div>
+                        <div class="p-8 flex-1 flex flex-col">
+                            <h5 class="text-3xl font-extrabold text-slate-900 mb-4">${game.title}</h5>
+                            
+                            <div class="mb-6 flex-1">
+                                <h6 class="text-sm font-extrabold text-slate-400 uppercase tracking-wider mb-2">Teacher Impact</h6>
+                                <p class="text-slate-700 text-base leading-relaxed font-medium">${game.impact}</p>
+                            </div>
+                            
+                            <div class="bg-brand-highlight/20 border-l-4 border-brand-warning p-5 rounded-r-xl mb-8">
+                                <h6 class="text-xs font-extrabold text-slate-800 uppercase tracking-wider mb-2 flex items-center gap-2">
+                                    <svg class="w-5 h-5 text-brand-warning" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                    IEP Target Example
+                                </h6>
+                                <p class="text-slate-900 font-semibold text-sm leading-relaxed">${game.target}</p>
+                            </div>
+                            
+                            <button onclick="openModal('${game.title}', '${game.url}')" class="w-full py-4 bg-brand-dark text-white font-extrabold text-xl rounded-xl hover:bg-brand-accent transition-colors flex justify-center items-center gap-3 shadow-md hover:shadow-lg">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                Play Demo
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+
+                section.innerHTML = `
+                    <div class="mb-8">
+                        <h4 class="text-3xl font-extrabold text-slate-900 flex items-center gap-4">
+                            <span class="w-5 h-5 rounded-full ${bgColors[cat.color]} shadow-inner"></span>
+                            ${cat.name}
+                        </h4>
+                        <p class="text-slate-600 mt-3 text-xl ml-9 font-medium max-w-3xl">${cat.description}</p>
+                    </div>
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+                        ${gamesHtml}
+                    </div>
+                `;
+                container.appendChild(section);
+            });
+        }
+
+        const modal = document.getElementById('game-modal');
+        const iframe = document.getElementById('game-iframe');
+        const modalTitle = document.getElementById('modal-title');
+        const fullscreenBtn = document.getElementById('modal-fullscreen-btn');
+
+        function openModal(title, url) {
+            modalTitle.innerText = title;
+            iframe.src = url;
+            fullscreenBtn.href = url;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.classList.add('modal-open');
+        }
+
+        function closeModal() {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.classList.remove('modal-open');
+            iframe.src = ''; // Stop audio/video
+        }
+
+        function handleForm(e) {
+            e.preventDefault();
+            const toast = document.getElementById('toast');
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+            e.target.reset();
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', renderPortfolio);
+    </script>
+</body>
+</html>
