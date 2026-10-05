@@ -127,18 +127,18 @@ function renderHome() {
             <button style="margin-top:0;" onclick="navTo('Zen')">The Zen Zone 🧹</button>
             <button style="margin-top:0;" onclick="navTo('Bubble')">Bubble Guard 🫧</button>
             <button style="margin-top:0;" onclick="navTo('Grocery')">Grocery Grab 🛒</button>
-            <button style="margin-top:0;" onclick="window.location.href='phonics-game/'">Blendy Bot 🤖</button>
+            <button style="margin-top:0;" onclick="navToExternal('phonics-game/')">Blendy Bot 🤖</button>
         </div>
         <div class="grid-4" style="margin-bottom: 20px;">
-            <button style="margin-top:0;" onclick="window.location.href='smartboard-shapes/'">Smartboard Shapes 🔺</button>
-            <button style="margin-top:0;" onclick="window.location.href='my-future-launchpad/'">My Future Launchpad 🚀</button>
-            <button style="margin-top:0;" onclick="window.location.href='colours/'">Colour Sorting 🎨</button>
-            <button style="margin-top:0;" onclick="window.location.href='maths/'">Maths Game 🔢</button>
+            <button style="margin-top:0;" onclick="navToExternal('smartboard-shapes/')">Smartboard Shapes 🔺</button>
+            <button style="margin-top:0;" onclick="navToExternal('my-future-launchpad/')">My Future Launchpad 🚀</button>
+            <button style="margin-top:0;" onclick="navToExternal('colours/')">Colour Sorting 🎨</button>
+            <button style="margin-top:0;" onclick="navToExternal('maths/')">Maths Game 🔢</button>
         </div>
         <div class="grid-4" style="margin-bottom: 20px;">
-            <button style="margin-top:0;" onclick="window.location.href='sensory-room.html'">Sensory Room ✨</button>
+            <button style="margin-top:0;" onclick="navToExternal('sensory-room.html')">Sensory Room ✨</button>
             <button style="margin-top:0;" onclick="window.location.href='animal-matching/'">Animal Matching 🦁</button>
-            <button style="margin-top:0;" onclick="window.location.href='whos-in-my-space/'">Who's In My Space? 🏫</button>
+            <button style="margin-top:0;" onclick="navToExternal('whos-in-my-space/')">Who's In My Space? 🏫</button>
             <button style="margin-top:0;" onclick="window.location.href='sensory-physics-board/'">Sensory Choice Board ✨</button>
         </div>
         <div class="grid-4" style="margin-bottom: 20px;">
@@ -157,7 +157,35 @@ function renderHome() {
     `;
 }
 
+function checkAccess() {
+    const correctCode = 'HEROES26'; // The Master Password to sell on TES
+    const storedCode = localStorage.getItem('ab_access_code');
+    
+    if (storedCode === correctCode) {
+        return true;
+    }
+    
+    const userCode = prompt("Premium Game Locked 🔒\n\nPlease enter your Access Code (found in your TES PDF) to unlock the premium games:");
+    if (userCode && userCode.trim().toUpperCase() === correctCode) {
+        localStorage.setItem('ab_access_code', correctCode);
+        alert("Access Granted! Enjoy the games.");
+        return true;
+    } else {
+        alert("Incorrect code. You can purchase a Premium Access Pass on our TES store.");
+        return false;
+    }
+}
+
+function navToExternal(url) {
+    if (checkAccess()) {
+        window.location.href = url;
+    }
+}
+
 function navTo(page) {
+    if (page !== 'Home') {
+        if (!checkAccess()) return;
+    }
     state.page = page;
     if (page === 'Socks') {
         initSocks(state.socks.difficulty);
