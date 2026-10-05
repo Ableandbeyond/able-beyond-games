@@ -183,52 +183,16 @@
                 <p class="text-slate-300 text-xl">Let's build something incredible for your students. Submit a request to get started.</p>
             </div>
             
-            <form onsubmit="handleForm(event)" class="bg-slate-800/80 backdrop-blur-md rounded-3xl shadow-2xl p-6 sm:p-12 border border-slate-700">
-                <div class="space-y-8">
-                    <div class="grid md:grid-cols-2 gap-8">
-                        <div>
-                            <label class="block text-xl font-semibold mb-2">Name & Role</label>
-                            <input type="text" placeholder="e.g., Sarah Smith, SENCO" required class="w-full bg-slate-900/50 border border-slate-600 rounded-xl px-5 py-4 text-white text-lg focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent transition-colors">
-                        </div>
-                        <div>
-                            <label class="block text-xl font-semibold mb-2">School / Organization</label>
-                            <input type="text" placeholder="e.g., Maple Wood Academy" required class="w-full bg-slate-900/50 border border-slate-600 rounded-xl px-5 py-4 text-white text-lg focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent transition-colors">
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <label class="block text-xl font-semibold mb-2">Target Learning Outcome (IEP/EHCP Goal)</label>
-                        <textarea required rows="3" placeholder="e.g., Student will independently recognize 5 community roles..." class="w-full bg-slate-900/50 border border-slate-600 rounded-xl px-5 py-4 text-white text-lg focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent transition-colors"></textarea>
-                    </div>
-
-                    <div>
-                        <label class="block text-xl font-semibold mb-3">Preferred Mechanic Template</label>
-                        <div class="grid sm:grid-cols-2 gap-4">
-                            <label class="flex items-center p-5 border border-slate-600 rounded-xl cursor-pointer hover:bg-slate-700 transition-colors">
-                                <input type="radio" name="mechanic" value="matching" class="w-6 h-6 text-brand-accent" checked>
-                                <span class="ml-4 font-semibold text-lg">Matching / Sorting Cards</span>
-                            </label>
-                            <label class="flex items-center p-5 border border-slate-600 rounded-xl cursor-pointer hover:bg-slate-700 transition-colors">
-                                <input type="radio" name="mechanic" value="choice_board" class="w-6 h-6 text-brand-accent">
-                                <span class="ml-4 font-semibold text-lg">Visual Choice Board</span>
-                            </label>
-                            <label class="flex items-center p-5 border border-slate-600 rounded-xl cursor-pointer hover:bg-slate-700 transition-colors">
-                                <input type="radio" name="mechanic" value="sequencing" class="w-6 h-6 text-brand-accent">
-                                <span class="ml-4 font-semibold text-lg">Sequencing / Navigation</span>
-                            </label>
-                            <label class="flex items-center p-5 border border-slate-600 rounded-xl cursor-pointer hover:bg-slate-700 transition-colors">
-                                <input type="radio" name="mechanic" value="timer" class="w-6 h-6 text-brand-accent">
-                                <span class="ml-4 font-semibold text-lg">Pacing Timer / Transition Tracker</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="w-full bg-brand-accent hover:bg-blue-500 text-white font-extrabold text-2xl py-5 rounded-xl shadow-lg hover:shadow-2xl transition-all transform hover:-translate-y-1 flex justify-center items-center gap-3">
-                        <span>Submit Inquiry</span>
-                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                    </button>
-                </div>
-            </form>
+            <div class="bg-slate-800/80 backdrop-blur-md rounded-3xl shadow-2xl p-8 sm:p-16 border border-slate-700 text-center max-w-3xl mx-auto">
+                <svg class="w-16 h-16 text-brand-accent mx-auto mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                <h4 class="text-2xl font-bold text-white mb-4">Complete Our Secure Intake Form</h4>
+                <p class="text-slate-300 text-lg mb-8">Click below to open our official consultation form. You will be asked for basic details about the student's IEP targets and special interests so we can begin preparing your bespoke pilot.</p>
+                
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSciI0gCgLx8FOGyR_68d_PqTf3E1owxmRbpzV_vT-zYpiYPkQ/viewform?usp=header" target="_blank" rel="noopener noreferrer" class="inline-flex w-full sm:w-auto bg-brand-accent hover:bg-blue-500 text-white font-extrabold text-2xl px-10 py-5 rounded-xl shadow-lg hover:shadow-2xl transition-all transform hover:-translate-y-1 justify-center items-center gap-3">
+                    <span>Open Consultation Form</span>
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                </a>
+            </div>
         </div>
     </section>
 
