@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Able & Beyond Support - Portfolio & Templates</title>
+    <title>Able & Beyond Support - Custom Educational Tools</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -11,12 +11,12 @@
                 extend: {
                     colors: {
                         brand: {
-                            dark: '#121212',
+                            dark: '#0f172a',
                             light: '#f8fafc',
-                            accent: '#2563eb',
-                            success: '#16a34a',
-                            warning: '#d97706',
-                            highlight: '#fef08a'
+                            accent: '#3b82f6',
+                            success: '#22c55e',
+                            highlight: '#fde047',
+                            pricing: '#1e293b'
                         }
                     }
                 }
@@ -25,44 +25,53 @@
     </script>
     <style>
         body { font-family: 'Segoe UI', system-ui, sans-serif; }
-        .modal-open { overflow: hidden; }
-        .high-contrast-focus:focus { outline: 4px solid #fef08a; outline-offset: 2px; }
+        .high-contrast-focus:focus { outline: 4px solid #fde047; outline-offset: 2px; }
+        html { scroll-behavior: smooth; }
     </style>
 </head>
 <body class="bg-brand-light text-slate-900 antialiased selection:bg-brand-highlight selection:text-slate-900">
 
     <!-- Header -->
     <header class="bg-brand-dark text-white shadow-xl sticky top-0 z-40">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <div class="text-center sm:text-left">
-                <h1 class="text-3xl font-extrabold tracking-tight">Able & Beyond Support</h1>
-                <p class="text-slate-300 text-sm mt-1 font-medium">Specialized Educational Interactive Templates</p>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="text-center md:text-left">
+                <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-white">Able & Beyond Support</h1>
             </div>
             <nav class="flex flex-wrap justify-center gap-4 sm:gap-6">
-                <a href="#portfolio" class="text-lg font-semibold hover:text-brand-highlight high-contrast-focus transition-colors flex items-center">Portfolio Grid</a>
-                <a href="#co-creation" class="text-lg font-semibold hover:text-brand-highlight high-contrast-focus transition-colors flex items-center">Request a Build</a>
-                <a href="index.html" class="text-lg font-semibold bg-brand-accent px-5 py-2 rounded-lg hover:bg-blue-500 high-contrast-focus transition-colors shadow-lg flex items-center">Return to Arcade</a>
+                <a href="#portfolio" class="text-base sm:text-lg font-semibold text-slate-200 hover:text-brand-highlight high-contrast-focus transition-colors">Portfolio</a>
+                <a href="#process" class="text-base sm:text-lg font-semibold text-slate-200 hover:text-brand-highlight high-contrast-focus transition-colors">How it Works</a>
+                <a href="#pricing" class="text-base sm:text-lg font-semibold text-slate-200 hover:text-brand-highlight high-contrast-focus transition-colors">Pricing</a>
+                <a href="#contact" class="text-base sm:text-lg font-semibold text-slate-200 hover:text-brand-highlight high-contrast-focus transition-colors">Book Pilot</a>
+                <a href="index.html" class="text-base sm:text-lg font-bold bg-brand-accent px-5 py-2 rounded-lg hover:bg-blue-500 text-white high-contrast-focus transition-colors shadow-lg flex items-center">Return to Arcade</a>
             </nav>
         </div>
     </header>
 
     <!-- Hero Section -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
         <div class="text-center max-w-4xl mx-auto">
             <h2 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-slate-900 leading-tight mb-6">Empowering Neurodiverse Learners Through Targeted Play</h2>
-            <p class="text-xl sm:text-2xl text-slate-700 mb-10 leading-relaxed font-medium">
-                Accessible, high-contrast, and low-cognitive-load web games designed specifically for SEN, PMLD, and early years education. Fully customizable to meet individual IEP targets.
+            <p class="text-xl sm:text-2xl text-slate-700 mb-10 leading-relaxed font-medium bg-brand-highlight/20 p-4 rounded-xl border-l-4 border-brand-accent">
+                "Bespoke digital learning tools and co-created interventions tailored to individual student needs and EHCP targets."
             </p>
-            <a href="#portfolio" class="inline-flex items-center justify-center px-8 py-4 text-xl font-bold rounded-xl text-brand-dark bg-brand-highlight hover:bg-yellow-200 shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-1">
-                Explore the Interventions
-            </a>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#portfolio" class="inline-flex items-center justify-center px-8 py-4 text-xl font-bold rounded-xl text-white bg-brand-accent hover:bg-blue-700 shadow-xl transition-transform transform hover:-translate-y-1">
+                    Explore Our Showroom
+                </a>
+                <a href="#contact" class="inline-flex items-center justify-center px-8 py-4 text-xl font-bold rounded-xl text-brand-dark bg-slate-200 hover:bg-slate-300 shadow-lg transition-transform transform hover:-translate-y-1">
+                    Book a Consultation
+                </a>
+            </div>
         </div>
     </section>
 
     <!-- Portfolio Section -->
     <section id="portfolio" class="bg-white py-16 sm:py-24 border-t border-slate-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h3 class="text-3xl sm:text-4xl font-extrabold text-slate-900 border-l-8 border-brand-accent pl-5 mb-16">Live Portfolio Grid</h3>
+            <div class="mb-16">
+                <h3 class="text-3xl sm:text-4xl font-extrabold text-slate-900 border-l-8 border-brand-accent pl-5 mb-4">Live Game Portfolio</h3>
+                <p class="text-xl text-slate-600 pl-5 max-w-3xl">A showcase of bespoke web games built for targeted interventions. Click any game to visit its live page in the Arcade.</p>
+            </div>
             
             <div id="grid-container" class="space-y-20">
                 <!-- Injected via JS -->
@@ -70,24 +79,126 @@
         </div>
     </section>
 
+    <!-- Co-Creation Process Section -->
+    <section id="process" class="bg-slate-50 py-16 sm:py-24 border-t border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h3 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-4">The Co-Creation Process</h3>
+                <p class="text-xl text-slate-600 max-w-2xl mx-auto">How we collaborate with schools and families to build the perfect targeted intervention.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Step 1 -->
+                <div class="bg-white p-8 rounded-2xl shadow-lg border border-slate-100 relative">
+                    <div class="absolute -top-6 -left-6 w-12 h-12 bg-brand-accent text-white font-black text-2xl rounded-full flex items-center justify-center shadow-lg border-4 border-slate-50">1</div>
+                    <h4 class="text-2xl font-bold text-slate-900 mb-4 mt-2">Consultation</h4>
+                    <p class="text-slate-600 text-lg leading-relaxed">
+                        We sit down with the teacher, SENCO, or family to review the student's specific IEP/EHCP targets, sensory needs, and special interests.
+                    </p>
+                </div>
+                <!-- Step 2 -->
+                <div class="bg-white p-8 rounded-2xl shadow-lg border border-slate-100 relative">
+                    <div class="absolute -top-6 -left-6 w-12 h-12 bg-brand-accent text-white font-black text-2xl rounded-full flex items-center justify-center shadow-lg border-4 border-slate-50">2</div>
+                    <h4 class="text-2xl font-bold text-slate-900 mb-4 mt-2">Rapid Prototyping</h4>
+                    <p class="text-slate-600 text-lg leading-relaxed">
+                        We build a bespoke browser game tailored to the student's exact cognitive, sensory, and accessibility profile using clean, modern code.
+                    </p>
+                </div>
+                <!-- Step 3 -->
+                <div class="bg-white p-8 rounded-2xl shadow-lg border border-slate-100 relative">
+                    <div class="absolute -top-6 -left-6 w-12 h-12 bg-brand-accent text-white font-black text-2xl rounded-full flex items-center justify-center shadow-lg border-4 border-slate-50">3</div>
+                    <h4 class="text-2xl font-bold text-slate-900 mb-4 mt-2">Pilot & Track</h4>
+                    <p class="text-slate-600 text-lg leading-relaxed">
+                        We deploy the game on a secure URL for a 2-week testing window, allowing educators to monitor engagement and track progress against IEP targets.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="bg-white py-16 sm:py-24 border-t border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h3 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-4">Transparent Service Pricing</h3>
+                <p class="text-xl text-slate-600 max-w-2xl mx-auto">Clear and accessible pricing models for schools, agencies, and families.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Tier 1 -->
+                <div class="bg-brand-light border-2 border-slate-200 rounded-3xl p-8 shadow-xl flex flex-col">
+                    <div class="mb-6">
+                        <span class="bg-slate-200 text-slate-700 px-3 py-1 text-sm font-bold uppercase tracking-wider rounded-full">For Families</span>
+                        <h4 class="text-3xl font-bold mt-4 mb-2">B2C Bespoke Game</h4>
+                        <div class="text-4xl font-extrabold text-brand-dark">£150 - £250 <span class="text-lg text-slate-500 font-normal">one-off</span></div>
+                    </div>
+                    <ul class="space-y-4 mb-8 flex-1 text-lg text-slate-700">
+                        <li class="flex items-start gap-3"><svg class="w-6 h-6 text-brand-success shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Personalized home-use game</li>
+                        <li class="flex items-start gap-3"><svg class="w-6 h-6 text-brand-success shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Built around a child's specific special interest</li>
+                        <li class="flex items-start gap-3"><svg class="w-6 h-6 text-brand-success shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Hosted indefinitely</li>
+                    </ul>
+                    <a href="#contact" class="block w-full py-4 text-center rounded-xl bg-slate-800 text-white font-bold hover:bg-slate-900 transition-colors">Inquire Now</a>
+                </div>
+
+                <!-- Tier 2 -->
+                <div class="bg-brand-dark text-white border-2 border-brand-accent rounded-3xl p-8 shadow-2xl flex flex-col relative transform md:-translate-y-4">
+                    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-brand-accent text-white px-6 py-1 rounded-full text-sm font-bold uppercase tracking-widest shadow-md">Most Popular</div>
+                    <div class="mb-6">
+                        <span class="bg-slate-700 text-slate-200 px-3 py-1 text-sm font-bold uppercase tracking-wider rounded-full">For Schools</span>
+                        <h4 class="text-3xl font-bold mt-4 mb-2 text-white">School Pilot Package</h4>
+                        <div class="text-4xl font-extrabold text-brand-highlight">£350 - £500 <span class="text-lg text-slate-400 font-normal">one-off</span></div>
+                        <p class="text-slate-300 mt-2 text-sm">Also known as the "Co-Creation Sprint"</p>
+                    </div>
+                    <ul class="space-y-4 mb-8 flex-1 text-lg text-slate-300">
+                        <li class="flex items-start gap-3"><svg class="w-6 h-6 text-brand-highlight shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> 1-hour consultation with educator</li>
+                        <li class="flex items-start gap-3"><svg class="w-6 h-6 text-brand-highlight shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> 1 fully custom targeted web game</li>
+                        <li class="flex items-start gap-3"><svg class="w-6 h-6 text-brand-highlight shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> 2-week active testing & revision window</li>
+                    </ul>
+                    <a href="#contact" class="block w-full py-4 text-center rounded-xl bg-brand-accent text-white font-bold hover:bg-blue-500 transition-colors text-lg shadow-lg">Start a Sprint</a>
+                </div>
+
+                <!-- Tier 3 -->
+                <div class="bg-brand-light border-2 border-slate-200 rounded-3xl p-8 shadow-xl flex flex-col">
+                    <div class="mb-6">
+                        <span class="bg-slate-200 text-slate-700 px-3 py-1 text-sm font-bold uppercase tracking-wider rounded-full">For Agencies & Trusts</span>
+                        <h4 class="text-3xl font-bold mt-4 mb-2">Termly License</h4>
+                        <div class="text-4xl font-extrabold text-brand-dark">£800 - £1,500 <span class="text-lg text-slate-500 font-normal">/ term</span></div>
+                    </div>
+                    <ul class="space-y-4 mb-8 flex-1 text-lg text-slate-700">
+                        <li class="flex items-start gap-3"><svg class="w-6 h-6 text-brand-success shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Dedicated branded school hub</li>
+                        <li class="flex items-start gap-3"><svg class="w-6 h-6 text-brand-success shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Up to 3 custom games developed per term</li>
+                        <li class="flex items-start gap-3"><svg class="w-6 h-6 text-brand-success shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Ongoing parameter adjustments & support</li>
+                    </ul>
+                    <a href="#contact" class="block w-full py-4 text-center rounded-xl bg-slate-800 text-white font-bold hover:bg-slate-900 transition-colors">Request Details</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Co-Creation Request Form -->
-    <section id="co-creation" class="bg-slate-900 text-white py-16 sm:py-24 border-t border-brand-accent border-t-8">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="contact" class="bg-brand-dark text-white py-16 sm:py-24 border-t border-brand-accent border-t-8 relative overflow-hidden">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="text-center mb-12">
-                <h3 class="text-3xl sm:text-4xl font-extrabold mb-4 text-brand-highlight">Co-Creation Request</h3>
-                <p class="text-slate-300 text-xl">Need a bespoke interactive tool for a specific student? Request a pilot build below.</p>
+                <h3 class="text-3xl sm:text-5xl font-extrabold mb-4 text-white">Book a Pilot / Consultation</h3>
+                <p class="text-slate-300 text-xl">Let's build something incredible for your students. Submit a request to get started.</p>
             </div>
             
-            <form onsubmit="handleForm(event)" class="bg-slate-800 rounded-2xl shadow-2xl p-6 sm:p-12 border border-slate-700">
+            <form onsubmit="handleForm(event)" class="bg-slate-800/80 backdrop-blur-md rounded-3xl shadow-2xl p-6 sm:p-12 border border-slate-700">
                 <div class="space-y-8">
-                    <div>
-                        <label class="block text-xl font-semibold mb-2">Educator Name / Role</label>
-                        <input type="text" required class="w-full bg-slate-900 border border-slate-600 rounded-xl px-5 py-4 text-white text-lg focus:outline-none focus:border-brand-highlight focus:ring-2 focus:ring-brand-highlight transition-colors">
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <label class="block text-xl font-semibold mb-2">Name & Role</label>
+                            <input type="text" placeholder="e.g., Sarah Smith, SENCO" required class="w-full bg-slate-900/50 border border-slate-600 rounded-xl px-5 py-4 text-white text-lg focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-xl font-semibold mb-2">School / Organization</label>
+                            <input type="text" placeholder="e.g., Maple Wood Academy" required class="w-full bg-slate-900/50 border border-slate-600 rounded-xl px-5 py-4 text-white text-lg focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent transition-colors">
+                        </div>
                     </div>
                     
                     <div>
-                        <label class="block text-xl font-semibold mb-2">Target Learning Outcome (IEP Goal)</label>
-                        <textarea required rows="4" placeholder="e.g., Student will independently select a self-regulation activity..." class="w-full bg-slate-900 border border-slate-600 rounded-xl px-5 py-4 text-white text-lg focus:outline-none focus:border-brand-highlight focus:ring-2 focus:ring-brand-highlight transition-colors"></textarea>
+                        <label class="block text-xl font-semibold mb-2">Target Learning Outcome (IEP/EHCP Goal)</label>
+                        <textarea required rows="3" placeholder="e.g., Student will independently recognize 5 community roles..." class="w-full bg-slate-900/50 border border-slate-600 rounded-xl px-5 py-4 text-white text-lg focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent transition-colors"></textarea>
                     </div>
 
                     <div>
@@ -112,13 +223,8 @@
                         </div>
                     </div>
 
-                    <div>
-                        <label class="block text-xl font-semibold mb-2">Accessibility Needs</label>
-                        <input type="text" placeholder="e.g., Ultra-high contrast, switch accessible, no audio" class="w-full bg-slate-900 border border-slate-600 rounded-xl px-5 py-4 text-white text-lg focus:outline-none focus:border-brand-highlight focus:ring-2 focus:ring-brand-highlight transition-colors">
-                    </div>
-
-                    <button type="submit" class="w-full bg-brand-success hover:bg-green-600 text-white font-extrabold text-2xl py-5 rounded-xl shadow-lg hover:shadow-2xl transition-all transform hover:-translate-y-1 flex justify-center items-center gap-3">
-                        <span>Submit Request</span>
+                    <button type="submit" class="w-full bg-brand-accent hover:bg-blue-500 text-white font-extrabold text-2xl py-5 rounded-xl shadow-lg hover:shadow-2xl transition-all transform hover:-translate-y-1 flex justify-center items-center gap-3">
+                        <span>Submit Inquiry</span>
                         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                     </button>
                 </div>
@@ -126,31 +232,10 @@
         </div>
     </section>
 
-    <!-- Modal for iFrame -->
-    <div id="game-modal" class="fixed inset-0 bg-slate-900/95 z-50 hidden flex-col items-center justify-center p-2 sm:p-6 backdrop-blur-sm transition-opacity">
-        <div class="w-full max-w-7xl bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col h-full max-h-[95vh]">
-            <div class="px-4 sm:px-6 py-4 bg-slate-100 border-b border-slate-200 flex justify-between items-center shrink-0">
-                <h3 id="modal-title" class="text-2xl font-bold text-slate-900">Game Demo</h3>
-                <button onclick="closeModal()" class="text-slate-500 hover:text-red-600 focus:outline-none p-2 rounded-full hover:bg-red-50 transition-colors">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
-            </div>
-            <div class="flex-1 w-full bg-black relative">
-                <iframe id="game-iframe" src="" class="absolute inset-0 w-full h-full border-0"></iframe>
-            </div>
-            <div class="px-4 sm:px-6 py-4 bg-slate-50 border-t border-slate-200 flex flex-wrap justify-between items-center gap-4 shrink-0">
-                <a id="modal-fullscreen-btn" href="#" target="_blank" class="text-brand-accent font-semibold hover:underline flex items-center gap-2 text-lg">
-                    Open fullscreen <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                </a>
-                <button onclick="closeModal()" class="px-8 py-3 bg-slate-800 hover:bg-slate-900 text-white font-bold text-lg rounded-xl transition-colors shadow-lg hover:shadow-xl">Close Preview</button>
-            </div>
-        </div>
-    </div>
-
     <!-- Success Toast -->
-    <div id="toast" class="fixed bottom-5 right-5 bg-green-500 text-white px-6 py-4 rounded-xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center gap-3">
+    <div id="toast" class="fixed bottom-5 right-5 bg-brand-success text-white px-6 py-4 rounded-xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center gap-3 border-2 border-white/20">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-        <span class="font-bold text-lg">Request Sent Successfully!</span>
+        <span class="font-bold text-lg">Consultation Request Sent!</span>
     </div>
 
     <script>
@@ -163,6 +248,7 @@
                     {
                         title: "Community Heroes",
                         url: "community-heroes/index.html",
+                        domain: "Vocational & Life Skills",
                         impact: "Builds vocational awareness and vocabulary. Utilizes errorless learning through distinct visual and auditory feedback loops.",
                         target: "Student will independently identify 5 community helpers and their roles.",
                         icon: "👩‍🚒"
@@ -170,6 +256,7 @@
                     {
                         title: "Recycling Rover",
                         url: "recycling-rover/index.html",
+                        domain: "Spatial & Sequencing",
                         impact: "Teaches multi-step sequencing and direct absolute movement mapping to reduce cognitive load.",
                         target: "Student will successfully navigate a grid to sort 3 objects without prompts.",
                         icon: "🤖"
@@ -184,6 +271,7 @@
                     {
                         title: "Sensory Choice Board",
                         url: "sensory-physics-board/index.html",
+                        domain: "Emotional Regulation",
                         impact: "Provides immediate, satisfying visual physics responses to touch, promoting self-advocacy for sensory needs.",
                         target: "Student will use the board to request a sensory break when showing signs of dysregulation.",
                         icon: "✨"
@@ -198,6 +286,7 @@
                     {
                         title: "Animal Matching",
                         url: "animal-matching/index.html",
+                        domain: "Working Memory",
                         impact: "Enhances working memory and visual discrimination with an uncluttered, high-contrast UI.",
                         target: "Student will accurately match identical pictures in a field of 6.",
                         icon: "🦁"
@@ -205,23 +294,10 @@
                     {
                         title: "Build a Body",
                         url: "build-a-body/index.html",
-                        impact: "Reinforces bodily autonomy and spatial awareness.",
+                        domain: "Spatial Awareness",
+                        impact: "Reinforces bodily autonomy and spatial awareness through targeted placement mechanics.",
                         target: "Student will correctly place 4 major body parts on a blank template.",
                         icon: "🧍"
-                    }
-                ]
-            },
-            {
-                name: "Routines & Transitions",
-                description: "Structured interventions to reduce transition anxiety.",
-                color: "orange",
-                games: [
-                    {
-                        title: "Visual Timetable Orbit",
-                        url: "timetable-orbit/index.html",
-                        impact: "Provides a predictable daily visual schedule with spoken transition reminders.",
-                        target: "Student will check schedule independently before transitioning to the next activity.",
-                        icon: "📅"
                     }
                 ]
             }
@@ -241,11 +317,12 @@
                 };
                 
                 let gamesHtml = cat.games.map(game => `
-                    <div class="bg-white rounded-3xl shadow-lg border border-slate-200 overflow-hidden flex flex-col hover:shadow-2xl transition-all duration-300 group transform hover:-translate-y-1">
-                        <div class="p-10 bg-slate-50 flex justify-center items-center border-b border-slate-100 group-hover:bg-slate-100 transition-colors cursor-pointer" onclick="openModal('${game.title}', '${game.url}')">
-                            <span class="text-8xl transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 drop-shadow-md">${game.icon}</span>
+                    <div class="bg-white rounded-3xl shadow-lg border border-slate-200 overflow-hidden flex flex-col hover:shadow-2xl transition-all duration-300 group">
+                        <div class="p-10 bg-slate-50 flex justify-center items-center border-b border-slate-100 transition-colors">
+                            <span class="text-8xl transform group-hover:scale-110 group-hover:-translate-y-2 transition-all duration-300 drop-shadow-md">${game.icon}</span>
                         </div>
                         <div class="p-8 flex-1 flex flex-col">
+                            <span class="text-xs font-black text-${cat.color}-600 uppercase tracking-widest mb-2">${game.domain}</span>
                             <h5 class="text-3xl font-extrabold text-slate-900 mb-4">${game.title}</h5>
                             
                             <div class="mb-6 flex-1">
@@ -253,18 +330,18 @@
                                 <p class="text-slate-700 text-base leading-relaxed font-medium">${game.impact}</p>
                             </div>
                             
-                            <div class="bg-brand-highlight/20 border-l-4 border-brand-warning p-5 rounded-r-xl mb-8">
+                            <div class="bg-brand-light border-l-4 border-slate-400 p-5 rounded-r-xl mb-8">
                                 <h6 class="text-xs font-extrabold text-slate-800 uppercase tracking-wider mb-2 flex items-center gap-2">
-                                    <svg class="w-5 h-5 text-brand-warning" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                                    IEP Target Example
+                                    <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    IEP Target Alignment
                                 </h6>
                                 <p class="text-slate-900 font-semibold text-sm leading-relaxed">${game.target}</p>
                             </div>
                             
-                            <button onclick="openModal('${game.title}', '${game.url}')" class="w-full py-4 bg-brand-dark text-white font-extrabold text-xl rounded-xl hover:bg-brand-accent transition-colors flex justify-center items-center gap-3 shadow-md hover:shadow-lg">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                Play Demo
-                            </button>
+                            <a href="${game.url}" target="_blank" class="w-full py-4 bg-brand-dark text-white font-extrabold text-xl rounded-xl hover:bg-brand-accent transition-colors flex justify-center items-center gap-3 shadow-md hover:shadow-lg">
+                                Play in Arcade
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </a>
                         </div>
                     </div>
                 `).join('');
@@ -283,27 +360,6 @@
                 `;
                 container.appendChild(section);
             });
-        }
-
-        const modal = document.getElementById('game-modal');
-        const iframe = document.getElementById('game-iframe');
-        const modalTitle = document.getElementById('modal-title');
-        const fullscreenBtn = document.getElementById('modal-fullscreen-btn');
-
-        function openModal(title, url) {
-            modalTitle.innerText = title;
-            iframe.src = url;
-            fullscreenBtn.href = url;
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            document.body.classList.add('modal-open');
-        }
-
-        function closeModal() {
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-            document.body.classList.remove('modal-open');
-            iframe.src = ''; // Stop audio/video
         }
 
         function handleForm(e) {
