@@ -27,9 +27,13 @@ let state = {
         completed: false
     },
     bubble: {
+        level: 1,
         running: false,
         warning: false,
-        completed: false
+        completed: false,
+        starsCollected: 0,
+        starsTotal: 1,
+        status: 'comfy'
     },
     grocery: {
         budget: 10.00,
@@ -1018,132 +1022,447 @@ function renderZenZone() {
     app.innerHTML += content;
 }
 
-// ------ THE BUBBLE GUARD (Three.js) ------
+// ------ THE BUBBLE GUARD (Three.js Upgraded) ------
+const BUBBLE_LEVELS = {
+    1: {
+        name: "Level 1: School Corridor 🏫",
+        goalName: "Classroom Door",
+        desc: "Collect 1 Gold Star ⭐ and walk safely to the Green Classroom Door!",
+        bgHex: 0xE0F2FE,
+        floorHex: 0xF1F5F9,
+        stars: [{ x: 0, z: 0 }],
+        npcs: [
+            { x: -3.5, z: 2.5, speed: 0.025, dir: 1, range: 6, color: 0xEC4899 },
+            { x: 3.0, z: -1.5, speed: 0.03, dir: -1, range: 6, color: 0x8B5CF6 },
+            { x: -2.0, z: -5.0, speed: 0.025, dir: 1, range: 6.5, color: 0xF59E0B }
+        ]
+    },
+    2: {
+        name: "Level 2: Busy Playground 🛝",
+        goalName: "Park Gate",
+        desc: "Collect 2 Gold Stars ⭐! Walk carefully around friends who are chatting.",
+        bgHex: 0xDCFCE7,
+        floorHex: 0xECFDF5,
+        stars: [{ x: -4.8, z: 1.5 }, { x: 4.8, z: -3.5 }],
+        npcs: [
+            // Chatting friend group in the center
+            { x: -0.7, z: 0.5, speed: 0, dir: 1, range: 0, color: 0xEC4899 },
+            { x: 0.7, z: 0.5, speed: 0, dir: -1, range: 0, color: 0x6366F1 },
+            // Moving students
+            { x: -4.0, z: 3.5, speed: 0.032, dir: 1, range: 7, color: 0xF97316 },
+            { x: 3.5, z: -2.0, speed: 0.035, dir: -1, range: 7, color: 0x14B8A6 },
+            { x: 0.0, z: -5.5, speed: 0.03, dir: 1, range: 7, color: 0xEAB308 }
+        ]
+    },
+    3: {
+        name: "Level 3: Supermarket Aisle 🛒",
+        goalName: "Checkout Zone",
+        desc: "Collect all 3 Gold Stars ⭐ in the busy shop! Use 'Excuse Me' if you need space.",
+        bgHex: 0xFEF3C7,
+        floorHex: 0xFFFBEB,
+        stars: [{ x: -5.0, z: 3.0 }, { x: 0, z: -0.5 }, { x: 5.0, z: -4.5 }],
+        npcs: [
+            { x: -3.0, z: 3.8, speed: 0.035, dir: 1, range: 6.5, color: 0xEF4444 },
+            { x: 3.0, z: 1.5, speed: 0.04, dir: -1, range: 6.5, color: 0x8B5CF6 },
+            { x: -1.2, z: -0.5, speed: 0, dir: 1, range: 0, color: 0x06B6D4 },
+            { x: -4.0, z: -2.8, speed: 0.038, dir: 1, range: 7, color: 0xEC4899 },
+            { x: 4.0, z: -5.2, speed: 0.042, dir: -1, range: 7, color: 0x10B981 }
+        ]
+    }
+};
+
+function playBubbleTone(type) {
+    try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const now = ctx.currentTime;
+
+        if (type === 'step') {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(320, now);
+            osc.frequency.exponentialRampToValueAtTime(420, now + 0.06);
+            gain.gain.setValueAtTime(0.08, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.07);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.07);
+        } else if (type === 'star') {
+            [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(freq, now + i * 0.07);
+                gain.gain.setValueAtTime(0.18, now + i * 0.07);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.07 + 0.25);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start(now + i * 0.07);
+                osc.stop(now + i * 0.07 + 0.25);
+            });
+        } else if (type === 'bump') {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(220, now);
+            osc.frequency.linearRampToValueAtTime(150, now + 0.25);
+            gain.gain.setValueAtTime(0.15, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.28);
+        } else if (type === 'excuse') {
+            [440, 554.37, 659.25].forEach((freq, i) => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, now + i * 0.09);
+                gain.gain.setValueAtTime(0.16, now + i * 0.09);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.09 + 0.3);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start(now + i * 0.09);
+                osc.stop(now + i * 0.09 + 0.3);
+            });
+        }
+    } catch (e) {}
+}
+
+window.bubbleActions = {
+    setLevel: function(lvl) {
+        state.bubble.running = false;
+        state.bubble.level = lvl;
+        render();
+        setTimeout(initBubbleGuard, 50);
+    },
+    nextLevel: function() {
+        const next = state.bubble.level < 3 ? state.bubble.level + 1 : 1;
+        this.setLevel(next);
+    },
+    move: function(dx, dz) {
+        if (window.bubbleMovePlayer) {
+            window.bubbleMovePlayer(dx, dz);
+        }
+    },
+    excuseMe: function() {
+        if (window.bubbleExcuseMe) {
+            window.bubbleExcuseMe();
+        }
+    }
+};
+
 function renderBubbleGuard() {
+    const lvl = state.bubble.level || 1;
+    const cfg = BUBBLE_LEVELS[lvl];
+
     let content = `
-        <div style="display:flex; justify-content:space-between; margin-bottom: 20px;">
-            <button class="btn-secondary" style="width: 200px; min-height: 3rem;" onclick="navTo('Home')">← Back Home</button>
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom: 16px;">
+            <button class="btn-secondary" style="width: 180px; min-height: 3.2rem; margin-top:0;" onclick="navTo('Home')">← Back Home</button>
+            <div class="bubble-levels">
+                <button class="bubble-lvl-btn ${lvl === 1 ? 'active' : ''}" onclick="bubbleActions.setLevel(1)">1. Corridor 🏫</button>
+                <button class="bubble-lvl-btn ${lvl === 2 ? 'active' : ''}" onclick="bubbleActions.setLevel(2)">2. Playground 🛝</button>
+                <button class="bubble-lvl-btn ${lvl === 3 ? 'active' : ''}" onclick="bubbleActions.setLevel(3)">3. Supermarket 🛒</button>
+            </div>
         </div>
-        <div class="card">
-            <div class="big">The Bubble Guard</div>
-            <div class="small">Drag the blue bubble carefully to the Green Zone! Keep your personal space away from the other people!</div>
-            <div id="bubbleWin" class="big text-success" style="display:none; margin-top:20px;">🎉 Reached the Goal safely!</div>
+
+        <div class="card" style="margin-bottom: 12px; padding: 18px 22px;">
+            <div class="big">${cfg.name}</div>
+            <div class="small" style="font-size:1.1rem; color:#334155; font-weight:600;">${cfg.desc}</div>
+
+            <div class="bubble-hud">
+                <div id="bubbleStatusPill" class="bubble-status-pill status-comfy">
+                    <span>😊</span>
+                    <span id="bubbleStatusText">Comfy Space Bubble!</span>
+                </div>
+                <div class="bubble-star-pill">
+                    <span>⭐ Stars:</span>
+                    <span id="bubbleStarCount">0 / ${cfg.stars.length}</span>
+                </div>
+            </div>
+
+            <div id="bubbleWin" style="display:none; margin-top:18px; padding:16px; background:#DCFCE7; border:3px solid #22C55E; border-radius:16px;">
+                <div class="big text-success" style="font-size:1.6rem;">🎉 Amazing Job! You respected everyone's Personal Space!</div>
+                <button onclick="bubbleActions.nextLevel()" style="max-width:320px; margin:10px auto 0 auto; background:linear-gradient(135deg, #16A34A, #15803D); font-size:1.3rem;">
+                    ${lvl < 3 ? 'Next Level ➔' : 'Play Again from Level 1 🔄'}
+                </button>
+            </div>
         </div>
+
         <div id="bubbleContainer" class="bubble-container"></div>
+
+        <div class="bubble-controls-wrap">
+            <div class="bubble-dpad">
+                <div></div>
+                <button class="dpad-btn" onclick="bubbleActions.move(0, -1.25)" aria-label="Move Up">
+                    <span style="font-size:1.8rem;">⬆️</span>
+                    <span>UP</span>
+                </button>
+                <div></div>
+                <button class="dpad-btn" onclick="bubbleActions.move(-1.25, 0)" aria-label="Move Left">
+                    <span style="font-size:1.8rem;">⬅️</span>
+                    <span>LEFT</span>
+                </button>
+                <button class="dpad-btn" onclick="bubbleActions.move(0, 1.25)" aria-label="Move Down">
+                    <span style="font-size:1.8rem;">⬇️</span>
+                    <span>DOWN</span>
+                </button>
+                <button class="dpad-btn" onclick="bubbleActions.move(1.25, 0)" aria-label="Move Right">
+                    <span style="font-size:1.8rem;">➡️</span>
+                    <span>RIGHT</span>
+                </button>
+            </div>
+
+            <button id="excuseBtn" class="excuse-btn" onclick="bubbleActions.excuseMe()">
+                <span style="font-size:2.6rem;">✋🗣️</span>
+                <span>"Excuse Me, Space Please!"</span>
+                <span style="font-size:0.95rem; font-weight:500; opacity:0.9;">Tap to politely ask people to step back</span>
+            </button>
+        </div>
     `;
     app.innerHTML += content;
 }
 
 function initBubbleGuard() {
     if (!window.THREE) return;
-    
+
+    const lvl = state.bubble.level || 1;
+    const cfg = BUBBLE_LEVELS[lvl];
+
     state.bubble.running = true;
     state.bubble.completed = false;
     state.bubble.warning = false;
+    state.bubble.starsCollected = 0;
+    state.bubble.starsTotal = cfg.stars.length;
+    state.bubble.status = 'comfy';
 
     const container = document.getElementById('bubbleContainer');
-    if(!container) return;
+    if (!container) return;
 
     // SCENE & CAMERA
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xdce0e5);
-    scene.fog = new THREE.Fog(0xdce0e5, 10, 50);
+    scene.background = new THREE.Color(cfg.bgHex);
+    scene.fog = new THREE.Fog(cfg.bgHex, 14, 45);
 
     const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100);
-    camera.position.set(0, 16, 12);
-    camera.lookAt(0, 0, 0);
+    camera.position.set(0, 16.5, 12.5);
+    camera.lookAt(0, 0, -1);
 
     // RENDERER
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     container.innerHTML = '';
     container.appendChild(renderer.domElement);
 
     // LIGHTING
-    scene.add(new THREE.AmbientLight(0xffffff, 0.8));
-    const dirLight = new THREE.DirectionalLight(0xffffff, 0.5);
+    scene.add(new THREE.AmbientLight(0xffffff, 0.85));
+    const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
     dirLight.position.set(10, 20, 10);
     scene.add(dirLight);
 
     // MATERIALS
-    const bubbleMat = new THREE.MeshStandardMaterial({ color: 0x00CCFF, transparent: true, opacity: 0.4, roughness: 0.3 });
-    const npcMat = new THREE.MeshStandardMaterial({ color: 0x64748B, roughness: 1 });
-    const playerMat = new THREE.MeshStandardMaterial({ color: 0x3B82F6, roughness: 1 });
-    const floorMat = new THREE.MeshStandardMaterial({ color: 0xF1F5F9, roughness: 1 });
-    const finishMat = new THREE.MeshStandardMaterial({ color: 0x22C55E, roughness: 1 });
+    const bubbleMat = new THREE.MeshStandardMaterial({ color: 0x00CCFF, transparent: true, opacity: 0.38, roughness: 0.2 });
+    const playerMat = new THREE.MeshStandardMaterial({ color: 0x2563EB, roughness: 0.6 });
+    const floorMat = new THREE.MeshStandardMaterial({ color: cfg.floorHex, roughness: 0.9 });
+    const borderMat = new THREE.MeshStandardMaterial({ color: 0x94A3B8, roughness: 0.8 });
+    const finishMat = new THREE.MeshStandardMaterial({ color: 0x22C55E, roughness: 0.7 });
+    const starMat = new THREE.MeshStandardMaterial({ color: 0xFACC15, emissive: 0xCA8A04, emissiveIntensity: 0.35, roughness: 0.3 });
 
     // HUMAN FACTORY
-    const bodyGeo = new THREE.CylinderGeometry(0.3, 0.4, 1.0, 12);
-    const headGeo = new THREE.SphereGeometry(0.25, 12, 12);
-    const armGeo = new THREE.CylinderGeometry(0.08, 0.08, 0.8, 8);
+    const bodyGeo = new THREE.CylinderGeometry(0.32, 0.42, 1.0, 14);
+    const headGeo = new THREE.SphereGeometry(0.28, 14, 14);
+    const armGeo = new THREE.CylinderGeometry(0.09, 0.09, 0.75, 10);
 
     function createHuman(material) {
         const group = new THREE.Group();
         const body = new THREE.Mesh(bodyGeo, material);
         body.position.y = 0.5;
         group.add(body);
-        
-        const head = new THREE.Mesh(headGeo, material);
-        head.position.y = 1.3;
+
+        const head = new THREE.Mesh(headGeo, new THREE.MeshStandardMaterial({ color: 0xFDE68A, roughness: 0.6 }));
+        head.position.y = 1.32;
         group.add(head);
 
         const leftArm = new THREE.Mesh(armGeo, material);
-        leftArm.position.set(-0.5, 0.6, 0);
+        leftArm.position.set(-0.48, 0.6, 0);
         leftArm.rotation.z = Math.PI / 8;
         group.add(leftArm);
 
         const rightArm = new THREE.Mesh(armGeo, material);
-        rightArm.position.set(0.5, 0.6, 0);
+        rightArm.position.set(0.48, 0.6, 0);
         rightArm.rotation.z = -Math.PI / 8;
         group.add(rightArm);
-        
+
+        group.userData.rightArm = rightArm;
         return group;
     }
 
-    // GROUND & GOAL
-    const floor = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), floorMat);
-    floor.rotation.x = -Math.PI/2;
+    // GROUND, SIDE WALLS & GOAL ZONE
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(20, 26), floorMat);
+    floor.rotation.x = -Math.PI / 2;
     floor.position.y = -0.01;
     scene.add(floor);
 
-    const finishZone = new THREE.Mesh(new THREE.BoxGeometry(20, 0.1, 4), finishMat);
-    finishZone.position.set(0, 0, -10);
+    const leftWall = new THREE.Mesh(new THREE.BoxGeometry(0.6, 1.2, 24), borderMat);
+    leftWall.position.set(-8.6, 0.6, -1);
+    scene.add(leftWall);
+
+    const rightWall = new THREE.Mesh(new THREE.BoxGeometry(0.6, 1.2, 24), borderMat);
+    rightWall.position.set(8.6, 0.6, -1);
+    scene.add(rightWall);
+
+    const finishZone = new THREE.Mesh(new THREE.BoxGeometry(16.5, 0.12, 3.2), finishMat);
+    finishZone.position.set(0, 0.02, -9.2);
     scene.add(finishZone);
 
     // PLAYER PROTAGONIST
     const playerRoot = new THREE.Group();
-    const bubbleMesh = new THREE.Mesh(new THREE.SphereGeometry(1.8, 32, 32), bubbleMat);
+    const bubbleMesh = new THREE.Mesh(new THREE.SphereGeometry(1.75, 32, 32), bubbleMat);
     playerRoot.add(bubbleMesh);
-    
+
     const humanInside = createHuman(playerMat);
-    humanInside.scale.set(0.8, 0.8, 0.8);
+    humanInside.scale.set(0.85, 0.85, 0.85);
     playerRoot.add(humanInside);
 
     // PERSONAL SPACE RING
-    const ringGeo = new THREE.RingGeometry(1.75, 1.85, 64);
+    const ringGeo = new THREE.RingGeometry(1.65, 1.82, 64);
     const ringMat = new THREE.MeshBasicMaterial({ color: 0x00CCFF, side: THREE.DoubleSide });
     const spaceRing = new THREE.Mesh(ringGeo, ringMat);
     spaceRing.rotation.x = -Math.PI / 2;
     spaceRing.position.y = 0.05;
     playerRoot.add(spaceRing);
 
-    playerRoot.position.set(0, 0, 6);
+    playerRoot.position.set(0, 0, 6.8);
+    let targetPos = new THREE.Vector3(0, 0, 6.8);
     scene.add(playerRoot);
+
+    // COLLECTIBLE STARS
+    const starMeshes = [];
+    const starGeo = new THREE.OctahedronGeometry(0.55, 0);
+    const starRingGeo = new THREE.RingGeometry(0.6, 0.78, 32);
+    const starRingMat = new THREE.MeshBasicMaterial({ color: 0xEAB308, side: THREE.DoubleSide });
+
+    cfg.stars.forEach((sPos) => {
+        const starGroup = new THREE.Group();
+        const mesh = new THREE.Mesh(starGeo, starMat);
+        mesh.position.y = 0.7;
+        starGroup.add(mesh);
+
+        const sRing = new THREE.Mesh(starRingGeo, starRingMat);
+        sRing.rotation.x = -Math.PI / 2;
+        sRing.position.y = 0.04;
+        starGroup.add(sRing);
+
+        starGroup.position.set(sPos.x, 0, sPos.z);
+        starGroup.userData = { collected: false, mesh: mesh };
+        scene.add(starGroup);
+        starMeshes.push(starGroup);
+    });
 
     // NPCs
     const npcs = [];
-    for(let i=0; i<7; i++) {
-        const npc = createHuman(npcMat);
-        npc.position.set((Math.random()-0.5)*14, 0, (Math.random()-0.5)*10 - 2);
-        npc.userData = { 
-            speed: (Math.random() * 0.015) + 0.01, // Gentler pacing
-            dir: Math.random() > 0.5 ? 1 : -1 
+    const npcRingGeo = new THREE.RingGeometry(0.85, 0.98, 32);
+    cfg.npcs.forEach((nCfg) => {
+        const mat = new THREE.MeshStandardMaterial({ color: nCfg.color, roughness: 0.7 });
+        const npc = createHuman(mat);
+
+        const nRingMat = new THREE.MeshBasicMaterial({ color: 0x94A3B8, side: THREE.DoubleSide });
+        const nRing = new THREE.Mesh(npcRingGeo, nRingMat);
+        nRing.rotation.x = -Math.PI / 2;
+        nRing.position.y = 0.03;
+        npc.add(nRing);
+
+        npc.position.set(nCfg.x, 0, nCfg.z);
+        npc.userData = {
+            baseSpeed: nCfg.speed,
+            dir: nCfg.dir,
+            range: nCfg.range || 6.5,
+            pausedUntil: 0,
+            ringMat: nRingMat
         };
         scene.add(npc);
         npcs.push(npc);
+    });
+
+    // HUD UPDATER
+    function updateStatusUI(mode, customMsg) {
+        const pill = document.getElementById('bubbleStatusPill');
+        const textEl = document.getElementById('bubbleStatusText');
+        if (!pill || !textEl) return;
+
+        pill.className = 'bubble-status-pill';
+        if (mode === 'comfy') {
+            pill.classList.add('status-comfy');
+            pill.firstElementChild.textContent = '😊';
+            textEl.textContent = customMsg || 'Comfy Space Bubble!';
+            container.style.borderColor = '#38BDF8';
+        } else if (mode === 'close') {
+            pill.classList.add('status-close');
+            pill.firstElementChild.textContent = '😮';
+            textEl.textContent = customMsg || 'Getting Close! Watch Your Bubble';
+            container.style.borderColor = '#F59E0B';
+        } else if (mode === 'bump') {
+            pill.classList.add('status-bump');
+            pill.firstElementChild.textContent = '🛑';
+            textEl.textContent = customMsg || 'Too Close! Stepping Back Safely';
+            container.style.borderColor = '#EF4444';
+        }
     }
 
-    // INTERACTION (Pointer Events)
+    function updateStarUI() {
+        const el = document.getElementById('bubbleStarCount');
+        if (el) {
+            el.textContent = `${state.bubble.starsCollected} / ${state.bubble.starsTotal}`;
+        }
+    }
+
+    // D-PAD & KEYBOARD MOVEMENT HOOK
+    window.bubbleMovePlayer = function(dx, dz) {
+        if (!state.bubble.running || state.bubble.completed) return;
+        targetPos.x = THREE.MathUtils.clamp(targetPos.x + dx, -7.2, 7.2);
+        targetPos.z = THREE.MathUtils.clamp(targetPos.z + dz, -9.5, 7.2);
+        playBubbleTone('step');
+    };
+
+    // SELF-ADVOCACY "EXCUSE ME" HOOK
+    window.bubbleExcuseMe = function() {
+        if (!state.bubble.running || state.bubble.completed) return;
+        playBubbleTone('excuse');
+        playTTS("Excuse me, can I have some space please?");
+        updateStatusUI('comfy', '✋ "Excuse me!" — Friends are giving you space!');
+
+        const now = Date.now();
+        npcs.forEach((n) => {
+            n.userData.pausedUntil = now + 4000;
+            n.userData.ringMat.color.setHex(0x22C55E);
+            const dist = n.position.distanceTo(playerRoot.position);
+            if (dist < 5.0) {
+                const pushDir = new THREE.Vector3().subVectors(n.position, playerRoot.position);
+                pushDir.y = 0;
+                if (pushDir.lengthSq() < 0.01) pushDir.set(1, 0, 0);
+                pushDir.normalize();
+                n.position.x = THREE.MathUtils.clamp(n.position.x + pushDir.x * 2.2, -7.5, 7.5);
+                n.position.z = THREE.MathUtils.clamp(n.position.z + pushDir.z * 1.4, -7.8, 5.8);
+            }
+        });
+    };
+
+    // KEYBOARD SUPPORT
+    function onKeyDown(e) {
+        if (state.page !== 'Bubble' || state.bubble.completed) return;
+        if (e.key === 'ArrowUp' || e.key === 'w') { e.preventDefault(); window.bubbleMovePlayer(0, -1.2); }
+        else if (e.key === 'ArrowDown' || e.key === 's') { e.preventDefault(); window.bubbleMovePlayer(0, 1.2); }
+        else if (e.key === 'ArrowLeft' || e.key === 'a') { e.preventDefault(); window.bubbleMovePlayer(-1.2, 0); }
+        else if (e.key === 'ArrowRight' || e.key === 'd') { e.preventDefault(); window.bubbleMovePlayer(1.2, 0); }
+        else if (e.key === ' ') { e.preventDefault(); window.bubbleExcuseMe(); }
+    }
+    window.addEventListener('keydown', onKeyDown);
+
+    // POINTER DRAG SUPPORT
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
     let isDragging = false;
@@ -1151,15 +1470,15 @@ function initBubbleGuard() {
     const planeIntersect = new THREE.Vector3();
 
     function onMove(e) {
-        if(!isDragging || state.bubble.completed) return;
+        if (!isDragging || state.bubble.completed) return;
         const rect = renderer.domElement.getBoundingClientRect();
         mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
         mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
 
         raycaster.setFromCamera(mouse, camera);
-        if(raycaster.ray.intersectPlane(dragPlane, planeIntersect)) {
-            playerRoot.position.x = THREE.MathUtils.clamp(planeIntersect.x, -8, 8);
-            playerRoot.position.z = THREE.MathUtils.clamp(planeIntersect.z, -12, 8);
+        if (raycaster.ray.intersectPlane(dragPlane, planeIntersect)) {
+            targetPos.x = THREE.MathUtils.clamp(planeIntersect.x, -7.2, 7.2);
+            targetPos.z = THREE.MathUtils.clamp(planeIntersect.z, -9.5, 7.2);
         }
     }
 
@@ -1178,56 +1497,142 @@ function initBubbleGuard() {
 
     container.addEventListener('pointerdown', onDown);
 
-    // LOOP
+    let lastBumpTime = 0;
+
+    // ANIMATION LOOP
     function animate() {
-        if(!state.bubble.running) return;
+        if (!state.bubble.running) {
+            window.removeEventListener('keydown', onKeyDown);
+            return;
+        }
         requestAnimationFrame(animate);
 
-        const time = Date.now() * 0.003;
+        const now = Date.now();
+        const time = now * 0.003;
 
-        // Animate NPCs
-        npcs.forEach(n => {
-            n.position.x += n.userData.speed * n.userData.dir;
-            if(Math.abs(n.position.x) > 8) n.userData.dir *= -1;
-            // Subtle Bobbing
-            n.position.y = Math.abs(Math.sin(time + n.position.x)) * 0.15;
+        // Smoothly move player toward targetPos
+        playerRoot.position.x = THREE.MathUtils.lerp(playerRoot.position.x, targetPos.x, 0.22);
+        playerRoot.position.z = THREE.MathUtils.lerp(playerRoot.position.z, targetPos.z, 0.22);
+
+        // Animate Stars & Check Collection
+        starMeshes.forEach((sGroup) => {
+            if (!sGroup.userData.collected) {
+                sGroup.userData.mesh.rotation.y += 0.04;
+                sGroup.userData.mesh.position.y = 0.7 + Math.sin(time * 2) * 0.15;
+
+                if (playerRoot.position.distanceTo(sGroup.position) < 2.1) {
+                    sGroup.userData.collected = true;
+                    sGroup.visible = false;
+                    state.bubble.starsCollected++;
+                    updateStarUI();
+                    playBubbleTone('star');
+                    playHaptic();
+                    if (state.bubble.starsCollected < state.bubble.starsTotal) {
+                        playTTS("Star collected!");
+                    } else {
+                        playTTS(`All stars collected! Now walk to the green ${cfg.goalName}!`);
+                    }
+                }
+            }
         });
 
-        // Player Bobbing if dragging
-        if(isDragging) {
-            humanInside.position.y = Math.abs(Math.sin(time * 2)) * 0.2;
+        // Animate NPCs
+        npcs.forEach((n) => {
+            if (now < n.userData.pausedUntil) {
+                // Paused politely after "Excuse Me"
+                n.position.y = 0;
+                return;
+            } else {
+                n.userData.ringMat.color.setHex(0x94A3B8);
+            }
+
+            if (n.userData.baseSpeed > 0) {
+                n.position.x += n.userData.baseSpeed * n.userData.dir;
+                if (Math.abs(n.position.x) > n.userData.range) {
+                    n.userData.dir *= -1;
+                }
+                n.position.y = Math.abs(Math.sin(time + n.position.x)) * 0.14;
+            }
+        });
+
+        // Player subtle bobbing
+        const moving = playerRoot.position.distanceTo(targetPos) > 0.08 || isDragging;
+        if (moving) {
+            humanInside.position.y = Math.abs(Math.sin(time * 2.5)) * 0.18;
         } else {
-            humanInside.position.y = THREE.MathUtils.lerp(humanInside.position.y, 0, 0.1);
+            humanInside.position.y = THREE.MathUtils.lerp(humanInside.position.y, 0, 0.15);
         }
 
-        if(!state.bubble.completed) {
-            let collision = false;
-            npcs.forEach(n => {
-                if(playerRoot.position.distanceTo(n.position) < 2.5) collision = true;
+        if (!state.bubble.completed) {
+            let minDistance = 999;
+            let closestNpc = null;
+
+            npcs.forEach((n) => {
+                const d = playerRoot.position.distanceTo(n.position);
+                if (d < minDistance) {
+                    minDistance = d;
+                    closestNpc = n;
+                }
             });
 
-            if(collision && !state.bubble.warning) {
-                state.bubble.warning = true;
-                bubbleMesh.material.color.setHex(0xFF9900);
-                spaceRing.material.color.setHex(0xFF9900);
-                container.classList.add('screen-shake');
-                playHaptic();
-                setTimeout(() => container.classList.remove('screen-shake'), 400);
-            } else if(!collision && state.bubble.warning) {
-                state.bubble.warning = false;
+            if (minDistance < 2.25 && closestNpc) {
+                // BUMP! Gentle bounce back to respect personal space
+                const pushVec = new THREE.Vector3().subVectors(playerRoot.position, closestNpc.position);
+                pushVec.y = 0;
+                if (pushVec.lengthSq() < 0.01) pushVec.set(0, 0, 1);
+                pushVec.normalize();
+
+                targetPos.x = THREE.MathUtils.clamp(playerRoot.position.x + pushVec.x * 1.6, -7.2, 7.2);
+                targetPos.z = THREE.MathUtils.clamp(playerRoot.position.z + pushVec.z * 1.6, -9.5, 7.2);
+
+                bubbleMesh.material.color.setHex(0xEF4444);
+                spaceRing.material.color.setHex(0xEF4444);
+                updateStatusUI('bump');
+
+                if (now - lastBumpTime > 2200) {
+                    lastBumpTime = now;
+                    container.classList.add('screen-shake');
+                    playBubbleTone('bump');
+                    playHaptic();
+                    playTTS("Oops, too close! Let's step back and give space.");
+                    setTimeout(() => container.classList.remove('screen-shake'), 400);
+                }
+            } else if (minDistance < 3.2) {
+                // AMBER WARNING ZONE
+                bubbleMesh.material.color.setHex(0xF59E0B);
+                spaceRing.material.color.setHex(0xF59E0B);
+                updateStatusUI('close');
+            } else if (now - lastBumpTime > 900) {
+                // COMFY SPACE ZONE
                 bubbleMesh.material.color.setHex(0x00CCFF);
                 spaceRing.material.color.setHex(0x00CCFF);
+                updateStatusUI('comfy');
             }
 
-            if(playerRoot.position.z < -8) {
-                state.bubble.completed = true;
-                bubbleMesh.material.color.setHex(0x22C55E);
-                spaceRing.material.color.setHex(0x22C55E);
-                confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
-                playTTS("Great job! You stayed safe!");
-                document.getElementById('bubbleWin').style.display = 'block';
+            // CHECK GOAL ZONE
+            if (playerRoot.position.z < -7.8) {
+                if (state.bubble.starsCollected >= state.bubble.starsTotal) {
+                    state.bubble.completed = true;
+                    bubbleMesh.material.color.setHex(0x22C55E);
+                    spaceRing.material.color.setHex(0x22C55E);
+                    updateStatusUI('comfy', '🎉 Goal Reached Safely with All Stars!');
+                    playBubbleTone('star');
+                    confetti({ particleCount: 180, spread: 80, origin: { y: 0.6 } });
+                    playTTS(`Fantastic job! You collected all the stars and reached the ${cfg.goalName} safely!`);
+                    const winEl = document.getElementById('bubbleWin');
+                    if (winEl) winEl.style.display = 'block';
+                } else {
+                    // Gently remind student to collect the remaining stars first
+                    targetPos.z = -6.8;
+                    updateStatusUI('close', `⭐ Collect all ${state.bubble.starsTotal} Gold Stars before entering the Green Zone!`);
+                    if (now - lastBumpTime > 2500) {
+                        lastBumpTime = now;
+                        playTTS(`Almost there! Collect the gold star first!`);
+                    }
+                }
             }
         }
+
         renderer.render(scene, camera);
     }
     animate();

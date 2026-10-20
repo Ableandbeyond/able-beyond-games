@@ -511,14 +511,15 @@ button:disabled {
 /* Bubble Guard Specific */
 .bubble-container {
     width: 100%;
-    height: 400px;
-    background: #dce0e5; /* The clay-like neutral background */
+    height: 420px;
+    background: #dce0e5;
     border-radius: 20px;
-    border: 2px solid #CBD5E1;
+    border: 4px solid #38BDF8;
     overflow: hidden;
     position: relative;
-    margin-top: 20px;
-    box-shadow: inset 0 0 20px rgba(0,0,0,0.05);
+    margin-top: 15px;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.06), 0 10px 25px rgba(0,0,0,0.06);
+    transition: border-color 0.25s ease;
 }
 
 .bubble-container canvas {
@@ -528,6 +529,158 @@ button:disabled {
     outline: none;
     -webkit-tap-highlight-color: transparent;
     touch-action: none; /* Crucial fix for mobile touch-dragging */
+}
+
+.bubble-hud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+}
+
+.bubble-status-pill {
+    flex: 1;
+    min-width: 240px;
+    padding: 14px 20px;
+    border-radius: 16px;
+    font-weight: 800;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border: 3px solid transparent;
+    transition: all 0.25s ease;
+}
+
+.status-comfy {
+    background: #DCFCE7;
+    color: #166534;
+    border-color: #22C55E;
+}
+
+.status-close {
+    background: #FEF3C7;
+    color: #92400E;
+    border-color: #F59E0B;
+}
+
+.status-bump {
+    background: #FEE2E2;
+    color: #991B1B;
+    border-color: #EF4444;
+}
+
+.bubble-star-pill {
+    background: #FEF9C3;
+    color: #854D0E;
+    border: 3px solid #EAB308;
+    padding: 14px 22px;
+    border-radius: 16px;
+    font-weight: 800;
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.bubble-levels {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.bubble-lvl-btn {
+    width: auto !important;
+    min-height: 3.2rem !important;
+    padding: 8px 18px !important;
+    margin-top: 0 !important;
+    font-size: 1rem !important;
+    background: #E2E8F0;
+    color: #1E293B;
+    box-shadow: none;
+    border: 2px solid #CBD5E1;
+}
+
+.bubble-lvl-btn.active {
+    background: linear-gradient(135deg, #2563EB, #1D4ED8);
+    color: white;
+    border-color: #1E40AF;
+    box-shadow: 0 6px 15px rgba(37, 99, 235, 0.35);
+}
+
+.bubble-controls-wrap {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 20px;
+    margin-top: 18px;
+    align-items: stretch;
+}
+
+.bubble-dpad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 10px;
+    background: #F8FAFC;
+    padding: 14px;
+    border-radius: 20px;
+    border: 3px solid #CBD5E1;
+}
+
+.dpad-btn {
+    margin-top: 0 !important;
+    min-height: 4.5rem !important;
+    font-size: 1.35rem !important;
+    font-weight: 800 !important;
+    background: linear-gradient(135deg, #0284C7, #0369A1) !important;
+    color: white !important;
+    border: 3px solid #075985 !important;
+    box-shadow: 0 6px 0 #075985 !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.1;
+    user-select: none;
+}
+
+.dpad-btn:active {
+    transform: translateY(4px) !important;
+    box-shadow: 0 2px 0 #075985 !important;
+}
+
+.excuse-btn {
+    margin-top: 0 !important;
+    height: 100%;
+    min-height: 9.5rem !important;
+    background: linear-gradient(135deg, #8B5CF6, #6D28D9) !important;
+    border: 4px solid #4C1D95 !important;
+    box-shadow: 0 8px 0 #4C1D95 !important;
+    font-size: 1.4rem !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 16px !important;
+    text-align: center;
+}
+
+.excuse-btn:active:not(:disabled) {
+    transform: translateY(5px) !important;
+    box-shadow: 0 3px 0 #4C1D95 !important;
+}
+
+@media (max-width: 768px) {
+    .bubble-controls-wrap {
+        grid-template-columns: 1fr;
+    }
+    .excuse-btn {
+        min-height: 5.5rem !important;
+    }
 }
 
 .screen-shake {
@@ -702,4 +855,3 @@ button:disabled {
     font-weight: 600;
 }
 
-}
