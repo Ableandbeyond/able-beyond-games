@@ -145,6 +145,7 @@ function renderHome() {
             <button style="margin-top:0;" onclick="window.location.href='build-a-body/'">Build a Body 🧍</button>
             <button style="margin-top:0;" onclick="window.location.href='recycling-rover/'">Recycling Rover ♻️</button>
             <button style="margin-top:0;" onclick="window.location.href='community-heroes/'">Community Heroes 👩‍🚒</button>
+            <button style="margin-top:0;" onclick="window.location.href='emotion-explorer/'">Emotion Explorer 😊</button>
         </div>
         <div class="game-card card" style="text-align: center; margin-bottom: 20px;">
           <h3>Visual Timetable Orbit</h3>
