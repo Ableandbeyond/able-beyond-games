@@ -1,0 +1,2110 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <title>Emotion Explorer: Facial Expressions &amp; Regulation | Able &amp; Beyond Support</title>
+  <meta name="description" content="WCAG AAA accessible SEN educational game for facial expression recognition, interoception body cues, and EHCP emotional self-regulation strategies." />
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons via CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              navy: '#0f172a',
+              slate: '#1e293b',
+              cream: '#f8fafc',
+              warm: '#f1f5f9',
+              accent: '#2563eb',
+              focus: '#facc15',
+              success: '#15803d',
+              gentle: '#0d9488'
+            },
+            zone: {
+              green: '#15803d',
+              greenBg: '#dcfce7',
+              greenBorder: '#22c55e',
+              yellow: '#b45309',
+              yellowBg: '#fef3c7',
+              yellowBorder: '#f59e0b',
+              blue: '#1d4ed8',
+              blueBg: '#dbeafe',
+              blueBorder: '#3b82f6',
+              red: '#b91c1c',
+              redBg: '#fee2e2',
+              redBorder: '#ef4444'
+            }
+          },
+          fontFamily: {
+            sans: ['"Segoe UI"', 'Nunito', 'Inter', 'system-ui', '-apple-system', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    /* =========================================================================
+       WCAG AAA & SEN SENSORY-SAFE DESIGN SYSTEM
+       Zero strobing, generous whitespace, high contrast, switch/D-pad focus rings
+       ========================================================================= */
+    :root {
+      --focus-ring-color: #2563eb;
+      --focus-ring-offset: #facc15;
+    }
+    .dark {
+      --focus-ring-color: #facc15;
+      --focus-ring-offset: #0f172a;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      touch-action: manipulation;
+      overflow-x: hidden;
+    }
+
+    /* High-visibility WCAG AAA Focus Ring for Keyboard, Switch & D-Pad users */
+    .sen-focus:focus-visible,
+    .sen-focus.dpad-focused {
+      outline: 4px solid var(--focus-ring-color) !important;
+      outline-offset: 4px !important;
+      box-shadow: 0 0 0 8px rgba(250, 204, 21, 0.45) !important;
+      transform: translateY(-2px);
+      z-index: 20;
+    }
+
+    /* Gentle, non-punitive horizontal nudge animation for incorrect tries */
+    @keyframes gentleNudge {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-7px); }
+      40% { transform: translateX(7px); }
+      60% { transform: translateX(-4px); }
+      80% { transform: translateX(4px); }
+    }
+    .animate-gentle-nudge {
+      animation: gentleNudge 0.45s ease-in-out;
+    }
+
+    /* Calm breathing expansion animation for Stage 2 regulation pacer */
+    @keyframes calmPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.04); }
+    }
+    .animate-calm-float {
+      animation: calmPulse 4s ease-in-out infinite;
+    }
+
+    /* Subtle celebration glow (Zero flashing/strobing) */
+    @keyframes softGlow {
+      0% { box-shadow: 0 0 0 0 rgba(21, 128, 61, 0.45); }
+      70% { box-shadow: 0 0 0 18px rgba(21, 128, 61, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(21, 128, 61, 0); }
+    }
+    .celebration-glow {
+      animation: softGlow 1.4s ease-out infinite;
+    }
+
+    /* Respect user reduced motion preference */
+    @media (prefers-reduced-motion: reduce) {
+      *, ::before, ::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    /* Tactile 3D button press feel for Interactive Whiteboards & Tablets */
+    .tactile-card {
+      transition: transform 0.16s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.16s ease, border-color 0.16s ease;
+    }
+    .tactile-card:active:not(:disabled) {
+      transform: translateY(4px);
+    }
+
+    /* Custom smooth scrollbar */
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-track { background: #e2e8f0; }
+    ::-webkit-scrollbar-thumb { background: #64748b; border-radius: 9999px; }
+  </style>
+</head>
+
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-50 min-h-screen flex flex-col justify-between antialiased selection:bg-yellow-300 selection:text-slate-950 transition-colors duration-200">
+
+  <!-- =========================================================================
+       SKIP LINK FOR KEYBOARD / SWITCH ACCESSIBILITY
+       ========================================================================= -->
+  <a href="#main-game-area" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:bg-yellow-400 focus:text-slate-950 focus:px-6 focus:py-3 focus:rounded-xl focus:font-extrabold focus:shadow-2xl">
+    Skip to Game Board
+  </a>
+
+  <!-- =========================================================================
+       1. TOP NAVIGATION & HEADER LAYOUT
+       ========================================================================= -->
+  <header class="bg-white dark:bg-slate-900 border-b-2 border-slate-200 dark:border-slate-800 shadow-sm sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+
+        <!-- Left: Prominent High-Contrast Back Home Button + Brand Title -->
+        <div class="flex items-center gap-3 sm:gap-5 flex-wrap">
+          <a href="https://games.ableandbeyond.support/portfolio.html"
+             class="sen-focus tactile-card inline-flex items-center gap-2.5 px-5 py-3 rounded-2xl bg-slate-900 dark:bg-yellow-400 text-white dark:text-slate-950 hover:bg-blue-700 dark:hover:bg-yellow-300 font-extrabold text-base sm:text-lg shadow-md border-2 border-slate-900 dark:border-yellow-500 transition-colors"
+             aria-label="Back Home to Able and Beyond Support Portfolio">
+            <span aria-hidden="true" class="text-xl leading-none">&larr;</span>
+            <span>Back Home</span>
+          </a>
+
+          <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-2xl bg-blue-600 dark:bg-blue-500 text-white flex items-center justify-center shadow-inner font-black text-2xl" aria-hidden="true">
+              😊
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h1 class="text-xl sm:text-2xl md:text-3xl font-black tracking-tight text-slate-900 dark:text-white leading-tight">
+                  Emotion Explorer
+                </h1>
+                <span class="hidden xl:inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-extrabold uppercase tracking-wider bg-blue-100 dark:bg-blue-950 text-blue-900 dark:text-blue-200 border border-blue-300 dark:border-blue-800">
+                  Able &amp; Beyond Support
+                </span>
+              </div>
+              <p class="text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300">
+                Facial Expressions, Body Clues &amp; Self-Regulation
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Center/Right Controls: Difficulty Mode Selector + Accessibility Audio/Theme Controls -->
+        <div class="flex flex-wrap items-center gap-2.5 sm:gap-3">
+
+          <!-- Dual Difficulty Mode Toggle -->
+          <div class="bg-slate-100 dark:bg-slate-800 p-1.5 rounded-2xl border-2 border-slate-300 dark:border-slate-700 flex items-center" role="group" aria-label="Difficulty Mode Selector">
+            <button type="button"
+                    id="mode-simple-btn"
+                    onclick="GameApp.setDifficulty('simple')"
+                    aria-pressed="true"
+                    class="sen-focus px-3.5 sm:px-4 py-2 rounded-xl font-extrabold text-sm sm:text-base transition-all flex items-center gap-2 bg-blue-600 text-white shadow-sm">
+              <i data-lucide="smile" class="w-4 h-4 sm:w-5 sm:h-5" aria-hidden="true"></i>
+              <span>Simple (6)</span>
+            </button>
+            <button type="button"
+                    id="mode-complex-btn"
+                    onclick="GameApp.setDifficulty('complex')"
+                    aria-pressed="false"
+                    class="sen-focus px-3.5 sm:px-4 py-2 rounded-xl font-extrabold text-sm sm:text-base transition-all flex items-center gap-2 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700">
+              <i data-lucide="sparkles" class="w-4 h-4 sm:w-5 sm:h-5" aria-hidden="true"></i>
+              <span>Complex (12)</span>
+            </button>
+          </div>
+
+          <!-- Play Style Toggle: Guided Game vs Free Check-In Board -->
+          <div class="bg-slate-100 dark:bg-slate-800 p-1.5 rounded-2xl border-2 border-slate-300 dark:border-slate-700 flex items-center" role="group" aria-label="Activity Type Selector">
+            <button type="button"
+                    id="activity-guided-btn"
+                    onclick="GameApp.setActivityMode('guided')"
+                    aria-pressed="true"
+                    class="sen-focus px-3 py-2 rounded-xl font-extrabold text-sm transition-all bg-emerald-700 text-white shadow-sm flex items-center gap-1.5">
+              <i data-lucide="compass" class="w-4 h-4" aria-hidden="true"></i>
+              <span>Play Quest</span>
+            </button>
+            <button type="button"
+                    id="activity-explore-btn"
+                    onclick="GameApp.setActivityMode('checkin')"
+                    aria-pressed="false"
+                    class="sen-focus px-3 py-2 rounded-xl font-extrabold text-sm transition-all text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center gap-1.5">
+              <i data-lucide="heart-handshake" class="w-4 h-4" aria-hidden="true"></i>
+              <span>How I Feel</span>
+            </button>
+          </div>
+
+          <!-- TTS Narration Toggle -->
+          <button type="button"
+                  id="tts-toggle-btn"
+                  onclick="GameApp.toggleTTS()"
+                  aria-pressed="true"
+                  class="sen-focus tactile-card px-3.5 py-2.5 rounded-2xl border-2 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-bold text-sm flex items-center gap-2 hover:border-blue-500"
+                  title="Toggle Spoken Voice Narration (Text-to-Speech)">
+            <i data-lucide="volume-2" id="tts-icon" class="w-5 h-5 text-blue-600 dark:text-yellow-400" aria-hidden="true"></i>
+            <span id="tts-label" class="hidden md:inline">Voice: ON</span>
+          </button>
+
+          <!-- Sound Effects Toggle -->
+          <button type="button"
+                  id="sfx-toggle-btn"
+                  onclick="GameApp.toggleSFX()"
+                  aria-pressed="true"
+                  class="sen-focus tactile-card px-3.5 py-2.5 rounded-2xl border-2 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-bold text-sm flex items-center gap-2 hover:border-blue-500"
+                  title="Toggle Gentle Sound Chimes">
+            <i data-lucide="music" id="sfx-icon" class="w-5 h-5 text-emerald-600 dark:text-emerald-400" aria-hidden="true"></i>
+            <span id="sfx-label" class="hidden lg:inline">Chimes: ON</span>
+          </button>
+
+          <!-- High-Contrast Dark/Light Theme Toggle -->
+          <button type="button"
+                  id="theme-toggle-btn"
+                  onclick="GameApp.toggleTheme()"
+                  aria-pressed="false"
+                  class="sen-focus tactile-card p-2.5 rounded-2xl border-2 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white hover:border-blue-500"
+                  aria-label="Toggle High-Contrast Dark Mode"
+                  title="Switch Light / Dark Contrast Theme">
+            <i data-lucide="moon" id="theme-icon" class="w-5 h-5" aria-hidden="true"></i>
+          </button>
+
+          <!-- Educator / EHCP Report Button -->
+          <button type="button"
+                  onclick="GameApp.openEducatorModal()"
+                  class="sen-focus tactile-card px-3.5 py-2.5 rounded-2xl border-2 border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 font-bold text-sm flex items-center gap-1.5 hover:bg-slate-200 dark:hover:bg-slate-700"
+                  aria-label="Open Teacher and EHCP Progress Log">
+            <i data-lucide="clipboard-check" class="w-5 h-5 text-blue-600 dark:text-yellow-400" aria-hidden="true"></i>
+            <span class="hidden sm:inline">EHCP Log</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       MAIN INTERACTIVE WORKSPACE
+       ========================================================================= -->
+  <main id="main-game-area" class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex flex-col gap-6">
+
+    <!-- Top Progress & Zones Bar -->
+    <section aria-label="Progress and Regulation Zones" class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
+
+      <!-- Prompt Banner (Stage 1 Target Instruction) -->
+      <div class="lg:col-span-8 bg-white dark:bg-slate-900 rounded-3xl p-5 sm:p-6 border-2 border-slate-300 dark:border-slate-700 shadow-md flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-start sm:items-center gap-4 text-center sm:text-left flex-col sm:flex-row w-full">
+          <button type="button"
+                  onclick="GameApp.speakCurrentPrompt()"
+                  class="sen-focus tactile-card shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center shadow-md mx-auto sm:mx-0"
+                  aria-label="Listen to question prompt aloud"
+                  title="Click to hear instructions spoken aloud">
+            <i data-lucide="volume-2" class="w-8 h-8" aria-hidden="true"></i>
+          </button>
+
+          <div class="flex-1">
+            <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2 mb-1">
+              <span id="stage-badge" class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs sm:text-sm font-extrabold uppercase tracking-wider bg-blue-100 dark:bg-blue-950 text-blue-900 dark:text-blue-200 border border-blue-300 dark:border-blue-700">
+                Stage 1: Spot the Feeling
+              </span>
+              <span id="scenario-context-badge" class="hidden items-center gap-1 px-3 py-0.5 rounded-full text-xs sm:text-sm font-bold bg-amber-100 dark:bg-amber-950 text-amber-900 dark:text-amber-200 border border-amber-300 dark:border-amber-700">
+                Real-Life Scenario
+              </span>
+            </div>
+
+            <!-- Scenario Story Line (Used in Complex Mode or Optional Clue) -->
+            <p id="prompt-scenario-text" class="text-sm sm:text-base font-semibold text-slate-600 dark:text-slate-300 mb-1 hidden"></p>
+
+            <!-- Primary Question Prompt -->
+            <h2 id="prompt-main-text" class="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 dark:text-white leading-snug" aria-live="polite">
+              Find the student who is feeling <span class="underline decoration-4 decoration-blue-600 dark:decoration-yellow-400">Happy</span>
+            </h2>
+
+            <!-- Subtle Facial / Body Clue Hint -->
+            <p id="prompt-clue-text" class="text-sm sm:text-base font-medium text-slate-600 dark:text-slate-400 mt-1">
+              Clue: Look for a warm smile and bright eyes.
+            </p>
+          </div>
+        </div>
+
+        <!-- Hint / Clue Toggle Button & Skip Round Button -->
+        <div class="flex sm:flex-col gap-2 shrink-0 w-full sm:w-auto justify-center">
+          <button type="button"
+                  onclick="GameApp.showVisualHint()"
+                  class="sen-focus tactile-card px-4 py-2.5 rounded-xl bg-amber-100 dark:bg-amber-950/80 hover:bg-amber-200 text-amber-950 dark:text-amber-200 border-2 border-amber-400 dark:border-amber-700 font-extrabold text-sm flex items-center justify-center gap-1.5"
+                  title="Highlight a helpful facial clue">
+            <i data-lucide="lightbulb" class="w-4 h-4" aria-hidden="true"></i>
+            <span>Face Clue</span>
+          </button>
+          <button type="button"
+                  onclick="GameApp.nextQuestion()"
+                  class="sen-focus tactile-card px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border-2 border-slate-300 dark:border-slate-700 font-bold text-sm flex items-center justify-center gap-1.5"
+                  title="Try a different emotion prompt">
+            <i data-lucide="refresh-cw" class="w-4 h-4" aria-hidden="true"></i>
+            <span>New Prompt</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Right: Calm Mastery Stars & Zones Filter Bar -->
+      <div class="lg:col-span-4 bg-white dark:bg-slate-900 rounded-3xl p-5 sm:p-6 border-2 border-slate-300 dark:border-slate-700 shadow-md flex flex-col justify-between gap-3">
+        <div class="flex items-center justify-between">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400 block">
+              Regulation Stars
+            </span>
+            <div class="flex items-center gap-2 mt-0.5">
+              <span class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white" id="score-counter">0</span>
+              <span class="text-sm font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/80 px-2.5 py-0.5 rounded-full border border-emerald-300 dark:border-emerald-800">
+                ⭐ Stars Earned
+              </span>
+            </div>
+          </div>
+
+          <!-- Star Visual Track (5 Stars per Milestone) -->
+          <div id="star-track" class="flex items-center gap-1.5" aria-label="Milestone progress stars">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Zones of Regulation Legend -->
+        <div class="pt-3 border-t border-slate-200 dark:border-slate-800">
+          <div class="flex items-center justify-between text-xs font-extrabold text-slate-600 dark:text-slate-300 mb-2">
+            <span>ZONES OF REGULATION GUIDE:</span>
+            <span id="keyboard-hint" class="hidden sm:inline text-slate-500 dark:text-slate-400">Use Arrow Keys + Enter</span>
+          </div>
+          <div class="grid grid-cols-4 gap-1.5 text-center text-xs font-extrabold">
+            <div class="px-2 py-1.5 rounded-lg bg-emerald-100 dark:bg-emerald-950 text-emerald-950 dark:text-emerald-200 border border-emerald-400 dark:border-emerald-700">
+              🟢 Green<br><span class="font-semibold text-[11px]">Ready/Calm</span>
+            </div>
+            <div class="px-2 py-1.5 rounded-lg bg-amber-100 dark:bg-amber-950 text-amber-950 dark:text-amber-200 border border-amber-400 dark:border-amber-700">
+              🟡 Yellow<br><span class="font-semibold text-[11px]">Fizzy/Wobbly</span>
+            </div>
+            <div class="px-2 py-1.5 rounded-lg bg-blue-100 dark:bg-blue-950 text-blue-950 dark:text-blue-200 border border-blue-400 dark:border-blue-700">
+              🔵 Blue<br><span class="font-semibold text-[11px]">Low/Tired</span>
+            </div>
+            <div class="px-2 py-1.5 rounded-lg bg-red-100 dark:bg-red-950 text-red-950 dark:text-red-200 border border-red-400 dark:border-red-700">
+              🔴 Red<br><span class="font-semibold text-[11px]">Big/Stop</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Gentle Non-Punitive Feedback Banner (Hidden unless needed) -->
+    <div id="feedback-banner"
+         role="status"
+         aria-live="polite"
+         class="hidden rounded-2xl p-4 border-2 font-bold text-base sm:text-lg items-center justify-between gap-4 transition-all">
+      <div class="flex items-center gap-3">
+        <span id="feedback-icon" class="text-2xl" aria-hidden="true">💡</span>
+        <span id="feedback-message">That student is feeling Calm. Let's look for Happy!</span>
+      </div>
+      <button type="button"
+              onclick="GameApp.hideFeedbackBanner()"
+              class="sen-focus px-3 py-1 rounded-lg bg-white/80 dark:bg-slate-800 text-sm font-extrabold border border-slate-300 dark:border-slate-600">
+        OK
+      </button>
+    </div>
+
+    <!-- =========================================================================
+         STAGE 1: EMOTION CARDS GRID
+         Responsive, high-contrast cards with custom articulated SVG faces + AAC badges
+         ========================================================================= -->
+    <section aria-label="Emotion Cards Grid" class="flex-1 flex flex-col justify-center">
+      <div id="emotion-grid"
+           role="grid"
+           aria-label="Select the matching emotion card"
+           class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+        <!-- Dynamically rendered by JS -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =========================================================================
+       STAGE 2 MODAL: DE-ESCALATION, COPING STRATEGY & BREATHING PACER
+       ========================================================================= -->
+  <div id="stage2-modal"
+       class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto"
+       role="dialog"
+       aria-modal="true"
+       aria-labelledby="stage2-title">
+
+    <div class="bg-white dark:bg-slate-900 border-4 border-slate-900 dark:border-yellow-400 rounded-3xl max-w-3xl w-full p-6 sm:p-8 shadow-2xl my-auto">
+
+      <!-- Modal Header: Identified Emotion & Facial Anatomy Breakdown -->
+      <div class="flex flex-col sm:flex-row items-center gap-6 pb-6 border-b-2 border-slate-200 dark:border-slate-800">
+        <!-- Animated SVG Face Preview -->
+        <div id="stage2-face-container" class="w-32 h-32 sm:w-36 sm:h-36 shrink-0 rounded-3xl flex items-center justify-center border-4 shadow-inner animate-calm-float">
+          <!-- Injected SVG -->
+        </div>
+
+        <div class="text-center sm:text-left flex-1">
+          <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2 mb-2">
+            <span id="stage2-zone-badge" class="px-3.5 py-1 rounded-full text-xs sm:text-sm font-black uppercase tracking-wider border-2">
+              Green Zone
+            </span>
+            <span class="px-3 py-1 rounded-full text-xs sm:text-sm font-extrabold bg-emerald-100 dark:bg-emerald-950 text-emerald-900 dark:text-emerald-200 border border-emerald-400">
+              ✓ Stage 1 Complete!
+            </span>
+          </div>
+
+          <h2 id="stage2-title" class="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 dark:text-white">
+            Yes! That is <span id="stage2-emotion-name" class="text-blue-600 dark:text-yellow-400">Frustrated</span>
+          </h2>
+
+          <p id="stage2-meaning" class="text-base sm:text-lg font-semibold text-slate-700 dark:text-slate-300 mt-1">
+            When something is hard or not working the way we want.
+          </p>
+
+          <!-- Facial & Interoception Body Cues Chips -->
+          <div id="stage2-anatomy-chips" class="flex flex-wrap justify-center sm:justify-start gap-2 mt-3">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Stage 2 Prompt: Coping & Regulation Choice -->
+      <div id="stage2-choice-section" class="pt-6">
+        <div class="flex items-center justify-between gap-3 mb-4">
+          <div class="flex items-center gap-3">
+            <button type="button"
+                    onclick="GameApp.speakStage2Prompt()"
+                    class="sen-focus tactile-card w-12 h-12 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center shrink-0 shadow"
+                    aria-label="Read regulation choices aloud">
+              <i data-lucide="volume-2" class="w-6 h-6" aria-hidden="true"></i>
+            </button>
+            <div>
+              <span class="text-xs font-extrabold uppercase tracking-wider text-blue-700 dark:text-yellow-400 block">
+                Stage 2: EHCP Self-Regulation Target
+              </span>
+              <h3 id="stage2-question" class="text-lg sm:text-2xl font-black text-slate-900 dark:text-white">
+                What is a helpful strategy when we feel this way?
+              </h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2 Strategy Choice Cards -->
+        <div id="stage2-options-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 mt-4">
+          <!-- Injected by JS -->
+        </div>
+      </div>
+
+      <!-- Stage 2B: Interactive Co-Regulation / Breathing Mini-Pacer & Celebration (Shown after picking strategy) -->
+      <div id="stage2-celebration-section" class="hidden pt-6 text-center">
+        <div class="bg-emerald-50 dark:bg-emerald-950/60 border-2 border-emerald-400 dark:border-emerald-700 rounded-3xl p-6 mb-6">
+          <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-600 text-white text-3xl font-black mb-3 celebration-glow" aria-hidden="true">
+            🌟
+          </div>
+          <h3 id="celebration-heading" class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-2">
+            Wonderful Self-Regulation!
+          </h3>
+          <p id="celebration-subtext" class="text-base sm:text-lg font-semibold text-slate-700 dark:text-slate-200 max-w-xl mx-auto">
+            Taking 3 deep belly breaths helps our body and brain feel safe and calm.
+          </p>
+
+          <!-- Optional Interactive 1-Breath Calm Pacer -->
+          <div id="breathing-pacer-box" class="mt-5 pt-5 border-t border-emerald-200 dark:border-emerald-800 flex flex-col items-center">
+            <p class="text-xs font-extrabold uppercase tracking-wider text-emerald-800 dark:text-emerald-300 mb-3">
+              Optional: Practise Together Now
+            </p>
+            <button type="button"
+                    id="breath-circle-btn"
+                    onclick="GameApp.runBreathingCycle()"
+                    class="sen-focus w-28 h-28 rounded-full bg-teal-600 hover:bg-teal-500 text-white font-extrabold text-sm flex flex-col items-center justify-center shadow-lg border-4 border-teal-200 transition-all duration-1000">
+              <span class="text-2xl mb-0.5" aria-hidden="true">🌬️</span>
+              <span id="breath-status-text">Tap to Breathe</span>
+            </button>
+          </div>
+        </div>
+
+        <button type="button"
+                id="continue-next-btn"
+                onclick="GameApp.completeRoundAndContinue()"
+                class="sen-focus tactile-card w-full sm:w-auto min-w-[260px] px-8 py-4 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-black text-xl shadow-lg border-2 border-blue-800 inline-flex items-center justify-center gap-3">
+          <span>Next Emotion</span>
+          <i data-lucide="arrow-right" class="w-6 h-6" aria-hidden="true"></i>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       EDUCATOR / EHCP PROGRESS REPORT MODAL
+       ========================================================================= -->
+  <div id="educator-modal"
+       class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto"
+       role="dialog"
+       aria-modal="true"
+       aria-labelledby="educator-modal-title">
+    <div class="bg-white dark:bg-slate-900 border-4 border-slate-900 dark:border-yellow-400 rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl my-auto">
+      <div class="flex items-center justify-between pb-4 border-b-2 border-slate-200 dark:border-slate-800">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-2xl bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-yellow-400 flex items-center justify-center">
+            <i data-lucide="clipboard-list" class="w-6 h-6" aria-hidden="true"></i>
+          </div>
+          <div>
+            <h2 id="educator-modal-title" class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
+              Educator &amp; EHCP Session Tracker
+            </h2>
+            <p class="text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-400">
+              Social, Emotional &amp; Mental Health (SEMH) Evidence Log
+            </p>
+          </div>
+        </div>
+        <button type="button"
+                onclick="GameApp.closeEducatorModal()"
+                class="sen-focus p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 font-bold"
+                aria-label="Close Educator Report">
+          <i data-lucide="x" class="w-6 h-6" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <div class="py-5 space-y-5">
+        <div class="grid grid-cols-3 gap-3 text-center">
+          <div class="p-4 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700">
+            <span class="text-xs font-extrabold uppercase text-slate-500 dark:text-slate-400 block">Emotions Mastered</span>
+            <span id="stat-completed" class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">0</span>
+          </div>
+          <div class="p-4 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700">
+            <span class="text-xs font-extrabold uppercase text-slate-500 dark:text-slate-400 block">First-Try Accuracy</span>
+            <span id="stat-accuracy" class="text-2xl sm:text-3xl font-black text-emerald-700 dark:text-emerald-400">100%</span>
+          </div>
+          <div class="p-4 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700">
+            <span class="text-xs font-extrabold uppercase text-slate-500 dark:text-slate-400 block">Current Mode</span>
+            <span id="stat-mode" class="text-lg sm:text-xl font-black text-blue-600 dark:text-yellow-400">Simple (6)</span>
+          </div>
+        </div>
+
+        <div class="bg-blue-50 dark:bg-slate-800/70 p-4 rounded-2xl border border-blue-200 dark:border-slate-700">
+          <h3 class="text-sm font-black uppercase tracking-wider text-blue-950 dark:text-yellow-400 mb-1">
+            IEP / EHCP Outcome Alignment
+          </h3>
+          <p class="text-sm font-medium text-slate-700 dark:text-slate-300 leading-relaxed">
+            Learner will accurately identify core and nuanced emotional states from facial expressions and body cues, and select an appropriate self-regulation or co-regulation strategy across structured scenarios.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">
+            Session Activity Log
+          </h3>
+          <div id="session-log-list" class="max-h-48 overflow-y-auto space-y-2 pr-1 text-sm font-semibold">
+            <p class="text-slate-500 italic">Complete a round to record EHCP evidence entries here.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-slate-200 dark:border-slate-800 flex flex-wrap justify-between gap-3">
+        <button type="button"
+                onclick="GameApp.copySessionReport()"
+                class="sen-focus px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold text-sm flex items-center gap-2">
+          <i data-lucide="copy" class="w-4 h-4" aria-hidden="true"></i>
+          <span id="copy-report-label">Copy Notes for EHCP File</span>
+        </button>
+        <button type="button"
+                onclick="GameApp.closeEducatorModal()"
+                class="sen-focus px-6 py-2.5 rounded-xl bg-slate-900 dark:bg-yellow-400 text-white dark:text-slate-950 font-extrabold text-sm">
+          Resume Game
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       FOOTER: KEYBOARD & ACCESSIBILITY REASSURANCE BAR
+       ========================================================================= -->
+  <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-3 px-4 text-center text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-400">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+      <span><strong>Able &amp; Beyond Support</strong> &bull; WCAG AAA Sensory-Safe Intervention</span>
+      <span class="hidden md:inline">Switch &amp; Keyboard Ready: Use <kbd class="px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded font-bold">Arrow Keys</kbd> or <kbd class="px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded font-bold">Tab</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded font-bold">Enter</kbd></span>
+      <span>Zero Flashing Lights &bull; Non-Punitive Learning</span>
+    </div>
+  </footer>
+
+  <!-- =========================================================================
+       APPLICATION JAVASCRIPT: EMOTION ENGINE, CUSTOM SVG FACES, AUDIO & GAMEPLAY
+       ========================================================================= -->
+  <script>
+    /**
+     * =========================================================================
+     * 1. BESPOKE SVG FACIAL EXPRESSION RENDERER
+     * Generates rich, high-contrast, anatomically clear illustrated character
+     * faces with distinct eyebrows, eye shapes, pupil positions, mouth curves,
+     * and physiological cues (tears, blush, sweat drop, calm sparkles) so SEN
+     * students learn genuine facial literacy alongside emoji symbols.
+     * =========================================================================
+     */
+    const FaceSVGGenerator = {
+      render(emotionId, skinTone = '#F6C99E', shirtColor = '#3B82F6') {
+        const expressions = {
+          happy: {
+            brows: `<path d="M32 42 Q40 36 48 41" stroke="#1E293B" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+                    <path d="M72 41 Q80 36 88 42" stroke="#1E293B" stroke-width="4.5" stroke-linecap="round" fill="none"/>`,
+            eyes: `<circle cx="40" cy="53" r="6" fill="#1E293B"/><circle cx="38" cy="51" r="2" fill="#FFFFFF"/>
+                   <circle cx="80" cy="53" r="6" fill="#1E293B"/><circle cx="78" cy="51" r="2" fill="#FFFFFF"/>`,
+            mouth: `<path d="M40 72 Q60 92 80 72 Z" fill="#BE123C" stroke="#1E293B" stroke-width="3.5" stroke-linejoin="round"/>
+                    <path d="M48 79 Q60 85 72 79" fill="#FB7185"/>`,
+            extras: `<ellipse cx="28" cy="65" rx="6" ry="3.5" fill="#FDA4AF" opacity="0.75"/>
+                     <ellipse cx="92" cy="65" rx="6" ry="3.5" fill="#FDA4AF" opacity="0.75"/>`
+          },
+          sad: {
+            brows: `<path d="M30 45 Q40 43 48 37" stroke="#1E293B" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+                    <path d="M72 37 Q80 43 90 45" stroke="#1E293B" stroke-width="4.5" stroke-linecap="round" fill="none"/>`,
+            eyes: `<ellipse cx="40" cy="55" rx="5.5" ry="6" fill="#1E293B"/><circle cx="38" cy="53" r="2" fill="#FFFFFF"/>
+                   <ellipse cx="80" cy="55" rx="5.5" ry="6" fill="#1E293B"/><circle cx="78" cy="53" r="2" fill="#FFFFFF"/>`,
+            mouth: `<path d="M42 82 Q60 68 78 82" stroke="#1E293B" stroke-width="4.5" stroke-linecap="round" fill="none"/>`,
+            extras: `<path d="M33 62 Q29 71 33 74 Q37 71 33 62 Z" fill="#38BDF8" stroke="#0284C7" stroke-width="1.5"/>`
+          },
+          angry: {
+            brows: `<path d="M29 36 L50 46" stroke="#1E293B" stroke-width="5.5" stroke-linecap="round"/>
+                    <path d="M91 36 L70 46" stroke="#1E293B" stroke-width="5.5" stroke-linecap="round"/>`,
+            eyes: `<circle cx="41" cy="54" r="5.5" fill="#1E293B"/><circle cx="40" cy="52" r="1.8" fill="#FFFFFF"/>
+                   <circle cx="79" cy="54" r="5.5" fill="#1E293B"/><circle cx="78" cy="52" r="1.8" fill="#FFFFFF"/>`,
+            mouth: `<path d="M41 81 Q60 70 79 81 Z" fill="#FFFFFF" stroke="#1E293B" stroke-width="4" stroke-linejoin="round"/>
+                    <line x1="50" y1="76" x2="50" y2="81" stroke="#1E293B" stroke-width="2.5"/>
+                    <line x1="60" y1="75" x2="60" y2="81" stroke="#1E293B" stroke-width="2.5"/>
+                    <line x1="70" y1="76" x2="70" y2="81" stroke="#1E293B" stroke-width="2.5"/>`,
+            extras: `<ellipse cx="28" cy="64" rx="7" ry="4" fill="#F87171" opacity="0.65"/>
+                     <ellipse cx="92" cy="64" rx="7" ry="4" fill="#F87171" opacity="0.65"/>`
+          },
+          surprised: {
+            brows: `<path d="M30 35 Q40 26 50 35" stroke="#1E293B" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+                    <path d="M70 35 Q80 26 90 35" stroke="#1E293B" stroke-width="4.5" stroke-linecap="round" fill="none"/>`,
+            eyes: `<circle cx="40" cy="52" r="8" fill="#FFFFFF" stroke="#1E293B" stroke-width="3"/>
+                   <circle cx="40" cy="52" r="4.5" fill="#1E293B"/><circle cx="38.5" cy="50.5" r="1.8" fill="#FFFFFF"/>
+                   <circle cx="80" cy="52" r="8" fill="#FFFFFF" stroke="#1E293B" stroke-width="3"/>
+                   <circle cx="80" cy="52" r="4.5" fill="#1E293B"/><circle cx="78.5" cy="50.5" r="1.8" fill="#FFFFFF"/>`,
+            mouth: `<ellipse cx="60" cy="78" rx="9" ry="11" fill="#9F1239" stroke="#1E293B" stroke-width="3.5"/>`,
+            extras: ``
+          },
+          scared: {
+            brows: `<path d="M29 42 Q40 33 49 36" stroke="#1E293B" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+                    <path d="M71 36 Q80 33 91 42" stroke="#1E293B" stroke-width="4.5" stroke-linecap="round" fill="none"/>`,
+            eyes: `<circle cx="40" cy="53" r="8.5" fill="#FFFFFF" stroke="#1E293B" stroke-width="3"/>
+                   <circle cx="40" cy="53" r="3.5" fill="#1E293B"/>
+                   <circle cx="80" cy="53" r="8.5" fill="#FFFFFF" stroke="#1E293B" stroke-width="3"/>
+                   <circle cx="80" cy="53" r="3.5" fill="#1E293B"/>`,
+            mouth: `<path d="M42 79 Q51 73 60 79 Q69 73 78 79 Q60 85 42 79 Z" fill="#FFE4E6" stroke="#1E293B" stroke-width="3.5"/>`,
+            extras: `<path d="M92 42 Q88 51 92 54 Q96 51 92 42 Z" fill="#38BDF8" stroke="#0284C7" stroke-width="1.5"/>`
+          },
+          calm: {
+            brows: `<path d="M31 41 Q40 38 49 41" stroke="#1E293B" stroke-width="4" stroke-linecap="round" fill="none"/>
+                    <path d="M71 41 Q80 38 89 41" stroke="#1E293B" stroke-width="4" stroke-linecap="round" fill="none"/>`,
+            eyes: `<path d="M32 53 Q40 60 48 53" stroke="#1E293B" stroke-width="4" stroke-linecap="round" fill="none"/>
+                   <path d="M72 53 Q80 60 88 53" stroke="#1E293B" stroke-width="4" stroke-linecap="round" fill="none"/>`,
+            mouth: `<path d="M43 74 Q60 84 77 74" stroke="#1E293B" stroke-width="4" stroke-linecap="round" fill="none"/>`,
+            extras: `<ellipse cx="29" cy="64" rx="5.5" ry="3" fill="#FDA4AF" opacity="0.6"/>
+                     <ellipse cx="91" cy="64" rx="5.5" ry="3" fill="#FDA4AF" opacity="0.6"/>`
+          },
+          frustrated: {
+            brows: `<path d="M29 39 L49 45" stroke="#1E293B" stroke-width="5" stroke-linecap="round"/>
+                    <path d="M91 39 L71 45" stroke="#1E293B" stroke-width="5" stroke-linecap="round"/>`,
+            eyes: `<circle cx="40" cy="54" r="5.5" fill="#1E293B"/><circle cx="38.5" cy="52" r="1.8" fill="#FFFFFF"/>
+                   <circle cx="80" cy="54" r="5.5" fill="#1E293B"/><circle cx="78.5" cy="52" r="1.8" fill="#FFFFFF"/>`,
+            mouth: `<path d="M39 78 L48 74 L56 80 L65 74 L73 80 L81 76" stroke="#1E293B" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`,
+            extras: `<path d="M92 34 Q98 28 94 22" stroke="#64748B" stroke-width="3" stroke-linecap="round" fill="none"/>`
+          },
+          excited: {
+            brows: `<path d="M30 36 Q40 29 50 36" stroke="#1E293B" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+                    <path d="M70 36 Q80 29 90 36" stroke="#1E293B" stroke-width="4.5" stroke-linecap="round" fill="none"/>`,
+            eyes: `<path d="M32 53 Q40 43 48 53" stroke="#1E293B" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+                   <path d="M72 53 Q80 43 88 53" stroke="#1E293B" stroke-width="4.5" stroke-linecap="round" fill="none"/>`,
+            mouth: `<path d="M37 70 Q60 95 83 70 Z" fill="#BE123C" stroke="#1E293B" stroke-width="3.5" stroke-linejoin="round"/>
+                    <path d="M47 79 Q60 87 73 79" fill="#FB7185"/>`,
+            extras: `<ellipse cx="27" cy="64" rx="6.5" ry="3.5" fill="#FDA4AF" opacity="0.85"/>
+                     <ellipse cx="93" cy="64" rx="6.5" ry="3.5" fill="#FDA4AF" opacity="0.85"/>`
+          },
+          worried: {
+            brows: `<path d="M30 44 Q40 41 49 35" stroke="#1E293B" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+                    <path d="M71 35 Q80 41 90 44" stroke="#1E293B" stroke-width="4.5" stroke-linecap="round" fill="none"/>`,
+            eyes: `<circle cx="40" cy="54" r="7" fill="#FFFFFF" stroke="#1E293B" stroke-width="2.8"/>
+                   <circle cx="41" cy="54" r="4" fill="#1E293B"/><circle cx="39.5" cy="52.5" r="1.5" fill="#FFFFFF"/>
+                   <circle cx="80" cy="54" r="7" fill="#FFFFFF" stroke="#1E293B" stroke-width="2.8"/>
+                   <circle cx="79" cy="54" r="4" fill="#1E293B"/><circle cx="77.5" cy="52.5" r="1.5" fill="#FFFFFF"/>`,
+            mouth: `<path d="M42 79 Q51 73 60 78 Q69 83 78 76" stroke="#1E293B" stroke-width="4" stroke-linecap="round" fill="none"/>`,
+            extras: `<path d="M27 45 Q23 53 27 56 Q31 53 27 45 Z" fill="#38BDF8" stroke="#0284C7" stroke-width="1.5"/>`
+          },
+          confused: {
+            brows: `<path d="M30 35 Q40 28 49 36" stroke="#1E293B" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+                    <path d="M71 43 L89 40" stroke="#1E293B" stroke-width="4.5" stroke-linecap="round" fill="none"/>`,
+            eyes: `<circle cx="40" cy="53" r="6" fill="#1E293B"/><circle cx="38" cy="51" r="2" fill="#FFFFFF"/>
+                   <circle cx="80" cy="55" r="5" fill="#1E293B"/><circle cx="78" cy="53" r="1.8" fill="#FFFFFF"/>`,
+            mouth: `<path d="M44 78 Q55 72 66 79 Q73 82 78 77" stroke="#1E293B" stroke-width="4.2" stroke-linecap="round" fill="none"/>`,
+            extras: `<text x="89" y="30" font-size="18" font-weight="900" fill="#1E293B">?</text>`
+          },
+          tired: {
+            brows: `<path d="M31 44 Q40 42 48 44" stroke="#1E293B" stroke-width="4" stroke-linecap="round" fill="none"/>
+                    <path d="M72 44 Q80 42 89 44" stroke="#1E293B" stroke-width="4" stroke-linecap="round" fill="none"/>`,
+            eyes: `<path d="M31 54 L49 54" stroke="#1E293B" stroke-width="4" stroke-linecap="round"/>
+                   <path d="M33 54 Q40 61 47 54" fill="#1E293B"/>
+                   <path d="M71 54 L89 54" stroke="#1E293B" stroke-width="4" stroke-linecap="round"/>
+                   <path d="M73 54 Q80 61 87 54" fill="#1E293B"/>`,
+            mouth: `<ellipse cx="60" cy="78" rx="7" ry="8.5" fill="#9F1239" stroke="#1E293B" stroke-width="3.5"/>`,
+            extras: `<text x="85" y="31" font-size="14" font-weight="900" fill="#1D4ED8">Zzz</text>`
+          },
+          proud: {
+            brows: `<path d="M31 38 Q40 33 49 38" stroke="#1E293B" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+                    <path d="M71 38 Q80 33 89 38" stroke="#1E293B" stroke-width="4.5" stroke-linecap="round" fill="none"/>`,
+            eyes: `<path d="M32 53 Q40 45 48 53" stroke="#1E293B" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+                   <path d="M72 53 Q80 45 88 53" stroke="#1E293B" stroke-width="4.5" stroke-linecap="round" fill="none"/>`,
+            mouth: `<path d="M40 73 Q60 88 80 73" stroke="#1E293B" stroke-width="4.5" stroke-linecap="round" fill="none"/>`,
+            extras: `<ellipse cx="28" cy="64" rx="6" ry="3.5" fill="#FDA4AF" opacity="0.75"/>
+                     <ellipse cx="92" cy="64" rx="6" ry="3.5" fill="#FDA4AF" opacity="0.75"/>`
+          }
+        };
+
+        const exp = expressions[emotionId] || expressions.happy;
+
+        return `
+          <svg viewBox="0 0 120 120" class="w-full h-full drop-shadow-sm select-none" role="img" aria-hidden="true">
+            <!-- Shoulders / Collar -->
+            <path d="M22 116 Q60 94 98 116" fill="${shirtColor}" stroke="#1E293B" stroke-width="3.5"/>
+            <!-- Ears -->
+            <circle cx="17" cy="60" r="8" fill="${skinTone}" stroke="#1E293B" stroke-width="3.2"/>
+            <circle cx="103" cy="60" r="8" fill="${skinTone}" stroke="#1E293B" stroke-width="3.2"/>
+            <!-- Head Base -->
+            <circle cx="60" cy="58" r="42" fill="${skinTone}" stroke="#1E293B" stroke-width="3.8"/>
+            <!-- Hair Top Arch -->
+            <path d="M20 48 Q26 15 60 15 Q94 15 100 48 Q82 28 60 30 Q38 28 20 48 Z" fill="#334155" stroke="#1E293B" stroke-width="3.2" stroke-linejoin="round"/>
+            <!-- Nose -->
+            <path d="M60 56 Q56 64 62 65" stroke="#1E293B" stroke-width="3" stroke-linecap="round" fill="none"/>
+            <!-- Dynamic Eyebrows, Eyes, Mouth & Cues -->
+            ${exp.brows}
+            ${exp.eyes}
+            ${exp.mouth}
+            ${exp.extras}
+          </svg>
+        `;
+      }
+    };
+
+    /**
+     * =========================================================================
+     * 2. COMPREHENSIVE SEN EMOTION & EHCP REGULATION DATASET
+     * Simple Mode: 6 Core Emotions
+     * Complex Mode: 12 Emotions (6 Core + 6 Expanded States)
+     * =========================================================================
+     */
+    const EMOTIONS_DATA = [
+      // --- 6 CORE EMOTIONS (Simple & Complex) ---
+      {
+        id: 'happy',
+        label: 'Happy',
+        emoji: '😊',
+        tier: 'simple',
+        zone: 'Green Zone',
+        zoneColor: 'emerald',
+        skinTone: '#F6C99E',
+        shirtColor: '#10B981',
+        meaning: 'Feeling good, joyful, and comfortable inside.',
+        faceClue: 'Corners of the mouth turn up into a smile and cheeks lift.',
+        bodyClue: 'Warm, light body and relaxed shoulders.',
+        anatomyChips: ['👀 Bright eyes', '👄 Curved smile', '💚 Relaxed body'],
+        scenarios: [
+          'Maya just finished building her favourite dinosaur puzzle!',
+          'Noah is playing his favourite music game with a friend.'
+        ],
+        strategies: [
+          {
+            text: 'Share a smile or high-five with a friend or adult',
+            icon: '🙌',
+            isCorrect: true,
+            feedback: 'Sharing our happy feelings helps us connect and enjoy the moment!'
+          },
+          {
+            text: 'Say "I really enjoyed doing this!"',
+            icon: '💬',
+            isCorrect: true,
+            feedback: 'Naming what made us happy helps us remember positive moments.'
+          },
+          {
+            text: 'Throw the puzzle pieces across the room',
+            icon: '🧩',
+            isCorrect: false,
+            feedback: 'Let’s keep the room safe. Try sharing a smile or saying what you enjoyed!'
+          }
+        ]
+      },
+      {
+        id: 'sad',
+        label: 'Sad',
+        emoji: '😢',
+        tier: 'simple',
+        zone: 'Blue Zone',
+        zoneColor: 'blue',
+        skinTone: '#E8B48A',
+        shirtColor: '#3B82F6',
+        meaning: 'Feeling hurt, disappointed, or missing someone we care about.',
+        faceClue: 'Inner eyebrows slant up, mouth corners turn down, and eyes may have tears.',
+        bodyClue: 'Heavy chest, quiet voice, or wanting a hug.',
+        anatomyChips: ['眉毛 Slanted brows', '👄 Downward mouth', '💧 Teardrop cue'],
+        scenarios: [
+          'Sam’s favourite outdoor playtime was cancelled because of heavy rain.',
+          'Ava dropped her ice cream cone on the pavement.'
+        ],
+        strategies: [
+          {
+            text: 'Ask a trusted adult for a comfort hug or quiet time',
+            icon: '🧸',
+            isCorrect: true,
+            feedback: 'Asking for comfort or a quiet cosy space helps our body feel safe when sad.'
+          },
+          {
+            text: 'Use my feeling card to tell someone "I feel sad"',
+            icon: '🗣️',
+            isCorrect: true,
+            feedback: 'Letting someone know we feel sad means they can listen and help us.'
+          },
+          {
+            text: 'Hide under a desk and refuse to tell anyone',
+            icon: '🙈',
+            isCorrect: false,
+            feedback: 'It is okay to feel sad, and telling a trusted adult helps keep you safe and supported.'
+          }
+        ]
+      },
+      {
+        id: 'angry',
+        label: 'Angry',
+        emoji: '😠',
+        tier: 'simple',
+        zone: 'Red Zone',
+        zoneColor: 'red',
+        skinTone: '#F3C19D',
+        shirtColor: '#EF4444',
+        meaning: 'Feeling a very strong, hot feeling when something feels unfair.',
+        faceClue: 'Eyebrows pull down and together tightly, and the jaw or teeth clench.',
+        bodyClue: 'Hot face, fast heartbeat, and tight fists.',
+        anatomyChips: ['😠 Lowered V-brows', '😬 Tight jaw', '🔥 Hot face & tight hands'],
+        scenarios: [
+          'Someone grabbed Leo’s tablet out of his hands without asking.',
+          'Zara was told she has to stop playing right in the middle of her level.'
+        ],
+        strategies: [
+          {
+            text: 'Take 3 slow deep breaths and step to the calm corner',
+            icon: '🌬️',
+            isCorrect: true,
+            feedback: 'Slow deep breaths cool down our brain and keep our hands safe!'
+          },
+          {
+            text: 'Squeeze a sensory stress ball or push my palms together',
+            icon: '🥎',
+            isCorrect: true,
+            feedback: 'Squeezing a stress ball lets big angry energy out safely.'
+          },
+          {
+            text: 'Shout loudly or push the table over',
+            icon: '💥',
+            isCorrect: false,
+            feedback: 'It is okay to feel angry, but we must keep hands and furniture safe. Let’s try deep breaths or a stress ball!'
+          }
+        ]
+      },
+      {
+        id: 'surprised',
+        label: 'Surprised',
+        emoji: '😮',
+        tier: 'simple',
+        zone: 'Yellow Zone',
+        zoneColor: 'amber',
+        skinTone: '#D99B72',
+        shirtColor: '#F59E0B',
+        meaning: 'When something unexpected happens suddenly that we did not know about.',
+        faceClue: 'Eyebrows arch high up, eyes open wide, and mouth forms an "O" shape.',
+        bodyClue: 'Quick intake of breath or jumping slightly.',
+        anatomyChips: ['👀 Wide round eyes', '😮 Round "O" mouth', '⬆️ High arched brows'],
+        scenarios: [
+          'A friendly therapy puppy walked into the classroom unexpectedly!',
+          'A jack-in-the-box popped open with a funny tune.'
+        ],
+        strategies: [
+          {
+            text: 'Pause, blink, and look to see what happened',
+            icon: '👀',
+            isCorrect: true,
+            feedback: 'Pausing and looking helps our brain understand unexpected surprises.'
+          },
+          {
+            text: 'Take a steady breath and ask "What is happening?"',
+            icon: '🙋',
+            isCorrect: true,
+            feedback: 'Asking a question helps turn a surprise into something predictable.'
+          },
+          {
+            text: 'Run out of the room without looking',
+            icon: '🏃',
+            isCorrect: false,
+            feedback: 'Running away can be unsafe. Let’s pause, take a breath, and check with an adult!'
+          }
+        ]
+      },
+      {
+        id: 'scared',
+        label: 'Scared',
+        emoji: '😨',
+        tier: 'simple',
+        zone: 'Yellow Zone',
+        zoneColor: 'amber',
+        skinTone: '#F6C99E',
+        shirtColor: '#8B5CF6',
+        meaning: 'Feeling unsafe or startled by a loud noise or unfamiliar thing.',
+        faceClue: 'Eyes open very wide, eyebrows pull up and together, and mouth trembles.',
+        bodyClue: 'Shaky knees, fast heartbeat, or wanting to cover ears.',
+        anatomyChips: ['😳 Wide fearful eyes', '👄 Tense open mouth', '💓 Fast heartbeat'],
+        scenarios: [
+          'A very loud thunderclap boomed right outside the window.',
+          'The school fire alarm bell started ringing unexpectedly.'
+        ],
+        strategies: [
+          {
+            text: 'Put on ear defenders and stay close to a trusted adult',
+            icon: '🎧',
+            isCorrect: true,
+            feedback: 'Ear defenders and a trusted adult help our sensory system feel protected.'
+          },
+          {
+            text: 'Hold my comfort object and take 3 slow belly breaths',
+            icon: '🫂',
+            isCorrect: true,
+            feedback: 'Slow breathing tells our body that we are safe and supported.'
+          },
+          {
+            text: 'Throw objects at the loud sound',
+            icon: '🚫',
+            isCorrect: false,
+            feedback: 'Throwing things isn’t safe. Let’s use ear defenders or stay near our trusted adult!'
+          }
+        ]
+      },
+      {
+        id: 'calm',
+        label: 'Calm',
+        emoji: '😌',
+        tier: 'simple',
+        zone: 'Green Zone',
+        zoneColor: 'emerald',
+        skinTone: '#C68659',
+        shirtColor: '#0D9488',
+        meaning: 'Feeling peaceful, steady, safe, and ready to listen or learn.',
+        faceClue: 'Soft, relaxed eyes and a gentle, peaceful smile.',
+        bodyClue: 'Slow, steady breathing and relaxed hands.',
+        anatomyChips: ['😌 Soft relaxed eyes', '🙂 Gentle smile', '🍃 Slow steady breath'],
+        scenarios: [
+          'Chloe is listening to gentle rain sounds in the sensory corner.',
+          'Ben has just finished his deep breathing exercises after lunch.'
+        ],
+        strategies: [
+          {
+            text: 'Notice how peaceful my body feels and keep breathing gently',
+            icon: '🌿',
+            isCorrect: true,
+            feedback: 'Noticing when we feel calm helps us remember what our Green Zone feels like!'
+          },
+          {
+            text: 'Start my next learning activity at a steady pace',
+            icon: '📖',
+            isCorrect: true,
+            feedback: 'When we are calm in the Green Zone, our brain is ready to learn and explore.'
+          },
+          {
+            text: 'Bang loudly on the table to wake everyone up',
+            icon: '🥁',
+            isCorrect: false,
+            feedback: 'Let’s keep our peaceful energy steady by noticing our calm breath or starting our activity.'
+          }
+        ]
+      },
+
+      // --- 6 EXPANDED NUANCED EMOTIONS (Complex Mode) ---
+      {
+        id: 'frustrated',
+        label: 'Frustrated',
+        emoji: '😤',
+        tier: 'complex',
+        zone: 'Yellow Zone',
+        zoneColor: 'amber',
+        skinTone: '#E8B48A',
+        shirtColor: '#D97706',
+        meaning: 'Feeling stuck and bothered when a task is tricky or not working.',
+        faceClue: 'Brows knit together and mouth twists in a tight, squiggly line.',
+        bodyClue: 'Tight shoulders, sighing loudly, or wanting to give up.',
+        anatomyChips: ['😤 Knitted brows', '〰️ Squiggly tight mouth', '💪 Tense shoulders'],
+        scenarios: [
+          'Liam’s tall LEGO tower fell down for the third time in a row.',
+          'Ruby is trying to tie her shoelaces, but the knot keeps slipping.'
+        ],
+        strategies: [
+          {
+            text: 'Ask for a short break or say "Help please, this part is tricky"',
+            icon: '✋',
+            isCorrect: true,
+            feedback: 'Asking for help or taking a 2-minute break stops frustration from turning into anger!'
+          },
+          {
+            text: 'Take 3 deep breaths and try one small step at a time',
+            icon: '🪜',
+            isCorrect: true,
+            feedback: 'Breaking a tricky task into one small step makes it much easier to manage.'
+          },
+          {
+            text: 'Rip up the worksheet or kick the bricks',
+            icon: '📄',
+            isCorrect: false,
+            feedback: 'When something feels tricky, let’s pause and ask for help or take a short break instead!'
+          }
+        ]
+      },
+      {
+        id: 'excited',
+        label: 'Excited',
+        emoji: '🤩',
+        tier: 'complex',
+        zone: 'Yellow Zone',
+        zoneColor: 'amber',
+        skinTone: '#F6C99E',
+        shirtColor: '#EC4899',
+        meaning: 'Feeling fizzy, bouncy, and super eager about something fun coming up!',
+        faceClue: 'Huge open smile, high eyebrows, and bright sparkling eyes.',
+        bodyClue: 'Bouncy feet, fast talking, and lots of fizzy energy.',
+        anatomyChips: ['🤩 Sparkling eyes', '😄 Big wide grin', '⚡ Fizzy bouncy energy'],
+        scenarios: [
+          'Today is the class trip to the science museum and the bus just arrived!',
+          'It is Toby’s birthday party after school today.'
+        ],
+        strategies: [
+          {
+            text: 'Do 5 wall push-ups or gentle star jumps, then take a slow breath',
+            icon: '⭐',
+            isCorrect: true,
+            feedback: 'Moving our body safely and taking a slow breath keeps excited energy in control!'
+          },
+          {
+            text: 'Squeeze my hands together and count slowly from 1 to 5',
+            icon: '🖐️',
+            isCorrect: true,
+            feedback: 'Counting slowly helps our fizzy Yellow Zone body stay safe and focused.'
+          },
+          {
+            text: 'Run around the classroom knocking into chairs',
+            icon: '🪑',
+            isCorrect: false,
+            feedback: 'Excited energy is wonderful, but let’s keep our body safe with wall push-ups or counting to 5!'
+          }
+        ]
+      },
+      {
+        id: 'worried',
+        label: 'Worried',
+        emoji: '😟',
+        tier: 'complex',
+        zone: 'Yellow Zone',
+        zoneColor: 'amber',
+        skinTone: '#D99B72',
+        shirtColor: '#6366F1',
+        meaning: 'Feeling uneasy or unsure about what might happen next.',
+        faceClue: 'Eyebrows slant up in the middle, eyes dart around, and mouth is wavy.',
+        bodyClue: 'Fluttery "butterflies" in the tummy and fidgety fingers.',
+        anatomyChips: ['😟 Furrowed brows', '〰️ Wavy unsure mouth', '🦋 Tummy butterflies'],
+        scenarios: [
+          'There is a supply teacher today and the visual timetable looks different.',
+          'Ella is going to the dentist this afternoon and isn’t sure what will happen.'
+        ],
+        strategies: [
+          {
+            text: 'Check the Now & Next visual schedule or ask an adult what happens first',
+            icon: '📅',
+            isCorrect: true,
+            feedback: 'Checking the visual schedule helps our brain see the plan and feel reassured!'
+          },
+          {
+            text: 'Use the 5-4-3-2-1 grounding tool and take 3 belly breaths',
+            icon: '🌱',
+            isCorrect: true,
+            feedback: 'Grounding and slow breathing settle the butterflies in our tummy.'
+          },
+          {
+            text: 'Keep all the worries locked inside without asking anyone',
+            icon: '🔒',
+            isCorrect: false,
+            feedback: 'Sharing a worry or checking the visual timetable helps make the day feel predictable and safe.'
+          }
+        ]
+      },
+      {
+        id: 'confused',
+        label: 'Confused',
+        emoji: '😕',
+        tier: 'complex',
+        zone: 'Yellow Zone',
+        zoneColor: 'amber',
+        skinTone: '#F3C19D',
+        shirtColor: '#0284C7',
+        meaning: 'Not understanding an instruction or what we are supposed to do next.',
+        faceClue: 'One eyebrow lifts higher than the other, and mouth tilts to one side.',
+        bodyClue: 'Scratching head, pausing, and feeling unsure how to start.',
+        anatomyChips: ['🤨 One raised eyebrow', '🫤 Tilted mouth', '❓ Unsure what to do'],
+        scenarios: [
+          'The teacher gave three instructions very quickly and Max missed step two.',
+          'A game rule changed and Hannah is not sure whose turn it is.'
+        ],
+        strategies: [
+          {
+            text: 'Raise my hand or show my "Please show me again" card',
+            icon: '🙋',
+            isCorrect: true,
+            feedback: 'Asking someone to show or repeat one step at a time is a brilliant learning skill!'
+          },
+          {
+            text: 'Look at the step-by-step picture checklist on the board',
+            icon: '📋',
+            isCorrect: true,
+            feedback: 'Checking the visual step-by-step guide helps clear up confusion.'
+          },
+          {
+            text: 'Throw the pencil on the floor and give up',
+            icon: '✏️',
+            isCorrect: false,
+            feedback: 'Everyone feels confused sometimes! Raising a hand or checking the picture guide will help right away.'
+          }
+        ]
+      },
+      {
+        id: 'tired',
+        label: 'Tired',
+        emoji: '😴',
+        tier: 'complex',
+        zone: 'Blue Zone',
+        zoneColor: 'blue',
+        skinTone: '#C68659',
+        shirtColor: '#64748B',
+        meaning: 'Having low energy and needing rest, water, or a quiet sensory break.',
+        faceClue: 'Heavy drooping eyelids, relaxed brows, and a wide yawn.',
+        bodyClue: 'Heavy arms and legs, resting head on hands, slow movements.',
+        anatomyChips: ['😴 Drooping eyelids', '🥱 Yawning mouth', '🔋 Low body battery'],
+        scenarios: [
+          'It is Friday afternoon after a busy week of swimming and learning.',
+          'Owen didn’t sleep well last night because of the wind outside.'
+        ],
+        strategies: [
+          {
+            text: 'Have a drink of water and ask for a 5-minute sensory rest break',
+            icon: '💧',
+            isCorrect: true,
+            feedback: 'Water and a calm sensory rest help recharge a low Blue Zone battery!'
+          },
+          {
+            text: 'Do a gentle seated stretch and take 3 refreshing breaths',
+            icon: '🙆',
+            isCorrect: true,
+            feedback: 'A gentle stretch helps wake up our muscles calmly and comfortably.'
+          },
+          {
+            text: 'Push someone who walks past my desk',
+            icon: '🚫',
+            isCorrect: false,
+            feedback: 'When our battery is low, let’s ask for water or a quiet 5-minute rest break.'
+          }
+        ]
+      },
+      {
+        id: 'proud',
+        label: 'Proud',
+        emoji: '🥳',
+        tier: 'complex',
+        zone: 'Green Zone',
+        zoneColor: 'emerald',
+        skinTone: '#E8B48A',
+        shirtColor: '#16A34A',
+        meaning: 'Feeling warm and accomplished after trying hard and achieving a goal!',
+        faceClue: 'Warm confident smile, lifted chin, and happy crinkled eyes.',
+        bodyClue: 'Standing or sitting tall with a warm glow in the chest.',
+        anatomyChips: ['😊 Confident warm smile', '✨ Happy crinkled eyes', '🏆 Standing tall'],
+        scenarios: [
+          'Freya practised cutting fruit safely and made a fruit salad all by herself!',
+          'Daniel stayed calm and used his words when the timetable changed today.'
+        ],
+        strategies: [
+          {
+            text: 'Show my work to a teacher or parent and say "Look what I did!"',
+            icon: '🌟',
+            isCorrect: true,
+            feedback: 'Celebrating your hard work builds confidence and self-belief!'
+          },
+          {
+            text: 'Add a star to my reward chart and give myself a thumbs-up',
+            icon: '👍',
+            isCorrect: true,
+            feedback: 'Recognising your own effort is a wonderful Green Zone celebration!'
+          },
+          {
+            text: 'Brag loudly and tell others their work is bad',
+            icon: '🗣️',
+            isCorrect: false,
+            feedback: 'We can celebrate our own hard work kindly while cheering on our friends too!'
+          }
+        ]
+      }
+    ];
+
+    /**
+     * =========================================================================
+     * 3. SENSORY-SAFE WEB AUDIO API SOUND ENGINE
+     * Synthesizes warm marimba/bell tones in real time—no external MP3 files
+     * required. Designed specifically for SEN learners (soft envelopes, zero
+     * harsh square/sawtooth waves).
+     * =========================================================================
+     */
+    const SoundEngine = {
+      ctx: null,
+      enabled: true,
+
+      init() {
+        if (!this.ctx) {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          if (AudioCtx) this.ctx = new AudioCtx();
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      },
+
+      playTone(freq, duration = 0.25, type = 'sine', volume = 0.22, delay = 0) {
+        if (!this.enabled) return;
+        try {
+          this.init();
+          if (!this.ctx) return;
+
+          const startTime = this.ctx.currentTime + delay;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, startTime);
+
+          // Soft attack & warm exponential release to avoid startling clicks
+          gain.gain.setValueAtTime(0.001, startTime);
+          gain.gain.linearRampToValueAtTime(volume, startTime + 0.025);
+          gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+
+          osc.start(startTime);
+          osc.stop(startTime + duration + 0.02);
+        } catch (err) {
+          // Ignore audio context restrictions before interaction
+        }
+      },
+
+      playTap() {
+        this.playTone(440, 0.09, 'sine', 0.15, 0);
+      },
+
+      playStage1Success() {
+        // Gentle ascending C-major pentatonic chime (C5 - E5 - G5 - C6)
+        const notes = [523.25, 659.25, 783.99, 1046.50];
+        notes.forEach((freq, idx) => {
+          this.playTone(freq, 0.35, 'triangle', 0.2, idx * 0.11);
+        });
+      },
+
+      playStage2Celebration() {
+        // Warm harmonic arpeggio (F4 - A4 - C5 - F5 - A5)
+        const notes = [349.23, 440.00, 523.25, 698.46, 880.00];
+        notes.forEach((freq, idx) => {
+          this.playTone(freq, 0.45, 'sine', 0.22, idx * 0.10);
+        });
+      },
+
+      playGentleNudge() {
+        // Non-punitive soft wooden low tone (no buzzer!)
+        this.playTone(246.94, 0.22, 'sine', 0.16, 0);
+        this.playTone(220.00, 0.28, 'sine', 0.14, 0.14);
+      },
+
+      playBreathCue(inhale = true) {
+        if (!this.enabled) return;
+        this.playTone(inhale ? 392.00 : 293.66, 1.2, 'sine', 0.12, 0);
+      }
+    };
+
+    /**
+     * =========================================================================
+     * 4. MAIN GAME APPLICATION CONTROLLER
+     * Handles state, TTS speech synthesis, D-pad keyboard navigation,
+     * Stage 1 Identification, Stage 2 Regulation Match, and EHCP logging.
+     * =========================================================================
+     */
+    const GameApp = {
+      difficulty: 'simple',       // 'simple' (6 emotions) | 'complex' (12 emotions)
+      activityMode: 'guided',     // 'guided' (2-stage quest) | 'checkin' (free AAC exploration)
+      ttsEnabled: true,
+      darkMode: false,
+
+      currentTarget: null,
+      currentScenario: '',
+      useScenarioPrompt: false,
+      firstTryThisRound: true,
+
+      score: 0,
+      roundsCompleted: 0,
+      firstTrySuccesses: 0,
+      sessionLogs: [],
+      focusedCardIndex: 0,
+      isBreathingActive: false,
+
+      init() {
+        // Render Lucide icons
+        if (window.lucide) window.lucide.createIcons();
+
+        this.renderStarTrack();
+        this.renderGrid();
+        this.pickNewTarget(false);
+        this.setupKeyboardNavigation();
+      },
+
+      getActiveEmotions() {
+        if (this.difficulty === 'simple') {
+          return EMOTIONS_DATA.filter(e => e.tier === 'simple');
+        }
+        return EMOTIONS_DATA;
+      },
+
+      /**
+       * Switch between Simple Mode (6 core) and Complex Mode (12 expanded)
+       */
+      setDifficulty(mode) {
+        SoundEngine.playTap();
+        this.difficulty = mode;
+
+        const simpleBtn = document.getElementById('mode-simple-btn');
+        const complexBtn = document.getElementById('mode-complex-btn');
+
+        if (mode === 'simple') {
+          simpleBtn.className = 'sen-focus px-3.5 sm:px-4 py-2 rounded-xl font-extrabold text-sm sm:text-base transition-all flex items-center gap-2 bg-blue-600 text-white shadow-sm';
+          simpleBtn.setAttribute('aria-pressed', 'true');
+          complexBtn.className = 'sen-focus px-3.5 sm:px-4 py-2 rounded-xl font-extrabold text-sm sm:text-base transition-all flex items-center gap-2 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700';
+          complexBtn.setAttribute('aria-pressed', 'false');
+        } else {
+          complexBtn.className = 'sen-focus px-3.5 sm:px-4 py-2 rounded-xl font-extrabold text-sm sm:text-base transition-all flex items-center gap-2 bg-blue-600 text-white shadow-sm';
+          complexBtn.setAttribute('aria-pressed', 'true');
+          simpleBtn.className = 'sen-focus px-3.5 sm:px-4 py-2 rounded-xl font-extrabold text-sm sm:text-base transition-all flex items-center gap-2 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700';
+          simpleBtn.setAttribute('aria-pressed', 'false');
+        }
+
+        document.getElementById('stat-mode').textContent = mode === 'simple' ? 'Simple (6)' : 'Complex (12)';
+        this.hideFeedbackBanner();
+        this.renderGrid();
+        this.pickNewTarget(true);
+      },
+
+      /**
+       * Switch between Guided Quest (Stage 1 -> Stage 2) and Free "How I Feel" Check-In
+       */
+      setActivityMode(mode) {
+        SoundEngine.playTap();
+        this.activityMode = mode;
+
+        const guidedBtn = document.getElementById('activity-guided-btn');
+        const exploreBtn = document.getElementById('activity-explore-btn');
+
+        if (mode === 'guided') {
+          guidedBtn.className = 'sen-focus px-3 py-2 rounded-xl font-extrabold text-sm transition-all bg-emerald-700 text-white shadow-sm flex items-center gap-1.5';
+          guidedBtn.setAttribute('aria-pressed', 'true');
+          exploreBtn.className = 'sen-focus px-3 py-2 rounded-xl font-extrabold text-sm transition-all text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center gap-1.5';
+          exploreBtn.setAttribute('aria-pressed', 'false');
+          this.pickNewTarget(true);
+        } else {
+          exploreBtn.className = 'sen-focus px-3 py-2 rounded-xl font-extrabold text-sm transition-all bg-emerald-700 text-white shadow-sm flex items-center gap-1.5';
+          exploreBtn.setAttribute('aria-pressed', 'true');
+          guidedBtn.className = 'sen-focus px-3 py-2 rounded-xl font-extrabold text-sm transition-all text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center gap-1.5';
+          guidedBtn.setAttribute('aria-pressed', 'false');
+
+          // Update banner for Check-In mode
+          document.getElementById('stage-badge').textContent = 'Self-Advocacy & Check-In Board';
+          document.getElementById('scenario-context-badge').classList.add('hidden');
+          document.getElementById('prompt-scenario-text').classList.add('hidden');
+          document.getElementById('prompt-main-text').innerHTML = 'How are you feeling right now? <span class="text-blue-600 dark:text-yellow-400">Tap any card to explore!</span>';
+          document.getElementById('prompt-clue-text').textContent = 'Tap any emotion to hear its name and practise a calming or helpful strategy.';
+          this.speakText('How are you feeling right now? Tap any emotion card to explore.');
+        }
+
+        this.hideFeedbackBanner();
+      },
+
+      /**
+       * Render the Emotion Cards Grid
+       */
+      renderGrid() {
+        const grid = document.getElementById('emotion-grid');
+        const emotions = this.getActiveEmotions();
+
+        // Adjust grid columns for Simple (3 cols) vs Complex (4 cols on desktop)
+        if (this.difficulty === 'simple') {
+          grid.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6';
+        } else {
+          grid.className = 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5';
+        }
+
+        const zoneStyles = {
+          emerald: {
+            cardBorder: 'border-emerald-500/80 dark:border-emerald-500',
+            badgeBg: 'bg-emerald-100 dark:bg-emerald-950 text-emerald-950 dark:text-emerald-200 border-emerald-400 dark:border-emerald-700',
+            avatarBg: 'bg-emerald-50 dark:bg-emerald-950/50 border-emerald-300 dark:border-emerald-800',
+            dot: '🟢'
+          },
+          amber: {
+            cardBorder: 'border-amber-500/80 dark:border-amber-500',
+            badgeBg: 'bg-amber-100 dark:bg-amber-950 text-amber-950 dark:text-amber-200 border-amber-400 dark:border-amber-700',
+            avatarBg: 'bg-amber-50 dark:bg-amber-950/50 border-amber-300 dark:border-amber-800',
+            dot: '🟡'
+          },
+          blue: {
+            cardBorder: 'border-blue-500/80 dark:border-blue-500',
+            badgeBg: 'bg-blue-100 dark:bg-blue-950 text-blue-950 dark:text-blue-200 border-blue-400 dark:border-blue-700',
+            avatarBg: 'bg-blue-50 dark:bg-blue-950/50 border-blue-300 dark:border-blue-800',
+            dot: '🔵'
+          },
+          red: {
+            cardBorder: 'border-red-500/80 dark:border-red-500',
+            badgeBg: 'bg-red-100 dark:bg-red-950 text-red-950 dark:text-red-200 border-red-400 dark:border-red-700',
+            avatarBg: 'bg-red-50 dark:bg-red-950/50 border-red-300 dark:border-red-800',
+            dot: '🔴'
+          }
+        };
+
+        grid.innerHTML = emotions.map((emotion, idx) => {
+          const zs = zoneStyles[emotion.zoneColor] || zoneStyles.emerald;
+          const svgFace = FaceSVGGenerator.render(emotion.id, emotion.skinTone, emotion.shirtColor);
+
+          return `
+            <div class="relative group">
+              <button type="button"
+                      id="emotion-card-${emotion.id}"
+                      data-emotion-id="${emotion.id}"
+                      data-index="${idx}"
+                      onclick="GameApp.handleCardSelect('${emotion.id}')"
+                      class="emotion-card-btn sen-focus tactile-card w-full h-full text-left bg-white dark:bg-slate-900 rounded-3xl p-5 sm:p-6 border-4 ${zs.cardBorder} shadow-md hover:shadow-xl flex flex-col justify-between gap-4 transition-all"
+                      aria-label="${emotion.label}, ${emotion.zone}. ${emotion.faceClue}">
+
+                <!-- Top Row: Zone Pill + High-Contrast Emoji Symbol Badge -->
+                <div class="flex items-center justify-between gap-2 w-full">
+                  <span class="px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider border ${zs.badgeBg}">
+                    ${zs.dot} ${emotion.zone}
+                  </span>
+                  <span class="w-11 h-11 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 flex items-center justify-center text-2xl shadow-inner" aria-hidden="true" title="AAC Symbol">
+                    ${emotion.emoji}
+                  </span>
+                </div>
+
+                <!-- Center: Custom Articulated Character Face SVG -->
+                <div class="w-28 h-28 sm:w-32 sm:h-32 mx-auto rounded-3xl border-2 ${zs.avatarBg} p-2 flex items-center justify-center shadow-inner">
+                  ${svgFace}
+                </div>
+
+                <!-- Bottom: Clear Typography Label & Facial Feature Clue -->
+                <div class="text-center w-full pt-1">
+                  <span class="block text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+                    ${emotion.label}
+                  </span>
+                  <span class="block text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300 mt-1 line-clamp-2">
+                    ${emotion.faceClue}
+                  </span>
+                </div>
+              </button>
+
+              <!-- Dedicated Speak Single Card Button (Top-Right Overlay or Corner) -->
+              <button type="button"
+                      onclick="event.stopPropagation(); GameApp.speakCardInfo('${emotion.id}')"
+                      class="sen-focus absolute bottom-4 right-4 w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-600 flex items-center justify-center shadow-sm transition-colors"
+                      aria-label="Listen to ${emotion.label} description aloud"
+                      title="Hear ${emotion.label} spoken aloud">
+                <i data-lucide="volume-2" class="w-5 h-5" aria-hidden="true"></i>
+              </button>
+            </div>
+          `;
+        }).join('');
+
+        if (window.lucide) window.lucide.createIcons();
+      },
+
+      /**
+       * Select a new target emotion for Stage 1 Identification
+       */
+      pickNewTarget(speakImmediately = true) {
+        if (this.activityMode === 'checkin') return;
+
+        const pool = this.getActiveEmotions();
+        // Avoid repeating the exact same emotion twice in a row
+        const candidates = pool.length > 1 && this.currentTarget
+          ? pool.filter(e => e.id !== this.currentTarget.id)
+          : pool;
+
+        const chosen = candidates[Math.floor(Math.random() * candidates.length)];
+        this.currentTarget = chosen;
+        this.firstTryThisRound = true;
+
+        // Clear any previous hint highlights
+        document.querySelectorAll('.emotion-card-btn').forEach(btn => {
+          btn.classList.remove('ring-8', 'ring-yellow-400');
+        });
+
+        // In Complex mode, 50% of prompts include a situational scenario context
+        this.useScenarioPrompt = this.difficulty === 'complex' && chosen.scenarios && chosen.scenarios.length > 0;
+        this.currentScenario = this.useScenarioPrompt
+          ? chosen.scenarios[Math.floor(Math.random() * chosen.scenarios.length)]
+          : '';
+
+        // Update UI Banner
+        document.getElementById('stage-badge').textContent = 'Stage 1: Spot the Feeling';
+        const scenarioBadge = document.getElementById('scenario-context-badge');
+        const scenarioTextEl = document.getElementById('prompt-scenario-text');
+
+        if (this.useScenarioPrompt) {
+          scenarioBadge.classList.remove('hidden');
+          scenarioBadge.classList.add('inline-flex');
+          scenarioTextEl.textContent = `"${this.currentScenario}"`;
+          scenarioTextEl.classList.remove('hidden');
+        } else {
+          scenarioBadge.classList.add('hidden');
+          scenarioBadge.classList.remove('inline-flex');
+          scenarioTextEl.classList.add('hidden');
+        }
+
+        document.getElementById('prompt-main-text').innerHTML =
+          `Find the student who is feeling <span class="underline decoration-4 decoration-blue-600 dark:decoration-yellow-400 text-blue-700 dark:text-yellow-300">${chosen.label}</span>`;
+
+        document.getElementById('prompt-clue-text').textContent =
+          `Facial Clue: ${chosen.faceClue} (${chosen.zone})`;
+
+        if (speakImmediately) {
+          this.speakCurrentPrompt();
+        }
+      },
+
+      nextQuestion() {
+        SoundEngine.playTap();
+        this.hideFeedbackBanner();
+        this.pickNewTarget(true);
+      },
+
+      /**
+       * Highlight the target emotion card with a gentle golden ring if the student needs a visual prompt
+       */
+      showVisualHint() {
+        SoundEngine.playTap();
+        if (!this.currentTarget) return;
+        const targetCard = document.getElementById(`emotion-card-${this.currentTarget.id}`);
+        if (targetCard) {
+          targetCard.classList.add('ring-8', 'ring-yellow-400');
+          targetCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          this.speakText(`Hint: Look for ${this.currentTarget.label}. ${this.currentTarget.faceClue}`);
+        }
+      },
+
+      /**
+       * Handle clicking/selecting an emotion card in Stage 1
+       */
+      handleCardSelect(emotionId) {
+        const clickedEmotion = EMOTIONS_DATA.find(e => e.id === emotionId);
+        if (!clickedEmotion) return;
+
+        // If in Free Check-In mode, open Stage 2 directly for any emotion clicked
+        if (this.activityMode === 'checkin') {
+          SoundEngine.playStage1Success();
+          this.openStage2Modal(clickedEmotion);
+          return;
+        }
+
+        // Guided Quest Mode: Check if clicked card matches target
+        if (this.currentTarget && clickedEmotion.id === this.currentTarget.id) {
+          // CORRECT!
+          SoundEngine.playStage1Success();
+          this.hideFeedbackBanner();
+          this.openStage2Modal(clickedEmotion);
+        } else {
+          // NON-PUNITIVE GENTLE REDIRECTION
+          this.firstTryThisRound = false;
+          SoundEngine.playGentleNudge();
+
+          const cardBtn = document.getElementById(`emotion-card-${emotionId}`);
+          if (cardBtn) {
+            cardBtn.classList.remove('animate-gentle-nudge');
+            void cardBtn.offsetWidth; // trigger reflow
+            cardBtn.classList.add('animate-gentle-nudge');
+          }
+
+          const msg = `That student is feeling ${clickedEmotion.label} (${clickedEmotion.faceClue}). Let's find ${this.currentTarget.label}!`;
+          this.showFeedbackBanner(msg, 'amber');
+          this.speakText(`That is ${clickedEmotion.label}. Let's look for ${this.currentTarget.label}.`);
+        }
+      },
+
+      /**
+       * Open Stage 2: De-escalation & Coping Strategy Match Modal
+       */
+      openStage2Modal(emotion) {
+        const modal = document.getElementById('stage2-modal');
+        const faceBox = document.getElementById('stage2-face-container');
+        const zoneBadge = document.getElementById('stage2-zone-badge');
+        const nameSpan = document.getElementById('stage2-emotion-name');
+        const meaningP = document.getElementById('stage2-meaning');
+        const chipsBox = document.getElementById('stage2-anatomy-chips');
+        const choiceSection = document.getElementById('stage2-choice-section');
+        const celebrationSection = document.getElementById('stage2-celebration-section');
+        const optionsGrid = document.getElementById('stage2-options-grid');
+
+        // Reset sections
+        choiceSection.classList.remove('hidden');
+        celebrationSection.classList.add('hidden');
+
+        // Populate Face SVG
+        faceBox.innerHTML = FaceSVGGenerator.render(emotion.id, emotion.skinTone, emotion.shirtColor);
+
+        // Style Zone Badge
+        const zoneColors = {
+          emerald: 'bg-emerald-100 text-emerald-950 border-emerald-500 dark:bg-emerald-950 dark:text-emerald-200',
+          amber: 'bg-amber-100 text-amber-950 border-amber-500 dark:bg-amber-950 dark:text-amber-200',
+          blue: 'bg-blue-100 text-blue-950 border-blue-500 dark:bg-blue-950 dark:text-blue-200',
+          red: 'bg-red-100 text-red-950 border-red-500 dark:bg-red-950 dark:text-red-200'
+        };
+        zoneBadge.className = `px-3.5 py-1 rounded-full text-xs sm:text-sm font-black uppercase tracking-wider border-2 ${zoneColors[emotion.zoneColor] || zoneColors.emerald}`;
+        zoneBadge.textContent = emotion.zone;
+
+        nameSpan.textContent = emotion.label;
+        meaningP.textContent = `${emotion.meaning} Body clue: ${emotion.bodyClue}`;
+
+        chipsBox.innerHTML = emotion.anatomyChips.map(chip => `
+          <span class="px-3 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200">
+            ${chip}
+          </span>
+        `).join('');
+
+        // Build 2 Coping Choices:
+        // In Simple Mode: Both choices are positive, empowering regulation choices (errorless co-regulation choice!)
+        // In Complex Mode: 1 helpful regulation strategy + 1 unhelpful impulse to practice discrimination
+        const helpfulStrategies = emotion.strategies.filter(s => s.isCorrect);
+        const unhelpfulStrategy = emotion.strategies.find(s => !s.isCorrect);
+
+        let presentedChoices = [];
+        if (this.difficulty === 'simple') {
+          presentedChoices = helpfulStrategies.slice(0, 2);
+          document.getElementById('stage2-question').textContent =
+            `Choose a calming or helpful strategy for feeling ${emotion.label}:`;
+        } else {
+          const pickedHelpful = helpfulStrategies[Math.floor(Math.random() * helpfulStrategies.length)];
+          presentedChoices = [pickedHelpful, unhelpfulStrategy];
+          // Shuffle order
+          if (Math.random() > 0.5) presentedChoices.reverse();
+          document.getElementById('stage2-question').textContent =
+            `Which strategy is safe and helpful when feeling ${emotion.label}?`;
+        }
+
+        this.currentStage2Choices = presentedChoices;
+        this.currentStage2Emotion = emotion;
+
+        optionsGrid.innerHTML = presentedChoices.map((choice, idx) => `
+          <button type="button"
+                  id="stage2-option-${idx}"
+                  onclick="GameApp.handleStage2Choice(${idx})"
+                  class="sen-focus tactile-card p-5 sm:p-6 rounded-3xl border-4 border-slate-300 dark:border-slate-700 hover:border-blue-600 dark:hover:border-yellow-400 bg-slate-50 dark:bg-slate-800/90 text-left flex items-center gap-4 shadow-md transition-all">
+            <span class="w-16 h-16 shrink-0 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 flex items-center justify-center text-4xl shadow-inner" aria-hidden="true">
+              ${choice.icon}
+            </span>
+            <div class="flex-1">
+              <span class="text-xs font-extrabold uppercase tracking-wider text-blue-700 dark:text-yellow-400 block mb-1">
+                Choice ${idx + 1}
+              </span>
+              <span class="text-lg sm:text-xl font-black text-slate-900 dark:text-white leading-snug block">
+                ${choice.text}
+              </span>
+            </div>
+          </button>
+        `).join('');
+
+        modal.classList.remove('hidden');
+        if (window.lucide) window.lucide.createIcons();
+
+        // Speak Stage 2 celebration & prompt
+        this.speakText(
+          `Yes! That is ${emotion.label}. ${emotion.meaning} Now, choose a helpful strategy: Option 1: ${presentedChoices[0].text}. Or Option 2: ${presentedChoices[1].text}.`
+        );
+
+        // Focus first strategy button for keyboard/switch users
+        setTimeout(() => {
+          const firstOpt = document.getElementById('stage2-option-0');
+          if (firstOpt) firstOpt.focus();
+        }, 120);
+      },
+
+      /**
+       * Handle selecting one of the 2 coping strategies in Stage 2
+       */
+      handleStage2Choice(choiceIndex) {
+        const choice = this.currentStage2Choices[choiceIndex];
+        const emotion = this.currentStage2Emotion;
+        if (!choice || !emotion) return;
+
+        const btn = document.getElementById(`stage2-option-${choiceIndex}`);
+
+        if (choice.isCorrect) {
+          SoundEngine.playStage2Celebration();
+
+          // Hide choices, show celebration + breathing pacer
+          document.getElementById('stage2-choice-section').classList.add('hidden');
+          const celebSection = document.getElementById('stage2-celebration-section');
+          celebSection.classList.remove('hidden');
+
+          document.getElementById('celebration-heading').textContent =
+            `Great Choice for ${emotion.label}!`;
+          document.getElementById('celebration-subtext').textContent =
+            `${choice.feedback}`;
+
+          // Reset breath circle UI
+          const breathBtn = document.getElementById('breath-circle-btn');
+          const breathText = document.getElementById('breath-status-text');
+          breathBtn.style.transform = 'scale(1)';
+          breathText.textContent = 'Tap to Breathe';
+
+          this.speakText(`Wonderful! ${choice.feedback}`);
+
+          // Focus Next Emotion button for smooth switch/keyboard play
+          setTimeout(() => {
+            const nextBtn = document.getElementById('continue-next-btn');
+            if (nextBtn) nextBtn.focus();
+          }, 150);
+        } else {
+          // Gentle non-punitive feedback for unhelpful strategy in Complex Mode
+          SoundEngine.playGentleNudge();
+          if (btn) {
+            btn.classList.remove('animate-gentle-nudge');
+            void btn.offsetWidth;
+            btn.classList.add('animate-gentle-nudge');
+            btn.classList.add('border-amber-500');
+          }
+          this.speakText(choice.feedback);
+        }
+      },
+
+      /**
+       * Interactive 1-Breath Co-Regulation Pacer inside Stage 2 Modal
+       */
+      runBreathingCycle() {
+        if (this.isBreathingActive) return;
+        this.isBreathingActive = true;
+
+        const breathBtn = document.getElementById('breath-circle-btn');
+        const breathText = document.getElementById('breath-status-text');
+
+        // Inhale (3 seconds)
+        SoundEngine.playBreathCue(true);
+        this.speakText('Breathe in slowly through your nose...');
+        breathText.textContent = 'Breathe In...';
+        breathBtn.style.transform = 'scale(1.28)';
+        breathBtn.classList.replace('bg-teal-600', 'bg-emerald-600');
+
+        setTimeout(() => {
+          // Exhale (3 seconds)
+          SoundEngine.playBreathCue(false);
+          this.speakText('And breathe out gently...');
+          breathText.textContent = 'Breathe Out...';
+          breathBtn.style.transform = 'scale(1)';
+          breathBtn.classList.replace('bg-emerald-600', 'bg-teal-600');
+
+          setTimeout(() => {
+            breathText.textContent = 'Calm & Ready ✓';
+            this.isBreathingActive = false;
+          }, 3000);
+        }, 3000);
+      },
+
+      /**
+       * Complete the 2-stage round, award star, log EHCP evidence, and advance
+       */
+      completeRoundAndContinue() {
+        SoundEngine.playTap();
+        document.getElementById('stage2-modal').classList.add('hidden');
+
+        // Update Score & EHCP Metrics
+        this.score += 1;
+        this.roundsCompleted += 1;
+        if (this.firstTryThisRound) {
+          this.firstTrySuccesses += 1;
+        }
+
+        // Record in Educator Session Log
+        if (this.currentStage2Emotion) {
+          const timestamp = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+          this.sessionLogs.unshift({
+            time: timestamp,
+            emotion: this.currentStage2Emotion.label,
+            zone: this.currentStage2Emotion.zone,
+            firstTry: this.firstTryThisRound,
+            mode: this.difficulty === 'simple' ? 'Simple' : 'Complex'
+          });
+        }
+
+        document.getElementById('score-counter').textContent = this.score;
+        this.renderStarTrack();
+        this.updateEducatorStats();
+
+        if (this.activityMode === 'guided') {
+          this.pickNewTarget(true);
+        }
+      },
+
+      /**
+       * Render the 5-star visual milestone bar
+       */
+      renderStarTrack() {
+        const track = document.getElementById('star-track');
+        const filledCount = this.score % 5 === 0 && this.score > 0 ? 5 : this.score % 5;
+
+        let html = '';
+        for (let i = 1; i <= 5; i++) {
+          const isFilled = i <= filledCount;
+          html += `
+            <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center border-2 transition-all ${
+              isFilled
+                ? 'bg-yellow-400 border-amber-500 text-slate-950 scale-105 shadow-sm'
+                : 'bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-400'
+            }" aria-hidden="true">
+              ★
+            </div>
+          `;
+        }
+        track.innerHTML = html;
+      },
+
+      /**
+       * Show/Hide Non-Punitive Feedback Banner
+       */
+      showFeedbackBanner(message, tone = 'amber') {
+        const banner = document.getElementById('feedback-banner');
+        const msgEl = document.getElementById('feedback-message');
+
+        banner.className = `rounded-2xl p-4 border-2 font-bold text-base sm:text-lg flex items-center justify-between gap-4 transition-all ${
+          tone === 'amber'
+            ? 'bg-amber-100 dark:bg-amber-950/90 border-amber-500 text-amber-950 dark:text-amber-100'
+            : 'bg-emerald-100 dark:bg-emerald-950/90 border-emerald-500 text-emerald-950 dark:text-emerald-100'
+        }`;
+        msgEl.textContent = message;
+        banner.classList.remove('hidden');
+      },
+
+      hideFeedbackBanner() {
+        const banner = document.getElementById('feedback-banner');
+        if (banner) banner.classList.add('hidden');
+      },
+
+      /**
+       * Web Speech API (Text-to-Speech) Helpers
+       */
+      speakText(text) {
+        if (!this.ttsEnabled || !('speechSynthesis' in window)) return;
+        try {
+          window.speechSynthesis.cancel();
+          const utterance = new SpeechSynthesisUtterance(text);
+          utterance.lang = 'en-GB';
+          utterance.rate = 0.94; // Calm, clear SEN-friendly pacing
+          utterance.pitch = 1.02;
+          window.speechSynthesis.speak(utterance);
+        } catch (err) {
+          // Ignore speech synthesis errors on restricted browsers
+        }
+      },
+
+      speakCurrentPrompt() {
+        SoundEngine.playTap();
+        if (this.activityMode === 'checkin') {
+          this.speakText('How are you feeling right now? Tap any emotion card to explore.');
+          return;
+        }
+        if (!this.currentTarget) return;
+        const scenarioPart = this.useScenarioPrompt ? `${this.currentScenario} ` : '';
+        this.speakText(
+          `${scenarioPart}Find the student who is feeling ${this.currentTarget.label}. Clue: ${this.currentTarget.faceClue}`
+        );
+      },
+
+      speakCardInfo(emotionId) {
+        const emotion = EMOTIONS_DATA.find(e => e.id === emotionId);
+        if (!emotion) return;
+        SoundEngine.playTap();
+        this.speakText(`${emotion.label}. ${emotion.zone}. ${emotion.faceClue}`);
+      },
+
+      speakStage2Prompt() {
+        if (!this.currentStage2Emotion || !this.currentStage2Choices) return;
+        this.speakText(
+          `What is a helpful strategy when feeling ${this.currentStage2Emotion.label}? Choice 1: ${this.currentStage2Choices[0].text}. Choice 2: ${this.currentStage2Choices[1].text}.`
+        );
+      },
+
+      toggleTTS() {
+        this.ttsEnabled = !this.ttsEnabled;
+        const btn = document.getElementById('tts-toggle-btn');
+        const label = document.getElementById('tts-label');
+        btn.setAttribute('aria-pressed', String(this.ttsEnabled));
+        label.textContent = this.ttsEnabled ? 'Voice: ON' : 'Voice: OFF';
+
+        if (!this.ttsEnabled && 'speechSynthesis' in window) {
+          window.speechSynthesis.cancel();
+        } else {
+          this.speakText('Voice narration turned on.');
+        }
+      },
+
+      toggleSFX() {
+        SoundEngine.enabled = !SoundEngine.enabled;
+        const btn = document.getElementById('sfx-toggle-btn');
+        const label = document.getElementById('sfx-label');
+        btn.setAttribute('aria-pressed', String(SoundEngine.enabled));
+        label.textContent = SoundEngine.enabled ? 'Chimes: ON' : 'Chimes: OFF';
+        if (SoundEngine.enabled) SoundEngine.playTap();
+      },
+
+      toggleTheme() {
+        SoundEngine.playTap();
+        this.darkMode = !this.darkMode;
+        document.documentElement.classList.toggle('dark', this.darkMode);
+        const btn = document.getElementById('theme-toggle-btn');
+        btn.setAttribute('aria-pressed', String(this.darkMode));
+      },
+
+      /**
+       * Educator / EHCP Progress Log Modal
+       */
+      openEducatorModal() {
+        SoundEngine.playTap();
+        this.updateEducatorStats();
+        document.getElementById('educator-modal').classList.remove('hidden');
+      },
+
+      closeEducatorModal() {
+        SoundEngine.playTap();
+        document.getElementById('educator-modal').classList.add('hidden');
+      },
+
+      updateEducatorStats() {
+        document.getElementById('stat-completed').textContent = this.roundsCompleted;
+        const accuracy = this.roundsCompleted > 0
+          ? Math.round((this.firstTrySuccesses / this.roundsCompleted) * 100)
+          : 100;
+        document.getElementById('stat-accuracy').textContent = `${accuracy}%`;
+
+        const listEl = document.getElementById('session-log-list');
+        if (this.sessionLogs.length === 0) {
+          listEl.innerHTML = `<p class="text-slate-500 italic">Complete a round to record EHCP evidence entries here.</p>`;
+          return;
+        }
+
+        listEl.innerHTML = this.sessionLogs.map(item => `
+          <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+            <div>
+              <span class="font-black text-slate-900 dark:text-white">${item.emotion}</span>
+              <span class="text-xs px-2 py-0.5 ml-1.5 rounded-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-600">${item.zone}</span>
+            </div>
+            <div class="text-xs font-bold ${item.firstTry ? 'text-emerald-700 dark:text-emerald-400' : 'text-amber-700 dark:text-amber-400'}">
+              ${item.firstTry ? '✓ Independent (1st Try)' : '↗ Prompted / Multi-Try'} &bull; ${item.time}
+            </div>
+          </div>
+        `).join('');
+      },
+
+      copySessionReport() {
+        const accuracy = this.roundsCompleted > 0
+          ? Math.round((this.firstTrySuccesses / this.roundsCompleted) * 100)
+          : 100;
+        const summary = [
+          `Able & Beyond Support — Emotion Explorer EHCP Log`,
+          `Date: ${new Date().toLocaleDateString('en-GB')}`,
+          `Difficulty Mode: ${this.difficulty.toUpperCase()}`,
+          `Emotions Mastered: ${this.roundsCompleted} | Independent First-Try Accuracy: ${accuracy}%`,
+          `Log Details:`,
+          ...this.sessionLogs.map(l => `- [${l.time}] ${l.emotion} (${l.zone}): ${l.firstTry ? 'Independent 1st Try' : 'Supported/Multi-Try'}`)
+        ].join('\n');
+
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(summary).then(() => {
+            const label = document.getElementById('copy-report-label');
+            label.textContent = 'Copied to Clipboard ✓';
+            setTimeout(() => { label.textContent = 'Copy Notes for EHCP File'; }, 2500);
+          });
+        }
+      },
+
+      /**
+       * Full Keyboard / Switch D-Pad Navigation Support
+       * Allows learners using arrow keys or switch boxes to move across the grid effortlessly
+       */
+      setupKeyboardNavigation() {
+        window.addEventListener('keydown', (e) => {
+          const stage2Modal = document.getElementById('stage2-modal');
+          const educatorModal = document.getElementById('educator-modal');
+
+          // Close modals on Escape
+          if (e.key === 'Escape') {
+            if (!stage2Modal.classList.contains('hidden')) {
+              stage2Modal.classList.add('hidden');
+              return;
+            }
+            if (!educatorModal.classList.contains('hidden')) {
+              educatorModal.classList.add('hidden');
+              return;
+            }
+          }
+
+          // If Stage 2 Modal is open, allow Left/Right arrows between the 2 strategy choices
+          if (!stage2Modal.classList.contains('hidden')) {
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+              const opt1 = document.getElementById('stage2-option-1');
+              if (opt1 && !document.getElementById('stage2-choice-section').classList.contains('hidden')) {
+                e.preventDefault();
+                opt1.focus();
+              }
+            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+              const opt0 = document.getElementById('stage2-option-0');
+              if (opt0 && !document.getElementById('stage2-choice-section').classList.contains('hidden')) {
+                e.preventDefault();
+                opt0.focus();
+              }
+            }
+            return;
+          }
+
+          // Grid D-pad navigation when modals are closed
+          const cards = Array.from(document.querySelectorAll('.emotion-card-btn'));
+          if (cards.length === 0) return;
+
+          const activeIndex = cards.findIndex(c => c === document.activeElement);
+          const cols = this.difficulty === 'simple'
+            ? (window.innerWidth >= 1024 ? 3 : window.innerWidth >= 640 ? 2 : 1)
+            : (window.innerWidth >= 1024 ? 4 : window.innerWidth >= 768 ? 3 : window.innerWidth >= 640 ? 2 : 1);
+
+          let nextIndex = activeIndex;
+
+          if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            nextIndex = activeIndex < 0 ? 0 : (activeIndex + 1) % cards.length;
+            cards[nextIndex].focus();
+          } else if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            nextIndex = activeIndex <= 0 ? cards.length - 1 : activeIndex - 1;
+            cards[nextIndex].focus();
+          } else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            nextIndex = activeIndex < 0 ? 0 : Math.min(cards.length - 1, activeIndex + cols);
+            cards[nextIndex].focus();
+          } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            nextIndex = activeIndex < 0 ? 0 : Math.max(0, activeIndex - cols);
+            cards[nextIndex].focus();
+          }
+        });
+      }
+    };
+
+    document.addEventListener('DOMContentLoaded', () => GameApp.init());
+  </script>
+</body>
+</html>
