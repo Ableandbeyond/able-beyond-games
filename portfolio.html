@@ -68,9 +68,21 @@
     <!-- Portfolio Section -->
     <section id="portfolio" class="bg-white py-16 sm:py-24 border-t border-slate-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="mb-16">
+            <div class="mb-12">
                 <h3 class="text-3xl sm:text-4xl font-extrabold text-slate-900 border-l-8 border-brand-accent pl-5 mb-4">Live Game Portfolio</h3>
-                <p class="text-xl text-slate-600 pl-5 max-w-3xl">A showcase of bespoke web games built for targeted interventions. Click any game to visit its live page in the Arcade.</p>
+                <p class="text-xl text-slate-600 pl-5 max-w-3xl mb-6">A showcase of bespoke web games built for targeted interventions. Click any game to visit its live page in the Arcade.</p>
+                <div class="bg-emerald-50 border-2 border-emerald-500 rounded-2xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
+                    <div class="flex items-center gap-3.5 text-center sm:text-left flex-col sm:flex-row">
+                        <span class="w-12 h-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center text-2xl shrink-0 shadow">🔓</span>
+                        <div>
+                            <h4 class="text-lg sm:text-xl font-extrabold text-emerald-950">Free &amp; Unlocked for Live Classroom Testing</h4>
+                            <p class="text-sm sm:text-base font-medium text-emerald-800">Every game showcased on this portfolio page is <strong>100% unlocked with no password required</strong> so teachers, SENCOs, and families can test them freely.</p>
+                        </div>
+                    </div>
+                    <a href="index.html" class="shrink-0 px-5 py-3 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold text-sm sm:text-base shadow transition-colors">
+                        View All in Arcade &rarr;
+                    </a>
+                </div>
             </div>
             
             <div id="grid-container" class="space-y-20">
@@ -247,6 +259,14 @@
                         impact: "Provides immediate, satisfying visual physics responses to touch, promoting self-advocacy for sensory needs.",
                         target: "Student will use the board to request a sensory break when showing signs of dysregulation.",
                         icon: "✨"
+                    },
+                    {
+                        title: "Visual Timetable Orbit",
+                        url: "timetable-orbit/index.html",
+                        domain: "Transition & Routine Support",
+                        impact: "Reduces transition anxiety with a predictable daily visual schedule and spoken audio reminders.",
+                        target: "Student will independently check and transition between 3 scheduled daily activities.",
+                        icon: "📅"
                     }
                 ]
             },
@@ -289,8 +309,12 @@
                 };
                 
                 let gamesHtml = cat.games.map(game => `
-                    <div class="bg-white rounded-3xl shadow-lg border border-slate-200 overflow-hidden flex flex-col hover:shadow-2xl transition-all duration-300 group">
-                        <div class="p-10 bg-slate-50 flex justify-center items-center border-b border-slate-100 transition-colors">
+                    <div class="bg-white rounded-3xl shadow-lg border-2 border-emerald-400 overflow-hidden flex flex-col hover:shadow-2xl transition-all duration-300 group relative">
+                        <div class="p-10 bg-slate-50 flex justify-center items-center border-b border-slate-100 transition-colors relative">
+                            <span class="absolute top-4 right-4 bg-emerald-600 text-white text-xs font-extrabold uppercase tracking-wider px-3.5 py-1.5 rounded-full shadow flex items-center gap-1.5">
+                                <span>🔓</span>
+                                <span>Free &amp; Unlocked</span>
+                            </span>
                             <span class="text-8xl transform group-hover:scale-110 group-hover:-translate-y-2 transition-all duration-300 drop-shadow-md">${game.icon}</span>
                         </div>
                         <div class="p-8 flex-1 flex flex-col">
@@ -302,7 +326,7 @@
                                 <p class="text-slate-700 text-base leading-relaxed font-medium">${game.impact}</p>
                             </div>
                             
-                            <div class="bg-brand-light border-l-4 border-slate-400 p-5 rounded-r-xl mb-8">
+                            <div class="bg-brand-light border-l-4 border-slate-400 p-5 rounded-r-xl mb-6">
                                 <h6 class="text-xs font-extrabold text-slate-800 uppercase tracking-wider mb-2 flex items-center gap-2">
                                     <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                     IEP Target Alignment
@@ -310,10 +334,15 @@
                                 <p class="text-slate-900 font-semibold text-sm leading-relaxed">${game.target}</p>
                             </div>
                             
-                            <a href="${game.url}" target="_blank" class="w-full py-4 bg-brand-dark text-white font-extrabold text-xl rounded-xl hover:bg-brand-accent transition-colors flex justify-center items-center gap-3 shadow-md hover:shadow-lg">
-                                Play in Arcade
+                            <a href="${game.url}" target="_blank" class="w-full py-4 bg-emerald-700 text-white font-extrabold text-xl rounded-xl hover:bg-emerald-800 transition-colors flex justify-center items-center gap-3 shadow-md hover:shadow-lg">
+                                <span>Play Free in Arcade</span>
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                             </a>
+
+                            <div class="mt-3 px-4 py-2.5 rounded-xl bg-emerald-50 border border-emerald-300 text-emerald-900 text-xs sm:text-sm font-bold text-center flex items-center justify-center gap-2">
+                                <span aria-hidden="true">🟢</span>
+                                <span>Unlocked for Testing &bull; No Password Needed</span>
+                            </div>
                         </div>
                     </div>
                 `).join('');

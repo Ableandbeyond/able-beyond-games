@@ -111,51 +111,149 @@ function render() {
 }
 
 function renderHome() {
+    const isUnlocked = localStorage.getItem('ab_access_code') === 'HEROES26';
+    const lockIcon = isUnlocked ? '🔓' : '🔒';
+    const lockNote = isUnlocked ? '🟢 Access Pass Active' : '🔒 Access Code Required';
+
     app.innerHTML += `
-        <div class="card">
-            <div class="big">Start an activity</div>
-            <div class="small">Choose a calm activity below.</div>
+        <div class="game-card card" style="text-align: center; margin-bottom: 24px; background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border: 2px solid #f59e0b;">
+          <h3 style="margin-top: 0; font-size: 1.4rem; color: #92400e;">🌟 Teacher Portfolio, Pricing &amp; IEP Dashboard</h3>
+          <p style="margin: 8px 0 14px 0; color: #78350f; font-weight: 600;">Explore how each game aligns with EHCP/IEP targets, view school co-creation pricing, and test our free showcase interventions!</p>
+          <a href="portfolio.html" class="play-btn" style="text-decoration: none;"><button style="background: linear-gradient(135deg, #d97706, #b45309); max-width: 340px; margin: 0 auto; display: block;">View Teacher Portfolio &amp; Free Demos &rarr;</button></a>
         </div>
-        <div class="game-card card" style="text-align: center; margin-bottom: 20px; background: #ffe0b2; border-color: #ffb74d;">
-          <h3>🌟 New Feature</h3>
-          <p style="margin: 10px 0; color: #333;">Check out the new professional Teacher Portfolio & IEP Dashboard!</p>
-          <a href="portfolio.html" class="play-btn"><button style="background: #ef6c00;">View Portfolio</button></a>
+
+        <!-- SECTION 1: FREE & UNLOCKED GAMES FOR TESTING -->
+        <div class="arcade-section-box arcade-section-free">
+            <div class="arcade-section-header">
+                <div>
+                    <div style="font-size: 1.45rem; font-weight: 800; color: #14532d;">🔓 Free &amp; Unlocked Games (Open for Testing)</div>
+                    <div style="font-size: 0.98rem; color: #166534; font-weight: 600; margin-top: 4px;">
+                        These 7 showcase games are 100% unlocked—no password needed! Click any game below to test it live.
+                    </div>
+                </div>
+                <span class="arcade-badge-free">🟢 Free Classroom Testing</span>
+            </div>
+
+            <div class="grid-4" style="margin-bottom: 18px;">
+                <div class="game-tile-wrapper">
+                    <button class="btn-free-game" onclick="window.location.href='emotion-explorer/'">Emotion Explorer 😊</button>
+                    <div class="under-game-note under-game-note-free">🔓 Free &amp; Unlocked for Testing</div>
+                </div>
+                <div class="game-tile-wrapper">
+                    <button class="btn-free-game" onclick="window.location.href='community-heroes/'">Community Heroes 👩‍🚒</button>
+                    <div class="under-game-note under-game-note-free">🔓 Free &amp; Unlocked for Testing</div>
+                </div>
+                <div class="game-tile-wrapper">
+                    <button class="btn-free-game" onclick="window.location.href='recycling-rover/'">Recycling Rover ♻️</button>
+                    <div class="under-game-note under-game-note-free">🔓 Free &amp; Unlocked for Testing</div>
+                </div>
+                <div class="game-tile-wrapper">
+                    <button class="btn-free-game" onclick="window.location.href='sensory-physics-board/'">Sensory Choice Board ✨</button>
+                    <div class="under-game-note under-game-note-free">🔓 Free &amp; Unlocked for Testing</div>
+                </div>
+            </div>
+
+            <div class="grid-3">
+                <div class="game-tile-wrapper">
+                    <button class="btn-free-game" onclick="window.location.href='animal-matching/'">Animal Matching 🦁</button>
+                    <div class="under-game-note under-game-note-free">🔓 Free &amp; Unlocked for Testing</div>
+                </div>
+                <div class="game-tile-wrapper">
+                    <button class="btn-free-game" onclick="window.location.href='build-a-body/'">Build a Body 🧍</button>
+                    <div class="under-game-note under-game-note-free">🔓 Free &amp; Unlocked for Testing</div>
+                </div>
+                <div class="game-tile-wrapper">
+                    <button class="btn-free-game" onclick="window.location.href='./timetable-orbit/'">Visual Timetable Orbit 📅</button>
+                    <div class="under-game-note under-game-note-free">🔓 Free &amp; Unlocked for Testing</div>
+                </div>
+            </div>
+
+            <div style="margin-top: 18px; padding: 12px 16px; border-radius: 14px; background: #dcfce7; border: 1px solid #86efac; color: #14532d; font-size: 0.92rem; font-weight: 700; text-align: center;">
+                ✅ Testing Notice: All 7 games above are open-access demos so educators, SENCOs, and parents can test gameplay, audio, and Smartboard touch controls before booking or purchasing.
+            </div>
         </div>
-        <div class="grid-4" style="margin-bottom: 20px;">
-            <button onclick="navTo('Socks')">Matching Socks 🧦</button>
-            <button onclick="navTo('Sandwich')">Sandwich Maker 🥪</button>
-            <button onclick="navTo('Bus')">Bus Buddy 🚌</button>
-            <button onclick="navTo('Pharmacy')">Healthy Hero 🏥</button>
+
+        <!-- SECTION 2: PREMIUM ARCADE GAMES -->
+        <div class="arcade-section-box arcade-section-premium">
+            <div class="arcade-section-header">
+                <div>
+                    <div style="font-size: 1.4rem; font-weight: 800; color: #1e293b;">${lockIcon} Full Premium Arcade Library</div>
+                    <div style="font-size: 0.95rem; color: #475569; font-weight: 600; margin-top: 4px;">
+                        ${isUnlocked ? 'Your Premium Access Pass is active! All games below are unlocked.' : 'Requires your TES / TpT Access Code to unlock.'}
+                    </div>
+                </div>
+                <span class="arcade-badge-locked">${lockIcon} ${isUnlocked ? 'Unlocked Pass' : 'Premium Pass'}</span>
+            </div>
+
+            <div class="grid-4" style="margin-bottom: 18px;">
+                <div class="game-tile-wrapper">
+                    <button style="margin-top:0;" onclick="navTo('Socks')">Matching Socks 🧦</button>
+                    <div class="under-game-note under-game-note-locked">${lockNote}</div>
+                </div>
+                <div class="game-tile-wrapper">
+                    <button style="margin-top:0;" onclick="navTo('Sandwich')">Sandwich Maker 🥪</button>
+                    <div class="under-game-note under-game-note-locked">${lockNote}</div>
+                </div>
+                <div class="game-tile-wrapper">
+                    <button style="margin-top:0;" onclick="navTo('Bus')">Bus Buddy 🚌</button>
+                    <div class="under-game-note under-game-note-locked">${lockNote}</div>
+                </div>
+                <div class="game-tile-wrapper">
+                    <button style="margin-top:0;" onclick="navTo('Pharmacy')">Healthy Hero 🏥</button>
+                    <div class="under-game-note under-game-note-locked">${lockNote}</div>
+                </div>
+            </div>
+
+            <div class="grid-4" style="margin-bottom: 18px;">
+                <div class="game-tile-wrapper">
+                    <button style="margin-top:0;" onclick="navTo('Zen')">The Zen Zone 🧹</button>
+                    <div class="under-game-note under-game-note-locked">${lockNote}</div>
+                </div>
+                <div class="game-tile-wrapper">
+                    <button style="margin-top:0;" onclick="navTo('Bubble')">Bubble Guard 🫧</button>
+                    <div class="under-game-note under-game-note-locked">${lockNote}</div>
+                </div>
+                <div class="game-tile-wrapper">
+                    <button style="margin-top:0;" onclick="navTo('Grocery')">Grocery Grab 🛒</button>
+                    <div class="under-game-note under-game-note-locked">${lockNote}</div>
+                </div>
+                <div class="game-tile-wrapper">
+                    <button style="margin-top:0;" onclick="navToExternal('phonics-game/')">Blendy Bot 🤖</button>
+                    <div class="under-game-note under-game-note-locked">${lockNote}</div>
+                </div>
+            </div>
+
+            <div class="grid-4" style="margin-bottom: 18px;">
+                <div class="game-tile-wrapper">
+                    <button style="margin-top:0;" onclick="navToExternal('smartboard-shapes/')">Smartboard Shapes 🔺</button>
+                    <div class="under-game-note under-game-note-locked">${lockNote}</div>
+                </div>
+                <div class="game-tile-wrapper">
+                    <button style="margin-top:0;" onclick="navToExternal('my-future-launchpad/')">My Future Launchpad 🚀</button>
+                    <div class="under-game-note under-game-note-locked">${lockNote}</div>
+                </div>
+                <div class="game-tile-wrapper">
+                    <button style="margin-top:0;" onclick="navToExternal('colours/')">Colour Sorting 🎨</button>
+                    <div class="under-game-note under-game-note-locked">${lockNote}</div>
+                </div>
+                <div class="game-tile-wrapper">
+                    <button style="margin-top:0;" onclick="navToExternal('maths/')">Maths Game 🔢</button>
+                    <div class="under-game-note under-game-note-locked">${lockNote}</div>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="game-tile-wrapper">
+                    <button style="margin-top:0;" onclick="navToExternal('sensory-room.html')">Sensory Room ✨</button>
+                    <div class="under-game-note under-game-note-locked">${lockNote}</div>
+                </div>
+                <div class="game-tile-wrapper">
+                    <button style="margin-top:0;" onclick="navToExternal('whos-in-my-space/')">Who's In My Space? 🏫</button>
+                    <div class="under-game-note under-game-note-locked">${lockNote}</div>
+                </div>
+            </div>
         </div>
-        <div class="grid-4" style="margin-bottom: 20px;">
-            <button style="margin-top:0;" onclick="navTo('Zen')">The Zen Zone 🧹</button>
-            <button style="margin-top:0;" onclick="navTo('Bubble')">Bubble Guard 🫧</button>
-            <button style="margin-top:0;" onclick="navTo('Grocery')">Grocery Grab 🛒</button>
-            <button style="margin-top:0;" onclick="navToExternal('phonics-game/')">Blendy Bot 🤖</button>
-        </div>
-        <div class="grid-4" style="margin-bottom: 20px;">
-            <button style="margin-top:0;" onclick="navToExternal('smartboard-shapes/')">Smartboard Shapes 🔺</button>
-            <button style="margin-top:0;" onclick="navToExternal('my-future-launchpad/')">My Future Launchpad 🚀</button>
-            <button style="margin-top:0;" onclick="navToExternal('colours/')">Colour Sorting 🎨</button>
-            <button style="margin-top:0;" onclick="navToExternal('maths/')">Maths Game 🔢</button>
-        </div>
-        <div class="grid-4" style="margin-bottom: 20px;">
-            <button style="margin-top:0;" onclick="navToExternal('sensory-room.html')">Sensory Room ✨</button>
-            <button style="margin-top:0;" onclick="window.location.href='animal-matching/'">Animal Matching 🦁</button>
-            <button style="margin-top:0;" onclick="navToExternal('whos-in-my-space/')">Who's In My Space? 🏫</button>
-            <button style="margin-top:0;" onclick="window.location.href='sensory-physics-board/'">Sensory Choice Board ✨</button>
-        </div>
-        <div class="grid-4" style="margin-bottom: 20px;">
-            <button style="margin-top:0;" onclick="window.location.href='build-a-body/'">Build a Body 🧍</button>
-            <button style="margin-top:0;" onclick="window.location.href='recycling-rover/'">Recycling Rover ♻️</button>
-            <button style="margin-top:0;" onclick="window.location.href='community-heroes/'">Community Heroes 👩‍🚒</button>
-            <button style="margin-top:0;" onclick="window.location.href='emotion-explorer/'">Emotion Explorer 😊</button>
-        </div>
-        <div class="game-card card" style="text-align: center; margin-bottom: 20px;">
-          <h3>Visual Timetable Orbit</h3>
-          <p style="margin: 10px 0;">Predictable daily visual schedule with spoken transition reminders.</p>
-          <a href="./timetable-orbit/" class="play-btn"><button>Launch Schedule</button></a>
-        </div>
+
         <div class="card">
             <div class="small">Designed for neurodiverse learners. Calm colours. Clear feedback.</div>
         </div>
