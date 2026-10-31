@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Daily Routine Builder: Now &amp; Next | Able &amp; Beyond</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #F1F5F9;
+            --bg-card: #FFFFFF;
+            --bg-subtle: #E2E8F0;
+            --text-primary: #0F172A;
+            --text-secondary: #334155;
+            --border-color: #94A3B8;
+            --brand-blue: #0284C7;
+            --brand-blue-dark: #0369A1;
+            --now-bg: #DCFCE7;
+            --now-border: #16A34A;
+            --now-text: #14532D;
+            --next-bg: #FEF9C3;
+            --next-border: #CA8A04;
+            --next-text: #713F12;
+            --focus-ring: #F59E0B;
+            --purple-accent: #7C3AED;
+            --purple-dark: #5B21B6;
+        }
+
+        body.high-contrast {
+            --bg-main: #0F172A;
+            --bg-card: #1E293B;
+            --bg-subtle: #334155;
+            --text-primary: #FFFFFF;
+            --text-secondary: #E2E8F0;
+            --border-color: #94A3B8;
+            --now-bg: #064E3B;
+            --now-border: #34D399;
+            --now-text: #ECFDF5;
+            --next-bg: #78350F;
+            --next-border: #FBBF24;
+            --next-text: #FFFBEB;
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            transition: background-color 0.25s ease, color 0.25s ease;
+        }
+
+        /* High-Visibility Assistive Focus Ring */
+        button:focus-visible,
+        [tabindex="0"]:focus-visible {
+            outline: 5px solid var(--focus-ring) !important;
+            outline-offset: 3px !important;
+            box-shadow: 0 0 0 8px rgba(245, 158, 11, 0.35) !important;
+        }
+
+        .app-shell {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 16px 20px 40px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        /* --- Top Accessible Header --- */
+        .top-header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            background: var(--bg-card);
+            padding: 14px 20px;
+            border-radius: 22px;
+            border: 3px solid var(--border-color);
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .back-hub-btn {
+            min-height: 80px;
+            padding: 14px 24px;
+            border-radius: 18px;
+            background: var(--bg-subtle);
+            color: var(--text-primary);
+            border: 3px solid var(--border-color);
+            font-family: inherit;
+            font-size: 1.25rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            box-shadow: 0 5px 0 var(--border-color);
+            transition: transform 0.1s ease, background-color 0.2s ease;
+        }
+
+        .back-hub-btn:hover {
+            filter: brightness(0.96);
+        }
+
+        .back-hub-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 var(--border-color);
+        }
+
+        .game-title-block h1 {
+            margin: 0;
+            font-size: 1.85rem;
+            font-weight: 800;
+            line-height: 1.15;
+        }
+
+        .game-title-block p {
+            margin: 4px 0 0 0;
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .utility-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .util-btn {
+            min-height: 80px;
+            min-width: 80px;
+            padding: 12px 18px;
+            border-radius: 18px;
+            background: var(--bg-subtle);
+            color: var(--text-primary);
+            border: 3px solid var(--border-color);
+            font-family: inherit;
+            font-size: 1.1rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            box-shadow: 0 5px 0 var(--border-color);
+        }
+
+        .util-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 var(--border-color);
+        }
+
+        .stars-badge {
+            min-height: 80px;
+            padding: 12px 22px;
+            border-radius: 18px;
+            background: var(--next-bg);
+            color: var(--next-text);
+            border: 3px solid var(--next-border);
+            font-size: 1.35rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- Stage Navigation Tabs (80px+ height) --- */
+        .stage-tabs {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+
+        .stage-tab {
+            min-height: 86px;
+            padding: 14px 20px;
+            border-radius: 20px;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 4px solid var(--border-color);
+            font-family: inherit;
+            font-size: 1.25rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            box-shadow: 0 6px 0 var(--border-color);
+            transition: all 0.15s ease;
+            text-align: left;
+        }
+
+        .stage-tab.active {
+            background: linear-gradient(135deg, var(--brand-blue), var(--brand-blue-dark));
+            color: #FFFFFF;
+            border-color: #075985;
+            box-shadow: 0 6px 0 #075985;
+        }
+
+        .stage-tab-icon {
+            font-size: 2.2rem;
+            flex-shrink: 0;
+        }
+
+        /* --- Persistent "NOW & NEXT" Visual Board --- */
+        .now-next-board {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 16px;
+            align-items: stretch;
+            background: var(--bg-card);
+            padding: 18px;
+            border-radius: 24px;
+            border: 4px solid var(--border-color);
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+        }
+
+        .nn-card {
+            border-radius: 20px;
+            padding: 18px 22px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            min-height: 110px;
+            cursor: pointer;
+            transition: transform 0.15s ease;
+        }
+
+        .nn-card:hover {
+            transform: scale(1.01);
+        }
+
+        .nn-now {
+            background: var(--now-bg);
+            border: 4px solid var(--now-border);
+            color: var(--now-text);
+        }
+
+        .nn-next {
+            background: var(--next-bg);
+            border: 4px solid var(--next-border);
+            color: var(--next-text);
+        }
+
+        .nn-badge {
+            font-size: 1.1rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 6px 14px;
+            border-radius: 12px;
+            display: inline-block;
+            margin-bottom: 6px;
+        }
+
+        .nn-now .nn-badge {
+            background: #16A34A;
+            color: #FFFFFF;
+        }
+
+        .nn-next .nn-badge {
+            background: #CA8A04;
+            color: #FFFFFF;
+        }
+
+        .nn-emoji {
+            font-size: 3.6rem;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+
+        .nn-title {
+            font-size: 1.65rem;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+
+        .nn-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.6rem;
+            font-weight: 800;
+            color: var(--text-secondary);
+            padding: 0 4px;
+        }
+
+        /* --- Voice Prompt & Instruction Banner --- */
+        .prompt-bar {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: linear-gradient(135deg, #1E293B, #0F172A);
+            color: #FFFFFF;
+            padding: 16px 22px;
+            border-radius: 22px;
+            border: 3px solid #38BDF8;
+        }
+
+        .speak-prompt-btn {
+            min-width: 84px;
+            min-height: 84px;
+            border-radius: 18px;
+            background: #38BDF8;
+            color: #0F172A;
+            border: 3px solid #0284C7;
+            font-size: 2.3rem;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #0369A1;
+            flex-shrink: 0;
+        }
+
+        .speak-prompt-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 #0369A1;
+        }
+
+        .prompt-text-wrap {
+            flex: 1;
+        }
+
+        .prompt-main {
+            font-size: 1.5rem;
+            font-weight: 800;
+            line-height: 1.25;
+        }
+
+        .prompt-sub {
+            font-size: 1.08rem;
+            color: #BAE6FD;
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        /* --- Main Stage Content Container --- */
+        .stage-panel {
+            background: var(--bg-card);
+            border-radius: 26px;
+            border: 4px solid var(--border-color);
+            padding: 24px;
+            box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+        }
+
+        .panel-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .panel-title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin: 0;
+        }
+
+        /* --- STAGE 1: Visual Schedule Builder --- */
+        .schedule-slots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(185px, 1fr));
+            gap: 14px;
+            margin-bottom: 26px;
+        }
+
+        .schedule-slot {
+            min-height: 150px;
+            border-radius: 20px;
+            border: 4px dashed var(--border-color);
+            background: var(--bg-main);
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            gap: 8px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .schedule-slot.active-slot {
+            border-style: solid;
+            border-color: var(--brand-blue);
+            background: rgba(2, 132, 199, 0.1);
+            box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.2);
+        }
+
+        .schedule-slot.filled-slot {
+            border-style: solid;
+            border-color: #16A34A;
+            background: var(--now-bg);
+            color: var(--now-text);
+        }
+
+        .slot-number {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: var(--text-primary);
+            color: var(--bg-card);
+            font-weight: 800;
+            font-size: 1rem;
+            padding: 4px 10px;
+            border-radius: 10px;
+        }
+
+        .slot-emoji {
+            font-size: 3.2rem;
+            margin-top: 12px;
+        }
+
+        .slot-label {
+            font-size: 1.2rem;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+
+        .cards-pool-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 16px;
+        }
+
+        .activity-card {
+            min-height: 125px;
+            background: var(--bg-main);
+            color: var(--text-primary);
+            border: 4px solid var(--border-color);
+            border-radius: 22px;
+            padding: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 6px 0 var(--border-color);
+            transition: transform 0.15s ease, border-color 0.2s ease;
+            text-align: left;
+            font-family: inherit;
+        }
+
+        .activity-card:hover:not(:disabled) {
+            transform: translateY(-3px);
+            border-color: var(--brand-blue);
+        }
+
+        .activity-card:active:not(:disabled) {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 var(--border-color);
+        }
+
+        .activity-card.placed {
+            opacity: 0.35;
+            cursor: default;
+            box-shadow: none;
+            border-style: dashed;
+        }
+
+        .activity-card-emoji {
+            font-size: 3.3rem;
+            flex-shrink: 0;
+        }
+
+        .activity-card-title {
+            font-size: 1.3rem;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+
+        .activity-card-step {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            font-weight: 700;
+            margin-top: 4px;
+        }
+
+        /* --- STAGE 2: Functional Communication Choice Board --- */
+        .choice-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+        }
+
+        .choice-card {
+            min-height: 150px;
+            background: var(--bg-main);
+            color: var(--text-primary);
+            border: 4px solid var(--border-color);
+            border-radius: 24px;
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            gap: 10px;
+            box-shadow: 0 8px 0 var(--border-color);
+            transition: all 0.15s ease;
+            font-family: inherit;
+        }
+
+        .choice-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--purple-accent);
+        }
+
+        .choice-card.selected-choice {
+            background: var(--next-bg);
+            color: var(--next-text);
+            border-color: var(--next-border);
+            box-shadow: 0 8px 0 var(--next-border);
+            transform: scale(1.02);
+        }
+
+        .choice-emoji {
+            font-size: 4rem;
+        }
+
+        .choice-title {
+            font-size: 1.45rem;
+            font-weight: 800;
+        }
+
+        .choice-phrase {
+            font-size: 1.05rem;
+            font-weight: 600;
+            opacity: 0.85;
+        }
+
+        /* --- STAGE 3: Step-by-Step Task Analysis --- */
+        .preset-pills {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .preset-pill {
+            min-height: 64px;
+            padding: 10px 20px;
+            border-radius: 16px;
+            background: var(--bg-main);
+            color: var(--text-primary);
+            border: 3px solid var(--border-color);
+            font-family: inherit;
+            font-size: 1.1rem;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .preset-pill.active {
+            background: var(--purple-accent);
+            color: #FFFFFF;
+            border-color: var(--purple-dark);
+        }
+
+        .task-steps-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .task-step-btn {
+            min-height: 105px;
+            width: 100%;
+            background: var(--bg-main);
+            color: var(--text-primary);
+            border: 4px solid var(--border-color);
+            border-radius: 22px;
+            padding: 18px 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            box-shadow: 0 6px 0 var(--border-color);
+            font-family: inherit;
+            text-align: left;
+            transition: all 0.2s ease;
+        }
+
+        .task-step-btn.current-step {
+            border-color: var(--brand-blue);
+            box-shadow: 0 6px 0 var(--brand-blue-dark), 0 0 20px rgba(2, 132, 199, 0.25);
+        }
+
+        .task-step-btn.done-step {
+            background: var(--now-bg);
+            color: var(--now-text);
+            border-color: var(--now-border);
+            box-shadow: 0 4px 0 var(--now-border);
+        }
+
+        .step-left {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .step-num-circle {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--brand-blue);
+            color: #FFFFFF;
+            font-size: 1.5rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .done-step .step-num-circle {
+            background: #16A34A;
+        }
+
+        .step-emoji {
+            font-size: 3rem;
+        }
+
+        .step-text-main {
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        .step-text-sub {
+            font-size: 1.05rem;
+            opacity: 0.85;
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        .step-check-box {
+            font-size: 2.4rem;
+            font-weight: 800;
+        }
+
+        /* --- Action Buttons --- */
+        .action-row {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 24px;
+        }
+
+        .big-action-btn {
+            min-height: 84px;
+            padding: 16px 32px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #16A34A, #15803D);
+            color: #FFFFFF;
+            border: 4px solid #14532D;
+            font-family: inherit;
+            font-size: 1.4rem;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #14532D;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .big-action-btn.secondary {
+            background: var(--bg-subtle);
+            color: var(--text-primary);
+            border-color: var(--border-color);
+            box-shadow: 0 6px 0 var(--border-color);
+        }
+
+        .big-action-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #14532D;
+        }
+
+        /* --- Celebration & Customizer Modal --- */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.78);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 3000;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .modal-box {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 5px solid #16A34A;
+            border-radius: 28px;
+            padding: 32px;
+            max-width: 620px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.35);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .custom-input-row {
+            display: grid;
+            grid-template-columns: 70px 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .custom-input-row input {
+            padding: 12px 14px;
+            font-size: 1.15rem;
+            font-family: inherit;
+            font-weight: 700;
+            border-radius: 12px;
+            border: 3px solid var(--border-color);
+            background: var(--bg-main);
+            color: var(--text-primary);
+        }
+
+        @media (max-width: 860px) {
+            .stage-tabs {
+                grid-template-columns: 1fr;
+            }
+            .now-next-board {
+                grid-template-columns: 1fr;
+            }
+            .nn-arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-shell">
+        <!-- Accessible Header with 80px+ Touch Targets -->
+        <header class="top-header" role="banner">
+            <div class="header-left">
+                <a href="https://games.ableandbeyond.support/index.html" onclick="goHome(event)" class="back-hub-btn" aria-label="Back to Games Hub">
+                    <span style="font-size:1.7rem;">⬅️</span>
+                    <span>Back to Hub</span>
+                </a>
+                <div class="game-title-block">
+                    <h1>My Daily Routine Builder: Now &amp; Next</h1>
+                    <p>Visual Schedule, Choice Board &amp; Step-by-Step Independence</p>
+                </div>
+            </div>
+
+            <div class="utility-controls">
+                <div class="stars-badge" aria-live="polite" title="Completed Routines">
+                    <span>⭐</span>
+                    <span id="stars-counter">0</span>
+                </div>
+                <button class="util-btn" id="audio-toggle-btn" onclick="toggleAudio()" aria-label="Toggle Speech Audio">
+                    <span id="audio-icon" style="font-size:1.7rem;">🔊</span>
+                    <span id="audio-label">Voice ON</span>
+                </button>
+                <button class="util-btn" onclick="toggleContrast()" aria-label="Toggle High Contrast Mode">
+                    <span style="font-size:1.7rem;">🌓</span>
+                    <span>Contrast</span>
+                </button>
+                <button class="util-btn" onclick="openCustomizer()" aria-label="Customize Routine Cards">
+                    <span style="font-size:1.7rem;">⚙️</span>
+                    <span>Customize</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Persistent "NOW & NEXT" Visual Board -->
+        <section class="now-next-board" aria-label="Now and Next Visual Board">
+            <div class="nn-card nn-now" tabindex="0" role="button" onclick="speakNowCard()" onkeydown="handleKeyActivate(event, speakNowCard)">
+                <div class="nn-emoji" id="now-emoji">☀️</div>
+                <div>
+                    <span class="nn-badge">NOW (Happening Now)</span>
+                    <div class="nn-title" id="now-title">Morning Greeting &amp; Check-In</div>
+                </div>
+            </div>
+
+            <div class="nn-arrow" aria-hidden="true">➔</div>
+
+            <div class="nn-card nn-next" tabindex="0" role="button" onclick="speakNextCard()" onkeydown="handleKeyActivate(event, speakNextCard)">
+                <div class="nn-emoji" id="next-emoji">🎒</div>
+                <div>
+                    <span class="nn-badge">NEXT (Coming Up)</span>
+                    <div class="nn-title" id="next-title">Getting Ready to Learn</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3-Stage Pedagogical Loop Selector -->
+        <nav class="stage-tabs" role="tablist" aria-label="Learning Stages">
+            <button id="tab-stage-1" class="stage-tab active" role="tab" aria-selected="true" onclick="switchStage(1)">
+                <span class="stage-tab-icon">📅</span>
+                <div>
+                    <div>Stage 1: Schedule Builder</div>
+                    <div style="font-size:0.9rem; font-weight:600; opacity:0.85;">Order the Daily Flow</div>
+                </div>
+            </button>
+            <button id="tab-stage-2" class="stage-tab" role="tab" aria-selected="false" onclick="switchStage(2)">
+                <span class="stage-tab-icon">🗣️</span>
+                <div>
+                    <div>Stage 2: Choice Board</div>
+                    <div style="font-size:0.9rem; font-weight:600; opacity:0.85;">Choose Transition Activity</div>
+                </div>
+            </button>
+            <button id="tab-stage-3" class="stage-tab" role="tab" aria-selected="false" onclick="switchStage(3)">
+                <span class="stage-tab-icon">✅</span>
+                <div>
+                    <div>Stage 3: Mini-Routine Steps</div>
+                    <div style="font-size:0.9rem; font-weight:600; opacity:0.85;">Step-by-Step Self-Care</div>
+                </div>
+            </button>
+        </nav>
+
+        <!-- Spoken Instruction Banner -->
+        <section class="prompt-bar" aria-live="polite">
+            <button class="speak-prompt-btn" onclick="speakCurrentPrompt()" aria-label="Read Instruction Aloud">
+                🔊
+            </button>
+            <div class="prompt-text-wrap">
+                <div class="prompt-main" id="prompt-main">Tap the next activity card in order to build your daily schedule!</div>
+                <div class="prompt-sub" id="prompt-sub">Keyboard &amp; Switch Ready: Use Tab or Arrow keys to move, and press Space or Enter to select.</div>
+            </div>
+        </section>
+
+        <!-- Dynamic Stage Container -->
+        <main id="stage-content" class="stage-panel" role="main">
+            <!-- Rendered by JS -->
+        </main>
+    </div>
+
+    <!-- Stage Celebration Modal -->
+    <div id="celebration-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="modal-win-title">
+        <div class="modal-box">
+            <div style="font-size:4.5rem; margin-bottom:8px;">🌟🎉👏</div>
+            <h2 id="modal-win-title" style="font-size:2.4rem; margin:0 0 10px 0; color:#16A34A;">Fantastic Effort!</h2>
+            <p id="modal-win-desc" style="font-size:1.3rem; font-weight:600; margin:0 0 24px 0;">You completed this stage!</p>
+            <div class="action-row">
+                <button class="big-action-btn" id="modal-next-btn" onclick="advanceFromModal()">
+                    <span>Continue to Next Stage ➔</span>
+                </button>
+                <button class="big-action-btn secondary" onclick="closeCelebrationModal()">
+                    <span>Stay Here</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Educator / Parent Routine Customizer Modal -->
+    <div id="customizer-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="customizer-title">
+        <div class="modal-box" style="border-color: var(--brand-blue); text-align: left;">
+            <h2 id="customizer-title" style="margin-top:0; font-size:1.8rem;">⚙️ Customize Daily Schedule Cards</h2>
+            <p style="font-weight:600; color:var(--text-secondary);">Adapt the 6 schedule cards for your classroom or home setting. Saved automatically to this device.</p>
+
+            <div class="preset-pills" style="margin-bottom:16px;">
+                <button class="preset-pill" onclick="loadSchedulePreset('school')">🏫 School Day Preset</button>
+                <button class="preset-pill" onclick="loadSchedulePreset('home')">🏡 Home Routine Preset</button>
+            </div>
+
+            <div id="customizer-inputs"></div>
+
+            <div class="action-row" style="margin-top:18px;">
+                <button class="big-action-btn" onclick="saveCustomSchedule()">💾 Save Schedule</button>
+                <button class="big-action-btn secondary" onclick="closeCustomizer()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Default Universal Presets (Zero hardcoded names) ---
+        const SCHEDULE_PRESETS = {
+            school: [
+                { id: 's1', order: 1, emoji: '☀️', title: 'Morning Greeting & Check-In' },
+                { id: 's2', order: 2, emoji: '🎒', title: 'Getting Ready to Learn' },
+                { id: 's3', order: 3, emoji: '✏️', title: 'Focused Learning Activity' },
+                { id: 's4', order: 4, emoji: '🎨', title: 'Creative & Sensory Session' },
+                { id: 's5', order: 5, emoji: '🍎', title: 'Lunch & Social Break' },
+                { id: 's6', order: 6, emoji: '🏡', title: 'Afternoon Pack-Up & Home' }
+            ],
+            home: [
+                { id: 's1', order: 1, emoji: '🌅', title: 'Wake Up & Stretch' },
+                { id: 's2', order: 2, emoji: '🪥', title: 'Wash Face & Brush Teeth' },
+                { id: 's3', order: 3, emoji: '🥣', title: 'Healthy Breakfast Time' },
+                { id: 's4', order: 4, emoji: '👕', title: 'Get Dressed for the Day' },
+                { id: 's5', order: 5, emoji: '🧩', title: 'Calm Play or Learning' },
+                { id: 's6', order: 6, emoji: '👟', title: 'Shoes On & Ready to Go' }
+            ]
+        };
+
+        const CHOICE_BOARD_ITEMS = [
+            { id: 'c1', emoji: '🫧', title: 'Sensory Equipment', phrase: 'I would like to use the Sensory Equipment next, please.' },
+            { id: 'c2', emoji: '🛋️', title: 'Calm Quiet Corner', phrase: 'I need a break in the Calm Quiet Corner, please.' },
+            { id: 'c3', emoji: '🌳', title: 'Outdoor Movement Break', phrase: 'I would like an Outdoor Movement Break next, please.' },
+            { id: 'c4', emoji: '🧱', title: 'Building & Favorite Toy', phrase: 'I would like time with my Favorite Toy, please.' },
+            { id: 'c5', emoji: '🎧', title: 'Calm Music & Headphones', phrase: 'I would like to listen to Calm Music with headphones, please.' },
+            { id: 'c6', emoji: '🧘', title: 'Stretching & Deep Breaths', phrase: 'I would like to do Stretching and Deep Breaths, please.' }
+        ];
+
+        const TASK_ROUTINES = {
+            wash: {
+                name: '🧼 Wash Hands & Tidy Up',
+                steps: [
+                    { emoji: '💧', title: 'Turn on tap and wet hands', sub: 'Use warm water' },
+                    { emoji: '🧼', title: 'Put soap on hands and scrub', sub: 'Rub palms and fingers together' },
+                    { emoji: '🧻', title: 'Rinse and dry hands well', sub: 'Use a clean towel or dryer' },
+                    { emoji: '✨', title: 'Tidy up my workspace', sub: 'All finished and ready!' }
+                ]
+            },
+            ready: {
+                name: '🎒 Getting Ready to Learn',
+                steps: [
+                    { emoji: '🧥', title: 'Put away coat and bag', sub: 'Hang them on my peg or hook' },
+                    { emoji: '🪑', title: 'Sit calmly at my space', sub: 'Feet on the floor' },
+                    { emoji: '📋', title: 'Check my Now & Next board', sub: 'See what activity is first' },
+                    { emoji: '👂', title: 'Ready to look and listen', sub: 'Great focus!' }
+                ]
+            },
+            transition: {
+                name: '🌬️ Calm Transition Routine',
+                steps: [
+                    { emoji: '🛑', title: 'Stop and take 3 calm breaths', sub: 'Breathe in slowly, breathe out' },
+                    { emoji: '📦', title: 'Pack away current activity', sub: 'Put items back in their box' },
+                    { emoji: '🚶', title: 'Walk calmly to the next area', sub: 'Safe walking feet' },
+                    { emoji: '🌟', title: 'Begin my next activity', sub: 'Smooth transition complete!' }
+                ]
+            }
+        };
+
+        // --- State & LocalStorage ---
+        let state = {
+            stage: 1,
+            voiceEnabled: true,
+            highContrast: false,
+            stars: 0,
+            scheduleItems: [],
+            placedScheduleIds: [],
+            scrambledPool: [],
+            activeNowIndex: 0,
+            selectedChoice: null,
+            activeTaskKey: 'wash',
+            completedStepCount: 0
+        };
+
+        function loadState() {
+            try {
+                const savedStars = localStorage.getItem('ab_routine_stars');
+                if (savedStars !== null) state.stars = parseInt(savedStars, 10) || 0;
+
+                const savedContrast = localStorage.getItem('ab_routine_contrast');
+                if (savedContrast === 'true') {
+                    state.highContrast = true;
+                    document.body.classList.add('high-contrast');
+                }
+
+                const savedSchedule = localStorage.getItem('ab_routine_custom_schedule');
+                if (savedSchedule) {
+                    state.scheduleItems = JSON.parse(savedSchedule);
+                } else {
+                    state.scheduleItems = JSON.parse(JSON.stringify(SCHEDULE_PRESETS.school));
+                }
+            } catch (e) {
+                state.scheduleItems = JSON.parse(JSON.stringify(SCHEDULE_PRESETS.school));
+            }
+            document.getElementById('stars-counter').textContent = state.stars;
+        }
+
+        function addStar() {
+            state.stars += 1;
+            document.getElementById('stars-counter').textContent = state.stars;
+            try {
+                localStorage.setItem('ab_routine_stars', String(state.stars));
+            } catch (e) {}
+        }
+
+        function goHome(e) {
+            if (window.location.hostname === 'games.ableandbeyond.support' || window.location.protocol === 'file:') {
+                e.preventDefault();
+                // Navigate relative if inside subfolder or root
+                if (window.location.pathname.includes('/routine-builder/')) {
+                    window.location.href = '../index.html';
+                } else {
+                    window.location.href = 'index.html';
+                }
+            }
+        }
+
+        // --- Audio & Speech Synthesis ---
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        const audioCtx = AudioCtx ? new AudioCtx() : null;
+
+        function playChime(type) {
+            if (!audioCtx) return;
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const now = audioCtx.currentTime;
+
+            if (type === 'tap') {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(440, now);
+                osc.frequency.exponentialRampToValueAtTime(587.33, now + 0.08);
+                gain.gain.setValueAtTime(0.16, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.09);
+            } else if (type === 'success') {
+                [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, now + i * 0.07);
+                    gain.gain.setValueAtTime(0.22, now + i * 0.07);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.07 + 0.25);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now + i * 0.07);
+                    osc.stop(now + i * 0.07 + 0.25);
+                });
+            } else if (type === 'gentle-nudge') {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(260, now);
+                osc.frequency.linearRampToValueAtTime(220, now + 0.16);
+                gain.gain.setValueAtTime(0.14, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.18);
+            }
+        }
+
+        function speakText(text) {
+            if (!state.voiceEnabled) return;
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(text);
+                u.rate = 0.92;
+                u.pitch = 1.05;
+                window.speechSynthesis.speak(u);
+            }
+        }
+
+        function setPrompt(mainText, subText, shouldSpeak = true) {
+            document.getElementById('prompt-main').textContent = mainText;
+            if (subText) document.getElementById('prompt-sub').textContent = subText;
+            if (shouldSpeak) speakText(mainText);
+        }
+
+        function speakCurrentPrompt() {
+            playChime('tap');
+            speakText(document.getElementById('prompt-main').textContent);
+        }
+
+        function toggleAudio() {
+            state.voiceEnabled = !state.voiceEnabled;
+            document.getElementById('audio-icon').textContent = state.voiceEnabled ? '🔊' : '🔇';
+            document.getElementById('audio-label').textContent = state.voiceEnabled ? 'Voice ON' : 'Voice OFF';
+            if (state.voiceEnabled) speakText('Voice audio enabled');
+            else if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+        }
+
+        function toggleContrast() {
+            state.highContrast = !state.highContrast;
+            document.body.classList.toggle('high-contrast', state.highContrast);
+            try {
+                localStorage.setItem('ab_routine_contrast', String(state.highContrast));
+            } catch (e) {}
+            playChime('tap');
+        }
+
+        // --- Persistent Now & Next Board Logic ---
+        function updateNowNextHeader(nowItem, nextItem) {
+            if (nowItem) {
+                document.getElementById('now-emoji').textContent = nowItem.emoji;
+                document.getElementById('now-title').textContent = nowItem.title;
+            }
+            if (nextItem) {
+                document.getElementById('next-emoji').textContent = nextItem.emoji;
+                document.getElementById('next-title').textContent = nextItem.title;
+            }
+        }
+
+        function speakNowCard() {
+            playChime('tap');
+            const title = document.getElementById('now-title').textContent;
+            speakText(`Now is: ${title}`);
+        }
+
+        function speakNextCard() {
+            playChime('tap');
+            const title = document.getElementById('next-title').textContent;
+            speakText(`Next is: ${title}`);
+        }
+
+        function handleKeyActivate(e, callback) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                callback();
+            }
+        }
+
+        // --- Stage Switching ---
+        function switchStage(stageNum) {
+            state.stage = stageNum;
+            playChime('tap');
+
+            [1, 2, 3].forEach(n => {
+                const tab = document.getElementById(`tab-stage-${n}`);
+                const isActive = n === stageNum;
+                tab.classList.toggle('active', isActive);
+                tab.setAttribute('aria-selected', String(isActive));
+            });
+
+            if (stageNum === 1) initStage1();
+            else if (stageNum === 2) initStage2();
+            else if (stageNum === 3) initStage3();
+        }
+
+        // ==========================================
+        // STAGE 1: THE "NOW & NEXT" SCHEDULE BUILDER
+        // ==========================================
+        function initStage1() {
+            state.placedScheduleIds = [];
+            state.activeNowIndex = 0;
+            state.scrambledPool = [...state.scheduleItems].sort(() => Math.random() - 0.5);
+
+            const first = state.scheduleItems[0];
+            const second = state.scheduleItems[1] || state.scheduleItems[0];
+            updateNowNextHeader(first, second);
+
+            setPrompt(
+                `Stage 1: Let's build our Daily Schedule in order! Tap Step 1: "${first.title}".`,
+                `Tap the matching card below (or drag it into Slot 1) to sequence your day.`
+            );
+            renderStage1();
+        }
+
+        function renderStage1() {
+            const container = document.getElementById('stage-content');
+            const nextExpectedIdx = state.placedScheduleIds.length;
+            const nextItem = state.scheduleItems[nextExpectedIdx];
+
+            let slotsHtml = '';
+            state.scheduleItems.forEach((item, idx) => {
+                const isPlaced = idx < state.placedScheduleIds.length;
+                const isCurrentTarget = idx === nextExpectedIdx;
+                slotsHtml += `
+                    <div class="schedule-slot ${isPlaced ? 'filled-slot' : ''} ${isCurrentTarget ? 'active-slot' : ''}"
+                         tabindex="0"
+                         role="button"
+                         aria-label="Schedule Slot ${idx + 1}: ${isPlaced ? item.title : 'Empty slot'}"
+                         ondragover="event.preventDefault()"
+                         ondrop="handleSlotDrop(event, '${item.id}')"
+                         onclick="handleSlotTap(${idx})">
+                        <span class="slot-number">Step ${idx + 1}</span>
+                        ${isPlaced ? `
+                            <div class="slot-emoji">${item.emoji}</div>
+                            <div class="slot-label">${item.title}</div>
+                        ` : `
+                            <div class="slot-emoji" style="opacity:0.35;">${isCurrentTarget ? '⬇️' : '❔'}</div>
+                            <div class="slot-label" style="opacity:0.7;">${isCurrentTarget ? 'Next: ' + item.title : 'Waiting...'}</div>
+                        `}
+                    </div>
+                `;
+            });
+
+            let poolHtml = '';
+            state.scrambledPool.forEach(item => {
+                const isPlaced = state.placedScheduleIds.includes(item.id);
+                poolHtml += `
+                    <button class="activity-card ${isPlaced ? 'placed' : ''}"
+                            ${isPlaced ? 'disabled' : ''}
+                            draggable="${!isPlaced}"
+                            ondragstart="handleCardDragStart(event, '${item.id}')"
+                            onclick="handleScheduleCardPick('${item.id}')"
+                            aria-label="${item.title}, Step ${item.order}">
+                        <span class="activity-card-emoji">${item.emoji}</span>
+                        <div>
+                            <div class="activity-card-title">${item.title}</div>
+                            <div class="activity-card-step">Step ${item.order} of ${state.scheduleItems.length}</div>
+                        </div>
+                    </button>
+                `;
+            });
+
+            container.innerHTML = `
+                <div class="panel-header-row">
+                    <h2 class="panel-title">📅 Daily Visual Schedule (${state.placedScheduleIds.length} / ${state.scheduleItems.length} Placed)</h2>
+                    <button class="preset-pill" onclick="initStage1()">🔄 Reshuffle Cards</button>
+                </div>
+                <div class="schedule-slots-grid">${slotsHtml}</div>
+                <h3 style="font-size:1.3rem; margin: 0 0 12px 0;">👇 Tap or Drag Activity Cards in Chronological Order:</h3>
+                <div class="cards-pool-grid">${poolHtml}</div>
+            `;
+        }
+
+        function handleCardDragStart(e, itemId) {
+            e.dataTransfer.setData('text/plain', itemId);
+        }
+
+        function handleSlotDrop(e, slotItemId) {
+            e.preventDefault();
+            const draggedId = e.dataTransfer.getData('text/plain');
+            if (draggedId) handleScheduleCardPick(draggedId);
+        }
+
+        function handleSlotTap(idx) {
+            if (idx < state.placedScheduleIds.length) {
+                const item = state.scheduleItems[idx];
+                const nextItem = state.scheduleItems[idx + 1] || { emoji: '🎉', title: 'All Finished!' };
+                updateNowNextHeader(item, nextItem);
+                playChime('tap');
+                speakText(`Now: ${item.title}. Next: ${nextItem.title}`);
+            } else {
+                const expected = state.scheduleItems[state.placedScheduleIds.length];
+                if (expected) {
+                    playChime('tap');
+                    speakText(`Find Step ${state.placedScheduleIds.length + 1}: ${expected.title}`);
+                }
+            }
+        }
+
+        function handleScheduleCardPick(pickedId) {
+            const expectedIdx = state.placedScheduleIds.length;
+            const expectedItem = state.scheduleItems[expectedIdx];
+            if (!expectedItem) return;
+
+            if (pickedId === expectedItem.id) {
+                state.placedScheduleIds.push(pickedId);
+                playChime('tap');
+
+                const nowItem = expectedItem;
+                const followingItem = state.scheduleItems[expectedIdx + 1] || { emoji: '🌟', title: 'Transition Choice Time!' };
+                updateNowNextHeader(nowItem, followingItem);
+
+                renderStage1();
+
+                if (state.placedScheduleIds.length === state.scheduleItems.length) {
+                    addStar();
+                    playChime('success');
+                    setPrompt(
+                        'Awesome! Your entire Daily Schedule is ready! Let\'s choose a Transition Activity next.',
+                        'Click Continue in the celebration popup or tap Stage 2.'
+                    );
+                    showCelebrationModal(
+                        'Schedule Complete!',
+                        'You sequenced the whole day! Now let\'s pick a Transition Activity on the Choice Board.',
+                        2
+                    );
+                } else {
+                    const nextToFind = state.scheduleItems[state.placedScheduleIds.length];
+                    setPrompt(
+                        `Great job! "${expectedItem.title}" is set. Next, find Step ${state.placedScheduleIds.length + 1}: "${nextToFind.title}"!`,
+                        `Now: ${nowItem.title} ➔ Next: ${nextToFind.title}`
+                    );
+                }
+            } else {
+                const tappedItem = state.scheduleItems.find(i => i.id === pickedId);
+                playChime('gentle-nudge');
+                setPrompt(
+                    `That is "${tappedItem ? tappedItem.title : ''}". First, let's find Step ${expectedIdx + 1}: "${expectedItem.title}"!`,
+                    `Look for the card labeled Step ${expectedIdx + 1}.`
+                );
+            }
+        }
+
+        // ==========================================
+        // STAGE 2: FUNCTIONAL COMMUNICATION CHOICE BOARD
+        // ==========================================
+        function initStage2() {
+            state.selectedChoice = null;
+            setPrompt(
+                'Stage 2: Transition Time! What calming activity or reward would you like NEXT?',
+                'Tap any symbol card to speak your choice aloud and add it to your NEXT board.'
+            );
+            renderStage2();
+        }
+
+        function renderStage2() {
+            const container = document.getElementById('stage-content');
+            let cardsHtml = '';
+
+            CHOICE_BOARD_ITEMS.forEach(choice => {
+                const isSelected = state.selectedChoice && state.selectedChoice.id === choice.id;
+                cardsHtml += `
+                    <button class="choice-card ${isSelected ? 'selected-choice' : ''}"
+                            onclick="selectChoiceItem('${choice.id}')"
+                            aria-label="${choice.title}. ${choice.phrase}">
+                        <span class="choice-emoji">${choice.emoji}</span>
+                        <span class="choice-title">${choice.title}</span>
+                        <span class="choice-phrase">"${choice.phrase}"</span>
+                    </button>
+                `;
+            });
+
+            container.innerHTML = `
+                <div class="panel-header-row">
+                    <h2 class="panel-title">🗣️ My Transition Choice Board</h2>
+                </div>
+                <div class="choice-grid">${cardsHtml}</div>
+                ${state.selectedChoice ? `
+                    <div class="action-row">
+                        <button class="big-action-btn" onclick="confirmChoiceAndContinue()">
+                            <span>✅ Confirm "${state.selectedChoice.title}" &amp; Start Stage 3 ➔</span>
+                        </button>
+                    </div>
+                ` : ''}
+            `;
+        }
+
+        function selectChoiceItem(choiceId) {
+            const found = CHOICE_BOARD_ITEMS.find(c => c.id === choiceId);
+            if (!found) return;
+            state.selectedChoice = found;
+            playChime('tap');
+
+            updateNowNextHeader(
+                { emoji: '✅', title: 'Current Activity Finished' },
+                { emoji: found.emoji, title: found.title }
+            );
+
+            setPrompt(found.phrase, 'Tap the green Confirm button below when you are ready for your mini-routine!');
+            renderStage2();
+        }
+
+        function confirmChoiceAndContinue() {
+            addStar();
+            playChime('success');
+            showCelebrationModal(
+                'Great Communication!',
+                `You chose "${state.selectedChoice.title}" for your transition! Now let's complete our Step-by-Step Mini-Routine.`,
+                3
+            );
+        }
+
+        // ==========================================
+        // STAGE 3: STEP-BY-STEP TASK ANALYSIS
+        // ==========================================
+        function initStage3() {
+            state.completedStepCount = 0;
+            const routine = TASK_ROUTINES[state.activeTaskKey];
+            updateNowNextHeader(
+                { emoji: routine.steps[0].emoji, title: routine.steps[0].title },
+                { emoji: routine.steps[1].emoji, title: routine.steps[1].title }
+            );
+            setPrompt(
+                `Stage 3: ${routine.name}! Tap Step 1: "${routine.steps[0].title}".`,
+                'Complete each step in order from top to bottom.'
+            );
+            renderStage3();
+        }
+
+        function selectTaskRoutine(key) {
+            state.activeTaskKey = key;
+            initStage3();
+        }
+
+        function renderStage3() {
+            const container = document.getElementById('stage-content');
+            const routine = TASK_ROUTINES[state.activeTaskKey];
+
+            let stepsHtml = '';
+            routine.steps.forEach((step, idx) => {
+                const isDone = idx < state.completedStepCount;
+                const isCurrent = idx === state.completedStepCount;
+                stepsHtml += `
+                    <button class="task-step-btn ${isDone ? 'done-step' : ''} ${isCurrent ? 'current-step' : ''}"
+                            onclick="handleTaskStepTap(${idx})"
+                            aria-label="Step ${idx + 1}: ${step.title}. ${isDone ? 'Completed' : 'Tap to complete'}">
+                        <div class="step-left">
+                            <div class="step-num-circle">${isDone ? '✓' : idx + 1}</div>
+                            <div class="step-emoji">${step.emoji}</div>
+                            <div>
+                                <div class="step-text-main">${step.title}</div>
+                                <div class="step-text-sub">${step.sub}</div>
+                            </div>
+                        </div>
+                        <div class="step-check-box">${isDone ? '✅' : (isCurrent ? '👆 Tap' : '⬜')}</div>
+                    </button>
+                `;
+            });
+
+            container.innerHTML = `
+                <div class="panel-header-row">
+                    <h2 class="panel-title">✅ Step-by-Step Task Analysis</h2>
+                    <div class="preset-pills">
+                        <button class="preset-pill ${state.activeTaskKey === 'wash' ? 'active' : ''}" onclick="selectTaskRoutine('wash')">🧼 Wash Hands</button>
+                        <button class="preset-pill ${state.activeTaskKey === 'ready' ? 'active' : ''}" onclick="selectTaskRoutine('ready')">🎒 Ready to Learn</button>
+                        <button class="preset-pill ${state.activeTaskKey === 'transition' ? 'active' : ''}" onclick="selectTaskRoutine('transition')">🌬️ Calm Transition</button>
+                    </div>
+                </div>
+                <div class="task-steps-list">${stepsHtml}</div>
+            `;
+        }
+
+        function handleTaskStepTap(idx) {
+            const routine = TASK_ROUTINES[state.activeTaskKey];
+            if (idx === state.completedStepCount) {
+                state.completedStepCount += 1;
+                playChime('tap');
+
+                const nextStep = routine.steps[state.completedStepCount];
+                const afterNext = routine.steps[state.completedStepCount + 1] || { emoji: '🌟', title: 'All Done!' };
+
+                if (nextStep) {
+                    updateNowNextHeader(
+                        { emoji: nextStep.emoji, title: nextStep.title },
+                        { emoji: afterNext.emoji, title: afterNext.title }
+                    );
+                    setPrompt(
+                        `Well done! Now Step ${state.completedStepCount + 1}: "${nextStep.title}".`,
+                        nextStep.sub
+                    );
+                }
+
+                renderStage3();
+
+                if (state.completedStepCount === routine.steps.length) {
+                    addStar();
+                    playChime('success');
+                    updateNowNextHeader(
+                        { emoji: '🌟', title: `${routine.name} Complete!` },
+                        { emoji: state.selectedChoice ? state.selectedChoice.emoji : '🎉', title: state.selectedChoice ? state.selectedChoice.title : 'Free Choice Time!' }
+                    );
+                    setPrompt(
+                        `Bravo! You finished every single step of "${routine.name}"!`,
+                        'You earned a gold star for independent routine skills!'
+                    );
+                    showCelebrationModal(
+                        'Routine Superstar!',
+                        `You completed all ${routine.steps.length} steps independently!`,
+                        1
+                    );
+                }
+            } else if (idx < state.completedStepCount) {
+                speakText(`Step ${idx + 1} is already finished: ${routine.steps[idx].title}`);
+            } else {
+                const currentNeeded = routine.steps[state.completedStepCount];
+                playChime('gentle-nudge');
+                setPrompt(
+                    `Let's do Step ${state.completedStepCount + 1} first: "${currentNeeded.title}"!`,
+                    currentNeeded.sub
+                );
+            }
+        }
+
+        // --- Modals & Customizer ---
+        let nextModalStage = 2;
+
+        function showCelebrationModal(title, desc, nextStage) {
+            nextModalStage = nextStage;
+            document.getElementById('modal-win-title').textContent = title;
+            document.getElementById('modal-win-desc').textContent = desc;
+            document.getElementById('modal-next-btn').innerHTML = nextStage === 1
+                ? '<span>Play Again from Stage 1 🔄</span>'
+                : `<span>Continue to Stage ${nextStage} ➔</span>`;
+            document.getElementById('celebration-modal').classList.remove('hidden');
+        }
+
+        function closeCelebrationModal() {
+            document.getElementById('celebration-modal').classList.add('hidden');
+        }
+
+        function advanceFromModal() {
+            closeCelebrationModal();
+            switchStage(nextModalStage);
+        }
+
+        function openCustomizer() {
+            playChime('tap');
+            renderCustomizerInputs(state.scheduleItems);
+            document.getElementById('customizer-modal').classList.remove('hidden');
+        }
+
+        function closeCustomizer() {
+            document.getElementById('customizer-modal').classList.add('hidden');
+        }
+
+        function renderCustomizerInputs(items) {
+            const wrap = document.getElementById('customizer-inputs');
+            wrap.innerHTML = items.map((item, i) => `
+                <div class="custom-input-row">
+                    <input type="text" id="cust-emoji-${i}" value="${item.emoji}" aria-label="Step ${i + 1} Emoji">
+                    <input type="text" id="cust-title-${i}" value="${item.title}" aria-label="Step ${i + 1} Title">
+                </div>
+            `).join('');
+        }
+
+        function loadSchedulePreset(key) {
+            const preset = SCHEDULE_PRESETS[key];
+            if (preset) {
+                playChime('tap');
+                renderCustomizerInputs(preset);
+            }
+        }
+
+        function saveCustomSchedule() {
+            const updated = state.scheduleItems.map((item, i) => {
+                const emojiVal = document.getElementById(`cust-emoji-${i}`).value.trim() || '⭐';
+                const titleVal = document.getElementById(`cust-title-${i}`).value.trim() || `Activity ${i + 1}`;
+                return { id: `s${i + 1}`, order: i + 1, emoji: emojiVal, title: titleVal };
+            });
+            state.scheduleItems = updated;
+            try {
+                localStorage.setItem('ab_routine_custom_schedule', JSON.stringify(updated));
+            } catch (e) {}
+            closeCustomizer();
+            switchStage(1);
+        }
+
+        // --- Keyboard Arrow Navigation Support ---
+        window.addEventListener('keydown', (e) => {
+            if (!['ArrowRight', 'ArrowLeft', 'ArrowDown', 'ArrowUp'].includes(e.key)) return;
+            if (document.activeElement && document.activeElement.tagName === 'INPUT') return;
+
+            const focusables = Array.from(document.querySelectorAll(
+                'a.back-hub-btn, button:not(:disabled), [tabindex="0"]'
+            )).filter(el => el.offsetParent !== null);
+
+            if (!focusables.length) return;
+            const currentIdx = focusables.indexOf(document.activeElement);
+            let nextIdx = 0;
+
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                e.preventDefault();
+                nextIdx = currentIdx >= 0 ? (currentIdx + 1) % focusables.length : 0;
+                focusables[nextIdx].focus();
+            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                e.preventDefault();
+                nextIdx = currentIdx > 0 ? currentIdx - 1 : focusables.length - 1;
+                focusables[nextIdx].focus();
+            }
+        });
+
+        // Boot Game
+        loadState();
+        initStage1();
+    </script>
+</body>
+</html>

@@ -153,7 +153,7 @@ function renderHome() {
                 </div>
             </div>
 
-            <div class="grid-3">
+            <div class="grid-4">
                 <div class="game-tile-wrapper">
                     <button class="btn-free-game" onclick="window.location.href='animal-matching/'">Animal Matching 🦁</button>
                     <div class="under-game-note under-game-note-free">🔓 Free &amp; Unlocked for Testing</div>
@@ -166,10 +166,14 @@ function renderHome() {
                     <button class="btn-free-game" onclick="window.location.href='./timetable-orbit/'">Visual Timetable Orbit 📅</button>
                     <div class="under-game-note under-game-note-free">🔓 Free &amp; Unlocked for Testing</div>
                 </div>
+                <div class="game-tile-wrapper">
+                    <button class="btn-free-game" onclick="window.location.href='routine-builder.html'">Daily Routine: Now &amp; Next 📋</button>
+                    <div class="under-game-note under-game-note-free">🔓 Free &amp; Unlocked for Testing</div>
+                </div>
             </div>
 
             <div style="margin-top: 18px; padding: 12px 16px; border-radius: 14px; background: #dcfce7; border: 1px solid #86efac; color: #14532d; font-size: 0.92rem; font-weight: 700; text-align: center;">
-                ✅ Testing Notice: All 7 games above are open-access demos so educators, SENCOs, and parents can test gameplay, audio, and Smartboard touch controls before booking or purchasing.
+                ✅ Testing Notice: All 8 games above are open-access demos so educators, SENCOs, and parents can test gameplay, audio, and Smartboard touch controls before booking or purchasing.
             </div>
         </div>
 
