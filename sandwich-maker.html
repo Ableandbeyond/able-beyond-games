@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sandwich Maker Studio: Step-by-Step Kitchen | Able &amp; Beyond</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --bg-main: #FFFBEB;
+            --bg-card: #FFFFFF;
+            --bg-subtle: #FEF3C7;
+            --text-primary: #0F172A;
+            --text-secondary: #475569;
+            --border-color: #D97706;
+            --border-neutral: #CBD5E1;
+            --brand-orange: #EA580C;
+            --brand-orange-dark: #C2410C;
+            --now-bg: #DCFCE7;
+            --now-border: #16A34A;
+            --now-text: #14532D;
+            --next-bg: #FEF9C3;
+            --next-border: #CA8A04;
+            --next-text: #713F12;
+            --focus-ring: #2563EB;
+        }
+
+        body.high-contrast {
+            --bg-main: #0F172A;
+            --bg-card: #1E293B;
+            --bg-subtle: #334155;
+            --text-primary: #FFFFFF;
+            --text-secondary: #E2E8F0;
+            --border-color: #FBBF24;
+            --border-neutral: #64748B;
+            --now-bg: #064E3B;
+            --now-border: #34D399;
+            --now-text: #ECFDF5;
+            --next-bg: #78350F;
+            --next-border: #FBBF24;
+            --next-text: #FFFBEB;
+            --focus-ring: #FACC15;
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            transition: background-color 0.25s ease, color 0.25s ease;
+        }
+
+        /* High-Visibility Assistive Focus Outlines */
+        button:focus-visible,
+        [tabindex="0"]:focus-visible {
+            outline: 5px solid var(--focus-ring) !important;
+            outline-offset: 3px !important;
+            box-shadow: 0 0 0 8px rgba(37, 99, 235, 0.35) !important;
+        }
+
+        .app-shell {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 16px 20px 40px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* --- Top Header (80px+ Touch Targets) --- */
+        .top-header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            background: var(--bg-card);
+            padding: 14px 20px;
+            border-radius: 22px;
+            border: 3px solid var(--border-neutral);
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .back-hub-btn {
+            min-height: 80px;
+            padding: 14px 24px;
+            border-radius: 18px;
+            background: #F1F5F9;
+            color: #0F172A;
+            border: 3px solid #94A3B8;
+            font-family: inherit;
+            font-size: 1.25rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            box-shadow: 0 5px 0 #64748B;
+            transition: transform 0.1s ease;
+        }
+
+        .back-hub-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 #64748B;
+        }
+
+        .title-block h1 {
+            margin: 0;
+            font-size: 1.9rem;
+            font-weight: 800;
+        }
+
+        .title-block p {
+            margin: 4px 0 0 0;
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .utility-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .util-btn {
+            min-height: 80px;
+            min-width: 84px;
+            padding: 10px 18px;
+            border-radius: 18px;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 3px solid var(--border-neutral);
+            font-family: inherit;
+            font-size: 1.05rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            box-shadow: 0 5px 0 var(--border-neutral);
+        }
+
+        .util-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 var(--border-neutral);
+        }
+
+        .score-pill {
+            min-height: 80px;
+            padding: 12px 22px;
+            border-radius: 18px;
+            background: var(--next-bg);
+            color: var(--next-text);
+            border: 3px solid var(--next-border);
+            font-size: 1.35rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- Recipe Selector Tabs (80px+ height) --- */
+        .recipe-tabs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+        }
+
+        .recipe-tab {
+            min-height: 82px;
+            padding: 12px 18px;
+            border-radius: 20px;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 4px solid var(--border-neutral);
+            font-family: inherit;
+            font-size: 1.15rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 5px 0 var(--border-neutral);
+            transition: all 0.15s ease;
+            text-align: left;
+        }
+
+        .recipe-tab.active {
+            background: linear-gradient(135deg, var(--brand-orange), var(--brand-orange-dark));
+            color: #FFFFFF;
+            border-color: #9A3412;
+            box-shadow: 0 5px 0 #9A3412;
+        }
+
+        /* --- Phase 1: Order / Recipe "Now & Next" Card --- */
+        .recipe-order-card {
+            background: var(--bg-card);
+            border-radius: 24px;
+            border: 4px solid var(--border-color);
+            padding: 18px 22px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+        }
+
+        .order-top-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
+        .prompt-banner {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: linear-gradient(135deg, #1E293B, #0F172A);
+            color: #FFFFFF;
+            padding: 14px 20px;
+            border-radius: 18px;
+            border: 3px solid #38BDF8;
+        }
+
+        .speak-btn {
+            min-width: 80px;
+            min-height: 80px;
+            border-radius: 16px;
+            background: #38BDF8;
+            color: #0F172A;
+            border: 3px solid #0284C7;
+            font-size: 2.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #0369A1;
+            flex-shrink: 0;
+        }
+
+        .speak-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #0369A1;
+        }
+
+        .prompt-title {
+            font-size: 1.45rem;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+
+        .prompt-sub {
+            font-size: 1rem;
+            color: #BAE6FD;
+            margin-top: 4px;
+            font-weight: 600;
+        }
+
+        /* Recipe Step Strip */
+        .recipe-steps-strip {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+
+        .recipe-step-pill {
+            min-height: 82px;
+            border-radius: 16px;
+            padding: 10px 14px;
+            border: 3px solid var(--border-neutral);
+            background: var(--bg-main);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .recipe-step-pill.step-done {
+            background: var(--now-bg);
+            color: var(--now-text);
+            border-color: var(--now-border);
+        }
+
+        .recipe-step-pill.step-now {
+            background: var(--next-bg);
+            color: var(--next-text);
+            border: 4px solid var(--next-border);
+            transform: scale(1.03);
+            box-shadow: 0 0 16px rgba(234, 179, 8, 0.35);
+        }
+
+        .step-badge-tag {
+            display: inline-block;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            padding: 2px 8px;
+            border-radius: 6px;
+            background: rgba(0,0,0,0.12);
+            margin-bottom: 2px;
+        }
+
+        /* --- Phase 2: Kitchen Workspace & Pantry Grid --- */
+        .kitchen-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 1.2fr;
+            gap: 20px;
+            align-items: stretch;
+        }
+
+        /* Serving Plate Zone */
+        .plate-stage {
+            background: var(--bg-card);
+            border-radius: 26px;
+            border: 4px solid var(--border-neutral);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 440px;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+        }
+
+        .plate-stage.drag-over {
+            border-color: #16A34A;
+            background: var(--now-bg);
+        }
+
+        .plate-header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.35rem;
+            font-weight: 800;
+        }
+
+        .sandwich-stack-area {
+            flex: 1;
+            width: 100%;
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 20px 0 10px 0;
+            position: relative;
+        }
+
+        .serving-plate-svg {
+            width: 320px;
+            height: 55px;
+            margin-top: -15px;
+            z-index: 1;
+        }
+
+        .stacked-layer {
+            width: 240px;
+            height: 68px;
+            margin-bottom: -24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: dropBounce 0.4s cubic-bezier(0.18, 1.25, 0.4, 1) forwards;
+            filter: drop-shadow(0 6px 8px rgba(0,0,0,0.16));
+            cursor: pointer;
+        }
+
+        @keyframes dropBounce {
+            0% { opacity: 0; transform: translateY(-60px) scale(0.85); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* Ingredient Pantry Buttons (80px+ minimum height) */
+        .pantry-panel {
+            background: var(--bg-card);
+            border-radius: 26px;
+            border: 4px solid var(--border-neutral);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+        }
+
+        .pantry-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 14px;
+        }
+
+        .ingredient-btn {
+            min-height: 120px;
+            background: var(--bg-main);
+            color: var(--text-primary);
+            border: 4px solid var(--border-neutral);
+            border-radius: 22px;
+            padding: 14px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-family: inherit;
+            text-align: left;
+            box-shadow: 0 6px 0 var(--border-neutral);
+            transition: all 0.15s ease;
+        }
+
+        .ingredient-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            border-color: var(--brand-orange);
+        }
+
+        .ingredient-btn:active:not(:disabled) {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 var(--border-neutral);
+        }
+
+        .ingredient-btn.target-highlight {
+            border-color: #16A34A;
+            background: var(--now-bg);
+            color: var(--now-text);
+            box-shadow: 0 6px 0 #16A34A, 0 0 18px rgba(22, 163, 74, 0.3);
+        }
+
+        .ingredient-svg-icon {
+            width: 78px;
+            height: 62px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ingredient-name {
+            font-size: 1.3rem;
+            font-weight: 800;
+            line-height: 1.15;
+        }
+
+        .ingredient-hint {
+            font-size: 0.95rem;
+            font-weight: 700;
+            opacity: 0.85;
+            margin-top: 4px;
+        }
+
+        /* Celebration Modal */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.78);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 3000;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .modal-box {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 5px solid #16A34A;
+            border-radius: 30px;
+            padding: 36px;
+            max-width: 560px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.35);
+        }
+
+        .action-btn {
+            min-height: 82px;
+            padding: 16px 28px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #16A34A, #15803D);
+            color: #FFFFFF;
+            border: 4px solid #14532D;
+            font-family: inherit;
+            font-size: 1.35rem;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #14532D;
+            margin: 8px;
+        }
+
+        .action-btn.secondary {
+            background: var(--bg-subtle);
+            color: var(--text-primary);
+            border-color: var(--border-neutral);
+            box-shadow: 0 6px 0 var(--border-neutral);
+        }
+
+        @media (max-width: 900px) {
+            .kitchen-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-shell">
+        <!-- Accessible Top Header -->
+        <header class="top-header" role="banner">
+            <div class="header-left">
+                <a href="https://games.ableandbeyond.support/index.html" onclick="goHome(event)" class="back-hub-btn" aria-label="Back to Games Hub">
+                    <span style="font-size:1.7rem;">⬅️</span>
+                    <span>Back to Hub</span>
+                </a>
+                <div class="title-block">
+                    <h1>Sandwich Maker Studio 🥪</h1>
+                    <p>Step-by-Step Kitchen Sequencing &amp; Life Skills</p>
+                </div>
+            </div>
+
+            <div class="utility-bar">
+                <div class="score-pill" aria-live="polite" title="Sandwiches Made">
+                    <span>🥪</span>
+                    <span id="sandwiches-count">0</span>
+                </div>
+                <button class="util-btn" onclick="toggleVoice()" aria-label="Toggle Voice Audio">
+                    <span id="voice-icon" style="font-size:1.6rem;">🔊</span>
+                    <span id="voice-label">Voice ON</span>
+                </button>
+                <button class="util-btn" onclick="toggleContrast()" aria-label="Toggle High Contrast">
+                    <span style="font-size:1.6rem;">🌓</span>
+                    <span>Contrast</span>
+                </button>
+                <button class="util-btn" onclick="resetCurrentRecipe()" aria-label="Restart Sandwich">
+                    <span style="font-size:1.6rem;">🔄</span>
+                    <span>Restart</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Recipe Selection Tabs -->
+        <nav class="recipe-tabs" role="tablist" aria-label="Sandwich Recipes">
+            <button id="tab-classic" class="recipe-tab active" onclick="selectRecipe('classic')">
+                <span style="font-size:2.2rem;">🧀</span>
+                <div>
+                    <div>1. Cheese &amp; Lettuce</div>
+                    <div style="font-size:0.9rem; opacity:0.85;">Easy (4 Steps)</div>
+                </div>
+            </button>
+            <button id="tab-club" class="recipe-tab" onclick="selectRecipe('club')">
+                <span style="font-size:2.2rem;">🍅</span>
+                <div>
+                    <div>2. Garden Club</div>
+                    <div style="font-size:0.9rem; opacity:0.85;">Medium (6 Steps)</div>
+                </div>
+            </button>
+            <button id="tab-jam" class="recipe-tab" onclick="selectRecipe('jam')">
+                <span style="font-size:2.2rem;">🍓</span>
+                <div>
+                    <div>3. Berry Jam Toastie</div>
+                    <div style="font-size:0.9rem; opacity:0.85;">Easy (4 Steps)</div>
+                </div>
+            </button>
+            <button id="tab-free" class="recipe-tab" onclick="selectRecipe('free')">
+                <span style="font-size:2.2rem;">👩‍🍳</span>
+                <div>
+                    <div>4. Creative Chef</div>
+                    <div style="font-size:0.9rem; opacity:0.85;">Free-Play Mode</div>
+                </div>
+            </button>
+        </nav>
+
+        <!-- Phase 1: Visual Recipe Card & Now/Next Prompt -->
+        <section class="recipe-order-card" aria-label="Recipe Steps">
+            <div class="order-top-row">
+                <div class="prompt-banner" aria-live="polite">
+                    <button class="speak-btn" onclick="speakCurrentPrompt()" aria-label="Read Step Aloud">🔊</button>
+                    <div>
+                        <div class="prompt-title" id="prompt-title">Let's make a Cheese &amp; Lettuce Sandwich!</div>
+                        <div class="prompt-sub" id="prompt-sub">Tap the highlighted ingredient or drag it onto the plate.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recipe-steps-strip" id="recipe-strip">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- Phase 2: Interactive Assembly Workspace -->
+        <main class="kitchen-grid" role="main">
+            <!-- Left: Serving Plate & Layered Sandwich -->
+            <section class="plate-stage" id="plate-dropzone"
+                     ondragover="handlePlateDragOver(event)"
+                     ondragleave="handlePlateDragLeave(event)"
+                     ondrop="handlePlateDrop(event)"
+                     aria-label="Serving Plate">
+                <div class="plate-header">
+                    <span>🍽️ Serving Plate</span>
+                    <span id="layer-counter" style="color:var(--text-secondary); font-size:1.1rem;">0 Layers</span>
+                </div>
+
+                <div class="sandwich-stack-area" id="sandwich-stack">
+                    <!-- SVG Plate Base -->
+                    <svg class="serving-plate-svg" viewBox="0 0 320 60">
+                        <ellipse cx="160" cy="34" rx="150" ry="22" fill="#CBD5E1"/>
+                        <ellipse cx="160" cy="28" rx="145" ry="20" fill="#F8FAFC" stroke="#94A3B8" stroke-width="4"/>
+                        <ellipse cx="160" cy="28" rx="105" ry="12" fill="#F1F5F9" stroke="#E2E8F0" stroke-width="2"/>
+                    </svg>
+                </div>
+
+                <div id="freeplay-finish-wrap" class="hidden" style="width:100%; text-align:center; margin-top:10px;">
+                    <button class="action-btn" style="width:100%; margin:0;" onclick="completeSandwich()">
+                        🔔 Ring Bell &amp; Serve Sandwich!
+                    </button>
+                </div>
+            </section>
+
+            <!-- Right: Ingredient Pantry Buttons -->
+            <section class="pantry-panel" aria-label="Ingredients Pantry">
+                <div class="plate-header">
+                    <span>🧺 Kitchen Pantry (Tap or Drag)</span>
+                </div>
+                <div class="pantry-grid" id="pantry-grid">
+                    <!-- Populated by JS -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Phase 3: Celebration Modal -->
+    <div id="celebration-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="win-modal-title">
+        <div class="modal-box">
+            <div style="font-size:4.5rem; margin-bottom:10px;">🥪🎉⭐</div>
+            <h2 id="win-modal-title" style="font-size:2.5rem; margin:0 0 10px 0; color:#16A34A;">Delicious Sandwich!</h2>
+            <p id="win-modal-desc" style="font-size:1.3rem; font-weight:600; margin:0 0 24px 0;">You followed every step of the recipe!</p>
+            <div>
+                <button class="action-btn" onclick="nextRecipe()">Next Recipe ➔</button>
+                <button class="action-btn secondary" onclick="resetCurrentRecipe()">Make Again 🔄</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Rich Custom SVG Illustrations for Every Ingredient ---
+        const INGREDIENTS = {
+            bread_bottom: {
+                id: 'bread_bottom',
+                name: 'Bottom Bread',
+                emoji: '🍞',
+                spoken: 'Bottom slice of bread',
+                svg: `<svg viewBox="0 0 220 65" width="100%" height="100%">
+                        <path d="M 20 25 Q 110 8 200 25 L 195 50 Q 110 62 25 50 Z" fill="#D97706" stroke="#92400E" stroke-width="4"/>
+                        <ellipse cx="110" cy="24" rx="90" ry="16" fill="#FDE68A" stroke="#D97706" stroke-width="4"/>
+                      </svg>`
+            },
+            butter: {
+                id: 'butter',
+                name: 'Butter Spread',
+                emoji: '🧈',
+                spoken: 'Smooth butter spread',
+                svg: `<svg viewBox="0 0 220 65" width="100%" height="100%">
+                        <ellipse cx="110" cy="34" rx="76" ry="13" fill="#FEF08A" stroke="#EAB308" stroke-width="3.5"/>
+                        <path d="M 65 33 Q 110 42 155 31" fill="none" stroke="#CA8A04" stroke-width="3" stroke-linecap="round"/>
+                      </svg>`
+            },
+            cheese: {
+                id: 'cheese',
+                name: 'Cheddar Cheese',
+                emoji: '🧀',
+                spoken: 'Slice of cheddar cheese',
+                svg: `<svg viewBox="0 0 220 65" width="100%" height="100%">
+                        <polygon points="15,32 115,14 205,30 105,54" fill="#FACC15" stroke="#CA8A04" stroke-width="4" stroke-linejoin="round"/>
+                        <ellipse cx="85" cy="32" rx="10" ry="5" fill="#EAB308"/>
+                        <ellipse cx="135" cy="28" rx="8" ry="4" fill="#EAB308"/>
+                        <ellipse cx="112" cy="40" rx="7" ry="4" fill="#EAB308"/>
+                      </svg>`
+            },
+            tomato: {
+                id: 'tomato',
+                name: 'Sliced Tomato',
+                emoji: '🍅',
+                spoken: 'Fresh red tomato slices',
+                svg: `<svg viewBox="0 0 220 65" width="100%" height="100%">
+                        <ellipse cx="80" cy="35" rx="44" ry="14" fill="#EF4444" stroke="#991B1B" stroke-width="4"/>
+                        <ellipse cx="80" cy="35" rx="30" ry="8" fill="#FCA5A5"/>
+                        <ellipse cx="142" cy="33" rx="44" ry="14" fill="#EF4444" stroke="#991B1B" stroke-width="4"/>
+                        <ellipse cx="142" cy="33" rx="30" ry="8" fill="#FCA5A5"/>
+                      </svg>`
+            },
+            lettuce: {
+                id: 'lettuce',
+                name: 'Crisp Lettuce',
+                emoji: '🥬',
+                spoken: 'Crisp green lettuce',
+                svg: `<svg viewBox="0 0 220 65" width="100%" height="100%">
+                        <path d="M 18 34 Q 40 16 65 30 Q 90 14 115 30 Q 140 14 165 30 Q 190 16 204 34 Q 185 54 155 44 Q 110 58 65 44 Q 35 54 18 34 Z" fill="#22C55E" stroke="#15803D" stroke-width="4" stroke-linejoin="round"/>
+                      </svg>`
+            },
+            jam: {
+                id: 'jam',
+                name: 'Strawberry Jam',
+                emoji: '🍓',
+                spoken: 'Sweet strawberry jam',
+                svg: `<svg viewBox="0 0 220 65" width="100%" height="100%">
+                        <path d="M 35 32 Q 70 20 110 26 Q 155 18 185 32 Q 170 48 110 46 Q 50 48 35 32 Z" fill="#E11D48" stroke="#881337" stroke-width="4"/>
+                        <circle cx="85" cy="32" r="3" fill="#FECDD3"/>
+                        <circle cx="125" cy="35" r="3" fill="#FECDD3"/>
+                        <circle cx="145" cy="29" r="2.5" fill="#FECDD3"/>
+                      </svg>`
+            },
+            bread_top: {
+                id: 'bread_top',
+                name: 'Top Bread',
+                emoji: '🍞',
+                spoken: 'Top slice of bread to finish',
+                svg: `<svg viewBox="0 0 220 65" width="100%" height="100%">
+                        <path d="M 18 28 Q 110 6 202 28 L 196 46 Q 110 58 24 46 Z" fill="#B45309" stroke="#78350F" stroke-width="4"/>
+                        <ellipse cx="110" cy="24" rx="90" ry="16" fill="#FDE68A" stroke="#D97706" stroke-width="4"/>
+                      </svg>`
+            }
+        };
+
+        const RECIPES = {
+            classic: {
+                key: 'classic',
+                title: 'Cheese & Lettuce Sandwich',
+                steps: ['bread_bottom', 'cheese', 'lettuce', 'bread_top'],
+                pantry: ['bread_bottom', 'cheese', 'lettuce', 'bread_top']
+            },
+            club: {
+                key: 'club',
+                title: 'Healthy Garden Club Sandwich',
+                steps: ['bread_bottom', 'butter', 'cheese', 'tomato', 'lettuce', 'bread_top'],
+                pantry: ['bread_bottom', 'butter', 'cheese', 'tomato', 'lettuce', 'bread_top']
+            },
+            jam: {
+                key: 'jam',
+                title: 'Sweet Berry Jam Toastie',
+                steps: ['bread_bottom', 'butter', 'jam', 'bread_top'],
+                pantry: ['bread_bottom', 'butter', 'jam', 'bread_top']
+            },
+            free: {
+                key: 'free',
+                title: 'Creative Chef Free-Play Sandwich',
+                steps: [],
+                pantry: ['bread_bottom', 'butter', 'cheese', 'tomato', 'lettuce', 'jam', 'bread_top']
+            }
+        };
+
+        // --- State & LocalStorage ---
+        let state = {
+            recipeKey: 'classic',
+            placedLayers: [],
+            voiceOn: true,
+            highContrast: false,
+            completedCount: 0
+        };
+
+        function loadSavedProgress() {
+            try {
+                const savedCount = localStorage.getItem('ab_sandwich_count');
+                if (savedCount !== null) state.completedCount = parseInt(savedCount, 10) || 0;
+
+                const savedContrast = localStorage.getItem('ab_sandwich_contrast');
+                if (savedContrast === 'true') {
+                    state.highContrast = true;
+                    document.body.classList.add('high-contrast');
+                }
+            } catch (e) {}
+            document.getElementById('sandwiches-count').textContent = state.completedCount;
+        }
+
+        function incrementCompletedCount() {
+            state.completedCount += 1;
+            document.getElementById('sandwiches-count').textContent = state.completedCount;
+            try {
+                localStorage.setItem('ab_sandwich_count', String(state.completedCount));
+            } catch (e) {}
+        }
+
+        function goHome(e) {
+            if (window.location.hostname === 'games.ableandbeyond.support' || window.location.protocol === 'file:') {
+                e.preventDefault();
+                if (window.location.pathname.includes('/sandwich-maker/')) {
+                    window.location.href = '../index.html';
+                } else {
+                    window.location.href = 'index.html';
+                }
+            }
+        }
+
+        // --- Web Audio API & Speech ---
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        const audioCtx = AudioCtx ? new AudioCtx() : null;
+
+        function playSound(type) {
+            if (!audioCtx) return;
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const now = audioCtx.currentTime;
+
+            if (type === 'pop') {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(360, now);
+                osc.frequency.exponentialRampToValueAtTime(580, now + 0.09);
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.1);
+            } else if (type === 'nudge') {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(240, now);
+                osc.frequency.linearRampToValueAtTime(190, now + 0.16);
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.18);
+            } else if (type === 'bell') {
+                [523.25, 659.25, 783.99, 1046.5].forEach((freq, idx) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+                    gain.gain.setValueAtTime(0.25, now + idx * 0.08);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.3);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now + idx * 0.08);
+                    osc.stop(now + idx * 0.08 + 0.3);
+                });
+            }
+        }
+
+        function speakText(text) {
+            if (!state.voiceOn) return;
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(text);
+                u.rate = 0.92;
+                u.pitch = 1.05;
+                window.speechSynthesis.speak(u);
+            }
+        }
+
+        function setPrompt(title, sub, speak = true) {
+            document.getElementById('prompt-title').textContent = title;
+            if (sub) document.getElementById('prompt-sub').textContent = sub;
+            if (speak) speakText(title);
+        }
+
+        function speakCurrentPrompt() {
+            playSound('pop');
+            speakText(document.getElementById('prompt-title').textContent);
+        }
+
+        function toggleVoice() {
+            state.voiceOn = !state.voiceOn;
+            document.getElementById('voice-icon').textContent = state.voiceOn ? '🔊' : '🔇';
+            document.getElementById('voice-label').textContent = state.voiceOn ? 'Voice ON' : 'Voice OFF';
+            if (state.voiceOn) speakText('Voice audio on');
+            else if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+        }
+
+        function toggleContrast() {
+            state.highContrast = !state.highContrast;
+            document.body.classList.toggle('high-contrast', state.highContrast);
+            try {
+                localStorage.setItem('ab_sandwich_contrast', String(state.highContrast));
+            } catch (e) {}
+            playSound('pop');
+        }
+
+        // --- Recipe & Gameplay Logic ---
+        function selectRecipe(key) {
+            state.recipeKey = key;
+            state.placedLayers = [];
+            document.getElementById('celebration-modal').classList.add('hidden');
+
+            ['classic', 'club', 'jam', 'free'].forEach(k => {
+                document.getElementById(`tab-${k}`).classList.toggle('active', k === key);
+            });
+
+            const recipe = RECIPES[key];
+            if (key === 'free') {
+                setPrompt(
+                    'Creative Chef Mode! Add any ingredients you like onto the plate!',
+                    'When your sandwich is ready, tap the green Ring Bell button to serve!'
+                );
+            } else {
+                const firstIng = INGREDIENTS[recipe.steps[0]];
+                setPrompt(
+                    `${recipe.title}! Now: Step 1 — Add ${firstIng.name}.`,
+                    'Tap the highlighted green card in the pantry or drag it onto the plate!'
+                );
+            }
+
+            renderAll();
+        }
+
+        function resetCurrentRecipe() {
+            playSound('pop');
+            selectRecipe(state.recipeKey);
+        }
+
+        function nextRecipe() {
+            const order = ['classic', 'club', 'jam', 'free'];
+            const nextIdx = (order.indexOf(state.recipeKey) + 1) % order.length;
+            selectRecipe(order[nextIdx]);
+        }
+
+        function renderAll() {
+            renderRecipeStrip();
+            renderPlateStack();
+            renderPantry();
+        }
+
+        function renderRecipeStrip() {
+            const strip = document.getElementById('recipe-strip');
+            const recipe = RECIPES[state.recipeKey];
+
+            if (state.recipeKey === 'free') {
+                strip.innerHTML = `
+                    <div class="recipe-step-pill step-now" onclick="speakText('Creative Chef Mode: Choose any ingredients in any order!')">
+                        <span style="font-size:2rem;">👩‍🍳</span>
+                        <div>
+                            <div class="step-badge-tag">FREE-PLAY MODE</div>
+                            <div>Add any layers you want, then tap Ring Bell to Serve!</div>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            const currentStepIdx = state.placedLayers.length;
+            strip.innerHTML = recipe.steps.map((ingId, idx) => {
+                const ing = INGREDIENTS[ingId];
+                const isDone = idx < currentStepIdx;
+                const isNow = idx === currentStepIdx;
+                const isNext = idx === currentStepIdx + 1;
+
+                let badgeLabel = `Step ${idx + 1}`;
+                if (isDone) badgeLabel = '✓ Done';
+                else if (isNow) badgeLabel = '👉 NOW';
+                else if (isNext) badgeLabel = '⏭️ NEXT';
+
+                return `
+                    <div class="recipe-step-pill ${isDone ? 'step-done' : ''} ${isNow ? 'step-now' : ''}"
+                         tabindex="0"
+                         role="button"
+                         onclick="speakText('Step ${idx + 1}: ${ing.name}')"
+                         aria-label="Step ${idx + 1}: ${ing.name}. ${isDone ? 'Completed' : (isNow ? 'Current step' : 'Upcoming')}">
+                        <span style="font-size:2rem;">${isDone ? '✅' : ing.emoji}</span>
+                        <div>
+                            <div class="step-badge-tag">${badgeLabel}</div>
+                            <div>${ing.name}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderPlateStack() {
+            const stack = document.getElementById('sandwich-stack');
+            const plateSvg = `
+                <svg class="serving-plate-svg" viewBox="0 0 320 60">
+                    <ellipse cx="160" cy="34" rx="150" ry="22" fill="#CBD5E1"/>
+                    <ellipse cx="160" cy="28" rx="145" ry="20" fill="#F8FAFC" stroke="#94A3B8" stroke-width="4"/>
+                    <ellipse cx="160" cy="28" rx="105" ry="12" fill="#F1F5F9" stroke="#E2E8F0" stroke-width="2"/>
+                </svg>
+            `;
+
+            const layersHtml = state.placedLayers.map((ingId, idx) => {
+                const ing = INGREDIENTS[ingId];
+                return `
+                    <div class="stacked-layer" style="z-index:${idx + 2};" onclick="speakText('${ing.name}')">
+                        ${ing.svg}
+                    </div>
+                `;
+            }).join('');
+
+            stack.innerHTML = plateSvg + layersHtml;
+            document.getElementById('layer-counter').textContent = `${state.placedLayers.length} ${state.placedLayers.length === 1 ? 'Layer' : 'Layers'}`;
+
+            const freeFinishWrap = document.getElementById('freeplay-finish-wrap');
+            if (state.recipeKey === 'free' && state.placedLayers.length >= 2) {
+                freeFinishWrap.classList.remove('hidden');
+            } else {
+                freeFinishWrap.classList.add('hidden');
+            }
+        }
+
+        function renderPantry() {
+            const grid = document.getElementById('pantry-grid');
+            const recipe = RECIPES[state.recipeKey];
+            const currentStepIdx = state.placedLayers.length;
+            const expectedIngId = state.recipeKey === 'free' ? null : recipe.steps[currentStepIdx];
+
+            grid.innerHTML = recipe.pantry.map(ingId => {
+                const ing = INGREDIENTS[ingId];
+                const isTarget = expectedIngId === ingId;
+                return `
+                    <button class="ingredient-btn ${isTarget ? 'target-highlight' : ''}"
+                            draggable="true"
+                            ondragstart="handleIngDragStart(event, '${ing.id}')"
+                            onclick="handleIngredientSelect('${ing.id}')"
+                            aria-label="Add ${ing.name}">
+                        <div class="ingredient-svg-icon">${ing.svg}</div>
+                        <div>
+                            <div class="ingredient-name">${ing.emoji} ${ing.name}</div>
+                            <div class="ingredient-hint">${isTarget ? '👉 Tap to Add Now!' : 'Tap or Drag'}</div>
+                        </div>
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function handleIngDragStart(e, ingId) {
+            e.dataTransfer.setData('text/plain', ingId);
+        }
+
+        function handlePlateDragOver(e) {
+            e.preventDefault();
+            document.getElementById('plate-dropzone').classList.add('drag-over');
+        }
+
+        function handlePlateDragLeave() {
+            document.getElementById('plate-dropzone').classList.remove('drag-over');
+        }
+
+        function handlePlateDrop(e) {
+            e.preventDefault();
+            document.getElementById('plate-dropzone').classList.remove('drag-over');
+            const ingId = e.dataTransfer.getData('text/plain');
+            if (ingId) handleIngredientSelect(ingId);
+        }
+
+        function handleIngredientSelect(ingId) {
+            const ing = INGREDIENTS[ingId];
+            if (!ing) return;
+
+            if (state.recipeKey === 'free') {
+                if (state.placedLayers.length >= 8) {
+                    setPrompt('Your sandwich is super tall! Tap Ring Bell to serve!', '');
+                    return;
+                }
+                state.placedLayers.push(ingId);
+                playSound('pop');
+                setPrompt(`Added ${ing.name}!`, 'Add more layers or tap Ring Bell to serve!');
+                renderAll();
+                if (ingId === 'bread_top' && state.placedLayers.length >= 2) {
+                    setTimeout(completeSandwich, 500);
+                }
+                return;
+            }
+
+            const recipe = RECIPES[state.recipeKey];
+            const currentStepIdx = state.placedLayers.length;
+            const expectedIngId = recipe.steps[currentStepIdx];
+            if (!expectedIngId) return;
+
+            if (ingId === expectedIngId) {
+                state.placedLayers.push(ingId);
+                playSound('pop');
+                renderAll();
+
+                if (state.placedLayers.length === recipe.steps.length) {
+                    setTimeout(completeSandwich, 450);
+                } else {
+                    const nextIng = INGREDIENTS[recipe.steps[state.placedLayers.length]];
+                    const afterNextIng = recipe.steps[state.placedLayers.length + 1]
+                        ? INGREDIENTS[recipe.steps[state.placedLayers.length + 1]].name
+                        : 'Serve!';
+                    setPrompt(
+                        `Great job adding ${ing.name}! Now Step ${state.placedLayers.length + 1}: Add ${nextIng.name}.`,
+                        `Now: ${nextIng.name} ➔ Next: ${afterNextIng}`
+                    );
+                }
+            } else {
+                const neededIng = INGREDIENTS[expectedIngId];
+                playSound('nudge');
+                setPrompt(
+                    `That's ${ing.name}! First, let's add Step ${currentStepIdx + 1}: ${neededIng.name}.`,
+                    `Look for the highlighted green ${neededIng.name} button!`
+                );
+            }
+        }
+
+        function completeSandwich() {
+            incrementCompletedCount();
+            playSound('bell');
+            if (typeof confetti === 'function') {
+                confetti({ particleCount: 180, spread: 85, origin: { y: 0.6 } });
+            }
+            const recipe = RECIPES[state.recipeKey];
+            const praise = `Order up! Fantastic job making the ${recipe.title}!`;
+            setPrompt(praise, 'You earned a sandwich star!');
+            document.getElementById('win-modal-title').textContent = 'Order Up! Delicious! 🥪';
+            document.getElementById('win-modal-desc').textContent = praise;
+            document.getElementById('celebration-modal').classList.remove('hidden');
+        }
+
+        // --- Assistive Keyboard & Switch Arrow Navigation ---
+        window.addEventListener('keydown', (e) => {
+            if (!['ArrowRight', 'ArrowLeft', 'ArrowDown', 'ArrowUp'].includes(e.key)) return;
+            const focusables = Array.from(document.querySelectorAll(
+                'a.back-hub-btn, button:not(:disabled), [tabindex="0"]'
+            )).filter(el => el.offsetParent !== null);
+
+            if (!focusables.length) return;
+            const idx = focusables.indexOf(document.activeElement);
+            e.preventDefault();
+
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                const next = idx >= 0 ? (idx + 1) % focusables.length : 0;
+                focusables[next].focus();
+            } else {
+                const prev = idx > 0 ? idx - 1 : focusables.length - 1;
+                focusables[prev].focus();
+            }
+        });
+
+        // Boot Studio
+        loadSavedProgress();
+        selectRecipe('classic');
+    </script>
+</body>
+</html>

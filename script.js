@@ -297,7 +297,8 @@ function navTo(page) {
     if (page === 'Socks') {
         initSocks(state.socks.difficulty);
     } else if (page === 'Sandwich') {
-        state.sandwich.step = 0;
+        window.location.href = 'sandwich-maker.html';
+        return;
     } else if (page === 'Bus') {
         state.bus.stage = 1;
         state.bus.target = null;
