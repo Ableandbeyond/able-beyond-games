@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Build a Body - Able & Beyond</title>
-    <link rel="stylesheet" href="style.css?v=2">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+    <title>Build a Body Studio | Able & Beyond</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=5">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
@@ -13,53 +15,53 @@
         <!-- Top Navigation & Customizer Bar -->
         <header class="top-bar">
             <div class="top-left">
-                <button class="nav-back-btn" onclick="window.location.href='../index.html'">
-                    <span>⬅️</span> <span>Hub</span>
-                </button>
+                <a class="nav-back-btn" href="https://games.ableandbeyond.support/index.html">
+                    ⬅️ Hub
+                </a>
                 <div class="brand-title">
                     <span class="brand-icon">🧍</span>
-                    <span>Build a Body Studio</span>
+                    <span>Build a Body</span>
                 </div>
             </div>
 
             <div class="level-tabs" role="tablist" aria-label="Game Modes">
                 <button id="tab-lvl-1" class="lvl-tab active" onclick="startGame(1)">
-                    1. Easy (6 Parts)
+                    🧩 1. Easy (6 Parts)
                 </button>
                 <button id="tab-lvl-2" class="lvl-tab" onclick="startGame(2)">
-                    2. Full (10 Parts)
+                    🧍 2. Full (10 Parts)
                 </button>
                 <button id="tab-lvl-3" class="lvl-tab quiz-tab" onclick="startGame(3)">
-                    3. Body Quiz 🧠
+                    🧠 3. Body Quiz
                 </button>
             </div>
 
             <div class="customizer-bar">
                 <div class="swatch-group" aria-label="Skin Tone">
                     <span class="swatch-label">Skin:</span>
-                    <button class="swatch-btn active" style="background:#FFDCA8;" onclick="setSkinTone(0)" title="Warm Light"></button>
-                    <button class="swatch-btn" style="background:#F3C69F;" onclick="setSkinTone(1)" title="Peach Tan"></button>
-                    <button class="swatch-btn" style="background:#C68642;" onclick="setSkinTone(2)" title="Rich Bronze"></button>
+                    <button class="swatch-btn active" style="background:#FFE0BD;" onclick="setSkinTone(0)" title="Warm Light"></button>
+                    <button class="swatch-btn" style="background:#F1C27D;" onclick="setSkinTone(1)" title="Golden Peach"></button>
+                    <button class="swatch-btn" style="background:#C68642;" onclick="setSkinTone(2)" title="Warm Bronze"></button>
                     <button class="swatch-btn" style="background:#7B4B2A;" onclick="setSkinTone(3)" title="Deep Brown"></button>
                 </div>
                 <div class="swatch-group" aria-label="Outfit Colour">
-                    <span class="swatch-label">Shirt:</span>
-                    <button class="outfit-btn active" style="background:#10B981;" onclick="setOutfitTheme(0)" title="Emerald"></button>
+                    <span class="swatch-label">Outfit:</span>
+                    <button class="outfit-btn active" style="background:#10B981;" onclick="setOutfitTheme(0)" title="Emerald Green"></button>
                     <button class="outfit-btn" style="background:#3B82F6;" onclick="setOutfitTheme(1)" title="Ocean Blue"></button>
-                    <button class="outfit-btn" style="background:#F43F5E;" onclick="setOutfitTheme(2)" title="Coral Red"></button>
-                    <button class="outfit-btn" style="background:#8B5CF6;" onclick="setOutfitTheme(3)" title="Royal Purple"></button>
+                    <button class="outfit-btn" style="background:#F43F5E;" onclick="setOutfitTheme(2)" title="Berry Red"></button>
+                    <button class="outfit-btn" style="background:#8B5CF6;" onclick="setOutfitTheme(3)" title="Sunny Purple"></button>
                 </div>
             </div>
         </header>
 
-        <!-- Prompt & Progress Banner -->
-        <section class="prompt-banner">
-            <button class="speak-btn" onclick="repeatPrompt()" title="Read Aloud">
+        <!-- Friendly Prompt & Progress Banner -->
+        <section class="prompt-banner" onclick="repeatPrompt()">
+            <button class="speak-btn" title="Read Aloud">
                 🔊
             </button>
             <div class="prompt-content">
                 <div id="prompt-title" class="prompt-title">Tap or drag a body part to build your friend!</div>
-                <div id="prompt-sub" class="prompt-sub">Tip: Tap a card once to highlight where it goes, then tap the glowing outline!</div>
+                <div id="prompt-sub" class="prompt-sub">👉 Tap a card once to highlight where it goes, then tap the glowing outline!</div>
             </div>
             <div class="progress-pill">
                 <span>⭐</span>
@@ -104,6 +106,6 @@
         </div>
     </div>
 
-    <script src="app.js?v=2"></script>
+    <script src="app.js?v=5"></script>
 </body>
 </html>
