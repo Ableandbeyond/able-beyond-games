@@ -1,428 +1,1279 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Recycling Rover: Playground Ops</title>
-<style>
-  :root {
-    --bg-color: #121212;
-    --grid-bg: #2a2a2a;
-    --cell-bg: #3d3d3d;
-    --text-color: #ffffff;
-    --btn-forward: #4CAF50;
-    --btn-left: #2196F3;
-    --btn-right: #9C27B0;
-    --btn-collect: #FF9800;
-    --btn-execute: #E91E63;
-    --btn-reset: #F44336;
-    --grid-size: 5;
-    --cell-size: 15vmin;
-  }
-  
-  * { box-sizing: border-box; touch-action: manipulation; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-  
-  body {
-    margin: 0; padding: 0; background-color: var(--bg-color); color: var(--text-color);
-    display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-    min-height: 100vh; overflow-x: hidden;
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Recycling Rover ♻️ | Able & Beyond</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --bg-main: #f0fdf4;
+            --text-dark: #0f172a;
+            --focus-ring: #facc15;
+            --up-color: #16a34a;
+            --up-shadow: #14532d;
+            --down-color: #ea580c;
+            --down-shadow: #9a3412;
+            --left-color: #2563eb;
+            --left-shadow: #1e3a8a;
+            --right-color: #9333ea;
+            --right-shadow: #581c87;
+        }
 
-  header {
-    text-align: center; padding: 10px; width: 100%; background: #1a1a1a; margin-bottom: 10px;
-  }
-  header h1 { margin: 0; font-size: 24px; color: #FFEB3B; }
-  header p { margin: 5px 0 0; font-size: 18px; }
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
+        }
 
-  main {
-    display: flex; flex-direction: column; width: 100%; max-width: 900px;
-    align-items: center; gap: 20px; flex: 1; padding: 10px;
-  }
+        body {
+            font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+            background: var(--bg-main);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
 
-  @media (min-width: 768px) {
-    main { flex-direction: row; align-items: flex-start; justify-content: center; }
-    :root { --cell-size: 80px; }
-  }
+        button:focus-visible, .focusable:focus-visible {
+            outline: 6px solid var(--focus-ring) !important;
+            outline-offset: 4px !important;
+            box-shadow: 0 0 0 10px rgba(250, 204, 21, 0.45) !important;
+            z-index: 30;
+        }
 
-  #grid-container {
-    background-color: var(--grid-bg);
-    padding: 10px;
-    border-radius: 12px;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.5);
-    position: relative;
-  }
+        /* ================= TOP BAR ================= */
+        .top-bar {
+            background: #ffffff;
+            border-bottom: 4px solid #86efac;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
 
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(var(--grid-size), var(--cell-size));
-    grid-template-rows: repeat(var(--grid-size), var(--cell-size));
-    gap: 5px;
-  }
+        .btn-home {
+            background: #0f172a;
+            color: #ffffff;
+            border: 3px solid #0f172a;
+            border-radius: 18px;
+            padding: 10px 18px;
+            font-size: 1.15rem;
+            font-weight: 900;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #334155;
+        }
+        .btn-home:active { transform: translateY(3px); box-shadow: 0 1px 0 #334155; }
 
-  .cell {
-    background-color: var(--cell-bg);
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: calc(var(--cell-size) * 0.5);
-    position: relative;
-  }
+        .game-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: clamp(1.35rem, 3vw, 2rem);
+            font-weight: 900;
+            color: #14532d;
+        }
 
-  #rover {
-    position: absolute;
-    width: var(--cell-size);
-    height: var(--cell-size);
-    display: flex; align-items: center; justify-content: center;
-    font-size: calc(var(--cell-size) * 0.6);
-    transition: transform 0.4s ease-in-out, top 0.4s ease-in-out, left 0.4s ease-in-out;
-    z-index: 10;
-  }
+        .top-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
 
-  .puddle { background-color: #03A9F4; border-radius: 50%; width: 80%; height: 80%; }
-  
-  .controls-panel {
-    display: flex; flex-direction: column; gap: 15px; width: 100%; max-width: 400px;
-  }
+        .ctrl-btn {
+            background: #f1f5f9;
+            color: #0f172a;
+            border: 3px solid #94a3b8;
+            border-radius: 16px;
+            padding: 9px 14px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 0 #94a3b8;
+            transition: all 0.15s;
+        }
+        .ctrl-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #94a3b8; }
+        .ctrl-btn.active {
+            background: #dcfce7;
+            border-color: #16a34a;
+            color: #14532d;
+            box-shadow: 0 4px 0 #16a34a;
+        }
 
-  .command-queue {
-    background: #222; min-height: 70px; border-radius: 8px; padding: 10px;
-    display: flex; gap: 10px; align-items: center; overflow-x: auto;
-    border: 3px dashed #555;
-  }
+        .star-pill {
+            background: #fef9c3;
+            border: 3px solid #eab308;
+            color: #854d0e;
+            border-radius: 999px;
+            padding: 8px 16px;
+            font-size: 1.2rem;
+            font-weight: 900;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
 
-  .queue-item {
-    font-size: 24px; background: #444; padding: 10px; border-radius: 8px;
-    min-width: 50px; text-align: center;
-  }
+        /* ================= 2 VISUAL MODE TABS ================= */
+        .mode-tabs {
+            max-width: 1120px;
+            width: 100%;
+            margin: 12px auto 0;
+            padding: 0 14px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
 
-  .buttons-grid {
-    display: none; /* Removing old grid */
-  }
+        .mode-tab {
+            background: #ffffff;
+            border: 4px solid #cbd5e1;
+            border-radius: 22px;
+            padding: 12px 16px;
+            font-family: inherit;
+            font-size: clamp(1.15rem, 2.5vw, 1.5rem);
+            font-weight: 900;
+            color: #334155;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            box-shadow: 0 5px 0 #cbd5e1;
+            transition: all 0.15s;
+        }
+        .mode-tab .tab-icon {
+            font-size: clamp(2rem, 4vw, 2.6rem);
+            line-height: 1;
+        }
+        .mode-tab.active {
+            background: #dcfce7;
+            border-color: #16a34a;
+            color: #14532d;
+            box-shadow: 0 5px 0 #16a34a;
+            transform: translateY(-2px);
+        }
 
-  .d-pad {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 10px;
-    width: 250px;
-    margin: 0 auto 20px;
-  }
+        /* ================= MAIN STAGE ================= */
+        .stage-wrap {
+            flex: 1;
+            max-width: 1120px;
+            width: 100%;
+            margin: 12px auto 20px;
+            padding: 0 14px;
+            display: flex;
+            flex-direction: column;
+        }
 
-  .pad-empty {
-    visibility: hidden;
-  }
+        .stage-card {
+            background: #ffffff;
+            border: 5px solid #86efac;
+            border-radius: 32px;
+            padding: 20px;
+            box-shadow: 0 12px 30px rgba(20, 83, 45, 0.08);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 18px;
+        }
 
-  button {
-    border: none; border-radius: 12px; padding: 15px; font-size: 20px; font-weight: bold;
-    color: white; cursor: pointer; transition: transform 0.1s, filter 0.1s;
-    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
-    box-shadow: 0 6px 0px rgba(0,0,0,0.3);
-    aspect-ratio: 1 / 1;
-  }
-  
-  button:active { transform: translateY(6px); box-shadow: 0 0px 0px; }
-  
-  .btn-forward { background-color: var(--btn-forward); box-shadow: 0 6px 0px #2e7031; }
-  .btn-left { background-color: var(--btn-left); box-shadow: 0 6px 0px #12548a; }
-  .btn-right { background-color: var(--btn-right); box-shadow: 0 6px 0px #5c1669; }
-  .btn-down { background-color: #E91E63; box-shadow: 0 6px 0px #881139; }
-  .btn-collect { background-color: var(--btn-collect); box-shadow: 0 6px 0px #9e5e00; }
-  
-  .action-buttons {
-    display: flex; gap: 15px; margin-top: 5px;
-  }
-  .action-buttons button {
-    aspect-ratio: auto;
-  }
-  .btn-execute { background-color: var(--btn-execute); flex: 2; font-size: 24px; padding: 20px; box-shadow: 0 6px 0px #881139;}
-  .btn-reset { background-color: var(--btn-reset); flex: 1; box-shadow: 0 6px 0px #962820;}
+        /* ================= MODE 1: DRIVE ROVER LAYOUT ================= */
+        .drive-layout {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 24px;
+            align-items: center;
+            margin: auto 0;
+        }
 
-  #win-screen {
-    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-    background: rgba(0,0,0,0.9); z-index: 100;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    color: #FFEB3B; display: none;
-  }
-  
-  #win-screen h1 { font-size: 48px; text-shadow: 0 0 20px #FFEB3B; text-align: center; margin: 20px; }
-  #win-screen button { background: #4CAF50; font-size: 32px; padding: 20px 40px; margin-top: 30px; box-shadow: 0 6px 0px #2e7031; aspect-ratio: auto;}
+        .park-board-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
 
-  /* Particles */
-  .particle {
-    position: absolute;
-    width: 10px; height: 10px;
-    background: #FFEB3B;
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 50;
-  }
-</style>
+        .status-strip {
+            background: #f0fdf4;
+            border: 4px solid #86efac;
+            border-radius: 22px;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 500px;
+            font-size: 1.35rem;
+            font-weight: 900;
+            color: #14532d;
+        }
+
+        .park-grid {
+            background: #86efac;
+            border: 6px solid #16a34a;
+            border-radius: 28px;
+            padding: 10px;
+            display: grid;
+            gap: 8px;
+            box-shadow: 0 10px 0 #15803d;
+            width: 100%;
+            max-width: 480px;
+            aspect-ratio: 1 / 1;
+        }
+        .park-grid.size-3 {
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+        }
+        .park-grid.size-5 {
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: repeat(5, 1fr);
+        }
+
+        .park-cell {
+            background: #dcfce7;
+            border: 3px solid #4ade80;
+            border-radius: 18px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.14s, background-color 0.14s, border-color 0.14s;
+            overflow: hidden;
+        }
+        .park-cell:hover {
+            border-color: #16a34a;
+        }
+        .park-cell.next-step-cell {
+            background: #fef9c3;
+            border: 4px dashed #eab308;
+            animation: softPulse 1.3s infinite ease-in-out;
+        }
+        .park-cell.puddle-cell {
+            background: #bae6fd;
+            border-color: #0284c7;
+        }
+        .park-cell.station-cell {
+            background: #fef3c7;
+            border: 4px solid #f59e0b;
+        }
+
+        .cell-item {
+            font-size: clamp(2.1rem, 5vw, 3.2rem);
+            line-height: 1;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
+            z-index: 2;
+        }
+        .park-grid.size-3 .cell-item {
+            font-size: clamp(2.8rem, 7vw, 4.2rem);
+        }
+
+        .step-hint-arrow {
+            font-size: 1.8rem;
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        /* Custom Upright Rover inside Cell */
+        .rover-sprite {
+            width: 90%;
+            height: 90%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 5;
+            animation: popIn 0.22s ease-out;
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.75); }
+            100% { transform: scale(1); }
+        }
+        @keyframes softPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.04); }
+        }
+        @keyframes bumpShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+        .bump-shake { animation: bumpShake 0.35s ease-in-out; }
+
+        /* ================= GIANT COLOUR-CODED D-PAD ================= */
+        .controls-box {
+            background: #f8fafc;
+            border: 4px solid #cbd5e1;
+            border-radius: 30px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .next-hint-pill {
+            background: #fef9c3;
+            border: 4px solid #eab308;
+            color: #713f12;
+            border-radius: 20px;
+            padding: 10px 20px;
+            font-size: 1.4rem;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .dpad-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            width: 100%;
+            max-width: 340px;
+        }
+
+        .dpad-btn {
+            border-radius: 24px;
+            padding: 14px 8px;
+            min-height: 98px;
+            color: #ffffff;
+            font-family: inherit;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            border: 4px solid rgba(255,255,255,0.35);
+            transition: transform 0.12s, box-shadow 0.12s;
+            position: relative;
+        }
+        .dpad-btn .dir-arrow {
+            font-size: 2.3rem;
+            line-height: 1;
+        }
+        .dpad-btn .dir-word {
+            font-size: 1.25rem;
+            font-weight: 900;
+            letter-spacing: 0.03em;
+        }
+
+        .dpad-up {
+            background: var(--up-color);
+            box-shadow: 0 7px 0 var(--up-shadow);
+        }
+        .dpad-down {
+            background: var(--down-color);
+            box-shadow: 0 7px 0 var(--down-shadow);
+        }
+        .dpad-left {
+            background: var(--left-color);
+            box-shadow: 0 7px 0 var(--left-shadow);
+        }
+        .dpad-right {
+            background: var(--right-color);
+            box-shadow: 0 7px 0 var(--right-shadow);
+        }
+        .dpad-center {
+            background: #e2e8f0;
+            border: 4px solid #94a3b8;
+            color: #0f172a;
+            box-shadow: 0 6px 0 #64748b;
+            font-size: 2rem;
+        }
+
+        .dpad-btn:active {
+            transform: translateY(4px);
+        }
+
+        /* Glowing Golden Hint on Recommended Direction Button */
+        .dpad-btn.hint-glow {
+            outline: 6px solid #facc15 !important;
+            outline-offset: 3px !important;
+            box-shadow: 0 0 0 12px rgba(250, 204, 21, 0.5), 0 7px 0 #0f172a !important;
+            transform: scale(1.06);
+            z-index: 10;
+        }
+
+        /* ================= MODE 2: SORT BINS ================= */
+        .sort-tray {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            min-height: 150px;
+            padding: 16px;
+            background: #f8fafc;
+            border: 4px dashed #94a3b8;
+            border-radius: 26px;
+        }
+
+        .trash-token {
+            background: #ffffff;
+            border: 5px solid #475569;
+            border-radius: 24px;
+            padding: 12px 20px;
+            cursor: grab;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 6px 0 #475569;
+            transition: transform 0.15s, box-shadow 0.15s;
+            min-width: 135px;
+        }
+        .trash-token.selected {
+            border-color: #16a34a;
+            box-shadow: 0 0 0 7px rgba(34, 197, 94, 0.35), 0 6px 0 #15803d;
+            transform: translateY(-6px) scale(1.05);
+        }
+        .trash-token .trash-emoji {
+            font-size: 3.4rem;
+            line-height: 1;
+        }
+        .trash-token .trash-word {
+            font-size: 1.3rem;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        .bins-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .recycle-bin {
+            border-width: 6px;
+            border-style: solid;
+            border-radius: 28px;
+            padding: 20px 14px;
+            min-height: 220px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+        .recycle-bin.highlight-bin {
+            transform: translateY(-6px) scale(1.03);
+            box-shadow: 0 0 0 9px rgba(250, 204, 21, 0.65) !important;
+        }
+
+        .bin-paper {
+            background: #eff6ff;
+            border-color: #2563eb;
+            color: #1e3a8a;
+            box-shadow: 0 8px 0 #1d4ed8;
+        }
+        .bin-plastic {
+            background: #fefce8;
+            border-color: #eab308;
+            color: #713f12;
+            box-shadow: 0 8px 0 #ca8a04;
+        }
+        .bin-food {
+            background: #f0fdf4;
+            border-color: #16a34a;
+            color: #14532d;
+            box-shadow: 0 8px 0 #15803d;
+        }
+
+        .bin-icon {
+            font-size: 3.5rem;
+            line-height: 1;
+        }
+        .bin-title {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-top: 6px;
+        }
+        .bin-collected {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        .bin-mini-item {
+            font-size: 2.1rem;
+            background: rgba(255,255,255,0.9);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid currentColor;
+        }
+
+        /* Win Overlay */
+        .win-overlay {
+            background: #dcfce7;
+            border: 5px solid #16a34a;
+            border-radius: 26px;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .win-text {
+            font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+            font-weight: 900;
+            color: #14532d;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .btn-next-giant {
+            background: #16a34a;
+            color: #ffffff;
+            border: 4px solid #14532d;
+            border-radius: 20px;
+            padding: 12px 28px;
+            font-family: inherit;
+            font-size: 1.5rem;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #14532d;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        @media (max-width: 820px) {
+            .drive-layout { grid-template-columns: 1fr; }
+            .bins-grid { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 <body>
 
-<header>
-  <a href="../index.html" style="display: inline-block; background: #2196F3; color: white; padding: 15px 30px; border-radius: 12px; text-decoration: none; font-weight: bold; margin-bottom: 15px; font-size: 24px; box-shadow: 0 6px 0px #12548a; border: 2px solid white;">🏠 BACK TO MAIN MENU</a>
-  <h1>♻️ Recycling Rover</h1>
-  <p>Score: <span id="score">0</span> / <span id="total-items">3</span></p>
-</header>
+    <!-- TOP BAR -->
+    <header class="top-bar">
+        <a href="https://games.ableandbeyond.support/index.html" class="btn-home" aria-label="Back to Game Hub">
+            ⬅️ Hub
+        </a>
 
-<main>
-  <div id="grid-container">
-    <div class="grid" id="grid">
-      <!-- Cells generated by JS -->
-    </div>
-    <div id="rover">🤖</div>
-  </div>
+        <div class="game-title">
+            <span>♻️</span>
+            <span>Recycling Rover</span>
+        </div>
 
-  <div class="controls-panel">
-    <div class="d-pad">
-      <div class="pad-empty"></div>
-      <button class="btn-forward" onclick="executeAction('up')"><span style="font-size: 40px;">⬆️</span></button>
-      <div class="pad-empty"></div>
-      
-      <button class="btn-left" onclick="executeAction('left')"><span style="font-size: 40px;">⬅️</span></button>
-      <div class="pad-empty"></div>
-      <button class="btn-right" onclick="executeAction('right')"><span style="font-size: 40px;">➡️</span></button>
-      
-      <div class="pad-empty"></div>
-      <button class="btn-down" onclick="executeAction('down')"><span style="font-size: 40px;">⬇️</span></button>
-      <div class="pad-empty"></div>
-    </div>
-    <div class="action-buttons">
-      <button class="btn-reset" onclick="initGame()" style="flex: 1; padding: 20px; font-size: 24px;">🔄 RESET</button>
-    </div>
-  </div>
-</main>
+        <div class="top-controls">
+            <button type="button" id="btn-grid-size" class="ctrl-btn active" onclick="toggleGridSize()" title="Switch between 3x3 Easy Park or 5x5 Park">
+                🟩 3×3 Easy
+            </button>
+            <button type="button" id="btn-one-tap" class="ctrl-btn" onclick="toggleOneTap()" title="1-Tap & Spacebar Auto-Step Mode">
+                ⚡ 1-Tap: OFF
+            </button>
+            <button type="button" id="btn-voice" class="ctrl-btn active" onclick="toggleVoice()" title="Toggle 1-Word Voice">
+                🗣️ Voice
+            </button>
+            <button type="button" id="btn-sound" class="ctrl-btn active" onclick="toggleSound()" title="Toggle Musical Sounds">
+                🎵 Sound
+            </button>
+            <div class="star-pill" aria-label="Stars earned">
+                ⭐ <span id="star-count">0</span>
+            </div>
+        </div>
+    </header>
 
-<div id="win-screen">
-  <h1>🎉 ALL RECYCLING COLLECTED! 🎉</h1>
-  <button onclick="initGame()">🔄 PLAY AGAIN</button>
-</div>
+    <!-- 2 PICTURE MODE TABS -->
+    <nav class="mode-tabs" aria-label="Game Modes">
+        <button type="button" class="mode-tab active" id="tab-drive" onclick="setMode('drive')">
+            <span class="tab-icon">🤖</span>
+            <span>1. Drive Rover (Directions)</span>
+        </button>
+        <button type="button" class="mode-tab" id="tab-sort" onclick="setMode('sort')">
+            <span class="tab-icon">🗑️</span>
+            <span>2. Sort Bins</span>
+        </button>
+    </nav>
 
-<script>
-// Web Audio API for sounds
-const AudioContext = window.AudioContext || window.webkitAudioContext;
-let audioCtx;
+    <!-- MAIN STAGE -->
+    <main class="stage-wrap">
+        <div id="stage-content" class="stage-card">
+            <!-- Rendered by JS -->
+        </div>
+    </main>
 
-function initAudio() {
-  if (!audioCtx) audioCtx = new AudioContext();
-}
+    <script>
+        /* ================================================================
+           1. RECYCLING ITEMS & BINS DATA (1-WORD LABELS)
+           ================================================================ */
+        const RECYCLE_ITEMS = [
+            { id: 'box',    word: 'BOX',    emoji: '📦', bin: 'paper',   binWord: 'PAPER' },
+            { id: 'paper',  word: 'PAPER',  emoji: '📰', bin: 'paper',   binWord: 'PAPER' },
+            { id: 'book',   word: 'CARD',   emoji: '📄', bin: 'paper',   binWord: 'PAPER' },
+            { id: 'bottle', word: 'BOTTLE', emoji: '🧴', bin: 'plastic', binWord: 'PLASTIC' },
+            { id: 'can',    word: 'CAN',    emoji: '🥫', bin: 'plastic', binWord: 'PLASTIC' },
+            { id: 'cup',    word: 'CUP',    emoji: '🥤', bin: 'plastic', binWord: 'PLASTIC' },
+            { id: 'apple',  word: 'APPLE',  emoji: '🍎', bin: 'food',    binWord: 'FOOD' },
+            { id: 'banana', word: 'BANANA', emoji: '🍌', bin: 'food',    binWord: 'FOOD' },
+            { id: 'carrot', word: 'CARROT', emoji: '🥕', bin: 'food',    binWord: 'FOOD' }
+        ];
 
-function playTone(freq, type, duration, vol=0.5) {
-  if (!audioCtx) initAudio();
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
-  osc.type = type;
-  osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-  
-  gain.gain.setValueAtTime(vol, audioCtx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
-  
-  osc.connect(gain);
-  gain.connect(audioCtx.destination);
-  osc.start();
-  osc.stop(audioCtx.currentTime + duration);
-}
+        const BINS = [
+            { id: 'paper',   word: 'PAPER',   icon: '🟦', css: 'bin-paper' },
+            { id: 'plastic', word: 'PLASTIC', icon: '🟨', css: 'bin-plastic' },
+            { id: 'food',    word: 'FOOD',    icon: '🟩', css: 'bin-food' }
+        ];
 
-const sounds = {
-  click: () => playTone(600, 'sine', 0.1, 0.3),
-  move: () => playTone(400, 'triangle', 0.15, 0.4),
-  collect: () => {
-    playTone(800, 'sine', 0.1);
-    setTimeout(() => playTone(1200, 'sine', 0.2), 100);
-  },
-  bop: () => {
-    playTone(200, 'square', 0.1);
-    setTimeout(() => playTone(150, 'square', 0.2), 100);
-  },
-  error: () => playTone(150, 'sawtooth', 0.3),
-  win: () => {
-    [523, 659, 783, 1046].forEach((f, i) => {
-      setTimeout(() => playTone(f, 'sine', 0.3), i * 150);
-    });
-  }
-};
+        const DIR_INFO = {
+            up:    { word: 'UP',    arrow: '⬆️', dx: 0,  dy: -1, freq: 587.33 },
+            down:  { word: 'DOWN',  arrow: '⬇️', dx: 0,  dy: 1,  freq: 349.23 },
+            left:  { word: 'LEFT',  arrow: '⬅️', dx: -1, dy: 0,  freq: 440.00 },
+            right: { word: 'RIGHT', arrow: '➡️', dx: 1,  dy: 0,  freq: 523.25 }
+        };
 
-// Game State
-const SIZE = 5;
-let rover = { x: 0, y: 0, dir: 0 }; // dir: 0=East, 1=South, 2=West, 3=North
-let gridData = [];
-let isExecuting = false;
-let score = 0;
-let totalItems = 3;
+        /* ================================================================
+           2. STATE & WEB AUDIO + 1-WORD TTS
+           ================================================================ */
+        const state = {
+            mode: 'drive',
+            easyGrid: true, // true = 3x3, false = 5x5
+            oneTap: false,
+            voiceOn: true,
+            soundOn: true,
+            stars: parseInt(localStorage.getItem('ab_rover_stars') || '0', 10),
+            // Drive Mode
+            gridSize: 3,
+            rover: { x: 0, y: 0, lastDir: 'right', bump: false },
+            cells: [], // 2D array of { type: 'empty'|'item'|'puddle'|'station', item?: obj }
+            itemsRemaining: 0,
+            collectedCount: 0,
+            totalToCollect: 2,
+            driveWon: false,
+            // Sort Mode
+            sortQueue: [],
+            selectedTrashId: null,
+            sortedBins: { paper: [], plastic: [], food: [] }
+        };
 
-// DOM Elements
-const gridEl = document.getElementById('grid');
-const roverEl = document.getElementById('rover');
-const scoreEl = document.getElementById('score');
-const winScreen = document.getElementById('win-screen');
-const totalItemsEl = document.getElementById('total-items');
+        let audioCtx = null;
+        function getAudioCtx() {
+            if (!audioCtx) {
+                const AC = window.AudioContext || window.webkitAudioContext;
+                if (AC) audioCtx = new AC();
+            }
+            if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+            return audioCtx;
+        }
 
-function initGame() {
-  score = 0;
-  scoreEl.innerText = score;
-  rover = { x: 0, y: 0, dir: 0 };
-  isExecuting = false;
-  winScreen.style.display = 'none';
+        function playNotes(freqs, type = 'triangle', spacing = 0.09, duration = 0.35) {
+            if (!state.soundOn) return;
+            const ctx = getAudioCtx();
+            if (!ctx) return;
+            const now = ctx.currentTime;
+            freqs.forEach((f, idx) => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(f, now + idx * spacing);
+                gain.gain.setValueAtTime(0.001, now + idx * spacing);
+                gain.gain.exponentialRampToValueAtTime(0.24, now + idx * spacing + 0.02);
+                gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * spacing + duration);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start(now + idx * spacing);
+                osc.stop(now + idx * spacing + duration + 0.02);
+            });
+        }
 
-  // Generate grid
-  gridData = Array(SIZE).fill().map(() => Array(SIZE).fill(''));
-  gridEl.innerHTML = '';
-  
-  for(let y=0; y<SIZE; y++){
-    for(let x=0; x<SIZE; x++){
-      const cell = document.createElement('div');
-      cell.className = 'cell';
-      cell.id = `cell-${x}-${y}`;
-      gridEl.appendChild(cell);
-    }
-  }
+        function playPickupSound() {
+            playNotes([523.25, 659.25, 880.00], 'sine', 0.07, 0.35);
+        }
 
-  // Place items and puddles
-  let itemsPlaced = 0;
-  while(itemsPlaced < totalItems) {
-    let rx = Math.floor(Math.random() * SIZE);
-    let ry = Math.floor(Math.random() * SIZE);
-    if ((rx !== 0 || ry !== 0) && gridData[ry][rx] === '') {
-      gridData[ry][rx] = 'item';
-      document.getElementById(`cell-${rx}-${ry}`).innerHTML = ['🥤','🥫','🧴'][Math.floor(Math.random()*3)];
-      itemsPlaced++;
-    }
-  }
+        function playWinChime() {
+            playNotes([523.25, 659.25, 783.99, 1046.50], 'triangle', 0.09, 0.45);
+        }
 
-  let puddlesPlaced = 0;
-  while(puddlesPlaced < 2) {
-    let rx = Math.floor(Math.random() * SIZE);
-    let ry = Math.floor(Math.random() * SIZE);
-    if ((rx !== 0 || ry !== 0) && gridData[ry][rx] === '') {
-      gridData[ry][rx] = 'puddle';
-      document.getElementById(`cell-${rx}-${ry}`).innerHTML = '<div class="puddle"></div>';
-      puddlesPlaced++;
-    }
-  }
-  
-  updateRoverUI();
-}
+        function playSplashBump() {
+            playNotes([220, 174.61], 'sine', 0.1, 0.25);
+        }
 
-function updateRoverUI() {
-  const gap = 5;
-  const padding = 10;
-  roverEl.style.left = `calc(${padding}px + ${rover.x} * (var(--cell-size) + ${gap}px))`;
-  roverEl.style.top = `calc(${padding}px + ${rover.y} * (var(--cell-size) + ${gap}px))`;
-  roverEl.style.transform = `rotate(${rover.dir * 90}deg)`;
-}
+        function speakWord(text) {
+            if (!state.voiceOn || !('speechSynthesis' in window)) return;
+            try {
+                window.speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(text);
+                u.lang = 'en-GB';
+                u.rate = 0.92;
+                u.pitch = 1.05;
+                window.speechSynthesis.speak(u);
+            } catch (e) {}
+        }
 
-async function shakeRover() {
-  roverEl.style.transform = `rotate(${rover.dir * 90}deg) translateX(10px)`;
-  await sleep(100);
-  roverEl.style.transform = `rotate(${rover.dir * 90}deg) translateX(-10px)`;
-  await sleep(100);
-  roverEl.style.transform = `rotate(${rover.dir * 90}deg) translateX(0px)`;
-  await sleep(200);
-}
+        function addStar() {
+            state.stars += 1;
+            localStorage.setItem('ab_rover_stars', String(state.stars));
+            document.getElementById('star-count').textContent = state.stars;
+            if (typeof confetti === 'function') {
+                confetti({ particleCount: 45, spread: 65, origin: { y: 0.7 } });
+            }
+        }
 
-async function executeAction(cmd) {
-  if (isExecuting) return;
-  initAudio();
-  isExecuting = true;
+        /* ================================================================
+           3. CUSTOM UPRIGHT SVG RECYCLING ROVER
+           ================================================================ */
+        function renderRoverSVG(dir = 'right') {
+            const arrowMap = { up: '⬆️', down: '⬇️', left: '⬅️', right: '➡️' };
+            return `
+                <div class="rover-sprite ${state.rover.bump ? 'bump-shake' : ''}">
+                    <svg viewBox="0 0 100 100" width="100%" height="100%" aria-label="Recycling Rover">
+                        <!-- Wheels -->
+                        <rect x="14" y="72" width="22" height="16" rx="8" fill="#1e293b" stroke="#0f172a" stroke-width="3"/>
+                        <rect x="64" y="72" width="22" height="16" rx="8" fill="#1e293b" stroke="#0f172a" stroke-width="3"/>
+                        <!-- Green Eco Rover Body -->
+                        <rect x="16" y="30" width="68" height="48" rx="16" fill="#22c55e" stroke="#14532d" stroke-width="4"/>
+                        <!-- Antenna -->
+                        <line x1="50" y1="12" x2="50" y2="30" stroke="#14532d" stroke-width="5" stroke-linecap="round"/>
+                        <circle cx="50" cy="11" r="7" fill="#facc15" stroke="#14532d" stroke-width="3"/>
+                        <!-- Friendly Visor Eyes -->
+                        <rect x="25" y="38" width="50" height="22" rx="10" fill="#0f172a"/>
+                        <circle cx="38" cy="49" r="5.5" fill="#38bdf8"/>
+                        <circle cx="62" cy="49" r="5.5" fill="#38bdf8"/>
+                        <!-- Smile -->
+                        <path d="M40 67 Q50 74 60 67" stroke="#ffffff" stroke-width="4" stroke-linecap="round" fill="none"/>
+                        <!-- Direction Badge -->
+                        <text x="82" y="28" font-size="22" text-anchor="middle">${arrowMap[dir] || '➡️'}</text>
+                    </svg>
+                </div>
+            `;
+        }
 
-  let nx = rover.x;
-  let ny = rover.y;
-  let newDir = rover.dir;
+        /* ================================================================
+           4. HEADER CONTROLS & MODE SWITCHING
+           ================================================================ */
+        function toggleGridSize() {
+            state.easyGrid = !state.easyGrid;
+            const btn = document.getElementById('btn-grid-size');
+            btn.textContent = state.easyGrid ? '🟩 3×3 Easy' : '🟦 5×5 Park';
+            btn.classList.toggle('active', state.easyGrid);
+            if (state.mode === 'drive') setupDriveRound();
+        }
 
-  if (cmd === 'up') {
-    ny -= 1;
-    newDir = 3;
-  } else if (cmd === 'down') {
-    ny += 1;
-    newDir = 1;
-  } else if (cmd === 'left') {
-    nx -= 1;
-    newDir = 2;
-  } else if (cmd === 'right') {
-    nx += 1;
-    newDir = 0;
-  }
+        function toggleOneTap() {
+            state.oneTap = !state.oneTap;
+            const btn = document.getElementById('btn-one-tap');
+            btn.textContent = state.oneTap ? '⚡ 1-Tap: ON' : '⚡ 1-Tap: OFF';
+            btn.classList.toggle('active', state.oneTap);
+        }
 
-  rover.dir = newDir;
-  updateRoverUI(); // Turn first visually
+        function toggleVoice() {
+            state.voiceOn = !state.voiceOn;
+            document.getElementById('btn-voice').classList.toggle('active', state.voiceOn);
+            if (state.voiceOn) speakWord('Voice On');
+        }
 
-  if (nx >= 0 && nx < SIZE && ny >= 0 && ny < SIZE) {
-    if (gridData[ny][nx] === 'puddle') {
-      sounds.bop();
-      await shakeRover();
-    } else {
-      rover.x = nx;
-      rover.y = ny;
-      sounds.move();
-      updateRoverUI();
-      
-      // Auto-collect
-      await sleep(400); // wait for move animation
-      if (gridData[rover.y][rover.x] === 'item') {
-        collectItem();
-      }
-    }
-  } else {
-    sounds.bop(); // Hit wall
-    await shakeRover();
-  }
+        function toggleSound() {
+            state.soundOn = !state.soundOn;
+            document.getElementById('btn-sound').classList.toggle('active', state.soundOn);
+            if (state.soundOn) playWinChime();
+        }
 
-  await sleep(200); // Short debounce to prevent double-clicking issues
-  isExecuting = false;
-}
+        function setMode(mode) {
+            state.mode = mode;
+            document.getElementById('tab-drive').classList.toggle('active', mode === 'drive');
+            document.getElementById('tab-sort').classList.toggle('active', mode === 'sort');
+            if (mode === 'drive') setupDriveRound();
+            else setupSortRound();
+        }
 
-function collectItem() {
-  if (gridData[rover.y][rover.x] === 'item') {
-    gridData[rover.y][rover.x] = '';
-    document.getElementById(`cell-${rover.x}-${rover.y}`).innerHTML = '';
-    score++;
-    scoreEl.innerText = score;
-    sounds.collect();
-    createParticles(rover.x, rover.y);
-    
-    if (score >= totalItems) {
-      setTimeout(() => {
-        sounds.win();
-        winScreen.style.display = 'flex';
-      }, 500);
-    }
-  } else {
-    sounds.error();
-  }
-}
+        /* ================================================================
+           5. MODE 1: 🤖 DRIVE ROVER (DIRECTIONS + BFS HINT PATHFINDER)
+           ================================================================ */
+        function setupDriveRound() {
+            const S = state.easyGrid ? 3 : 5;
+            state.gridSize = S;
+            state.rover = { x: 0, y: 0, lastDir: 'right', bump: false };
+            state.driveWon = false;
+            state.collectedCount = 0;
+            state.totalToCollect = state.easyGrid ? 2 : 3;
 
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+            state.cells = Array.from({ length: S }, () =>
+                Array.from({ length: S }, () => ({ type: 'empty', item: null }))
+            );
 
-function createParticles(x, y) {
-  const cellSize = gridEl.children[0].offsetWidth;
-  const gap = 5;
-  const px = x * (cellSize + gap) + cellSize/2;
-  const py = y * (cellSize + gap) + cellSize/2;
-  
-  for(let i=0; i<15; i++) {
-    const p = document.createElement('div');
-    p.className = 'particle';
-    p.style.left = px + 'px';
-    p.style.top = py + 'px';
-    document.getElementById('grid-container').appendChild(p);
-    
-    const angle = Math.random() * Math.PI * 2;
-    const dist = Math.random() * 50 + 20;
-    const tx = px + Math.cos(angle) * dist;
-    const ty = py + Math.sin(angle) * dist;
-    
-    p.animate([
-      { transform: 'translate(-50%, -50%) scale(1)', opacity: 1 },
-      { transform: `translate(${tx - px}px, ${ty - py}px) scale(0)`, opacity: 0 }
-    ], { duration: 600, easing: 'ease-out' });
-    
-    setTimeout(() => p.remove(), 600);
-  }
-}
+            // Place Recycling Station at bottom-right corner
+            state.cells[S - 1][S - 1] = { type: 'station', item: null };
 
-// Initialize on load
-window.onload = initGame;
-</script>
+            // Place recyclable items
+            const shuffledItems = [...RECYCLE_ITEMS].sort(() => Math.random() - 0.5);
+            let placed = 0;
+            while (placed < state.totalToCollect) {
+                const rx = Math.floor(Math.random() * S);
+                const ry = Math.floor(Math.random() * S);
+                if ((rx !== 0 || ry !== 0) && state.cells[ry][rx].type === 'empty') {
+                    state.cells[ry][rx] = { type: 'item', item: shuffledItems[placed] };
+                    placed++;
+                }
+            }
+            state.itemsRemaining = state.totalToCollect;
+
+            // In 5x5 mode, add 2 water puddles that don't trap the rover
+            if (!state.easyGrid) {
+                let puddles = 0;
+                let tries = 0;
+                while (puddles < 2 && tries < 30) {
+                    tries++;
+                    const rx = Math.floor(Math.random() * S);
+                    const ry = Math.floor(Math.random() * S);
+                    if ((rx !== 0 || ry !== 0) && state.cells[ry][rx].type === 'empty') {
+                        state.cells[ry][rx].type = 'puddle';
+                        if (findNextHintStep()) {
+                            puddles++;
+                        } else {
+                            state.cells[ry][rx].type = 'empty';
+                        }
+                    }
+                }
+            }
+
+            renderDriveMode();
+        }
+
+        // Shortest-path BFS to find the best next direction ('up'|'down'|'left'|'right')
+        function findNextHintStep() {
+            const S = state.gridSize;
+            const start = { x: state.rover.x, y: state.rover.y };
+            const needStation = state.itemsRemaining === 0;
+
+            const queue = [{ x: start.x, y: start.y, firstDir: null, firstCell: null }];
+            const visited = new Set([`${start.x},${start.y}`]);
+
+            const dirs = [
+                { key: 'up',    dx: 0,  dy: -1 },
+                { key: 'right', dx: 1,  dy: 0  },
+                { key: 'down',  dx: 0,  dy: 1  },
+                { key: 'left',  dx: -1, dy: 0  }
+            ];
+
+            while (queue.length > 0) {
+                const cur = queue.shift();
+                const cell = state.cells[cur.y][cur.x];
+
+                if (cur.firstDir) {
+                    if (!needStation && cell.type === 'item') {
+                        return { dir: cur.firstDir, cell: cur.firstCell };
+                    }
+                    if (needStation && cell.type === 'station') {
+                        return { dir: cur.firstDir, cell: cur.firstCell };
+                    }
+                }
+
+                for (const d of dirs) {
+                    const nx = cur.x + d.dx;
+                    const ny = cur.y + d.dy;
+                    const key = `${nx},${ny}`;
+                    if (nx >= 0 && nx < S && ny >= 0 && ny < S && !visited.has(key)) {
+                        if (state.cells[ny][nx].type !== 'puddle') {
+                            visited.add(key);
+                            queue.push({
+                                x: nx,
+                                y: ny,
+                                firstDir: cur.firstDir || d.key,
+                                firstCell: cur.firstCell || { x: nx, y: ny }
+                            });
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        function renderDriveMode() {
+            const box = document.getElementById('stage-content');
+            const S = state.gridSize;
+            const hint = state.driveWon ? null : findNextHintStep();
+            const hintDirInfo = hint ? DIR_INFO[hint.dir] : null;
+
+            let gridHTML = '';
+            for (let y = 0; y < S; y++) {
+                for (let x = 0; x < S; x++) {
+                    const c = state.cells[y][x];
+                    const hasRover = state.rover.x === x && state.rover.y === y;
+                    const isNextStep = hint && hint.cell.x === x && hint.cell.y === y;
+
+                    let cellClasses = 'park-cell';
+                    if (c.type === 'puddle') cellClasses += ' puddle-cell';
+                    if (c.type === 'station') cellClasses += ' station-cell';
+                    if (isNextStep) cellClasses += ' next-step-cell';
+
+                    let inner = '';
+                    if (hasRover) {
+                        inner = renderRoverSVG(state.rover.lastDir);
+                    } else if (c.type === 'item' && c.item) {
+                        inner = `<span class="cell-item" title="${c.item.word}">${c.item.emoji}</span>`;
+                    } else if (c.type === 'puddle') {
+                        inner = `<span class="cell-item" title="Water Puddle">💧</span>`;
+                    } else if (c.type === 'station') {
+                        inner = `<span class="cell-item" title="Recycling Station">♻️</span>`;
+                    } else if (isNextStep && hintDirInfo) {
+                        inner = `<span class="step-hint-arrow">${hintDirInfo.arrow}</span>`;
+                    }
+
+                    gridHTML += `
+                        <div class="${cellClasses}"
+                             onclick="handleCellTap(${x}, ${y})"
+                             role="button"
+                             tabindex="-1">
+                            ${inner}
+                        </div>
+                    `;
+                }
+            }
+
+            box.innerHTML = `
+                <div class="drive-layout">
+                    <!-- LEFT: SUNNY PARK GRID -->
+                    <div class="park-board-wrap">
+                        <div class="status-strip">
+                            <span>🤖 ${state.itemsRemaining > 0 ? 'Collect:' : 'Go to ♻️ Bin!'}</span>
+                            <span>♻️ ${state.collectedCount} / ${state.totalToCollect}</span>
+                        </div>
+
+                        <div class="park-grid size-${S}">
+                            ${gridHTML}
+                        </div>
+                    </div>
+
+                    <!-- RIGHT: GIANT DIRECTION PAD -->
+                    <div class="controls-box">
+                        ${hintDirInfo ? `
+                            <button type="button" class="next-hint-pill" onclick="moveRover('${hint.dir}')">
+                                <span>💡 Go:</span>
+                                <span>${hintDirInfo.arrow} ${hintDirInfo.word}</span>
+                            </button>
+                        ` : `
+                            <div class="next-hint-pill">🌟 Great Driving!</div>
+                        `}
+
+                        <div class="dpad-grid">
+                            <div></div>
+                            <button type="button"
+                                    class="dpad-btn dpad-up ${hint && hint.dir === 'up' ? 'hint-glow' : ''}"
+                                    onclick="moveRover('up')">
+                                <span class="dir-arrow">⬆️</span>
+                                <span class="dir-word">UP</span>
+                            </button>
+                            <div></div>
+
+                            <button type="button"
+                                    class="dpad-btn dpad-left ${hint && hint.dir === 'left' ? 'hint-glow' : ''}"
+                                    onclick="moveRover('left')">
+                                <span class="dir-arrow">⬅️</span>
+                                <span class="dir-word">LEFT</span>
+                            </button>
+                            <button type="button"
+                                    class="dpad-btn dpad-center"
+                                    onclick="stepHintDirection()"
+                                    title="Auto-step toward target">
+                                🤖
+                            </button>
+                            <button type="button"
+                                    class="dpad-btn dpad-right ${hint && hint.dir === 'right' ? 'hint-glow' : ''}"
+                                    onclick="moveRover('right')">
+                                <span class="dir-arrow">➡️</span>
+                                <span class="dir-word">RIGHT</span>
+                            </button>
+
+                            <div></div>
+                            <button type="button"
+                                    class="dpad-btn dpad-down ${hint && hint.dir === 'down' ? 'hint-glow' : ''}"
+                                    onclick="moveRover('down')">
+                                <span class="dir-arrow">⬇️</span>
+                                <span class="dir-word">DOWN</span>
+                            </button>
+                            <div></div>
+                        </div>
+                    </div>
+                </div>
+
+                ${state.driveWon ? `
+                    <div class="win-overlay">
+                        <div class="win-text">
+                            <span>🎉</span>
+                            <span>Park Clean!</span>
+                        </div>
+                        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+                            <button type="button" class="btn-next-giant" onclick="setMode('sort')">
+                                Sort Bins 🗑️
+                            </button>
+                            <button type="button" class="btn-next-giant" style="background:#2563eb;border-color:#1e3a8a;box-shadow:0 5px 0 #1e3a8a;" onclick="setupDriveRound()">
+                                Drive Again 🔄
+                            </button>
+                        </div>
+                    </div>
+                ` : ''}
+            `;
+        }
+
+        function stepHintDirection() {
+            if (state.driveWon) {
+                setupDriveRound();
+                return;
+            }
+            const hint = findNextHintStep();
+            if (hint) moveRover(hint.dir);
+        }
+
+        function handleCellTap(tx, ty) {
+            if (state.driveWon) return;
+            if (state.oneTap) {
+                stepHintDirection();
+                return;
+            }
+            const dx = tx - state.rover.x;
+            const dy = ty - state.rover.y;
+            if (Math.abs(dx) + Math.abs(dy) === 1) {
+                if (dy === -1) moveRover('up');
+                else if (dy === 1) moveRover('down');
+                else if (dx === -1) moveRover('left');
+                else if (dx === 1) moveRover('right');
+            } else {
+                stepHintDirection();
+            }
+        }
+
+        function moveRover(dirKey) {
+            if (state.driveWon) return;
+
+            // In 1-Tap switch mode, any press moves in the recommended direction
+            const actualDirKey = state.oneTap && findNextHintStep()
+                ? findNextHintStep().dir
+                : dirKey;
+
+            const d = DIR_INFO[actualDirKey];
+            if (!d) return;
+
+            state.rover.lastDir = actualDirKey;
+            state.rover.bump = false;
+
+            const nx = state.rover.x + d.dx;
+            const ny = state.rover.y + d.dy;
+            const S = state.gridSize;
+
+            // Check walls or puddle
+            if (nx < 0 || nx >= S || ny < 0 || ny >= S || state.cells[ny][nx].type === 'puddle') {
+                state.rover.bump = true;
+                playSplashBump();
+                speakWord(nx >= 0 && nx < S && ny >= 0 && ny < S ? 'Water' : d.word);
+                renderDriveMode();
+                return;
+            }
+
+            // Move rover
+            state.rover.x = nx;
+            state.rover.y = ny;
+            playNotes([d.freq], 'triangle', 0.08, 0.25);
+            speakWord(d.word);
+
+            const targetCell = state.cells[ny][nx];
+            if (targetCell.type === 'item' && targetCell.item) {
+                const picked = targetCell.item;
+                targetCell.type = 'empty';
+                targetCell.item = null;
+                state.collectedCount += 1;
+                state.itemsRemaining -= 1;
+                setTimeout(() => {
+                    playPickupSound();
+                    speakWord(picked.word);
+                }, 180);
+            } else if (targetCell.type === 'station' && state.itemsRemaining === 0) {
+                state.driveWon = true;
+                setTimeout(() => {
+                    playWinChime();
+                    speakWord('Recycle');
+                    addStar();
+                }, 200);
+            }
+
+            renderDriveMode();
+        }
+
+        /* ================================================================
+           6. MODE 2: 🗑️ SORT BINS (TAP OR DRAG INTO 3 COLOURED BINS)
+           ================================================================ */
+        function setupSortRound() {
+            state.sortedBins = { paper: [], plastic: [], food: [] };
+            const p = RECYCLE_ITEMS.filter(i => i.bin === 'paper')[Math.floor(Math.random() * 3)];
+            const pl = RECYCLE_ITEMS.filter(i => i.bin === 'plastic')[Math.floor(Math.random() * 3)];
+            const f = RECYCLE_ITEMS.filter(i => i.bin === 'food')[Math.floor(Math.random() * 3)];
+            state.sortQueue = [p, pl, f].sort(() => Math.random() - 0.5);
+            state.selectedTrashId = state.sortQueue[0].id;
+            renderSortMode();
+        }
+
+        function renderSortMode() {
+            const box = document.getElementById('stage-content');
+            const allDone = state.sortQueue.length === 0;
+            const activeItem = state.sortQueue.find(i => i.id === state.selectedTrashId);
+
+            box.innerHTML = `
+                <div class="sort-tray">
+                    ${allDone ? `
+                        <div class="win-text">🌟 All Recycled!</div>
+                    ` : state.sortQueue.map(item => `
+                        <div class="trash-token ${state.selectedTrashId === item.id ? 'selected' : ''}"
+                             draggable="true"
+                             ondragstart="onTrashDrag(event, '${item.id}')"
+                             onclick="selectTrash('${item.id}')"
+                             tabindex="0"
+                             role="button"
+                             aria-label="${item.word}">
+                            <span class="trash-emoji">${item.emoji}</span>
+                            <span class="trash-word">${item.word}</span>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div class="bins-grid">
+                    ${BINS.map(b => {
+                        const isTarget = activeItem && activeItem.bin === b.id;
+                        return `
+                            <div class="recycle-bin ${b.css} ${isTarget ? 'highlight-bin' : ''}"
+                                 ondragover="event.preventDefault()"
+                                 ondrop="onBinDrop(event, '${b.id}')"
+                                 onclick="handleBinTap('${b.id}')"
+                                 tabindex="0"
+                                 role="button"
+                                 aria-label="${b.word} Bin">
+                                <div style="display:flex;flex-direction:column;align-items:center;">
+                                    <span class="bin-icon">${b.icon} 🗑️</span>
+                                    <span class="bin-title">${b.word}</span>
+                                </div>
+                                <div class="bin-collected">
+                                    ${state.sortedBins[b.id].map(it => `
+                                        <span class="bin-mini-item" title="${it.word}">${it.emoji}</span>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+
+                ${allDone ? `
+                    <div class="win-overlay">
+                        <div class="win-text">♻️ Great Sorting!</div>
+                        <button type="button" class="btn-next-giant" onclick="setupSortRound()">
+                            Sort More 🔄
+                        </button>
+                    </div>
+                ` : ''}
+            `;
+        }
+
+        function selectTrash(id) {
+            const item = state.sortQueue.find(i => i.id === id);
+            if (!item) return;
+            state.selectedTrashId = id;
+            speakWord(item.word);
+            playPickupSound();
+            if (state.oneTap) {
+                handleBinTap(item.bin);
+                return;
+            }
+            renderSortMode();
+        }
+
+        function onTrashDrag(e, id) {
+            state.selectedTrashId = id;
+            e.dataTransfer.setData('text/plain', id);
+        }
+
+        function onBinDrop(e, binId) {
+            e.preventDefault();
+            const id = e.dataTransfer.getData('text/plain') || state.selectedTrashId;
+            state.selectedTrashId = id;
+            handleBinTap(binId);
+        }
+
+        function handleBinTap(binId) {
+            if (!state.selectedTrashId && state.sortQueue.length > 0) {
+                state.selectedTrashId = state.sortQueue[0].id;
+            }
+            const item = state.sortQueue.find(i => i.id === state.selectedTrashId);
+            if (!item) return;
+
+            if (item.bin === binId || state.oneTap) {
+                const targetBin = item.bin;
+                state.sortedBins[targetBin].push(item);
+                state.sortQueue = state.sortQueue.filter(i => i.id !== item.id);
+                state.selectedTrashId = state.sortQueue[0] ? state.sortQueue[0].id : null;
+                playWinChime();
+                speakWord(item.binWord);
+                if (state.sortQueue.length === 0) addStar();
+                renderSortMode();
+            } else {
+                playSplashBump();
+                const tappedBin = BINS.find(b => b.id === binId);
+                if (tappedBin) speakWord(tappedBin.word);
+            }
+        }
+
+        /* ================================================================
+           7. KEYBOARD ARROWS & SPACEBAR SWITCH SUPPORT
+           ================================================================ */
+        window.addEventListener('keydown', (e) => {
+            if (state.mode === 'drive') {
+                if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') {
+                    e.preventDefault();
+                    moveRover('up');
+                } else if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') {
+                    e.preventDefault();
+                    moveRover('down');
+                } else if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+                    e.preventDefault();
+                    moveRover('left');
+                } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+                    e.preventDefault();
+                    moveRover('right');
+                } else if (e.code === 'Space' || e.code === 'Enter') {
+                    if (document.activeElement && document.activeElement.tagName === 'BUTTON') return;
+                    e.preventDefault();
+                    stepHintDirection();
+                }
+            } else if (state.mode === 'sort') {
+                if (e.code === 'Space' || e.code === 'Enter') {
+                    if (document.activeElement && document.activeElement.tagName === 'BUTTON') return;
+                    e.preventDefault();
+                    if (state.sortQueue.length === 0) setupSortRound();
+                    else handleBinTap(state.sortQueue[0].bin);
+                }
+            }
+        });
+
+        // Boot Game
+        document.getElementById('star-count').textContent = state.stars;
+        setupDriveRound();
+    </script>
 </body>
 </html>
