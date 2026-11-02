@@ -117,8 +117,8 @@
     .mode-bar {
       display: flex;
       justify-content: center;
-      gap: 12px;
-      padding: 10px 14px;
+      gap: 10px;
+      padding: 9px 14px;
       background: rgba(255,255,255,0.65);
       flex-shrink: 0;
       flex-wrap: wrap;
@@ -128,19 +128,19 @@
       background: #FFFFFF;
       border: 4px solid #CBD5E1;
       border-radius: 50px;
-      padding: 8px 22px;
+      padding: 7px 18px;
       font-family: 'Fredoka', sans-serif;
-      font-size: clamp(1rem, 2vw, 1.25rem);
+      font-size: clamp(0.95rem, 1.9vw, 1.2rem);
       color: #475569;
       cursor: pointer;
-      box-shadow: 0 5px 0 #CBD5E1;
+      box-shadow: 0 4px 0 #CBD5E1;
       transition: all 0.15s;
     }
     .mode-tab.active {
       background: #7C3AED;
       border-color: #5B21B6;
       color: #FFFFFF;
-      box-shadow: 0 5px 0 #5B21B6;
+      box-shadow: 0 4px 0 #5B21B6;
       transform: translateY(-2px);
     }
 
@@ -151,28 +151,43 @@
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 20px 20px;
+      padding: 12px 20px 18px;
       overflow-y: auto;
     }
 
-    /* MODE 1: BLEND WORD */
+    /* BLENDY BOT HEADER CARD */
     .blend-card {
       background: #FFFFFF;
       border: 6px solid #8B5CF6;
       border-radius: 36px;
-      padding: 16px 32px;
+      padding: 14px 28px;
       box-shadow: 0 12px 28px rgba(124, 58, 237, 0.18);
       display: flex;
       align-items: center;
-      gap: 24px;
+      gap: 22px;
       cursor: pointer;
-      transition: transform 0.2s;
+      transition: transform 0.2s, border-color 0.2s;
+      max-width: 780px;
     }
-    .blend-card:hover { transform: scale(1.03); }
+    .blend-card:hover { transform: scale(1.02); }
+    .blend-card.blended-win {
+      border-color: #16A34A;
+      background: #F0FDF4;
+    }
+
     .blend-picture {
-      font-size: clamp(4.5rem, 10vw, 7rem);
+      font-size: clamp(4.2rem, 9vw, 6.2rem);
       line-height: 1;
+      width: clamp(85px, 13vw, 115px);
+      height: clamp(85px, 13vw, 115px);
+      background: #F3E8FF;
+      border-radius: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 4px solid #DDD6FE;
     }
+
     .blend-word-info {
       display: flex;
       flex-direction: column;
@@ -181,7 +196,7 @@
     }
     .blend-whole-word {
       font-family: var(--phonics-font);
-      font-size: clamp(2.2rem, 5vw, 3.6rem);
+      font-size: clamp(2.1rem, 4.6vw, 3.3rem);
       font-weight: 700;
       color: #4C1D95;
       letter-spacing: 3px;
@@ -196,12 +211,13 @@
       font-size: 1.05rem;
     }
 
+    /* SOUND BUTTONS ROW */
     .sound-buttons-row {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: clamp(16px, 3.5vw, 34px);
-      margin: 10px 0;
+      margin: 8px 0;
       flex-wrap: wrap;
     }
 
@@ -213,8 +229,8 @@
     }
 
     .phoneme-tile {
-      width: clamp(110px, 20vw, 155px);
-      height: clamp(120px, 21vh, 165px);
+      width: clamp(105px, 19vw, 150px);
+      height: clamp(115px, 20vh, 155px);
       background: #FFFFFF;
       border: 6px solid #A78BFA;
       border-radius: 30px;
@@ -222,7 +238,7 @@
       align-items: center;
       justify-content: center;
       font-family: var(--phonics-font);
-      font-size: clamp(3.6rem, 7vw, 5.2rem);
+      font-size: clamp(3.4rem, 6.8vw, 5rem);
       font-weight: 700;
       color: #1E1B4B;
       cursor: pointer;
@@ -246,10 +262,16 @@
       box-shadow: 0 10px 0 #15803D, 0 0 25px rgba(34, 197, 94, 0.5);
       transform: translateY(-8px) scale(1.07);
     }
+    .phoneme-tile.empty-slot {
+      background: #F8FAFC;
+      border: 5px dashed #94A3B8;
+      color: #94A3B8;
+      box-shadow: none;
+    }
 
     .sound-dot {
-      width: 36px;
-      height: 36px;
+      width: 34px;
+      height: 34px;
       border-radius: 50%;
       background: #F59E0B;
       border: 4px solid #B45309;
@@ -258,7 +280,7 @@
       transition: all 0.15s;
     }
     .sound-dot.dash {
-      width: 78px;
+      width: 76px;
       border-radius: 20px;
       background: #0284C7;
       border-color: #0369A1;
@@ -271,9 +293,9 @@
       transform: scale(1.18);
     }
 
-    .blend-Controls-row {
+    .blend-controls-row {
       display: flex;
-      gap: 16px;
+      gap: 14px;
       align-items: center;
       flex-wrap: wrap;
       justify-content: center;
@@ -284,9 +306,9 @@
       color: #FFFFFF;
       border: 5px solid #15803D;
       border-radius: 50px;
-      padding: 12px 32px;
+      padding: 11px 30px;
       font-family: 'Fredoka', sans-serif;
-      font-size: clamp(1.3rem, 2.5vw, 1.75rem);
+      font-size: clamp(1.25rem, 2.4vw, 1.65rem);
       cursor: pointer;
       box-shadow: 0 8px 0 #14532D;
       transition: transform 0.15s;
@@ -298,26 +320,26 @@
       color: #5B21B6;
       border: 4px solid #A78BFA;
       border-radius: 50px;
-      padding: 12px 24px;
+      padding: 11px 22px;
       font-family: 'Fredoka', sans-serif;
-      font-size: 1.3rem;
+      font-size: 1.25rem;
       cursor: pointer;
       box-shadow: 0 6px 0 #A78BFA;
     }
 
-    /* MODE 2: FIRST SOUND MATCH */
+    /* MODE 2 & 3: LETTER CHOICE CARDS */
     .choice-tray {
       display: flex;
       justify-content: center;
-      gap: clamp(16px, 3vw, 30px);
+      gap: clamp(16px, 3vw, 28px);
       flex-wrap: wrap;
       width: 100%;
       max-width: 900px;
     }
 
     .letter-choice-card {
-      width: clamp(145px, 24vw, 210px);
-      height: clamp(150px, 24vh, 195px);
+      width: clamp(135px, 22vw, 195px);
+      height: clamp(135px, 22vh, 180px);
       background: #FFFFFF;
       border: 6px solid #CBD5E1;
       border-radius: 32px;
@@ -341,24 +363,29 @@
       box-shadow: 0 10px 0 #15803D;
       animation: bounceWin 0.6s ease;
     }
+    .letter-choice-card.used {
+      opacity: 0.25;
+      pointer-events: none;
+      transform: scale(0.9);
+    }
     .letter-choice-card.wrong {
       opacity: 0.35;
       transform: scale(0.92);
     }
     .letter-glyph {
       font-family: var(--phonics-font);
-      font-size: clamp(3.6rem, 7vw, 5rem);
+      font-size: clamp(3.4rem, 6.5vw, 4.8rem);
       font-weight: 700;
       color: #1E1B4B;
       line-height: 1;
     }
     .letter-hint {
       font-family: 'Fredoka', sans-serif;
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       color: #64748B;
     }
 
-    /* MODE 3: SOUND BOARD */
+    /* MODE 4: SOUND BOARD */
     .set-subbar {
       display: flex;
       gap: 8px;
@@ -445,6 +472,7 @@
     <a href="https://games.ableandbeyond.support/index.html" class="back-btn">⬅️ Hub</a>
     <div class="game-title">🤖 Blendy Bot Phonics</div>
     <div class="controls">
+      <button class="ctrl-btn" id="mystery-btn" onclick="toggleMystery()">🎁 Mystery Pic: OFF</button>
       <button class="ctrl-btn" id="cards-btn" onclick="toggleCardCount()">🃏 2 Cards</button>
       <button class="ctrl-btn active" id="voice-btn" onclick="toggleVoice()">🗣️ Voice: ON</button>
       <button class="ctrl-btn active" id="sound-btn" onclick="toggleSound()">🎵 Sound: ON</button>
@@ -454,55 +482,61 @@
 
   <nav class="mode-bar">
     <button class="mode-tab active" id="tab-blend" onclick="setMode('blend')">🤖 1. Blend Word</button>
-    <button class="mode-tab" id="tab-first" onclick="setMode('first')">🎯 2. First Sound</button>
-    <button class="mode-tab" id="tab-board" onclick="setMode('board')">🔤 3. Sound Board</button>
+    <button class="mode-tab" id="tab-build" onclick="setMode('build')">🧩 2. Build Word</button>
+    <button class="mode-tab" id="tab-first" onclick="setMode('first')">🎯 3. First Sound</button>
+    <button class="mode-tab" id="tab-board" onclick="setMode('board')">🔤 4. Sound Board</button>
   </nav>
 
   <main class="stage" id="stage"></main>
 
   <script>
     let mode = 'blend';
+    let mysteryPic = false;
+    let pictureRevealed = false;
     let cardCount = 2;
     let voiceOn = true;
     let soundOn = true;
     let stars = 0;
     let locked = false;
     let wordIdx = 0;
+    let buildIdx = 0;
+    let buildStep = 0;
     let firstIdx = 0;
     let boardSetIdx = 0;
     let litIndices = new Set();
 
-    // Pure phonetic utterance strings so Web Speech says the phoneme sound rather than letter names
+    // IMPORTANT: Vowel-anchored single syllables so Windows/Chrome en-GB TTS
+    // NEVER spells out repeated consonant letters like "S, S, S" or "F, F, F"!
     const PHONEME_SPEECH = {
-      s: 'sss',
-      a: 'ah',
-      t: 'tuh',
-      p: 'puh',
-      i: 'ih',
-      n: 'nnn',
-      m: 'mmm',
-      d: 'duh',
-      g: 'guh',
-      o: 'aw',
-      c: 'kuh',
-      k: 'kuh',
-      e: 'eh',
-      u: 'uh',
-      r: 'rrr',
-      h: 'huh',
-      b: 'buh',
-      f: 'fff',
-      l: 'lll',
-      sh: 'shhh',
+      s:  'suh',
+      a:  'ah',
+      t:  'tuh',
+      p:  'puh',
+      i:  'ih',
+      n:  'nuh',
+      m:  'muh',
+      d:  'duh',
+      g:  'guh',
+      o:  'oh',
+      c:  'kuh',
+      k:  'kuh',
+      e:  'eh',
+      u:  'uh',
+      r:  'ruh',
+      h:  'huh',
+      b:  'buh',
+      f:  'fuh',
+      l:  'luh',
+      sh: 'shuh',
       ch: 'chuh',
-      th: 'thhh',
-      ee: 'eee',
-      oo: 'ooo'
+      th: 'thuh',
+      ee: 'ee',
+      oo: 'oo'
     };
 
     const VOWELS = new Set(['a', 'e', 'i', 'o', 'u', 'ee', 'oo']);
 
-    // Mode 1: CVC & Digraph Words with Giant Pictures
+    // CVC & Digraph Words with Giant Pictures
     const BLEND_WORDS = [
       { word: 'cat',  sounds: ['c', 'a', 't'],  emoji: '🐱', label: 'CAT' },
       { word: 'dog',  sounds: ['d', 'o', 'g'],  emoji: '🐶', label: 'DOG' },
@@ -518,7 +552,7 @@
       { word: 'ship', sounds: ['sh', 'i', 'p'], emoji: '🚢', label: 'SHIP' }
     ];
 
-    // Mode 3: Sound Board Sets (manageable 6-card groups with picture cues)
+    // Sound Board Sets
     const SOUND_SETS = [
       {
         title: 'Set 1: s a t p i n',
@@ -568,7 +602,6 @@
 
     const ALL_SOUNDS = SOUND_SETS.flatMap(s => s.items);
 
-    // Web Audio
     let audioCtx = null;
     function getAudio() {
       if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -614,19 +647,43 @@
       } catch (e) {}
     }
 
-    function speak(text, rate = 0.88) {
-      if (!voiceOn || !('speechSynthesis' in window)) return;
+    window._activeUtterance = null;
+    function speak(text, rate = 0.92, onDone = null) {
+      if (!voiceOn || !('speechSynthesis' in window)) {
+        if (onDone) setTimeout(onDone, 1400);
+        return;
+      }
       window.speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(text);
+      window._activeUtterance = u;
       u.lang = 'en-GB';
       u.rate = rate;
-      u.pitch = 1.1;
+      u.pitch = 1.06;
+
+      let finished = false;
+      const done = () => {
+        if (finished) return;
+        finished = true;
+        if (onDone) onDone();
+      };
+      u.onend = () => setTimeout(done, 450);
+      u.onerror = () => setTimeout(done, 450);
+      setTimeout(done, Math.max(2600, text.length * 90));
+
       window.speechSynthesis.speak(u);
     }
 
     function speakPhoneme(p) {
       const ph = PHONEME_SPEECH[p] || p;
-      speak(ph, 0.82);
+      speak(ph, 0.95);
+    }
+
+    function toggleMystery() {
+      mysteryPic = !mysteryPic;
+      const btn = document.getElementById('mystery-btn');
+      btn.textContent = `🎁 Mystery Pic: ${mysteryPic ? 'ON' : 'OFF'}`;
+      btn.classList.toggle('active', mysteryPic);
+      if (mode === 'blend') renderStage();
     }
 
     function toggleCardCount() {
@@ -651,7 +708,7 @@
 
     function setMode(m) {
       mode = m;
-      ['blend', 'first', 'board'].forEach(k => {
+      ['blend', 'build', 'first', 'board'].forEach(k => {
         document.getElementById(`tab-${k}`).classList.toggle('active', k === mode);
       });
       renderStage();
@@ -660,16 +717,18 @@
     function renderStage() {
       locked = false;
       litIndices.clear();
+      pictureRevealed = !mysteryPic;
       const stage = document.getElementById('stage');
 
+      // ---------------- MODE 1: BLEND WORD ----------------
       if (mode === 'blend') {
         const item = BLEND_WORDS[wordIdx % BLEND_WORDS.length];
         stage.innerHTML = `
-          <div class="blend-card" onclick="speak('${item.word}')">
-            <div class="blend-picture">${item.emoji}</div>
+          <div class="blend-card" id="blend-header-card" onclick="speak('${item.word}')">
+            <div class="blend-picture" id="blend-pic">${pictureRevealed ? item.emoji : '🎁'}</div>
             <div class="blend-word-info">
-              <div class="blend-whole-word">${item.word}</div>
-              <div class="blend-speak-pill">🔊 Tap each sound below!</div>
+              <div class="blend-whole-word" id="blend-word-title">${pictureRevealed ? item.word : '? ? ?'}</div>
+              <div class="blend-speak-pill">🤖 Tap each sound button below, then blend!</div>
             </div>
           </div>
 
@@ -692,13 +751,48 @@
             }).join('')}
           </div>
 
-          <div class="blend-Controls-row">
-            <button class="big-blend-btn" onclick="blendWholeWord()">🤖 BLEND WORD! 🔊</button>
+          <div class="blend-controls-row">
+            <button class="big-blend-btn" onclick="blendWholeWord(false)">🤖 BLEND WORD! 🔊</button>
             <button class="next-word-btn" onclick="nextBlendWord()">Next Word ➡️</button>
           </div>
         `;
-        speak(`Let's blend ${item.word}! Tap each sound button!`);
-      } else if (mode === 'first') {
+        speak(mysteryPic ? 'Tap the three sound buttons to unlock the mystery picture!' : `Let's blend ${item.word}! Tap each sound button.`);
+      }
+
+      // ---------------- MODE 2: BUILD WORD (SPELL CVC) ----------------
+      else if (mode === 'build') {
+        buildStep = 0;
+        const item = BLEND_WORDS[buildIdx % BLEND_WORDS.length];
+        const jumbled = item.sounds.map((s, idx) => ({ s, idx })).sort(() => Math.random() - 0.5);
+
+        stage.innerHTML = `
+          <div class="blend-card" onclick="speak('${item.word}')">
+            <div class="blend-picture">${item.emoji}</div>
+            <div class="blend-word-info">
+              <div class="blend-whole-word">${item.word.toUpperCase()}</div>
+              <div class="blend-speak-pill">🧩 Tap the letters in order to build ${item.word.toUpperCase()}!</div>
+            </div>
+          </div>
+
+          <div class="sound-buttons-row">
+            ${item.sounds.map((s, idx) => `
+              <div class="phoneme-tile empty-slot" id="slot-${idx}">_</div>
+            `).join('')}
+          </div>
+
+          <div class="choice-tray" id="build-tray">
+            ${jumbled.map((obj, cIdx) => `
+              <button class="letter-choice-card" id="build-choice-${cIdx}" onclick="tapBuildLetter(${cIdx}, '${obj.s}')">
+                <div class="letter-glyph">${obj.s}</div>
+              </button>
+            `).join('')}
+          </div>
+        `;
+        speak(`Build the word ${item.word}! What is the first sound in ${item.word}?`);
+      }
+
+      // ---------------- MODE 3: FIRST SOUND ----------------
+      else if (mode === 'first') {
         const target = ALL_SOUNDS[firstIdx % ALL_SOUNDS.length];
         const distractors = ALL_SOUNDS.filter(x => x.letter !== target.letter)
           .sort(() => Math.random() - 0.5)
@@ -710,7 +804,7 @@
             <div class="blend-picture">${target.emoji}</div>
             <div class="blend-word-info">
               <div class="blend-whole-word">${target.word.toUpperCase()}</div>
-              <div class="blend-speak-pill">🔊 What is the first sound?</div>
+              <div class="blend-speak-pill">🎯 What is the first sound in ${target.word.toUpperCase()}?</div>
             </div>
           </div>
 
@@ -732,12 +826,13 @@
               locked = true;
               btn.classList.add('correct');
               playWinChime();
-              speak(`${PHONEME_SPEECH[target.letter]} for ${target.word}! Great job!`);
               stars++;
               document.getElementById('star-count').textContent = stars;
               fireConfetti();
               firstIdx++;
-              setTimeout(renderStage, 1800);
+              speak(`${PHONEME_SPEECH[target.letter]}, as in ${target.word}! Great job!`, 0.92, () => {
+                renderStage();
+              });
             } else {
               btn.classList.add('wrong');
               speakPhoneme(ch.letter);
@@ -747,7 +842,10 @@
         });
 
         speak(`Find the first sound for ${target.word}!`);
-      } else if (mode === 'board') {
+      }
+
+      // ---------------- MODE 4: SOUND BOARD ----------------
+      else if (mode === 'board') {
         const currentSet = SOUND_SETS[boardSetIdx % SOUND_SETS.length];
         stage.innerHTML = `
           <div class="set-subbar">
@@ -786,7 +884,7 @@
       const item = BLEND_WORDS[wordIdx % BLEND_WORDS.length];
       if (litIndices.size === item.sounds.length) {
         locked = true;
-        setTimeout(() => blendWholeWord(true), 650);
+        setTimeout(() => blendWholeWord(true), 700);
       }
     }
 
@@ -799,24 +897,72 @@
         if (dot) dot.classList.add('lit');
       });
 
+      const picEl = document.getElementById('blend-pic');
+      const titleEl = document.getElementById('blend-word-title');
+      const headerCard = document.getElementById('blend-header-card');
+      if (picEl) picEl.textContent = item.emoji;
+      if (titleEl) titleEl.textContent = item.word;
+      if (headerCard) headerCard.classList.add('blended-win');
+
       playWinChime();
-      const spokenSounds = item.sounds.map(s => PHONEME_SPEECH[s] || s).join('... ');
-      speak(`${spokenSounds}... ${item.word}!`, 0.9);
+      const spokenSounds = item.sounds.map(s => PHONEME_SPEECH[s] || s).join(', ');
       stars++;
       document.getElementById('star-count').textContent = stars;
       fireConfetti();
 
-      if (autoAdvance) {
-        setTimeout(() => {
+      speak(`${spokenSounds}... ${item.word}!`, 0.9, () => {
+        if (autoAdvance) {
           wordIdx++;
           renderStage();
-        }, 2300);
-      }
+        }
+      });
     }
 
     function nextBlendWord() {
       wordIdx++;
       renderStage();
+    }
+
+    function tapBuildLetter(choiceIdx, letter) {
+      if (locked) return;
+      const item = BLEND_WORDS[buildIdx % BLEND_WORDS.length];
+      const expected = item.sounds[buildStep];
+
+      const btn = document.getElementById(`build-choice-${choiceIdx}`);
+      if (letter === expected) {
+        playNote(buildStep);
+        speakPhoneme(letter);
+        if (btn) btn.classList.add('used');
+
+        const slot = document.getElementById(`slot-${buildStep}`);
+        if (slot) {
+          slot.textContent = letter;
+          slot.classList.remove('empty-slot');
+          slot.classList.add('lit');
+        }
+        buildStep++;
+
+        if (buildStep === item.sounds.length) {
+          locked = true;
+          setTimeout(() => {
+            playWinChime();
+            stars++;
+            document.getElementById('star-count').textContent = stars;
+            fireConfetti();
+            const spokenSounds = item.sounds.map(s => PHONEME_SPEECH[s] || s).join(', ');
+            speak(`${spokenSounds}... ${item.word}! Awesome spelling!`, 0.92, () => {
+              buildIdx++;
+              renderStage();
+            });
+          }, 550);
+        }
+      } else {
+        if (btn) {
+          btn.classList.add('wrong');
+          setTimeout(() => btn.classList.remove('wrong'), 400);
+        }
+        speak(`Look for ${PHONEME_SPEECH[expected]}`);
+      }
     }
 
     function selectBoardSet(idx) {
@@ -826,7 +972,7 @@
 
     function tapBoardCard(letter, word) {
       playNote(1);
-      speak(`${PHONEME_SPEECH[letter]}... ${word}`);
+      speak(`${PHONEME_SPEECH[letter]}, as in ${word}`);
     }
 
     // Confetti

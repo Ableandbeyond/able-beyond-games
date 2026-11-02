@@ -566,14 +566,15 @@
     let stars = 0;
     let locked = false;
     let stopIndex = 0;
-    let currentPromptSpeech = 'Hail the red London bus!';
+    let currentPromptSpeech = 'Wave to hail the red London bus!';
+    let stageTimer = null;
 
     const LONDON_STOPS = [
-      { id: 'school', name: 'SCHOOL', emoji: '🏫', route: '24', speech: 'Ring the bell for School!' },
-      { id: 'park',   name: 'PARK',   emoji: '🌳', route: '38', speech: 'Ring the bell for the Park!' },
-      { id: 'zoo',    name: 'ZOO',    emoji: '🦁', route: '274', speech: 'Ring the bell for the Zoo!' },
-      { id: 'shop',   name: 'SHOP',   emoji: '🛒', route: '73', speech: 'Ring the bell for the Shop!' },
-      { id: 'home',   name: 'HOME',   emoji: '🏠', route: '159', speech: 'Ring the bell for Home!' }
+      { id: 'school', name: 'SCHOOL', emoji: '🏫', route: '24', speech: 'Press the red stop bell for School!' },
+      { id: 'park',   name: 'PARK',   emoji: '🌳', route: '38', speech: 'Press the red stop bell for the Park!' },
+      { id: 'zoo',    name: 'ZOO',    emoji: '🦁', route: '274', speech: 'Press the red stop bell for the Zoo!' },
+      { id: 'shop',   name: 'SHOP',   emoji: '🛒', route: '73', speech: 'Press the red stop bell for the Shop!' },
+      { id: 'home',   name: 'HOME',   emoji: '🏠', route: '159', speech: 'Press the red stop bell for Home!' }
     ];
 
     // Audio Context
@@ -646,13 +647,32 @@
       } catch (e) {}
     }
 
-    function speak(text) {
-      if (!voiceOn || !('speechSynthesis' in window)) return;
+    // Keep global reference to prevent browser GC cutting off speech mid-sentence
+    window._activeUtterance = null;
+    function speak(text, onDone = null) {
+      if (!voiceOn || !('speechSynthesis' in window)) {
+        if (onDone) setTimeout(onDone, 1400);
+        return;
+      }
       window.speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(text);
+      window._activeUtterance = u;
       u.lang = 'en-GB';
-      u.rate = 0.9;
-      u.pitch = 1.08;
+      u.rate = 0.92;
+      u.pitch = 1.06;
+
+      let finished = false;
+      const done = () => {
+        if (finished) return;
+        finished = true;
+        if (onDone) onDone();
+      };
+
+      u.onend = () => setTimeout(done, 550);
+      u.onerror = () => setTimeout(done, 550);
+      // Safe fallback if browser speech event doesn't fire
+      setTimeout(done, Math.max(2800, text.length * 95));
+
       window.speechSynthesis.speak(u);
     }
 
@@ -682,6 +702,10 @@
     }
 
     function setMode(newMode) {
+      if (stageTimer) {
+        clearTimeout(stageTimer);
+        stageTimer = null;
+      }
       mode = newMode;
       ['stop', 'oyster', 'bell'].forEach(m => {
         document.getElementById(`tab-${m}`).classList.toggle('active', m === mode);
@@ -692,26 +716,18 @@
     function getDoubleDeckerSVG(routeNum, destName) {
       return `
         <svg viewBox="0 0 320 200" width="270" height="170" aria-label="Red London Double Decker Bus">
-          <!-- Bus Shadow -->
           <ellipse cx="160" cy="186" rx="135" ry="10" fill="rgba(0,0,0,0.16)"/>
-          <!-- Red Double Decker Body -->
           <rect x="20" y="18" width="280" height="150" rx="26" fill="#DC2626" stroke="#991B1B" stroke-width="6"/>
-          <!-- White Stripe -->
           <rect x="23" y="92" width="274" height="8" fill="#FEF2F2"/>
-          <!-- Top Deck Windows -->
           <rect x="38" y="32" width="48" height="44" rx="10" fill="#BAE6FD" stroke="#7F1D1D" stroke-width="4"/>
           <rect x="98" y="32" width="48" height="44" rx="10" fill="#BAE6FD" stroke="#7F1D1D" stroke-width="4"/>
           <rect x="158" y="32" width="48" height="44" rx="10" fill="#BAE6FD" stroke="#7F1D1D" stroke-width="4"/>
           <rect x="218" y="32" width="64" height="44" rx="10" fill="#BAE6FD" stroke="#7F1D1D" stroke-width="4"/>
-          <!-- Destination Blind (London style) -->
           <rect x="105" y="104" width="125" height="28" rx="6" fill="#0F172A" stroke="#FACC15" stroke-width="3"/>
           <text x="167" y="124" text-anchor="middle" fill="#FACC15" font-family="Fredoka, sans-serif" font-size="16" font-weight="bold">${routeNum} ${destName}</text>
-          <!-- Lower Deck Windows & Door -->
           <rect x="36" y="106" width="54" height="58" rx="8" fill="#E0F2FE" stroke="#7F1D1D" stroke-width="4"/>
           <rect x="242" y="104" width="44" height="46" rx="8" fill="#BAE6FD" stroke="#7F1D1D" stroke-width="4"/>
-          <!-- Headlight -->
           <circle cx="293" cy="152" r="8" fill="#FEF08A" stroke="#CA8A04" stroke-width="3"/>
-          <!-- Wheels -->
           <circle cx="85" cy="168" r="24" fill="#1E293B" stroke="#475569" stroke-width="6"/>
           <circle cx="85" cy="168" r="10" fill="#CBD5E1"/>
           <circle cx="235" cy="168" r="24" fill="#1E293B" stroke="#475569" stroke-width="6"/>
@@ -730,7 +746,7 @@
       if (mode === 'stop') {
         currentPromptSpeech = `Wave to hail the red London bus to ${stop.name}!`;
         document.getElementById('prompt-emoji').textContent = '🚏';
-        document.getElementById('prompt-text').textContent = `Hail Bus to ${stop. emoji} ${stop.name}!`;
+        document.getElementById('prompt-text').textContent = `Hail Bus to ${stop.emoji} ${stop.name}!`;
 
         scene.innerHTML = `
           <div class="bus-stop-scene">
@@ -812,7 +828,6 @@
           </div>
         `;
 
-        // Also offer 2 simple destination cards at the bottom
         const otherStop = LONDON_STOPS[(stopIndex + 2) % LONDON_STOPS.length];
         const choices = Math.random() > 0.5 ? [stop, otherStop] : [otherStop, stop];
         choices.forEach(item => {
@@ -828,7 +843,7 @@
               completeBellRing();
             } else {
               card.classList.add('wrong');
-              speak(stop.name);
+              speak(`Look for ${stop.name}`);
             }
           };
           tray.appendChild(card);
@@ -886,8 +901,7 @@
       const btn = document.getElementById('hail-btn');
       if (btn) btn.classList.add('correct');
       playWinChime();
-      speak('Beep beep! The red London bus is here!');
-      rewardAndNext();
+      rewardAndAdvanceAfterSpeech('Beep beep! The red London bus is here!');
     }
 
     function completeOysterTap() {
@@ -908,14 +922,13 @@
         screen.textContent = '✅ OYSTER OK!';
       }
       [l1, l2, l3].forEach(l => {
-        if (l) {
-          l.className = 'status-light green';
-        }
+        if (l) l.className = 'status-light green';
       });
 
       playOysterBeep();
-      setTimeout(() => speak('Beep! Oyster card accepted! Jump on the bus!'), 300);
-      rewardAndNext();
+      stageTimer = setTimeout(() => {
+        rewardAndAdvanceAfterSpeech('Beep! Oyster card accepted! Jump on the bus!');
+      }, 280);
     }
 
     function completeBellRing() {
@@ -928,16 +941,18 @@
       }
       const stop = LONDON_STOPS[stopIndex % LONDON_STOPS.length];
       playBusBellDing();
-      setTimeout(() => speak(`Ding! Stopping at ${stop.name}!`), 350);
       stopIndex++;
-      rewardAndNext();
+      stageTimer = setTimeout(() => {
+        rewardAndAdvanceAfterSpeech(`Ding! Stopping at ${stop.name}! Well done!`);
+      }, 320);
     }
 
-    function rewardAndNext() {
+    // Waits until the full spoken sentence finishes before moving to the next mode!
+    function rewardAndAdvanceAfterSpeech(winSentence) {
       stars++;
       document.getElementById('star-count').textContent = stars;
       fireConfetti();
-      setTimeout(() => {
+      speak(winSentence, () => {
         if (mode === 'stop') {
           setMode('oyster');
         } else if (mode === 'oyster') {
@@ -945,7 +960,7 @@
         } else {
           setMode('stop');
         }
-      }, 2100);
+      });
     }
 
     // Confetti
