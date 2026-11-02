@@ -124,36 +124,36 @@
             gap: 6px;
         }
 
-        /* ================= 3 SIMPLE PICTURE TABS ================= */
+        /* ================= 4 SIMPLE PICTURE TABS ================= */
         .mode-tabs {
             max-width: 1120px;
             width: 100%;
             margin: 12px auto 0;
             padding: 0 14px;
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
         }
 
         .mode-tab {
             background: #ffffff;
             border: 4px solid #cbd5e1;
             border-radius: 22px;
-            padding: 12px 12px;
+            padding: 12px 10px;
             font-family: inherit;
-            font-size: clamp(1.1rem, 2.3vw, 1.4rem);
+            font-size: clamp(1rem, 2.1vw, 1.3rem);
             font-weight: 900;
             color: #334155;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
             box-shadow: 0 5px 0 #cbd5e1;
             transition: all 0.15s;
         }
         .mode-tab .tab-icon {
-            font-size: clamp(1.9rem, 4vw, 2.5rem);
+            font-size: clamp(1.8rem, 3.8vw, 2.3rem);
             line-height: 1;
         }
         .mode-tab.active {
@@ -248,12 +248,8 @@
             box-shadow: 0 8px 0 #cbd5e1;
             transition: transform 0.16s, border-color 0.16s, box-shadow 0.16s;
         }
-        .shape-card:hover {
-            transform: translateY(-4px);
-        }
-        .shape-card:active {
-            transform: translateY(4px);
-        }
+        .shape-card:hover { transform: translateY(-4px); }
+        .shape-card:active { transform: translateY(4px); }
 
         .shape-svg-wrap {
             width: clamp(120px, 18vw, 155px);
@@ -333,7 +329,7 @@
             box-shadow: 0 0 0 9px rgba(250, 204, 21, 0.65) !important;
         }
 
-        /* ================= MODE 3: POP CORNERS ================= */
+        /* ================= MODE 3: POP CORNERS & MODE 4: DRAW SHAPE ================= */
         .corners-stage {
             display: flex;
             flex-direction: column;
@@ -416,6 +412,89 @@
             50% { transform: translate(-50%, -50%) scale(1.16); }
         }
 
+        /* ================= MODE 4: TRACE & DRAW CANVAS ================= */
+        .draw-workspace {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+            width: 100%;
+        }
+
+        .canvas-box {
+            position: relative;
+            width: 100%;
+            max-width: 640px;
+            height: 360px;
+            background: #ffffff;
+            border: 6px dashed #64748b;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: inset 0 4px 16px rgba(15, 23, 42, 0.06);
+            touch-action: none;
+        }
+
+        .trace-guide-layer {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            padding: 24px;
+        }
+
+        #trace-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            cursor: crosshair;
+            touch-action: none;
+        }
+
+        .brush-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .color-swatch-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 5px solid #cbd5e1;
+            cursor: pointer;
+            font-size: 1.7rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 0 #94a3b8;
+            transition: transform 0.12s;
+        }
+        .color-swatch-btn.active {
+            border-color: #0f172a;
+            transform: translateY(-4px) scale(1.1);
+            box-shadow: 0 7px 0 #0f172a;
+        }
+
+        .btn-canvas-action {
+            border: 4px solid #0f172a;
+            border-radius: 20px;
+            padding: 12px 22px;
+            font-family: inherit;
+            font-size: 1.3rem;
+            font-weight: 900;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 5px 0 #0f172a;
+        }
+        .btn-canvas-action:active { transform: translateY(3px); box-shadow: 0 2px 0 #0f172a; }
+
         /* Win Banner */
         .win-overlay {
             background: #dcfce7;
@@ -453,7 +532,7 @@
         }
 
         @media (max-width: 780px) {
-            .mode-tabs { grid-template-columns: 1fr; }
+            .mode-tabs { grid-template-columns: repeat(2, 1fr); }
             .shapes-grid.cols-2, .shapes-grid.cols-3 { grid-template-columns: repeat(2, 1fr); }
             .boxes-4-grid { grid-template-columns: repeat(2, 1fr); }
         }
@@ -491,19 +570,23 @@
         </div>
     </header>
 
-    <!-- 3 SIMPLE PICTURE TABS -->
+    <!-- 4 SIMPLE PICTURE TABS -->
     <nav class="mode-tabs" aria-label="Shape Modes">
         <button type="button" class="mode-tab active" id="tab-match" onclick="setMode('match')">
             <span class="tab-icon">🔺</span>
             <span>1. Match Shape</span>
         </button>
+        <button type="button" class="mode-tab" id="tab-draw" onclick="setMode('draw')">
+            <span class="tab-icon">✏️</span>
+            <span>2. Draw Shape</span>
+        </button>
         <button type="button" class="mode-tab" id="tab-real" onclick="setMode('real')">
             <span class="tab-icon">🍕</span>
-            <span>2. Real Shapes</span>
+            <span>3. Real Shapes</span>
         </button>
         <button type="button" class="mode-tab" id="tab-corners" onclick="setMode('corners')">
             <span class="tab-icon">✨</span>
-            <span>3. Pop Corners</span>
+            <span>4. Pop Corners</span>
         </button>
     </nav>
 
@@ -592,6 +675,14 @@
             { id: 'tv',     word: 'SCREEN', emoji: '📺', shape: 'rectangle', shapeWord: 'RECTANGLE' }
         ];
 
+        const BRUSH_COLOURS = [
+            { id: 'red',     hex: '#ef4444', label: '🔴' },
+            { id: 'blue',    hex: '#2563eb', label: '🟦' },
+            { id: 'green',   hex: '#16a34a', label: '🟢' },
+            { id: 'purple',  hex: '#9333ea', label: '🟣' },
+            { id: 'rainbow', hex: 'rainbow', label: '🌈' }
+        ];
+
         function renderShapeSVG(shape) {
             let geom = '';
             if (shape.id === 'circle') {
@@ -611,7 +702,6 @@
             return `
                 <svg viewBox="0 0 100 100" width="100%" height="100%" aria-hidden="true">
                     ${geom}
-                    <!-- Friendly Eyes & Smile inside the shape! -->
                     <circle cx="40" cy="48" r="4.5" fill="#ffffff"/>
                     <circle cx="40" cy="48" r="2.2" fill="#0f172a"/>
                     <circle cx="60" cy="48" r="4.5" fill="#ffffff"/>
@@ -619,6 +709,24 @@
                     <path d="M41 59 Q50 67 59 59" stroke="#ffffff" stroke-width="4" stroke-linecap="round" fill="none"/>
                 </svg>
             `;
+        }
+
+        function renderTraceOutlineSVG(shape) {
+            let geom = '';
+            if (shape.id === 'circle') {
+                geom = `<circle cx="50" cy="50" r="38" fill="none" stroke="${shape.fill}" stroke-width="7" stroke-dasharray="10,8" stroke-linecap="round" opacity="0.45"/>`;
+            } else if (shape.id === 'square') {
+                geom = `<rect x="16" y="16" width="68" height="68" rx="8" fill="none" stroke="${shape.fill}" stroke-width="7" stroke-dasharray="10,8" stroke-linecap="round" opacity="0.45"/>`;
+            } else if (shape.id === 'triangle') {
+                geom = `<polygon points="50,12 88,84 12,84" fill="none" stroke="${shape.fill}" stroke-width="7" stroke-dasharray="10,8" stroke-linejoin="round" stroke-linecap="round" opacity="0.45"/>`;
+            } else if (shape.id === 'rectangle') {
+                geom = `<rect x="10" y="25" width="80" height="50" rx="8" fill="none" stroke="${shape.fill}" stroke-width="7" stroke-dasharray="10,8" stroke-linecap="round" opacity="0.45"/>`;
+            } else if (shape.id === 'star') {
+                geom = `<polygon points="50,10 61,36 90,38 68,57 75,86 50,70 25,86 32,57 10,38 39,36" fill="none" stroke="${shape.fill}" stroke-width="7" stroke-dasharray="10,8" stroke-linejoin="round" stroke-linecap="round" opacity="0.45"/>`;
+            } else if (shape.id === 'heart') {
+                geom = `<path d="M50 86 C50 86 12 62 12 35 C12 18 28 12 40 22 C46 27 50 33 50 33 C50 33 54 27 60 22 C72 12 88 18 88 35 C88 62 50 86 50 86 Z" fill="none" stroke="${shape.fill}" stroke-width="7" stroke-dasharray="10,8" stroke-linejoin="round" stroke-linecap="round" opacity="0.45"/>`;
+            }
+            return `<svg viewBox="0 0 100 100" width="270" height="270" aria-hidden="true">${geom}</svg>`;
         }
 
         /* ================================================================
@@ -635,11 +743,15 @@
             targetShape: null,
             choices: [],
             matchWon: false,
-            // Mode 2: Real Objects
+            // Mode 2: Draw & Trace
+            drawShapeId: 'triangle',
+            brushColor: '#ef4444',
+            rainbowHue: 0,
+            // Mode 3: Real Objects
             realQueue: [],
             selectedRealId: null,
             sortedShapes: { circle: [], square: [], triangle: [], rectangle: [] },
-            // Mode 3: Pop Corners
+            // Mode 4: Pop Corners
             activeCornerShapeId: 'triangle',
             cornerIdx: 0
         };
@@ -735,16 +847,17 @@
 
         function setMode(mode) {
             state.mode = mode;
-            ['match', 'real', 'corners'].forEach(m => {
+            ['match', 'draw', 'real', 'corners'].forEach(m => {
                 document.getElementById('tab-' + m).classList.toggle('active', m === mode);
             });
             if (mode === 'match') setupMatchRound();
+            else if (mode === 'draw') renderDrawMode();
             else if (mode === 'real') setupRealRound();
             else setupCornersRound();
         }
 
         /* ================================================================
-           4. MODE 1: 🔺 MATCH SHAPE (1-WORD TARGET + 2 OR 3 CARDS)
+           4. MODE 1: 🔺 MATCH SHAPE
            ================================================================ */
         function setupMatchRound() {
             state.matchWon = false;
@@ -820,7 +933,168 @@
         }
 
         /* ================================================================
-           5. MODE 2: 🍕 REAL-WORLD SHAPES SORTING
+           5. MODE 2: ✏️ DRAW & TRACE SHAPE (SMARTBOARD CANVAS)
+           ================================================================ */
+        function renderDrawMode() {
+            const box = document.getElementById('stage-content');
+            const sh = SHAPES.find(s => s.id === state.drawShapeId) || SHAPES[2];
+
+            box.innerHTML = `
+                <div class="shape-pills-bar">
+                    ${SHAPES.map(s => `
+                        <button type="button"
+                                class="shape-pill-btn ${s.id === sh.id ? 'active' : ''}"
+                                onclick="selectDrawShape('${s.id}')">
+                            <span>${s.emoji}</span>
+                            <span>${s.word}</span>
+                        </button>
+                    `).join('')}
+                </div>
+
+                <div class="draw-workspace">
+                    <div class="canvas-box" id="canvas-box">
+                        <div class="trace-guide-layer">
+                            ${renderTraceOutlineSVG(sh)}
+                        </div>
+                        <canvas id="trace-canvas"></canvas>
+                    </div>
+
+                    <div class="brush-toolbar">
+                        ${BRUSH_COLOURS.map(c => `
+                            <button type="button"
+                                    class="color-swatch-btn ${state.brushColor === c.hex ? 'active' : ''}"
+                                    style="background:${c.hex === 'rainbow' ? 'conic-gradient(red, yellow, lime, aqua, blue, magenta, red)' : c.hex};"
+                                    onclick="selectBrushColor('${c.hex}')">
+                                ${c.label}
+                            </button>
+                        `).join('')}
+
+                        <button type="button"
+                                class="btn-canvas-action"
+                                style="background:#fee2e2;color:#991b1b;"
+                                onclick="clearTraceCanvas()">
+                            🧽 CLEAR
+                        </button>
+
+                        <button type="button"
+                                class="btn-canvas-action"
+                                style="background:#22c55e;color:#ffffff;"
+                                onclick="finishDrawingShape()">
+                            🌟 DONE!
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            initTraceCanvas();
+        }
+
+        function selectDrawShape(id) {
+            state.drawShapeId = id;
+            const sh = SHAPES.find(s => s.id === id);
+            if (sh) {
+                playNotes(sh.notes);
+                speakWord(sh.word);
+            }
+            renderDrawMode();
+        }
+
+        function selectBrushColor(hex) {
+            state.brushColor = hex;
+            playNotes([523.25]);
+            renderDrawMode();
+        }
+
+        function clearTraceCanvas() {
+            const canvas = document.getElementById('trace-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            playNotes([392.00, 329.63], 'sine', 0.08, 0.25);
+        }
+
+        function finishDrawingShape() {
+            const sh = SHAPES.find(s => s.id === state.drawShapeId) || SHAPES[0];
+            playWinChime();
+            speakWord(sh.word);
+            addStar();
+            const idx = SHAPES.findIndex(s => s.id === state.drawShapeId);
+            const next = SHAPES[(idx + 1) % SHAPES.length];
+            setTimeout(() => {
+                state.drawShapeId = next.id;
+                if (state.mode === 'draw') renderDrawMode();
+            }, 900);
+        }
+
+        function initTraceCanvas() {
+            const canvas = document.getElementById('trace-canvas');
+            const box = document.getElementById('canvas-box');
+            if (!canvas || !box) return;
+
+            canvas.width = box.clientWidth;
+            canvas.height = box.clientHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.lineWidth = 18;
+
+            let drawing = false;
+            let lastX = 0;
+            let lastY = 0;
+            let strokeStep = 0;
+
+            function getPos(e) {
+                const rect = canvas.getBoundingClientRect();
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                return { x: clientX - rect.left, y: clientY - rect.top };
+            }
+
+            function start(e) {
+                e.preventDefault();
+                drawing = true;
+                const p = getPos(e);
+                lastX = p.x;
+                lastY = p.y;
+                draw(e);
+            }
+
+            function draw(e) {
+                if (!drawing) return;
+                e.preventDefault();
+                const p = getPos(e);
+                ctx.beginPath();
+                ctx.moveTo(lastX, lastY);
+                ctx.lineTo(p.x, p.y);
+
+                if (state.brushColor === 'rainbow') {
+                    state.rainbowHue = (state.rainbowHue + 6) % 360;
+                    ctx.strokeStyle = `hsl(${state.rainbowHue}, 90%, 52%)`;
+                } else {
+                    ctx.strokeStyle = state.brushColor;
+                }
+                ctx.stroke();
+                lastX = p.x;
+                lastY = p.y;
+
+                strokeStep++;
+                if (strokeStep % 18 === 0) {
+                    const pentatonic = [523.25, 587.33, 659.25, 783.99, 880.00];
+                    playNotes([pentatonic[Math.floor(Math.random() * pentatonic.length)]], 'sine', 0.05, 0.16);
+                }
+            }
+
+            function stop() {
+                drawing = false;
+            }
+
+            canvas.addEventListener('pointerdown', start);
+            canvas.addEventListener('pointermove', draw);
+            window.addEventListener('pointerup', stop);
+        }
+
+        /* ================================================================
+           6. MODE 3: 🍕 REAL-WORLD SHAPES SORTING
            ================================================================ */
         function setupRealRound() {
             state.sortedShapes = { circle: [], square: [], triangle: [], rectangle: [] };
@@ -934,7 +1208,7 @@
         }
 
         /* ================================================================
-           6. MODE 3: ✨ POP CORNERS (TAP GLOWING POINTS 1, 2, 3...)
+           7. MODE 4: ✨ POP CORNERS (TAP GLOWING POINTS 1, 2, 3...)
            ================================================================ */
         function setupCornersRound(shapeId) {
             if (shapeId) state.activeCornerShapeId = shapeId;
@@ -1022,7 +1296,7 @@
         }
 
         /* ================================================================
-           7. SPACEBAR / ENTER SWITCH ACCESSIBILITY
+           8. SPACEBAR / ENTER SWITCH ACCESSIBILITY
            ================================================================ */
         window.addEventListener('keydown', (e) => {
             if (e.code === 'Space' || e.code === 'Enter') {
@@ -1031,6 +1305,8 @@
                 if (state.mode === 'match') {
                     if (state.matchWon) setupMatchRound();
                     else pickMatchShape(state.targetShape.id);
+                } else if (state.mode === 'draw') {
+                    finishDrawingShape();
                 } else if (state.mode === 'real') {
                     if (state.realQueue.length === 0) setupRealRound();
                     else handleShapeBoxTap(state.realQueue[0].shape);
