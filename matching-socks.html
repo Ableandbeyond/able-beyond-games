@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Matching Socks 🧦 | Able & Beyond</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --bg-main: #f8fafc;
+            --text-dark: #0f172a;
+            --focus-ring: #facc15;
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+            background: var(--bg-main);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        button:focus-visible, .focusable:focus-visible {
+            outline: 6px solid var(--focus-ring) !important;
+            outline-offset: 4px !important;
+            box-shadow: 0 0 0 10px rgba(250, 204, 21, 0.45) !important;
+            z-index: 30;
+        }
+
+        /* ================= TOP BAR ================= */
+        .top-bar {
+            background: #ffffff;
+            border-bottom: 4px solid #cbd5e1;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .btn-home {
+            background: #0f172a;
+            color: #ffffff;
+            border: 3px solid #0f172a;
+            border-radius: 18px;
+            padding: 10px 18px;
+            font-size: 1.15rem;
+            font-weight: 900;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #334155;
+        }
+        .btn-home:active { transform: translateY(3px); box-shadow: 0 1px 0 #334155; }
+
+        .game-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: clamp(1.35rem, 3vw, 2rem);
+            font-weight: 900;
+            color: #0f172a;
+        }
+
+        .top-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .ctrl-btn {
+            background: #f1f5f9;
+            color: #0f172a;
+            border: 3px solid #94a3b8;
+            border-radius: 16px;
+            padding: 9px 14px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 0 #94a3b8;
+            transition: all 0.15s;
+        }
+        .ctrl-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #94a3b8; }
+        .ctrl-btn.active {
+            background: #dcfce7;
+            border-color: #16a34a;
+            color: #14532d;
+            box-shadow: 0 4px 0 #16a34a;
+        }
+
+        .star-pill {
+            background: #fef9c3;
+            border: 3px solid #eab308;
+            color: #854d0e;
+            border-radius: 999px;
+            padding: 8px 16px;
+            font-size: 1.2rem;
+            font-weight: 900;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* ================= 3 SIMPLE PICTURE TABS ================= */
+        .mode-tabs {
+            max-width: 1120px;
+            width: 100%;
+            margin: 12px auto 0;
+            padding: 0 14px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .mode-tab {
+            background: #ffffff;
+            border: 4px solid #cbd5e1;
+            border-radius: 22px;
+            padding: 12px 12px;
+            font-family: inherit;
+            font-size: clamp(1.1rem, 2.3vw, 1.4rem);
+            font-weight: 900;
+            color: #334155;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 5px 0 #cbd5e1;
+            transition: all 0.15s;
+        }
+        .mode-tab .tab-icon {
+            font-size: clamp(1.9rem, 4vw, 2.5rem);
+            line-height: 1;
+        }
+        .mode-tab.active {
+            background: #eff6ff;
+            border-color: #2563eb;
+            color: #1e3a8a;
+            box-shadow: 0 5px 0 #2563eb;
+            transform: translateY(-2px);
+        }
+
+        /* ================= MAIN STAGE ================= */
+        .stage-wrap {
+            flex: 1;
+            max-width: 1120px;
+            width: 100%;
+            margin: 12px auto 20px;
+            padding: 0 14px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stage-card {
+            background: #ffffff;
+            border: 5px solid #cbd5e1;
+            border-radius: 32px;
+            padding: 20px;
+            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.07);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 18px;
+        }
+
+        /* ================= MODE 1: MATCH PAIRS GRID ================= */
+        .socks-grid {
+            display: grid;
+            gap: 18px;
+            margin: auto 0;
+        }
+        .socks-grid.count-4 {
+            grid-template-columns: repeat(2, 1fr);
+            max-width: 640px;
+            width: 100%;
+            margin: auto;
+        }
+        .socks-grid.count-6 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .sock-card {
+            background: #ffffff;
+            border: 6px solid #cbd5e1;
+            border-radius: 28px;
+            padding: 18px 12px;
+            min-height: 210px;
+            cursor: pointer;
+            font-family: inherit;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 8px 0 #cbd5e1;
+            transition: transform 0.16s, border-color 0.16s, box-shadow 0.16s, background-color 0.16s;
+            position: relative;
+        }
+        .sock-card:hover:not(.matched) {
+            transform: translateY(-4px);
+            border-color: #64748b;
+        }
+        .sock-card.selected {
+            background: #fef9c3;
+            border-color: #eab308;
+            box-shadow: 0 0 0 8px rgba(250, 204, 21, 0.5), 0 8px 0 #ca8a04;
+            transform: translateY(-6px) scale(1.04);
+        }
+        .sock-card.hint-pair {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 6px rgba(59, 130, 246, 0.35), 0 8px 0 #2563eb;
+        }
+        .sock-card.matched {
+            background: #dcfce7;
+            border-color: #16a34a;
+            box-shadow: 0 6px 0 #15803d;
+            opacity: 0.85;
+            cursor: default;
+        }
+
+        .sock-svg-box {
+            width: clamp(105px, 16vw, 135px);
+            height: clamp(105px, 16vw, 135px);
+        }
+
+        .sock-word {
+            font-size: clamp(1.35rem, 2.8vw, 1.8rem);
+            font-weight: 900;
+            color: #0f172a;
+            text-transform: uppercase;
+            padding: 4px 16px;
+            border-radius: 999px;
+            background: #f1f5f9;
+        }
+        .sock-card.matched .sock-word {
+            background: #16a34a;
+            color: #ffffff;
+        }
+
+        @keyframes gentleWiggle {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+        .wiggle { animation: gentleWiggle 0.38s ease-in-out; }
+
+        /* ================= MODE 2: WASHING LINE / COLOUR BASKETS ================= */
+        .laundry-tray {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            min-height: 165px;
+            padding: 14px;
+            background: #f8fafc;
+            border: 4px dashed #94a3b8;
+            border-radius: 26px;
+        }
+
+        .laundry-token {
+            background: #ffffff;
+            border: 5px solid #475569;
+            border-radius: 24px;
+            padding: 10px 16px;
+            cursor: grab;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 6px 0 #475569;
+            transition: transform 0.15s;
+        }
+        .laundry-token.selected {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 7px rgba(37, 99, 235, 0.35), 0 6px 0 #1d4ed8;
+            transform: translateY(-5px) scale(1.05);
+        }
+
+        .baskets-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+
+        .colour-basket {
+            border-width: 6px;
+            border-style: solid;
+            border-radius: 26px;
+            padding: 16px 10px;
+            min-height: 190px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+        .colour-basket.highlight-basket {
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 0 0 9px rgba(250, 204, 21, 0.65) !important;
+        }
+
+        /* ================= MODE 3: FIND THE PAIR ================= */
+        .target-banner {
+            background: #f8fafc;
+            border: 4px solid #94a3b8;
+            border-radius: 26px;
+            padding: 14px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+        }
+
+        /* Win Banner */
+        .win-overlay {
+            background: #dcfce7;
+            border: 5px solid #16a34a;
+            border-radius: 26px;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .win-text {
+            font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+            font-weight: 900;
+            color: #14532d;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .btn-next-giant {
+            background: #16a34a;
+            color: #ffffff;
+            border: 4px solid #14532d;
+            border-radius: 20px;
+            padding: 12px 28px;
+            font-family: inherit;
+            font-size: 1.5rem;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #14532d;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        @media (max-width: 780px) {
+            .mode-tabs { grid-template-columns: 1fr; }
+            .socks-grid.count-6 { grid-template-columns: repeat(2, 1fr); }
+            .baskets-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="top-bar">
+        <a href="https://games.ableandbeyond.support/index.html" class="btn-home" aria-label="Back to Game Hub">
+            ⬅️ Hub
+        </a>
+
+        <div class="game-title">
+            <span>🧦</span>
+            <span>Matching Socks</span>
+        </div>
+
+        <div class="top-controls">
+            <button type="button" id="btn-difficulty" class="ctrl-btn active" onclick="toggleDifficulty()" title="Switch between 4 Socks (Easy) or 6 Socks">
+                🧦 4 Socks
+            </button>
+            <button type="button" id="btn-one-tap" class="ctrl-btn" onclick="toggleOneTap()" title="1-Tap & Spacebar Switch Mode">
+                ⚡ 1-Tap: OFF
+            </button>
+            <button type="button" id="btn-voice" class="ctrl-btn active" onclick="toggleVoice()" title="Toggle 1-Word Voice">
+                🗣️ Voice
+            </button>
+            <button type="button" id="btn-sound" class="ctrl-btn active" onclick="toggleSound()" title="Toggle Musical Sounds">
+                🎵 Sound
+            </button>
+            <div class="star-pill" aria-label="Stars earned">
+                ⭐ <span id="star-count">0</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- 3 SIMPLE PICTURE TABS -->
+    <nav class="mode-tabs" aria-label="Sock Modes">
+        <button type="button" class="mode-tab active" id="tab-pairs" onclick="setMode('pairs')">
+            <span class="tab-icon">🧦</span>
+            <span>1. Match Pairs</span>
+        </button>
+        <button type="button" class="mode-tab" id="tab-baskets" onclick="setMode('baskets')">
+            <span class="tab-icon">🧺</span>
+            <span>2. Colour Baskets</span>
+        </button>
+        <button type="button" class="mode-tab" id="tab-find" onclick="setMode('find')">
+            <span class="tab-icon">👀</span>
+            <span>3. Find Match</span>
+        </button>
+    </nav>
+
+    <!-- MAIN STAGE -->
+    <main class="stage-wrap">
+        <div id="stage-content" class="stage-card">
+            <!-- Rendered by JS -->
+        </div>
+    </main>
+
+    <script>
+        /* ================================================================
+           1. COLOURFUL CUSTOM SVG SOCKS DATA (1-WORD LABELS)
+           ================================================================ */
+        const SOCK_TYPES = [
+            { id: 'red',    word: 'RED',    main: '#ef4444', trim: '#b91c1c', bg: '#fef2f2', pattern: 'plain',  notes: [523.25, 659.25] },
+            { id: 'blue',   word: 'BLUE',   main: '#3b82f6', trim: '#1d4ed8', bg: '#eff6ff', pattern: 'plain',  notes: [440.00, 554.37] },
+            { id: 'green',  word: 'GREEN',  main: '#22c55e', trim: '#15803d', bg: '#f0fdf4', pattern: 'plain',  notes: [392.00, 493.88] },
+            { id: 'yellow', word: 'YELLOW', main: '#eab308', trim: '#a16207', bg: '#fefce8', pattern: 'plain',  notes: [587.33, 739.99] },
+            { id: 'star',   word: 'STAR',   main: '#8b5cf6', trim: '#5b21b6', bg: '#f5f3ff', pattern: 'star',   notes: [523.25, 783.99] },
+            { id: 'stripe', word: 'STRIPE', main: '#ec4899', trim: '#9d174d', bg: '#fdf2f8', pattern: 'stripe', notes: [493.88, 659.25] }
+        ];
+
+        function renderSockSVG(sock) {
+            let patternEl = '';
+            if (sock.pattern === 'star') {
+                patternEl = `<text x="54" y="55" font-size="24" text-anchor="middle">⭐</text>`;
+            } else if (sock.pattern === 'stripe') {
+                patternEl = `
+                    <line x1="36" y1="36" x2="72" y2="36" stroke="#fde047" stroke-width="6" stroke-linecap="round"/>
+                    <line x1="36" y1="50" x2="72" y2="50" stroke="#fde047" stroke-width="6" stroke-linecap="round"/>
+                `;
+            }
+
+            return `
+                <svg viewBox="0 0 110 110" width="100%" height="100%" aria-hidden="true">
+                    <!-- Main Sock Shape -->
+                    <path d="M36 14 H74 V62 C74 78 64 90 48 92 H28 C16 92 12 82 14 72 C16 62 26 58 36 58 Z"
+                          fill="${sock.main}" stroke="#0f172a" stroke-width="4.5" stroke-linejoin="round"/>
+                    <!-- Top Cuff -->
+                    <rect x="34" y="12" width="42" height="14" rx="5"
+                          fill="${sock.trim}" stroke="#0f172a" stroke-width="4"/>
+                    <!-- Heel Patch -->
+                    <path d="M60 66 Q74 66 74 78 Q64 88 54 88 Q54 74 60 66 Z"
+                          fill="${sock.trim}"/>
+                    <!-- Toe Patch -->
+                    <path d="M26 59 Q14 62 14 75 Q14 89 27 91 Z"
+                          fill="${sock.trim}"/>
+                    ${patternEl}
+                </svg>
+            `;
+        }
+
+        /* ================================================================
+           2. STATE & WEB AUDIO + 1-WORD TTS
+           ================================================================ */
+        const state = {
+            mode: 'pairs',
+            easyFour: true,
+            oneTap: false,
+            voiceOn: true,
+            soundOn: true,
+            stars: parseInt(localStorage.getItem('ab_socks_stars') || '0', 10),
+            // Mode 1: Match Pairs
+            deck: [],
+            selectedIdx: null,
+            matchedIndices: [],
+            // Mode 2: Colour Baskets
+            basketQueue: [],
+            selectedTokenId: null,
+            sortedBaskets: { red: [], blue: [], green: [], yellow: [] },
+            // Mode 3: Find Match
+            targetSock: null,
+            findChoices: [],
+            findWon: false
+        };
+
+        let audioCtx = null;
+        function getAudioCtx() {
+            if (!audioCtx) {
+                const AC = window.AudioContext || window.webkitAudioContext;
+                if (AC) audioCtx = new AC();
+            }
+            if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+            return audioCtx;
+        }
+
+        function playNotes(freqs, type = 'triangle', spacing = 0.09, duration = 0.36) {
+            if (!state.soundOn) return;
+            const ctx = getAudioCtx();
+            if (!ctx) return;
+            const now = ctx.currentTime;
+            freqs.forEach((f, idx) => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(f, now + idx * spacing);
+                gain.gain.setValueAtTime(0.001, now + idx * spacing);
+                gain.gain.exponentialRampToValueAtTime(0.24, now + idx * spacing + 0.02);
+                gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * spacing + duration);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start(now + idx * spacing);
+                osc.stop(now + idx * spacing + duration + 0.02);
+            });
+        }
+
+        function playWinChime() {
+            playNotes([523.25, 659.25, 783.99, 1046.50], 'triangle', 0.09, 0.45);
+        }
+
+        function playSoftBump() {
+            playNotes([220, 196], 'sine', 0.1, 0.25);
+        }
+
+        function speakWord(text) {
+            if (!state.voiceOn || !('speechSynthesis' in window)) return;
+            try {
+                window.speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(text);
+                u.lang = 'en-GB';
+                u.rate = 0.92;
+                u.pitch = 1.05;
+                window.speechSynthesis.speak(u);
+            } catch (e) {}
+        }
+
+        function addStar() {
+            state.stars += 1;
+            localStorage.setItem('ab_socks_stars', String(state.stars));
+            document.getElementById('star-count').textContent = state.stars;
+            if (typeof confetti === 'function') {
+                confetti({ particleCount: 45, spread: 65, origin: { y: 0.7 } });
+            }
+        }
+
+        /* ================================================================
+           3. HEADER CONTROLS & TABS
+           ================================================================ */
+        function toggleDifficulty() {
+            state.easyFour = !state.easyFour;
+            const btn = document.getElementById('btn-difficulty');
+            btn.textContent = state.easyFour ? '🧦 4 Socks' : '🧦 6 Socks';
+            btn.classList.toggle('active', state.easyFour);
+            if (state.mode === 'pairs') setupPairsRound();
+            else if (state.mode === 'find') setupFindRound();
+        }
+
+        function toggleOneTap() {
+            state.oneTap = !state.oneTap;
+            const btn = document.getElementById('btn-one-tap');
+            btn.textContent = state.oneTap ? '⚡ 1-Tap: ON' : '⚡ 1-Tap: OFF';
+            btn.classList.toggle('active', state.oneTap);
+        }
+
+        function toggleVoice() {
+            state.voiceOn = !state.voiceOn;
+            document.getElementById('btn-voice').classList.toggle('active', state.voiceOn);
+            if (state.voiceOn) speakWord('Voice On');
+        }
+
+        function toggleSound() {
+            state.soundOn = !state.soundOn;
+            document.getElementById('btn-sound').classList.toggle('active', state.soundOn);
+            if (state.soundOn) playWinChime();
+        }
+
+        function setMode(mode) {
+            state.mode = mode;
+            ['pairs', 'baskets', 'find'].forEach(m => {
+                document.getElementById('tab-' + m).classList.toggle('active', m === mode);
+            });
+            if (mode === 'pairs') setupPairsRound();
+            else if (mode === 'baskets') setupBasketsRound();
+            else setupFindRound();
+        }
+
+        /* ================================================================
+           4. MODE 1: 🧦 MATCH PAIRS (NO ALERT POP-UPS, VISUAL GLOW HINT)
+           ================================================================ */
+        function setupPairsRound() {
+            const pairCount = state.easyFour ? 2 : 3;
+            const chosenTypes = [...SOCK_TYPES].sort(() => Math.random() - 0.5).slice(0, pairCount);
+            const cards = [];
+            chosenTypes.forEach(t => {
+                cards.push({ ...t, uid: t.id + '_1' });
+                cards.push({ ...t, uid: t.id + '_2' });
+            });
+            state.deck = cards.sort(() => Math.random() - 0.5);
+            state.selectedIdx = null;
+            state.matchedIndices = [];
+            renderPairsMode();
+        }
+
+        function renderPairsMode() {
+            const box = document.getElementById('stage-content');
+            const total = state.deck.length;
+            const allDone = state.matchedIndices.length === total;
+            const selectedCard = state.selectedIdx !== null ? state.deck[state.selectedIdx] : null;
+
+            box.innerHTML = `
+                <div class="socks-grid count-${total}">
+                    ${state.deck.map((sock, idx) => {
+                        const isMatched = state.matchedIndices.includes(idx);
+                        const isSelected = state.selectedIdx === idx;
+                        const isHintPair = selectedCard && !isSelected && !isMatched && sock.id === selectedCard.id;
+
+                        return `
+                            <button type="button"
+                                    id="sock-card-${idx}"
+                                    class="sock-card ${isMatched ? 'matched' : ''} ${isSelected ? 'selected' : ''} ${isHintPair ? 'hint-pair' : ''}"
+                                    onclick="handleSockTap(${idx})">
+                                <div class="sock-svg-box">${renderSockSVG(sock)}</div>
+                                <span class="sock-word">${isMatched ? '✓ ' + sock.word : sock.word}</span>
+                            </button>
+                        `;
+                    }).join('')}
+                </div>
+
+                ${allDone ? `
+                    <div class="win-overlay">
+                        <div class="win-text">
+                            <span>🧺</span>
+                            <span>All Socks Paired!</span>
+                        </div>
+                        <button type="button" class="btn-next-giant" onclick="setupPairsRound()">
+                            Next Socks ➡️
+                        </button>
+                    </div>
+                ` : ''}
+            `;
+        }
+
+        function handleSockTap(idx) {
+            if (state.matchedIndices.includes(idx)) return;
+            const tapped = state.deck[idx];
+
+            // In 1-Tap Switch Mode, tapping any unmatched sock pairs it automatically!
+            if (state.oneTap) {
+                const partnerIdx = state.deck.findIndex((s, i) => i !== idx && s.id === tapped.id && !state.matchedIndices.includes(i));
+                if (partnerIdx !== -1) {
+                    state.matchedIndices.push(idx, partnerIdx);
+                    state.selectedIdx = null;
+                    playWinChime();
+                    speakWord(tapped.word);
+                    if (state.matchedIndices.length === state.deck.length) addStar();
+                    renderPairsMode();
+                    return;
+                }
+            }
+
+            if (state.selectedIdx === null) {
+                state.selectedIdx = idx;
+                playNotes(tapped.notes);
+                speakWord(tapped.word);
+                renderPairsMode();
+            } else if (state.selectedIdx === idx) {
+                state.selectedIdx = null;
+                renderPairsMode();
+            } else {
+                const first = state.deck[state.selectedIdx];
+                if (first.id === tapped.id) {
+                    state.matchedIndices.push(state.selectedIdx, idx);
+                    state.selectedIdx = null;
+                    playWinChime();
+                    speakWord(tapped.word);
+                    if (state.matchedIndices.length === state.deck.length) addStar();
+                    renderPairsMode();
+                } else {
+                    const cardEl = document.getElementById('sock-card-' + idx);
+                    if (cardEl) {
+                        cardEl.classList.remove('wiggle');
+                        void cardEl.offsetWidth;
+                        cardEl.classList.add('wiggle');
+                    }
+                    playSoftBump();
+                    speakWord(tapped.word);
+                }
+            }
+        }
+
+        /* ================================================================
+           5. MODE 2: 🧺 COLOUR BASKETS (SORT BY COLOUR)
+           ================================================================ */
+        function setupBasketsRound() {
+            state.sortedBaskets = { red: [], blue: [], green: [], yellow: [] };
+            const fourColours = SOCK_TYPES.filter(s => ['red', 'blue', 'green', 'yellow'].includes(s.id));
+            state.basketQueue = [...fourColours].sort(() => Math.random() - 0.5);
+            state.selectedTokenId = state.basketQueue[0].id;
+            renderBasketsMode();
+        }
+
+        function renderBasketsMode() {
+            const box = document.getElementById('stage-content');
+            const allDone = state.basketQueue.length === 0;
+            const activeSock = state.basketQueue.find(s => s.id === state.selectedTokenId);
+            const baskets = SOCK_TYPES.filter(s => ['red', 'blue', 'green', 'yellow'].includes(s.id));
+
+            box.innerHTML = `
+                <div class="laundry-tray">
+                    ${allDone ? `
+                        <div class="win-text">🌟 Laundry Sorted!</div>
+                    ` : state.basketQueue.map(sock => `
+                        <div class="laundry-token ${state.selectedTokenId === sock.id ? 'selected' : ''}"
+                             draggable="true"
+                             ondragstart="event.dataTransfer.setData('text/plain', '${sock.id}'); state.selectedTokenId='${sock.id}';"
+                             onclick="selectBasketSock('${sock.id}')"
+                             tabindex="0"
+                             role="button">
+                            <div style="width:82px;height:82px;">${renderSockSVG(sock)}</div>
+                            <span style="font-size:1.25rem;font-weight:900;">${sock.word}</span>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div class="baskets-grid">
+                    ${baskets.map(b => {
+                        const isTarget = activeSock && activeSock.id === b.id;
+                        return `
+                            <div class="colour-basket ${isTarget ? 'highlight-basket' : ''}"
+                                 style="background:${b.bg};border-color:${b.main};color:${b.trim};box-shadow:0 7px 0 ${b.trim};"
+                                 ondragover="event.preventDefault()"
+                                 ondrop="onBasketDrop(event, '${b.id}')"
+                                 onclick="handleBasketTap('${b.id}')"
+                                 tabindex="0"
+                                 role="button">
+                                <div style="text-align:center;">
+                                    <div style="font-size:2.8rem;">🧺</div>
+                                    <div style="font-size:1.5rem;font-weight:900;">${b.word}</div>
+                                </div>
+                                <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;">
+                                    ${state.sortedBaskets[b.id].map(s => `
+                                        <div style="width:48px;height:48px;">${renderSockSVG(s)}</div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+
+                ${allDone ? `
+                    <div class="win-overlay">
+                        <div class="win-text">🧺 All In Baskets!</div>
+                        <button type="button" class="btn-next-giant" onclick="setupBasketsRound()">
+                            Play Again 🔄
+                        </button>
+                    </div>
+                ` : ''}
+            `;
+        }
+
+        function selectBasketSock(id) {
+            const s = state.basketQueue.find(x => x.id === id);
+            if (!s) return;
+            state.selectedTokenId = id;
+            playNotes(s.notes);
+            speakWord(s.word);
+            if (state.oneTap) {
+                handleBasketTap(s.id);
+                return;
+            }
+            renderBasketsMode();
+        }
+
+        function onBasketDrop(e, basketId) {
+            e.preventDefault();
+            const id = e.dataTransfer.getData('text/plain') || state.selectedTokenId;
+            state.selectedTokenId = id;
+            handleBasketTap(basketId);
+        }
+
+        function handleBasketTap(basketId) {
+            if (!state.selectedTokenId && state.basketQueue.length > 0) {
+                state.selectedTokenId = state.basketQueue[0].id;
+            }
+            const sock = state.basketQueue.find(s => s.id === state.selectedTokenId);
+            if (!sock) return;
+
+            if (sock.id === basketId || state.oneTap) {
+                const target = sock.id;
+                state.sortedBaskets[target].push(sock);
+                state.basketQueue = state.basketQueue.filter(s => s.id !== sock.id);
+                state.selectedTokenId = state.basketQueue[0] ? state.basketQueue[0].id : null;
+                playWinChime();
+                speakWord(sock.word);
+                if (state.basketQueue.length === 0) addStar();
+                renderBasketsMode();
+            } else {
+                playSoftBump();
+            }
+        }
+
+        /* ================================================================
+           6. MODE 3: 👀 FIND MATCH (1 TARGET SOCK + 2 OR 3 CHOICES)
+           ================================================================ */
+        function setupFindRound() {
+            state.findWon = false;
+            const count = state.easyFour ? 2 : 3;
+            const pool = [...SOCK_TYPES].sort(() => Math.random() - 0.5).slice(0, count);
+            state.findChoices = pool;
+            state.targetSock = pool[Math.floor(Math.random() * pool.length)];
+            renderFindMode();
+            setTimeout(() => speakWord(state.targetSock.word), 250);
+        }
+
+        function renderFindMode() {
+            const box = document.getElementById('stage-content');
+            const t = state.targetSock;
+
+            box.innerHTML = `
+                <div class="target-banner">
+                    <div style="width:95px;height:95px;">${renderSockSVG(t)}</div>
+                    <span style="font-size:2.4rem;font-weight:900;">${t.word}</span>
+                </div>
+
+                <div class="socks-grid count-${state.findChoices.length === 2 ? 4 : 6}">
+                    ${state.findChoices.map(sock => `
+                        <button type="button"
+                                id="find-sock-${sock.id}"
+                                class="sock-card"
+                                onclick="pickFindSock('${sock.id}')">
+                            <div class="sock-svg-box">${renderSockSVG(sock)}</div>
+                            <span class="sock-word">${sock.word}</span>
+                        </button>
+                    `).join('')}
+                </div>
+
+                ${state.findWon ? `
+                    <div class="win-overlay">
+                        <div class="win-text">🌟 ${t.word} Match!</div>
+                        <button type="button" class="btn-next-giant" onclick="setupFindRound()">
+                            Next ➡️
+                        </button>
+                    </div>
+                ` : ''}
+            `;
+        }
+
+        function pickFindSock(id) {
+            if (state.findWon) return;
+            const actualId = state.oneTap ? state.targetSock.id : id;
+            const picked = SOCK_TYPES.find(s => s.id === actualId);
+            if (actualId === state.targetSock.id) {
+                state.findWon = true;
+                playWinChime();
+                speakWord(picked.word);
+                addStar();
+                renderFindMode();
+            } else {
+                const el = document.getElementById('find-sock-' + id);
+                if (el) {
+                    el.classList.remove('wiggle');
+                    void el.offsetWidth;
+                    el.classList.add('wiggle');
+                }
+                playSoftBump();
+                if (picked) speakWord(picked.word);
+            }
+        }
+
+        /* ================================================================
+           7. SPACEBAR / ENTER SWITCH ACCESSIBILITY
+           ================================================================ */
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' || e.code === 'Enter') {
+                if (document.activeElement && document.activeElement.tagName === 'BUTTON') return;
+                e.preventDefault();
+                if (state.mode === 'pairs') {
+                    if (state.matchedIndices.length === state.deck.length) {
+                        setupPairsRound();
+                    } else {
+                        const firstUnmatched = state.deck.findIndex((_, i) => !state.matchedIndices.includes(i));
+                        if (firstUnmatched !== -1) {
+                            const target = state.deck[firstUnmatched];
+                            const secondUnmatched = state.deck.findIndex((s, i) => i !== firstUnmatched && s.id === target.id && !state.matchedIndices.includes(i));
+                            if (secondUnmatched !== -1) {
+                                state.matchedIndices.push(firstUnmatched, secondUnmatched);
+                                playWinChime();
+                                speakWord(target.word);
+                                if (state.matchedIndices.length === state.deck.length) addStar();
+                                renderPairsMode();
+                            }
+                        }
+                    }
+                } else if (state.mode === 'baskets') {
+                    if (state.basketQueue.length === 0) setupBasketsRound();
+                    else handleBasketTap(state.basketQueue[0].id);
+                } else {
+                    if (state.findWon) setupFindRound();
+                    else pickFindSock(state.targetSock.id);
+                }
+            }
+        });
+
+        // Boot
+        document.getElementById('star-count').textContent = state.stars;
+        setupPairsRound();
+    </script>
+</body>
+</html>

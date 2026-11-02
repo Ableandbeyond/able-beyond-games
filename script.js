@@ -299,7 +299,8 @@ function navTo(page) {
     }
     state.page = page;
     if (page === 'Socks') {
-        initSocks(state.socks.difficulty);
+        window.location.href = 'matching-socks.html';
+        return;
     } else if (page === 'Sandwich') {
         window.location.href = 'sandwich-maker.html';
         return;
@@ -429,7 +430,7 @@ function renderBudgetBuffer() {
 function renderGrocery() {
     let content = `
         <div style="display:flex; justify-content:space-between; margin-bottom: 20px;">
-            <button class="btn-secondary" style="width: 200px; min-height: 3rem;" onclick="navTo('Home')">← Back Home</button>
+            <button class="btn-secondary" style="width: 200px; min-height: 3rem;" onclick="navTo('Home')">⬅️ Hub</button>
             <button class="btn-secondary" style="width: 200px; min-height: 3rem;" onclick="groceryActions.checkout()">Checkout 🛒</button>
         </div>
     `;
@@ -572,7 +573,7 @@ window.sockClick = function(index) {
 }
 
 function renderSocks() {
-    let content = `<button class="btn-secondary" style="width: 200px; min-height: 3rem; margin-bottom: 20px;" onclick="navTo('Home')">← Back Home</button>`;
+    let content = `<button class="btn-secondary" style="width: 200px; min-height: 3rem; margin-bottom: 20px;" onclick="navTo('Home')">⬅️ Hub</button>`;
     
     content += `
         <div class="card">
@@ -630,7 +631,7 @@ window.addIngredient = function() {
 }
 
 function renderSandwich() {
-    let content = `<button class="btn-secondary" style="width: 200px; min-height: 3rem; margin-bottom: 20px;" onclick="navTo('Home')">← Back Home</button>`;
+    let content = `<button class="btn-secondary" style="width: 200px; min-height: 3rem; margin-bottom: 20px;" onclick="navTo('Home')">⬅️ Hub</button>`;
     
     const recipe = ["bread_bottom.png", "cheese.png", "lettuce.png", "bread_top.png"];
     const labels = ["Bottom Bread 🍞", "Cheese 🧀", "Lettuce 🥬", "Top Bread 🍞"];
@@ -716,7 +717,7 @@ window.busActions = {
 }
 
 function renderBus() {
-    let content = `<button class="btn-secondary" style="width: 200px; min-height: 3rem; margin-bottom: 20px;" onclick="navTo('Home')">← Back Home</button>`;
+    let content = `<button class="btn-secondary" style="width: 200px; min-height: 3rem; margin-bottom: 20px;" onclick="navTo('Home')">⬅️ Hub</button>`;
 
     if (state.bus.stage === 1) {
         content += `
@@ -887,7 +888,7 @@ window.pharmacyActions = {
 function renderPharmacy() {
     let content = `
         <div style="display:flex; justify-content:space-between; margin-bottom: 20px;">
-            <button class="btn-secondary" style="width: 200px; min-height: 3rem;" onclick="navTo('Home')">← Back Home</button>
+            <button class="btn-secondary" style="width: 200px; min-height: 3rem;" onclick="navTo('Home')">⬅️ Hub</button>
             <button class="btn-secondary" style="width: 200px; min-height: 3rem; background: ${state.pharmacy.simpleView ? '#F59E0B' : '#94A3B8'};" onclick="pharmacyActions.toggleSimpleView()">
                 ${state.pharmacy.simpleView ? 'Normal View' : 'Simple View'}
             </button>
@@ -1083,7 +1084,7 @@ window.floatBack = function(item, el) {
 
 function renderZenZone() {
     let content = `
-        <button class="btn-secondary" style="width: 200px; min-height: 3rem;" onclick="navTo('Home')">← Back Home</button>
+        <button class="btn-secondary" style="width: 200px; min-height: 3rem;" onclick="navTo('Home')">⬅️ Hub</button>
         <div class="card" style="margin-top: 20px;">
             <div class="big">The Zen Zone</div>
             <div class="small">Tidy the room by dragging objects into their bins. If you make a mistake, they gently float back!</div>
@@ -1269,7 +1270,7 @@ function renderBubbleGuard() {
 
     let content = `
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom: 16px;">
-            <button class="btn-secondary" style="width: 180px; min-height: 3.2rem; margin-top:0;" onclick="navTo('Home')">← Back Home</button>
+            <button class="btn-secondary" style="width: 180px; min-height: 3.2rem; margin-top:0;" onclick="navTo('Home')">⬅️ Hub</button>
             <div class="bubble-levels">
                 <button class="bubble-lvl-btn ${lvl === 1 ? 'active' : ''}" onclick="bubbleActions.setLevel(1)">1. Corridor 🏫</button>
                 <button class="bubble-lvl-btn ${lvl === 2 ? 'active' : ''}" onclick="bubbleActions.setLevel(2)">2. Playground 🛝</button>

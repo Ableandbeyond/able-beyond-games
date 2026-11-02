@@ -3,196 +3,1048 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Smartboard Phonics & Shapes</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Smartboard Shapes 🔺 | Able & Beyond</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <link rel="stylesheet" href="style.css">
     <style>
-        /* Keep basic utility styles here to complement Tailwind */
-        .glass-panel { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); }
-        .shape-btn { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
-        .shape-btn:active { transform: scale(0.95); }
+        :root {
+            --bg-main: #f8fafc;
+            --text-dark: #0f172a;
+            --focus-ring: #facc15;
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+            background: var(--bg-main);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        button:focus-visible, .focusable:focus-visible {
+            outline: 6px solid var(--focus-ring) !important;
+            outline-offset: 4px !important;
+            box-shadow: 0 0 0 10px rgba(250, 204, 21, 0.45) !important;
+            z-index: 30;
+        }
+
+        /* ================= TOP BAR ================= */
+        .top-bar {
+            background: #ffffff;
+            border-bottom: 4px solid #cbd5e1;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .btn-home {
+            background: #0f172a;
+            color: #ffffff;
+            border: 3px solid #0f172a;
+            border-radius: 18px;
+            padding: 10px 18px;
+            font-size: 1.15rem;
+            font-weight: 900;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #334155;
+        }
+        .btn-home:active { transform: translateY(3px); box-shadow: 0 1px 0 #334155; }
+
+        .game-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: clamp(1.35rem, 3vw, 2rem);
+            font-weight: 900;
+            color: #0f172a;
+        }
+
+        .top-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .ctrl-btn {
+            background: #f1f5f9;
+            color: #0f172a;
+            border: 3px solid #94a3b8;
+            border-radius: 16px;
+            padding: 9px 14px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 0 #94a3b8;
+            transition: all 0.15s;
+        }
+        .ctrl-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #94a3b8; }
+        .ctrl-btn.active {
+            background: #dcfce7;
+            border-color: #16a34a;
+            color: #14532d;
+            box-shadow: 0 4px 0 #16a34a;
+        }
+
+        .star-pill {
+            background: #fef9c3;
+            border: 3px solid #eab308;
+            color: #854d0e;
+            border-radius: 999px;
+            padding: 8px 16px;
+            font-size: 1.2rem;
+            font-weight: 900;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* ================= 3 SIMPLE PICTURE TABS ================= */
+        .mode-tabs {
+            max-width: 1120px;
+            width: 100%;
+            margin: 12px auto 0;
+            padding: 0 14px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .mode-tab {
+            background: #ffffff;
+            border: 4px solid #cbd5e1;
+            border-radius: 22px;
+            padding: 12px 12px;
+            font-family: inherit;
+            font-size: clamp(1.1rem, 2.3vw, 1.4rem);
+            font-weight: 900;
+            color: #334155;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 5px 0 #cbd5e1;
+            transition: all 0.15s;
+        }
+        .mode-tab .tab-icon {
+            font-size: clamp(1.9rem, 4vw, 2.5rem);
+            line-height: 1;
+        }
+        .mode-tab.active {
+            background: #eff6ff;
+            border-color: #2563eb;
+            color: #1e3a8a;
+            box-shadow: 0 5px 0 #2563eb;
+            transform: translateY(-2px);
+        }
+
+        /* ================= MAIN STAGE ================= */
+        .stage-wrap {
+            flex: 1;
+            max-width: 1120px;
+            width: 100%;
+            margin: 12px auto 20px;
+            padding: 0 14px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stage-card {
+            background: #ffffff;
+            border: 5px solid #cbd5e1;
+            border-radius: 32px;
+            padding: 20px;
+            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.07);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 18px;
+        }
+
+        /* ================= MODE 1: MATCH SHAPE ================= */
+        .target-banner {
+            background: #f8fafc;
+            border: 4px solid #94a3b8;
+            border-radius: 26px;
+            padding: 14px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        .btn-speak-big {
+            width: 72px;
+            height: 72px;
+            border-radius: 22px;
+            background: #2563eb;
+            color: #ffffff;
+            border: 4px solid #1d4ed8;
+            font-size: 2.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 0 #1e40af;
+        }
+        .btn-speak-big:active { transform: translateY(3px); box-shadow: 0 2px 0 #1e40af; }
+
+        .shapes-grid {
+            display: grid;
+            gap: 20px;
+            margin: auto 0;
+        }
+        .shapes-grid.cols-2 {
+            grid-template-columns: repeat(2, 1fr);
+            max-width: 720px;
+            width: 100%;
+            margin: auto;
+        }
+        .shapes-grid.cols-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .shape-card {
+            background: #ffffff;
+            border: 6px solid #cbd5e1;
+            border-radius: 30px;
+            padding: 22px 16px;
+            min-height: 240px;
+            cursor: pointer;
+            font-family: inherit;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            box-shadow: 0 8px 0 #cbd5e1;
+            transition: transform 0.16s, border-color 0.16s, box-shadow 0.16s;
+        }
+        .shape-card:hover {
+            transform: translateY(-4px);
+        }
+        .shape-card:active {
+            transform: translateY(4px);
+        }
+
+        .shape-svg-wrap {
+            width: clamp(120px, 18vw, 155px);
+            height: clamp(120px, 18vw, 155px);
+        }
+
+        .shape-word {
+            font-size: clamp(1.5rem, 3.2vw, 2.1rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            padding: 6px 20px;
+            border-radius: 999px;
+        }
+
+        @keyframes gentleWiggle {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+        .wiggle { animation: gentleWiggle 0.4s ease-in-out; }
+
+        /* ================= MODE 2: REAL-WORLD SHAPES ================= */
+        .real-tray {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            min-height: 155px;
+            padding: 14px;
+            background: #f8fafc;
+            border: 4px dashed #94a3b8;
+            border-radius: 26px;
+        }
+
+        .real-token {
+            background: #ffffff;
+            border: 5px solid #475569;
+            border-radius: 24px;
+            padding: 12px 18px;
+            cursor: grab;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 6px 0 #475569;
+            transition: transform 0.15s;
+            min-width: 130px;
+        }
+        .real-token.selected {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 7px rgba(37, 99, 235, 0.35), 0 6px 0 #1d4ed8;
+            transform: translateY(-6px) scale(1.05);
+        }
+
+        .boxes-4-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+
+        .shape-box-bucket {
+            border-width: 6px;
+            border-style: solid;
+            border-radius: 26px;
+            padding: 16px 10px;
+            min-height: 195px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+        .shape-box-bucket.highlight-bucket {
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 0 0 9px rgba(250, 204, 21, 0.65) !important;
+        }
+
+        /* ================= MODE 3: POP CORNERS ================= */
+        .corners-stage {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            margin: auto 0;
+        }
+
+        .shape-pills-bar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .shape-pill-btn {
+            background: #f1f5f9;
+            border: 4px solid #94a3b8;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-family: inherit;
+            font-size: 1.15rem;
+            font-weight: 900;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .shape-pill-btn.active {
+            background: #eff6ff;
+            border-color: #2563eb;
+            color: #1e3a8a;
+        }
+
+        .corner-board {
+            position: relative;
+            width: 310px;
+            height: 310px;
+            background: #f8fafc;
+            border: 5px solid #cbd5e1;
+            border-radius: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .corner-dot-btn {
+            position: absolute;
+            width: 66px;
+            height: 66px;
+            border-radius: 50%;
+            border: 5px solid #0f172a;
+            background: #facc15;
+            color: #0f172a;
+            font-family: inherit;
+            font-size: 1.7rem;
+            font-weight: 900;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 6px 0 #0f172a;
+            transition: transform 0.15s, background-color 0.15s;
+            z-index: 10;
+        }
+        .corner-dot-btn.next-corner {
+            animation: pulseCorner 1.1s infinite ease-in-out;
+            box-shadow: 0 0 0 10px rgba(250, 204, 21, 0.55), 0 6px 0 #0f172a;
+        }
+        .corner-dot-btn.popped {
+            background: #22c55e;
+            color: #ffffff;
+            border-color: #14532d;
+            box-shadow: 0 4px 0 #14532d;
+        }
+
+        @keyframes pulseCorner {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.16); }
+        }
+
+        /* Win Banner */
+        .win-overlay {
+            background: #dcfce7;
+            border: 5px solid #16a34a;
+            border-radius: 26px;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .win-text {
+            font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+            font-weight: 900;
+            color: #14532d;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .btn-next-giant {
+            background: #16a34a;
+            color: #ffffff;
+            border: 4px solid #14532d;
+            border-radius: 20px;
+            padding: 12px 28px;
+            font-family: inherit;
+            font-size: 1.5rem;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #14532d;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        @media (max-width: 780px) {
+            .mode-tabs { grid-template-columns: 1fr; }
+            .shapes-grid.cols-2, .shapes-grid.cols-3 { grid-template-columns: repeat(2, 1fr); }
+            .boxes-4-grid { grid-template-columns: repeat(2, 1fr); }
+        }
     </style>
 </head>
-<body class="bg-gradient-to-br from-blue-50 to-indigo-100 h-screen w-screen overflow-hidden flex flex-col font-sans select-none touch-none text-gray-800">
-<div class="ab-back-home-wrapper">
-<style>
-.ab-back-home-wrapper {
-    width: 100%;
-    text-align: left;
-    padding: 10px;
-    z-index: 99999;
-    position: relative;
-    flex-shrink: 0;
-    box-sizing: border-box;
-    background: transparent;
-}
-.back-home-btn {
-    padding: 0.5rem 1rem;
-    font-size: 1.1rem;
-    color: #3b82f6;
-    background-color: white;
-    border: 2px solid #3b82f6;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    text-decoration: none;
-    transition: all 0.2s;
-    display: inline-block;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-.back-home-btn:hover {
-    background-color: #3b82f6;
-    color: white;
-}
-</style>
-<button class="back-home-btn" onclick="window.location.href='../'">← Back Home</button></div>
+<body>
 
+    <!-- TOP BAR -->
+    <header class="top-bar">
+        <a href="https://games.ableandbeyond.support/index.html" class="btn-home" aria-label="Back to Game Hub">
+            ⬅️ Hub
+        </a>
 
+        <div class="game-title">
+            <span>🔺</span>
+            <span>Smartboard Shapes</span>
+        </div>
 
-    <!-- Top Navigation Bar -->
-    <nav class="w-full bg-white shadow-md flex flex-wrap justify-center gap-2 md:gap-6 p-2 md:p-4 z-20 flex-shrink-0 border-b border-gray-200">
-        <button class="nav-shape-btn shape-btn bg-gradient-to-b from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 text-white font-bold py-2 md:py-3 px-4 md:px-8 rounded-xl shadow-md text-lg md:text-2xl border-b-4 border-green-700 flex items-center gap-2" data-shape="triangle">
-            <svg class="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 24 24" fill="currentColor"><polygon points="12,2 22,20 2,20"/></svg> <span class="hidden sm:inline">Triangle</span>
+        <div class="top-controls">
+            <button type="button" id="btn-card-count" class="ctrl-btn active" onclick="toggleCardCount()" title="Switch between 2 Cards (Easy) or 3 Cards">
+                🃏 2 Cards
+            </button>
+            <button type="button" id="btn-one-tap" class="ctrl-btn" onclick="toggleOneTap()" title="1-Tap & Spacebar Switch Mode">
+                ⚡ 1-Tap: OFF
+            </button>
+            <button type="button" id="btn-voice" class="ctrl-btn active" onclick="toggleVoice()" title="Toggle 1-Word Voice">
+                🗣️ Voice
+            </button>
+            <button type="button" id="btn-sound" class="ctrl-btn active" onclick="toggleSound()" title="Toggle Musical Sounds">
+                🎵 Sound
+            </button>
+            <div class="star-pill" aria-label="Stars earned">
+                ⭐ <span id="star-count">0</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- 3 SIMPLE PICTURE TABS -->
+    <nav class="mode-tabs" aria-label="Shape Modes">
+        <button type="button" class="mode-tab active" id="tab-match" onclick="setMode('match')">
+            <span class="tab-icon">🔺</span>
+            <span>1. Match Shape</span>
         </button>
-        <button class="nav-shape-btn shape-btn bg-gradient-to-b from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white font-bold py-2 md:py-3 px-4 md:px-8 rounded-xl shadow-md text-lg md:text-2xl border-b-4 border-blue-700 flex items-center gap-2" data-shape="square">
-            <svg class="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> <span class="hidden sm:inline">Square</span>
+        <button type="button" class="mode-tab" id="tab-real" onclick="setMode('real')">
+            <span class="tab-icon">🍕</span>
+            <span>2. Real Shapes</span>
         </button>
-        <button class="nav-shape-btn shape-btn bg-gradient-to-b from-red-400 to-red-500 hover:from-red-500 hover:to-red-600 text-white font-bold py-2 md:py-3 px-4 md:px-8 rounded-xl shadow-md text-lg md:text-2xl border-b-4 border-red-700 flex items-center gap-2" data-shape="circle">
-            <svg class="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg> <span class="hidden sm:inline">Circle</span>
-        </button>
-        <button class="nav-shape-btn shape-btn bg-gradient-to-b from-yellow-300 to-yellow-400 hover:from-yellow-400 hover:to-yellow-500 text-yellow-900 font-bold py-2 md:py-3 px-4 md:px-8 rounded-xl shadow-md text-lg md:text-2xl border-b-4 border-yellow-600 flex items-center gap-2" data-shape="rectangle">
-            <svg class="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="6" width="20" height="12" rx="2"/></svg> <span class="hidden sm:inline">Rectangle</span>
+        <button type="button" class="mode-tab" id="tab-corners" onclick="setMode('corners')">
+            <span class="tab-icon">✨</span>
+            <span>3. Pop Corners</span>
         </button>
     </nav>
 
-    <div class="flex flex-1 overflow-hidden relative min-h-0">
-        
-        <!-- Floating Makaton Reference Sidebar -->
-        <aside class="w-24 md:w-32 lg:w-48 glass-panel border-r border-gray-200 flex flex-col p-2 md:p-3 shadow-lg flex-shrink-0 z-20 overflow-y-auto">
-            <div class="text-center font-bold text-gray-500 mb-2 uppercase tracking-wider text-xs md:text-sm">Makaton</div>
-            
-            <button class="makaton-card bg-white p-2 md:p-3 rounded-xl shadow-sm border-2 border-transparent flex flex-col items-center justify-center transition-all hover:bg-blue-50 active:scale-95 mb-2 md:mb-3" data-sign="look">
-                <svg class="w-8 h-8 md:w-12 md:h-12 text-blue-500 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                <span class="text-sm md:text-lg font-black text-gray-700 uppercase">Look</span>
-            </button>
-            
-            <button class="makaton-card bg-white p-2 md:p-3 rounded-xl shadow-sm border-2 border-transparent flex flex-col items-center justify-center transition-all hover:bg-green-50 active:scale-95 mb-2 md:mb-3" data-sign="touch">
-                <svg class="w-8 h-8 md:w-12 md:h-12 text-green-500 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11"></path></svg>
-                <span class="text-sm md:text-lg font-black text-gray-700 uppercase">Touch</span>
-            </button>
-
-            <button class="makaton-card bg-white p-2 md:p-3 rounded-xl shadow-sm border-2 border-transparent flex flex-col items-center justify-center transition-all hover:bg-red-50 active:scale-95 mb-2 md:mb-3" data-sign="cut">
-                <svg class="w-8 h-8 md:w-12 md:h-12 text-red-500 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"></path></svg>
-                <span class="text-sm md:text-lg font-black text-gray-700 uppercase">Cut</span>
-            </button>
-
-            <button class="makaton-card bg-white p-2 md:p-3 rounded-xl shadow-sm border-2 border-transparent flex flex-col items-center justify-center transition-all hover:bg-yellow-50 active:scale-95" data-sign="good">
-                <svg class="w-8 h-8 md:w-12 md:h-12 text-yellow-500 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.514"></path></svg>
-                <span class="text-sm md:text-lg font-black text-gray-700 uppercase">Good</span>
-            </button>
-        </aside>
-
-        <!-- Main Interactive Area -->
-        <main class="flex-1 flex flex-col relative overflow-hidden min-h-0 bg-white/50">
-            
-            <!-- Step Tabs -->
-            <div class="flex justify-center mt-4 mb-2 z-10 gap-2 md:gap-4 flex-wrap flex-shrink-0 px-2">
-                <button class="step-tab-btn shape-btn active bg-indigo-600 text-white font-bold py-2 px-4 md:px-6 rounded-full shadow text-sm md:text-lg transition-all border-b-4 border-indigo-800" data-step="1">
-                    1. LOOK & MATCH
-                </button>
-                <button class="step-tab-btn shape-btn bg-white text-gray-600 font-bold py-2 px-4 md:px-6 rounded-full shadow text-sm md:text-lg transition-all border-b-4 border-gray-200 hover:bg-gray-50" data-step="2">
-                    2. TRACE & DRAW
-                </button>
-                <button class="step-tab-btn shape-btn bg-white text-gray-600 font-bold py-2 px-4 md:px-6 rounded-full shadow text-sm md:text-lg transition-all border-b-4 border-gray-200 hover:bg-gray-50" data-step="3">
-                    3. MAKE & COUNT
-                </button>
-            </div>
-
-            <!-- Viewport: Step 1 (Look & Match) -->
-            <div id="viewport-step-1" class="viewport active flex-1 flex flex-col items-center justify-center p-4 min-h-0">
-                <div class="text-center mb-6 flex-shrink-0">
-                    <h2 class="text-3xl md:text-5xl font-black text-gray-700 drop-shadow-sm">Tap the <span id="match-target-name" class="text-green-600 uppercase">TRIANGLE</span></h2>
-                </div>
-                
-                <!-- Match Options Container -->
-                <div class="flex justify-center items-center gap-6 md:gap-10 w-full flex-1 min-h-0">
-                    <button id="match-option-1" class="match-option flex-1 max-w-[28vh] aspect-square rounded-3xl shadow-xl transition-transform transform hover:scale-105 active:scale-95 flex justify-center items-center bg-white border-4 border-gray-100">
-                    </button>
-                    <button id="match-option-2" class="match-option flex-1 max-w-[28vh] aspect-square rounded-3xl shadow-xl transition-transform transform hover:scale-105 active:scale-95 flex justify-center items-center bg-white border-4 border-gray-100">
-                    </button>
-                </div>
-                
-                <div class="mt-4 md:mt-6 flex flex-wrap justify-center gap-4 flex-shrink-0">
-                    <button id="aac-btn" class="shape-btn bg-gradient-to-b from-purple-400 to-purple-500 hover:from-purple-500 hover:to-purple-600 text-white font-bold py-3 px-6 md:px-8 rounded-full shadow-lg text-xl md:text-2xl flex items-center gap-3 border-b-4 border-purple-700">
-                        <svg class="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
-                        <span class="uppercase tracking-wider">Speak Shape</span>
-                    </button>
-                    <button onclick="window.nextStep()" class="shape-btn bg-gray-800 hover:bg-gray-900 text-white font-bold py-3 px-6 rounded-full shadow-lg text-xl flex items-center gap-2 border-b-4 border-gray-950">
-                        Next <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Viewport: Step 2 (Trace & Draw) -->
-            <div id="viewport-step-2" class="viewport hidden flex-1 flex flex-col items-center justify-center w-full p-4 md:p-6 min-h-0">
-                <div class="text-center mb-4 flex-shrink-0">
-                    <h2 id="trace-title" class="text-3xl md:text-4xl font-black text-gray-700 drop-shadow-sm">Trace the <span class="uppercase text-indigo-500">Shape</span></h2>
-                </div>
-                <div class="relative w-full flex-1 rounded-3xl bg-white border-4 border-dashed border-gray-300 shadow-inner overflow-hidden min-h-0" id="canvas-container">
-                    <div id="trace-template-container" class="absolute inset-0 flex justify-center items-center pointer-events-none opacity-30 z-0 p-8">
-                    </div>
-                    <canvas id="drawing-canvas" class="absolute inset-0 w-full h-full z-10 touch-none cursor-crosshair"></canvas>
-                    
-                    <button id="clear-canvas-btn" class="absolute bottom-4 left-4 md:bottom-6 md:left-6 shape-btn bg-red-500 hover:bg-red-600 text-white p-3 md:p-4 rounded-full shadow-xl z-20 border-b-4 border-red-700">
-                        <svg class="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                    </button>
-
-                    <button onclick="window.nextStep()" class="absolute bottom-4 right-4 md:bottom-6 md:right-6 shape-btn bg-gray-800 hover:bg-gray-900 text-white font-bold py-3 px-6 rounded-full shadow-lg text-xl flex items-center gap-2 border-b-4 border-gray-950 z-20">
-                        Next <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Viewport: Step 3 (Make & Count) -->
-            <div id="viewport-step-3" class="viewport hidden flex-1 flex flex-col items-center justify-center p-4 md:p-6 min-h-0">
-                <div class="text-center mb-4 flex-shrink-0">
-                    <h2 class="text-3xl md:text-4xl font-black text-gray-700 drop-shadow-sm">Count the Corners</h2>
-                </div>
-                <div class="flex-1 flex justify-center items-center w-full min-h-0">
-                    <div id="count-shape-container" class="relative w-[40vh] h-[40vh] flex justify-center items-center">
-                    </div>
-                </div>
-                <div class="mt-4 flex flex-wrap justify-center items-center gap-4 flex-shrink-0">
-                    <div class="flex items-center gap-4 text-gray-700 text-lg md:text-2xl font-black bg-white p-3 md:p-4 rounded-2xl shadow border-2 border-gray-100">
-                        <div class="cut-animation text-2xl md:text-4xl">✂️</div>
-                        <div class="uppercase tracking-wide">Make Time! Cut or stamp the shape.</div>
-                    </div>
-                    <button onclick="window.nextStep()" class="shape-btn bg-gray-800 hover:bg-gray-900 text-white font-bold py-3 px-6 rounded-full shadow-lg text-xl flex items-center gap-2 border-b-4 border-gray-950">
-                        Next <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
-                    </button>
-                </div>
-            </div>
-
-        </main>
-    </div>
-
-    <!-- Active Differentiated Instruction Cards -->
-    <footer class="w-full flex-shrink-0 flex flex-col lg:flex-row text-gray-800 text-xs md:text-sm font-medium border-t-4 border-gray-200 z-30 relative bg-white shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.05)]">
-        <div class="flex-1 border-b lg:border-b-0 lg:border-t-4 border-orange-400 p-2 md:p-3 text-center hover:bg-orange-50 transition-colors">
-            <h3 class="text-orange-700 text-base md:text-lg font-black mb-1 uppercase tracking-widest">Level 1</h3>
-            <p class="text-gray-600 leading-tight">LOOK & MATCH (choices of 2)<br>TRACE (finger-trace)<br>MAKE (tear/stamp)</p>
+    <!-- MAIN STAGE -->
+    <main class="stage-wrap">
+        <div id="stage-content" class="stage-card">
+            <!-- Populated by JS -->
         </div>
-        <div class="flex-1 border-b lg:border-b-0 lg:border-t-4 border-green-400 p-2 md:p-3 text-center lg:border-l lg:border-r border-gray-200 hover:bg-green-50 transition-colors">
-            <h3 class="text-green-700 text-base md:text-lg font-black mb-1 uppercase tracking-widest">Level 2</h3>
-            <p class="text-gray-600 leading-tight">MATCH & SAY (vocalize/AAC)<br>TRACE (marker trace)<br>MAKE (cut straight lines)</p>
-        </div>
-        <div class="flex-1 border-b lg:border-b-0 lg:border-t-4 border-purple-400 p-2 md:p-3 text-center hover:bg-purple-50 transition-colors">
-            <h3 class="text-purple-700 text-base md:text-lg font-black mb-1 uppercase tracking-widest">Level 3</h3>
-            <p class="text-gray-600 leading-tight">DISCOVER (count corners)<br>TRACE & DRAW (freehand)<br>MAKE (cut outline)</p>
-        </div>
-    </footer>
+    </main>
 
-    <script src="app.js?v=5"></script>
+    <script>
+        /* ================================================================
+           1. 6 GIANT FRIENDLY SHAPES + REAL-WORLD ITEMS
+           ================================================================ */
+        const SHAPES = [
+            {
+                id: 'circle',
+                word: 'CIRCLE',
+                emoji: '🔴',
+                fill: '#ef4444',
+                stroke: '#991b1b',
+                bg: '#fef2f2',
+                notes: [523.25, 659.25],
+                corners: [{ x: 50, y: 12 }, { x: 88, y: 50 }, { x: 50, y: 88 }, { x: 12, y: 50 }]
+            },
+            {
+                id: 'square',
+                word: 'SQUARE',
+                emoji: '🟦',
+                fill: '#3b82f6',
+                stroke: '#1e3a8a',
+                bg: '#eff6ff',
+                notes: [440.00, 554.37],
+                corners: [{ x: 18, y: 18 }, { x: 82, y: 18 }, { x: 82, y: 82 }, { x: 18, y: 82 }]
+            },
+            {
+                id: 'triangle',
+                word: 'TRIANGLE',
+                emoji: '🟢',
+                fill: '#22c55e',
+                stroke: '#14532d',
+                bg: '#f0fdf4',
+                notes: [392.00, 493.88, 587.33],
+                corners: [{ x: 50, y: 14 }, { x: 86, y: 84 }, { x: 14, y: 84 }]
+            },
+            {
+                id: 'rectangle',
+                word: 'RECTANGLE',
+                emoji: '🟧',
+                fill: '#f97316',
+                stroke: '#9a3412',
+                bg: '#fff7ed',
+                notes: [349.23, 440.00],
+                corners: [{ x: 12, y: 26 }, { x: 88, y: 26 }, { x: 88, y: 74 }, { x: 12, y: 74 }]
+            },
+            {
+                id: 'star',
+                word: 'STAR',
+                emoji: '⭐',
+                fill: '#eab308',
+                stroke: '#854d0e',
+                bg: '#fefce8',
+                notes: [523.25, 659.25, 783.99],
+                corners: [{ x: 50, y: 10 }, { x: 88, y: 38 }, { x: 73, y: 86 }, { x: 27, y: 86 }, { x: 12, y: 38 }]
+            },
+            {
+                id: 'heart',
+                word: 'HEART',
+                emoji: '🩷',
+                fill: '#ec4899',
+                stroke: '#9d174d',
+                bg: '#fdf2f8',
+                notes: [493.88, 659.25],
+                corners: [{ x: 30, y: 22 }, { x: 70, y: 22 }, { x: 50, y: 86 }]
+            }
+        ];
+
+        const REAL_OBJECTS = [
+            { id: 'ball',   word: 'BALL',   emoji: '⚽', shape: 'circle',    shapeWord: 'CIRCLE' },
+            { id: 'clock',  word: 'CLOCK',  emoji: '🕒', shape: 'circle',    shapeWord: 'CIRCLE' },
+            { id: 'window', word: 'WINDOW', emoji: '🪟', shape: 'square',    shapeWord: 'SQUARE' },
+            { id: 'box',    word: 'BOX',    emoji: '🎁', shape: 'square',    shapeWord: 'SQUARE' },
+            { id: 'pizza',  word: 'PIZZA',  emoji: '🍕', shape: 'triangle',  shapeWord: 'TRIANGLE' },
+            { id: 'tent',   word: 'TENT',   emoji: '⛺', shape: 'triangle',  shapeWord: 'TRIANGLE' },
+            { id: 'door',   word: 'DOOR',   emoji: '🚪', shape: 'rectangle', shapeWord: 'RECTANGLE' },
+            { id: 'tv',     word: 'SCREEN', emoji: '📺', shape: 'rectangle', shapeWord: 'RECTANGLE' }
+        ];
+
+        function renderShapeSVG(shape) {
+            let geom = '';
+            if (shape.id === 'circle') {
+                geom = `<circle cx="50" cy="50" r="38" fill="${shape.fill}" stroke="${shape.stroke}" stroke-width="5"/>`;
+            } else if (shape.id === 'square') {
+                geom = `<rect x="16" y="16" width="68" height="68" rx="8" fill="${shape.fill}" stroke="${shape.stroke}" stroke-width="5"/>`;
+            } else if (shape.id === 'triangle') {
+                geom = `<polygon points="50,12 88,84 12,84" fill="${shape.fill}" stroke="${shape.stroke}" stroke-width="5" stroke-linejoin="round"/>`;
+            } else if (shape.id === 'rectangle') {
+                geom = `<rect x="10" y="25" width="80" height="50" rx="8" fill="${shape.fill}" stroke="${shape.stroke}" stroke-width="5"/>`;
+            } else if (shape.id === 'star') {
+                geom = `<polygon points="50,10 61,36 90,38 68,57 75,86 50,70 25,86 32,57 10,38 39,36" fill="${shape.fill}" stroke="${shape.stroke}" stroke-width="4.5" stroke-linejoin="round"/>`;
+            } else if (shape.id === 'heart') {
+                geom = `<path d="M50 86 C50 86 12 62 12 35 C12 18 28 12 40 22 C46 27 50 33 50 33 C50 33 54 27 60 22 C72 12 88 18 88 35 C88 62 50 86 50 86 Z" fill="${shape.fill}" stroke="${shape.stroke}" stroke-width="5" stroke-linejoin="round"/>`;
+            }
+
+            return `
+                <svg viewBox="0 0 100 100" width="100%" height="100%" aria-hidden="true">
+                    ${geom}
+                    <!-- Friendly Eyes & Smile inside the shape! -->
+                    <circle cx="40" cy="48" r="4.5" fill="#ffffff"/>
+                    <circle cx="40" cy="48" r="2.2" fill="#0f172a"/>
+                    <circle cx="60" cy="48" r="4.5" fill="#ffffff"/>
+                    <circle cx="60" cy="48" r="2.2" fill="#0f172a"/>
+                    <path d="M41 59 Q50 67 59 59" stroke="#ffffff" stroke-width="4" stroke-linecap="round" fill="none"/>
+                </svg>
+            `;
+        }
+
+        /* ================================================================
+           2. STATE & WEB AUDIO + 1-WORD TTS
+           ================================================================ */
+        const state = {
+            mode: 'match',
+            easyTwoCards: true,
+            oneTap: false,
+            voiceOn: true,
+            soundOn: true,
+            stars: parseInt(localStorage.getItem('ab_shapes_stars') || '0', 10),
+            // Mode 1: Match
+            targetShape: null,
+            choices: [],
+            matchWon: false,
+            // Mode 2: Real Objects
+            realQueue: [],
+            selectedRealId: null,
+            sortedShapes: { circle: [], square: [], triangle: [], rectangle: [] },
+            // Mode 3: Pop Corners
+            activeCornerShapeId: 'triangle',
+            cornerIdx: 0
+        };
+
+        let audioCtx = null;
+        function getAudioCtx() {
+            if (!audioCtx) {
+                const AC = window.AudioContext || window.webkitAudioContext;
+                if (AC) audioCtx = new AC();
+            }
+            if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+            return audioCtx;
+        }
+
+        function playNotes(freqs, type = 'triangle', spacing = 0.09, duration = 0.36) {
+            if (!state.soundOn) return;
+            const ctx = getAudioCtx();
+            if (!ctx) return;
+            const now = ctx.currentTime;
+            freqs.forEach((f, idx) => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(f, now + idx * spacing);
+                gain.gain.setValueAtTime(0.001, now + idx * spacing);
+                gain.gain.exponentialRampToValueAtTime(0.24, now + idx * spacing + 0.02);
+                gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * spacing + duration);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start(now + idx * spacing);
+                osc.stop(now + idx * spacing + duration + 0.02);
+            });
+        }
+
+        function playWinChime() {
+            playNotes([523.25, 659.25, 783.99, 1046.50], 'triangle', 0.09, 0.45);
+        }
+
+        function playSoftBump() {
+            playNotes([220, 196], 'sine', 0.1, 0.25);
+        }
+
+        function speakWord(text) {
+            if (!state.voiceOn || !('speechSynthesis' in window)) return;
+            try {
+                window.speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(text);
+                u.lang = 'en-GB';
+                u.rate = 0.92;
+                u.pitch = 1.05;
+                window.speechSynthesis.speak(u);
+            } catch (e) {}
+        }
+
+        function addStar() {
+            state.stars += 1;
+            localStorage.setItem('ab_shapes_stars', String(state.stars));
+            document.getElementById('star-count').textContent = state.stars;
+            if (typeof confetti === 'function') {
+                confetti({ particleCount: 45, spread: 65, origin: { y: 0.7 } });
+            }
+        }
+
+        /* ================================================================
+           3. HEADER CONTROLS & MODE SWITCHING
+           ================================================================ */
+        function toggleCardCount() {
+            state.easyTwoCards = !state.easyTwoCards;
+            const btn = document.getElementById('btn-card-count');
+            btn.textContent = state.easyTwoCards ? '🃏 2 Cards' : '🃏 3 Cards';
+            btn.classList.toggle('active', state.easyTwoCards);
+            if (state.mode === 'match') setupMatchRound();
+        }
+
+        function toggleOneTap() {
+            state.oneTap = !state.oneTap;
+            const btn = document.getElementById('btn-one-tap');
+            btn.textContent = state.oneTap ? '⚡ 1-Tap: ON' : '⚡ 1-Tap: OFF';
+            btn.classList.toggle('active', state.oneTap);
+        }
+
+        function toggleVoice() {
+            state.voiceOn = !state.voiceOn;
+            document.getElementById('btn-voice').classList.toggle('active', state.voiceOn);
+            if (state.voiceOn) speakWord('Voice On');
+        }
+
+        function toggleSound() {
+            state.soundOn = !state.soundOn;
+            document.getElementById('btn-sound').classList.toggle('active', state.soundOn);
+            if (state.soundOn) playWinChime();
+        }
+
+        function setMode(mode) {
+            state.mode = mode;
+            ['match', 'real', 'corners'].forEach(m => {
+                document.getElementById('tab-' + m).classList.toggle('active', m === mode);
+            });
+            if (mode === 'match') setupMatchRound();
+            else if (mode === 'real') setupRealRound();
+            else setupCornersRound();
+        }
+
+        /* ================================================================
+           4. MODE 1: 🔺 MATCH SHAPE (1-WORD TARGET + 2 OR 3 CARDS)
+           ================================================================ */
+        function setupMatchRound() {
+            state.matchWon = false;
+            const count = state.easyTwoCards ? 2 : 3;
+            const pool = [...SHAPES].sort(() => Math.random() - 0.5).slice(0, count);
+            state.choices = pool;
+            state.targetShape = pool[Math.floor(Math.random() * pool.length)];
+            renderMatchMode();
+            setTimeout(() => speakWord(state.targetShape.word), 250);
+        }
+
+        function renderMatchMode() {
+            const box = document.getElementById('stage-content');
+            const t = state.targetShape;
+            const colsClass = state.easyTwoCards ? 'cols-2' : 'cols-3';
+
+            box.innerHTML = `
+                <div class="target-banner">
+                    <button type="button" class="btn-speak-big" onclick="speakWord('${t.word}'); playNotes([${t.notes.join(',')}])" aria-label="Speak ${t.word}">
+                        🔊
+                    </button>
+                    <div style="width:82px;height:82px;">${renderShapeSVG(t)}</div>
+                    <span style="font-size:clamp(2rem, 5vw, 3rem);font-weight:900;color:${t.stroke};">${t.word}</span>
+                </div>
+
+                <div class="shapes-grid ${colsClass}">
+                    ${state.choices.map(sh => `
+                        <button type="button"
+                                id="shape-card-${sh.id}"
+                                class="shape-card"
+                                style="background:${sh.bg};border-color:${sh.fill};box-shadow:0 8px 0 ${sh.stroke};"
+                                onclick="pickMatchShape('${sh.id}')">
+                            <div class="shape-svg-wrap">${renderShapeSVG(sh)}</div>
+                            <span class="shape-word" style="background:#ffffff;color:${sh.stroke};">${sh.word}</span>
+                        </button>
+                    `).join('')}
+                </div>
+
+                ${state.matchWon ? `
+                    <div class="win-overlay">
+                        <div class="win-text">
+                            <span>🌟</span>
+                            <span>${t.word}!</span>
+                        </div>
+                        <button type="button" class="btn-next-giant" onclick="setupMatchRound()">
+                            Next ➡️
+                        </button>
+                    </div>
+                ` : ''}
+            `;
+        }
+
+        function pickMatchShape(id) {
+            if (state.matchWon) return;
+            const actualId = state.oneTap ? state.targetShape.id : id;
+            const picked = SHAPES.find(s => s.id === actualId);
+            if (actualId === state.targetShape.id) {
+                state.matchWon = true;
+                playWinChime();
+                speakWord(picked.word);
+                addStar();
+                renderMatchMode();
+            } else {
+                const el = document.getElementById('shape-card-' + id);
+                if (el) {
+                    el.classList.remove('wiggle');
+                    void el.offsetWidth;
+                    el.classList.add('wiggle');
+                }
+                playSoftBump();
+                if (picked) speakWord(picked.word);
+            }
+        }
+
+        /* ================================================================
+           5. MODE 2: 🍕 REAL-WORLD SHAPES SORTING
+           ================================================================ */
+        function setupRealRound() {
+            state.sortedShapes = { circle: [], square: [], triangle: [], rectangle: [] };
+            const c = REAL_OBJECTS.filter(o => o.shape === 'circle')[Math.floor(Math.random() * 2)];
+            const s = REAL_OBJECTS.filter(o => o.shape === 'square')[Math.floor(Math.random() * 2)];
+            const t = REAL_OBJECTS.filter(o => o.shape === 'triangle')[Math.floor(Math.random() * 2)];
+            const r = REAL_OBJECTS.filter(o => o.shape === 'rectangle')[Math.floor(Math.random() * 2)];
+            state.realQueue = [c, s, t, r].sort(() => Math.random() - 0.5);
+            state.selectedRealId = state.realQueue[0].id;
+            renderRealMode();
+        }
+
+        function renderRealMode() {
+            const box = document.getElementById('stage-content');
+            const allDone = state.realQueue.length === 0;
+            const activeItem = state.realQueue.find(o => o.id === state.selectedRealId);
+            const buckets = SHAPES.filter(s => ['circle', 'square', 'triangle', 'rectangle'].includes(s.id));
+
+            box.innerHTML = `
+                <div class="real-tray">
+                    ${allDone ? `
+                        <div class="win-text">🌟 All Shapes Sorted!</div>
+                    ` : state.realQueue.map(obj => `
+                        <div class="real-token ${state.selectedRealId === obj.id ? 'selected' : ''}"
+                             draggable="true"
+                             ondragstart="event.dataTransfer.setData('text/plain', '${obj.id}'); state.selectedRealId='${obj.id}';"
+                             onclick="selectRealObject('${obj.id}')"
+                             tabindex="0"
+                             role="button">
+                            <span style="font-size:3.4rem;line-height:1;">${obj.emoji}</span>
+                            <span style="font-size:1.3rem;font-weight:900;">${obj.word}</span>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div class="boxes-4-grid">
+                    ${buckets.map(b => {
+                        const isTarget = activeItem && activeItem.shape === b.id;
+                        return `
+                            <div class="shape-box-bucket ${isTarget ? 'highlight-bucket' : ''}"
+                                 style="background:${b.bg};border-color:${b.fill};color:${b.stroke};box-shadow:0 7px 0 ${b.stroke};"
+                                 ondragover="event.preventDefault()"
+                                 ondrop="onShapeBoxDrop(event, '${b.id}')"
+                                 onclick="handleShapeBoxTap('${b.id}')"
+                                 tabindex="0"
+                                 role="button">
+                                <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+                                    <div style="width:68px;height:68px;">${renderShapeSVG(b)}</div>
+                                    <span style="font-size:1.35rem;font-weight:900;">${b.word}</span>
+                                </div>
+                                <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;">
+                                    ${state.sortedShapes[b.id].map(it => `
+                                        <span style="font-size:2.2rem;">${it.emoji}</span>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+
+                ${allDone ? `
+                    <div class="win-overlay">
+                        <div class="win-text">🍕 Great Shape Sorting!</div>
+                        <button type="button" class="btn-next-giant" onclick="setupRealRound()">
+                            Play Again 🔄
+                        </button>
+                    </div>
+                ` : ''}
+            `;
+        }
+
+        function selectRealObject(id) {
+            const obj = state.realQueue.find(o => o.id === id);
+            if (!obj) return;
+            state.selectedRealId = id;
+            speakWord(obj.word);
+            playNotes([523.25, 659.25]);
+            if (state.oneTap) {
+                handleShapeBoxTap(obj.shape);
+                return;
+            }
+            renderRealMode();
+        }
+
+        function onShapeBoxDrop(e, shapeId) {
+            e.preventDefault();
+            const id = e.dataTransfer.getData('text/plain') || state.selectedRealId;
+            state.selectedRealId = id;
+            handleShapeBoxTap(shapeId);
+        }
+
+        function handleShapeBoxTap(shapeId) {
+            if (!state.selectedRealId && state.realQueue.length > 0) {
+                state.selectedRealId = state.realQueue[0].id;
+            }
+            const obj = state.realQueue.find(o => o.id === state.selectedRealId);
+            if (!obj) return;
+
+            if (obj.shape === shapeId || state.oneTap) {
+                const target = obj.shape;
+                state.sortedShapes[target].push(obj);
+                state.realQueue = state.realQueue.filter(o => o.id !== obj.id);
+                state.selectedRealId = state.realQueue[0] ? state.realQueue[0].id : null;
+                playWinChime();
+                speakWord(obj.shapeWord);
+                if (state.realQueue.length === 0) addStar();
+                renderRealMode();
+            } else {
+                playSoftBump();
+            }
+        }
+
+        /* ================================================================
+           6. MODE 3: ✨ POP CORNERS (TAP GLOWING POINTS 1, 2, 3...)
+           ================================================================ */
+        function setupCornersRound(shapeId) {
+            if (shapeId) state.activeCornerShapeId = shapeId;
+            state.cornerIdx = 0;
+            renderCornersMode();
+        }
+
+        function renderCornersMode() {
+            const box = document.getElementById('stage-content');
+            const sh = SHAPES.find(s => s.id === state.activeCornerShapeId) || SHAPES[2];
+            const allPopped = state.cornerIdx >= sh.corners.length;
+
+            box.innerHTML = `
+                <div class="shape-pills-bar">
+                    ${SHAPES.map(s => `
+                        <button type="button"
+                                class="shape-pill-btn ${s.id === sh.id ? 'active' : ''}"
+                                onclick="setupCornersRound('${s.id}'); speakWord('${s.word}');">
+                            <span>${s.emoji}</span>
+                            <span>${s.word}</span>
+                        </button>
+                    `).join('')}
+                </div>
+
+                <div class="corners-stage">
+                    <div class="corner-board" onclick="if(state.oneTap) popCorner(state.cornerIdx)">
+                        <div style="width:230px;height:230px;">
+                            ${renderShapeSVG(sh)}
+                        </div>
+
+                        ${sh.corners.map((pt, idx) => {
+                            const isPopped = idx < state.cornerIdx;
+                            const isNext = idx === state.cornerIdx;
+                            return `
+                                <button type="button"
+                                        class="corner-dot-btn ${isPopped ? 'popped' : ''} ${isNext ? 'next-corner' : ''}"
+                                        style="left:${pt.x}%;top:${pt.y}%;"
+                                        onclick="event.stopPropagation(); popCorner(${idx});">
+                                    ${isPopped ? '✓' : idx + 1}
+                                </button>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+
+                ${allPopped ? `
+                    <div class="win-overlay">
+                        <div class="win-text">
+                            <span>✨</span>
+                            <span>${sh.corners.length} ${sh.word}!</span>
+                        </div>
+                        <button type="button" class="btn-next-giant" onclick="nextCornerShape()">
+                            Next Shape ➡️
+                        </button>
+                    </div>
+                ` : ''}
+            `;
+        }
+
+        function popCorner(idx) {
+            const sh = SHAPES.find(s => s.id === state.activeCornerShapeId) || SHAPES[2];
+            if (state.cornerIdx >= sh.corners.length) return;
+
+            state.cornerIdx += 1;
+            const numStr = String(state.cornerIdx);
+            const scaleFreqs = [392.00, 440.00, 493.88, 523.25, 587.33];
+            playNotes([scaleFreqs[(state.cornerIdx - 1) % scaleFreqs.length]], 'sine', 0.08, 0.3);
+            speakWord(numStr);
+
+            if (state.cornerIdx >= sh.corners.length) {
+                setTimeout(() => {
+                    playWinChime();
+                    speakWord(sh.word);
+                    addStar();
+                }, 250);
+            }
+            renderCornersMode();
+        }
+
+        function nextCornerShape() {
+            const idx = SHAPES.findIndex(s => s.id === state.activeCornerShapeId);
+            const next = SHAPES[(idx + 1) % SHAPES.length];
+            setupCornersRound(next.id);
+            speakWord(next.word);
+        }
+
+        /* ================================================================
+           7. SPACEBAR / ENTER SWITCH ACCESSIBILITY
+           ================================================================ */
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' || e.code === 'Enter') {
+                if (document.activeElement && document.activeElement.tagName === 'BUTTON') return;
+                e.preventDefault();
+                if (state.mode === 'match') {
+                    if (state.matchWon) setupMatchRound();
+                    else pickMatchShape(state.targetShape.id);
+                } else if (state.mode === 'real') {
+                    if (state.realQueue.length === 0) setupRealRound();
+                    else handleShapeBoxTap(state.realQueue[0].shape);
+                } else {
+                    const sh = SHAPES.find(s => s.id === state.activeCornerShapeId) || SHAPES[2];
+                    if (state.cornerIdx >= sh.corners.length) nextCornerShape();
+                    else popCorner(state.cornerIdx);
+                }
+            }
+        });
+
+        // Boot
+        document.getElementById('star-count').textContent = state.stars;
+        setupMatchRound();
+    </script>
 </body>
 </html>
