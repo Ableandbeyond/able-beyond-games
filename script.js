@@ -312,7 +312,8 @@ function navTo(page) {
         state.pharmacy.simpleView = false;
         playTTS("Welcome to Healthy Hero");
     } else if (page === 'Zen') {
-        initZenZone();
+        window.location.href = 'zen-zone.html';
+        return;
     } else if (page === 'Grocery') {
         initGrocery();
     }
