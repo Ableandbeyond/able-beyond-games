@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Emotion Explorer 😊 | Able & Beyond</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --bg-main: #f8fafc;
+            --text-dark: #0f172a;
+            --green-bg: #dcfce7;
+            --green-border: #22c55e;
+            --green-text: #14532d;
+            --blue-bg: #dbeafe;
+            --blue-border: #3b82f6;
+            --blue-text: #1e3a8a;
+            --yellow-bg: #fef3c7;
+            --yellow-border: #f59e0b;
+            --yellow-text: #78350f;
+            --red-bg: #fee2e2;
+            --red-border: #ef4444;
+            --red-text: #7f1d1d;
+            --focus-ring: #facc15;
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+            background: var(--bg-main);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        button:focus-visible, .focusable:focus-visible {
+            outline: 6px solid var(--focus-ring) !important;
+            outline-offset: 4px !important;
+            box-shadow: 0 0 0 10px rgba(250, 204, 21, 0.45) !important;
+            z-index: 30;
+        }
+
+        /* ================= TOP BAR ================= */
+        .top-bar {
+            background: #ffffff;
+            border-bottom: 4px solid #cbd5e1;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .btn-home {
+            background: #0f172a;
+            color: #ffffff;
+            border: 3px solid #0f172a;
+            border-radius: 18px;
+            padding: 10px 18px;
+            font-size: 1.15rem;
+            font-weight: 900;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #334155;
+            transition: transform 0.12s;
+        }
+        .btn-home:active { transform: translateY(3px); box-shadow: 0 1px 0 #334155; }
+
+        .game-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: clamp(1.35rem, 3vw, 2rem);
+            font-weight: 900;
+            color: #0f172a;
+        }
+
+        .top-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .ctrl-btn {
+            background: #f1f5f9;
+            color: #0f172a;
+            border: 3px solid #94a3b8;
+            border-radius: 16px;
+            padding: 9px 14px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 0 #94a3b8;
+            transition: all 0.15s;
+        }
+        .ctrl-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #94a3b8; }
+        .ctrl-btn.active {
+            background: #dcfce7;
+            border-color: #16a34a;
+            color: #14532d;
+            box-shadow: 0 4px 0 #16a34a;
+        }
+
+        .star-pill {
+            background: #fef9c3;
+            border: 3px solid #eab308;
+            color: #854d0e;
+            border-radius: 999px;
+            padding: 8px 16px;
+            font-size: 1.2rem;
+            font-weight: 900;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* ================= 4 VISUAL MODE TABS ================= */
+        .mode-tabs {
+            max-width: 1120px;
+            width: 100%;
+            margin: 12px auto 0;
+            padding: 0 14px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .mode-tab {
+            background: #ffffff;
+            border: 4px solid #cbd5e1;
+            border-radius: 22px;
+            padding: 12px 8px;
+            font-family: inherit;
+            font-size: clamp(1rem, 2.2vw, 1.3rem);
+            font-weight: 900;
+            color: #334155;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            box-shadow: 0 5px 0 #cbd5e1;
+            transition: all 0.15s;
+        }
+        .mode-tab .tab-icon {
+            font-size: clamp(1.9rem, 4vw, 2.5rem);
+            line-height: 1.1;
+        }
+        .mode-tab.active {
+            background: #eff6ff;
+            border-color: #2563eb;
+            color: #1e3a8a;
+            box-shadow: 0 5px 0 #2563eb;
+            transform: translateY(-2px);
+        }
+
+        /* ================= MAIN STAGE ================= */
+        .stage-wrap {
+            flex: 1;
+            max-width: 1120px;
+            width: 100%;
+            margin: 12px auto 20px;
+            padding: 0 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .stage-card {
+            background: #ffffff;
+            border: 5px solid #cbd5e1;
+            border-radius: 32px;
+            padding: 20px;
+            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.07);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 18px;
+        }
+
+        /* ================= MODE 1: MATCH FACE ================= */
+        .target-banner {
+            background: #f8fafc;
+            border: 4px solid #94a3b8;
+            border-radius: 26px;
+            padding: 14px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        .btn-speak-big {
+            width: 72px;
+            height: 72px;
+            border-radius: 22px;
+            background: #2563eb;
+            color: #ffffff;
+            border: 4px solid #1d4ed8;
+            font-size: 2.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 0 #1e40af;
+            transition: transform 0.12s;
+        }
+        .btn-speak-big:active { transform: translateY(3px); box-shadow: 0 2px 0 #1e40af; }
+
+        .target-word-box {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 8px 24px;
+            border-radius: 22px;
+            border: 4px solid transparent;
+        }
+        .target-emoji {
+            font-size: clamp(3rem, 6vw, 4.2rem);
+            line-height: 1;
+        }
+        .target-word {
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            font-weight: 900;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+        }
+
+        .faces-grid {
+            display: grid;
+            gap: 20px;
+            width: 100%;
+            margin: auto 0;
+        }
+        .faces-grid.cols-2 {
+            grid-template-columns: repeat(2, 1fr);
+            max-width: 760px;
+            margin: 0 auto;
+        }
+        .faces-grid.cols-3 {
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        }
+
+        .face-card {
+            background: #ffffff;
+            border: 6px solid #cbd5e1;
+            border-radius: 30px;
+            padding: 20px 16px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            box-shadow: 0 8px 0 #cbd5e1;
+            transition: transform 0.16s, box-shadow 0.16s, border-color 0.16s;
+            position: relative;
+            min-height: 250px;
+        }
+        .face-card:hover {
+            transform: translateY(-4px);
+        }
+        .face-card:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #cbd5e1;
+        }
+
+        .face-svg-wrap {
+            width: clamp(130px, 20vw, 165px);
+            height: clamp(130px, 20vw, 165px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .face-emoji-corner {
+            position: absolute;
+            top: 12px;
+            right: 14px;
+            font-size: 2rem;
+            line-height: 1;
+        }
+
+        .face-label {
+            font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            padding: 6px 20px;
+            border-radius: 999px;
+        }
+
+        /* Zone Color Themes for Cards */
+        .zone-green { background: #f0fdf4; border-color: #22c55e; box-shadow: 0 8px 0 #16a34a; color: #14532d; }
+        .zone-green .face-label { background: #dcfce7; color: #14532d; }
+
+        .zone-blue { background: #eff6ff; border-color: #3b82f6; box-shadow: 0 8px 0 #2563eb; color: #1e3a8a; }
+        .zone-blue .face-label { background: #dbeafe; color: #1e3a8a; }
+
+        .zone-yellow { background: #fffbeb; border-color: #f59e0b; box-shadow: 0 8px 0 #d97706; color: #78350f; }
+        .zone-yellow .face-label { background: #fef3c7; color: #78350f; }
+
+        .zone-red { background: #fef2f2; border-color: #ef4444; box-shadow: 0 8px 0 #dc2626; color: #7f1d1d; }
+        .zone-red .face-label { background: #fee2e2; color: #7f1d1d; }
+
+        @keyframes gentleWiggle {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+        .wiggle { animation: gentleWiggle 0.4s ease-in-out; }
+
+        @keyframes popSuccess {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+            100% { transform: scale(1); }
+        }
+        .pop-win { animation: popSuccess 0.45s ease-out; }
+
+        /* ================= MODE 2: COLOUR ZONES SORTING ================= */
+        .sort-tray {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            min-height: 165px;
+            padding: 14px;
+            background: #f8fafc;
+            border: 4px dashed #94a3b8;
+            border-radius: 26px;
+        }
+
+        .sort-token {
+            background: #ffffff;
+            border: 5px solid #475569;
+            border-radius: 24px;
+            padding: 10px 16px;
+            cursor: grab;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 6px 0 #475569;
+            transition: transform 0.15s, box-shadow 0.15s;
+            min-width: 135px;
+        }
+        .sort-token.selected {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 6px rgba(37, 99, 235, 0.35), 0 6px 0 #1d4ed8;
+            transform: translateY(-6px) scale(1.05);
+        }
+        .sort-token .token-svg {
+            width: 86px;
+            height: 86px;
+        }
+        .sort-token .token-word {
+            font-size: 1.3rem;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        .buckets-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+
+        .zone-bucket {
+            border-width: 5px;
+            border-style: solid;
+            border-radius: 26px;
+            padding: 16px 10px;
+            min-height: 190px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.15s;
+            position: relative;
+        }
+        .zone-bucket.highlight-target {
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 0 0 8px rgba(250, 204, 21, 0.65) !important;
+        }
+        .bucket-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+        .bucket-dot {
+            font-size: 2.5rem;
+            line-height: 1;
+        }
+        .bucket-title {
+            font-size: clamp(1.3rem, 2.5vw, 1.7rem);
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+        .bucket-items {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 8px;
+        }
+        .mini-sorted-face {
+            font-size: 2.1rem;
+            background: rgba(255,255,255,0.85);
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid currentColor;
+        }
+
+        /* ================= MODE 3: CALM HELPER ================= */
+        .helper-layout {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 22px;
+            align-items: center;
+            margin: auto 0;
+        }
+
+        .friend-box {
+            border: 6px solid #cbd5e1;
+            border-radius: 32px;
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            min-height: 310px;
+            position: relative;
+            transition: all 0.35s ease;
+        }
+        .friend-svg-stage {
+            width: 175px;
+            height: 175px;
+        }
+        .friend-active-tool {
+            position: absolute;
+            bottom: 18px;
+            right: 18px;
+            font-size: 3.4rem;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+            animation: popSuccess 0.5s ease-out;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .tool-btn {
+            background: #ffffff;
+            border: 5px solid #64748b;
+            border-radius: 26px;
+            padding: 20px 12px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 7px 0 #64748b;
+            transition: all 0.15s;
+            font-family: inherit;
+        }
+        .tool-btn:hover {
+            transform: translateY(-4px);
+            border-color: #0d9488;
+            background: #f0fdfa;
+        }
+        .tool-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #64748b;
+        }
+        .tool-icon {
+            font-size: clamp(2.8rem, 5vw, 3.8rem);
+            line-height: 1;
+        }
+        .tool-word {
+            font-size: clamp(1.35rem, 2.8vw, 1.75rem);
+            font-weight: 900;
+            color: #0f172a;
+            text-transform: uppercase;
+        }
+
+        /* ================= MODE 4: HOW I FEEL TODAY ================= */
+        .checkin-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .sensory-reward-box {
+            background: #f0fdf4;
+            border: 5px solid #22c55e;
+            border-radius: 30px;
+            padding: 22px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .breath-orb {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #5eead4 0%, #0d9488 100%);
+            border: 6px solid #115e59;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 0 0 12px rgba(45, 212, 191, 0.25);
+            transition: transform 2.4s ease-in-out, box-shadow 2.4s ease-in-out;
+        }
+        .breath-orb.inhale {
+            transform: scale(1.32);
+            box-shadow: 0 0 0 28px rgba(45, 212, 191, 0.4);
+        }
+
+        .bubble-row {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .calm-bubble {
+            width: 78px;
+            height: 78px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #ffffff, #93c5fd 60%, #3b82f6 100%);
+            border: 4px solid #2563eb;
+            font-size: 2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 14px rgba(37, 99, 235, 0.25);
+            transition: transform 0.15s;
+        }
+        .calm-bubble:hover { transform: scale(1.1); }
+
+        /* Celebration Banner */
+        .win-overlay {
+            background: #dcfce7;
+            border: 5px solid #16a34a;
+            border-radius: 26px;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .win-text {
+            font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+            font-weight: 900;
+            color: #14532d;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .btn-next-giant {
+            background: #16a34a;
+            color: #ffffff;
+            border: 4px solid #14532d;
+            border-radius: 20px;
+            padding: 12px 28px;
+            font-family: inherit;
+            font-size: 1.5rem;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #14532d;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .btn-next-giant:active { transform: translateY(3px); box-shadow: 0 2px 0 #14532d; }
+
+        @media (max-width: 780px) {
+            .mode-tabs { grid-template-columns: repeat(2, 1fr); }
+            .buckets-grid { grid-template-columns: repeat(2, 1fr); }
+            .helper-layout { grid-template-columns: 1fr; }
+            .checkin-grid { grid-template-columns: repeat(2, 1fr); }
+            .faces-grid.cols-2, .faces-grid.cols-3 { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 480px) {
+            .faces-grid.cols-2, .faces-grid.cols-3 { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="top-bar">
+        <a href="https://games.ableandbeyond.support/index.html" class="btn-home" aria-label="Back to Game Hub">
+            ⬅️ Hub
+        </a>
+
+        <div class="game-title">
+            <span>😊</span>
+            <span>Emotion Explorer</span>
+        </div>
+
+        <div class="top-controls">
+            <button type="button" id="btn-card-count" class="ctrl-btn active" onclick="toggleCardCount()" title="Switch between 2 cards (Easy) or 3 cards">
+                🃏 2 Cards
+            </button>
+            <button type="button" id="btn-one-tap" class="ctrl-btn" onclick="toggleOneTap()" title="1-Tap & Spacebar Switch Mode">
+                ⚡ 1-Tap: OFF
+            </button>
+            <button type="button" id="btn-voice" class="ctrl-btn active" onclick="toggleVoice()" title="Toggle 1-Word Voice">
+                🗣️ Voice
+            </button>
+            <button type="button" id="btn-sound" class="ctrl-btn active" onclick="toggleSound()" title="Toggle Musical Sounds">
+                🎵 Sound
+            </button>
+            <div class="star-pill" aria-label="Stars earned">
+                ⭐ <span id="star-count">0</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- 4 SIMPLE PICTURE TABS -->
+    <nav class="mode-tabs" aria-label="Game Modes">
+        <button type="button" class="mode-tab active" id="tab-match" onclick="setMode('match')">
+            <span class="tab-icon">😊</span>
+            <span>1. Match Face</span>
+        </button>
+        <button type="button" class="mode-tab" id="tab-zones" onclick="setMode('zones')">
+            <span class="tab-icon">🎨</span>
+            <span>2. Colour Zones</span>
+        </button>
+        <button type="button" class="mode-tab" id="tab-helper" onclick="setMode('helper')">
+            <span class="tab-icon">🧘</span>
+            <span>3. Calm Helper</span>
+        </button>
+        <button type="button" class="mode-tab" id="tab-checkin" onclick="setMode('checkin')">
+            <span class="tab-icon">🪞</span>
+            <span>4. How I Feel</span>
+        </button>
+    </nav>
+
+    <!-- MAIN INTERACTIVE STAGE -->
+    <main class="stage-wrap">
+        <div id="stage-content" class="stage-card">
+            <!-- Populated by JS -->
+        </div>
+    </main>
+
+    <script>
+        /* ================================================================
+           1. CORE EMOTIONS DATA (1-WORD LABELS + ZONE COLOURS)
+           ================================================================ */
+        const EMOTIONS = [
+            { id: 'happy',     word: 'HAPPY',     emoji: '😊', zone: 'green',  zoneName: 'Green',  skin: '#F6C99E', notes: [523.25, 659.25, 783.99] },
+            { id: 'calm',      word: 'CALM',      emoji: '😌', zone: 'green',  zoneName: 'Green',  skin: '#E8B48A', notes: [392.00, 493.88, 587.33] },
+            { id: 'sad',       word: 'SAD',       emoji: '😢', zone: 'blue',   zoneName: 'Blue',   skin: '#F6C99E', notes: [440.00, 392.00, 349.23] },
+            { id: 'tired',     word: 'TIRED',     emoji: '😴', zone: 'blue',   zoneName: 'Blue',   skin: '#D99B72', notes: [349.23, 329.63, 293.66] },
+            { id: 'worried',   word: 'WORRIED',   emoji: '😟', zone: 'yellow', zoneName: 'Yellow', skin: '#F6C99E', notes: [440.00, 466.16, 440.00] },
+            { id: 'excited',   word: 'EXCITED',   emoji: '🤩', zone: 'yellow', zoneName: 'Yellow', skin: '#E8B48A', notes: [587.33, 659.25, 880.00] },
+            { id: 'angry',     word: 'ANGRY',     emoji: '😠', zone: 'red',    zoneName: 'Red',    skin: '#F6C99E', notes: [261.63, 293.66, 261.63] },
+            { id: 'scared',    word: 'SCARED',    emoji: '😨', zone: 'red',    zoneName: 'Red',    skin: '#D99B72', notes: [329.63, 311.13, 329.63] }
+        ];
+
+        const CALM_TOOLS = [
+            { id: 'breathe', word: 'BREATHE', emoji: '🌬️', notes: [392.00, 523.25, 659.25] },
+            { id: 'quiet',   word: 'QUIET',   emoji: '🎧', notes: [349.23, 440.00, 523.25] },
+            { id: 'teddy',   word: 'TEDDY',   emoji: '🧸', notes: [440.00, 554.37, 659.25] },
+            { id: 'water',   word: 'WATER',   emoji: '💧', notes: [523.25, 587.33, 783.99] }
+        ];
+
+        const ZONES = [
+            { id: 'green',  word: 'GREEN',  dot: '🟢', css: 'zone-green' },
+            { id: 'blue',   word: 'BLUE',   dot: '🔵', css: 'zone-blue' },
+            { id: 'yellow', word: 'YELLOW', dot: '🟡', css: 'zone-yellow' },
+            { id: 'red',    word: 'RED',    dot: '🔴', css: 'zone-red' }
+        ];
+
+        /* ================================================================
+           2. EXPRESSIVE SVG FACE GENERATOR (GIANT & CLEAR FOR SEN)
+           ================================================================ */
+        function renderFaceSVG(emotionId, skin = '#F6C99E') {
+            const faces = {
+                happy: `
+                    <path d="M30 40 Q40 33 50 40" stroke="#0f172a" stroke-width="5" stroke-linecap="round" fill="none"/>
+                    <path d="M70 40 Q80 33 90 40" stroke="#0f172a" stroke-width="5" stroke-linecap="round" fill="none"/>
+                    <circle cx="40" cy="53" r="6.5" fill="#0f172a"/><circle cx="38" cy="50.5" r="2.2" fill="#fff"/>
+                    <circle cx="80" cy="53" r="6.5" fill="#0f172a"/><circle cx="78" cy="50.5" r="2.2" fill="#fff"/>
+                    <path d="M38 71 Q60 95 82 71 Z" fill="#e11d48" stroke="#0f172a" stroke-width="4" stroke-linejoin="round"/>
+                    <ellipse cx="26" cy="65" rx="7" ry="4" fill="#fb7185" opacity="0.7"/>
+                    <ellipse cx="94" cy="65" rx="7" ry="4" fill="#fb7185" opacity="0.7"/>
+                `,
+                calm: `
+                    <path d="M31 41 Q40 38 49 41" stroke="#0f172a" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+                    <path d="M71 41 Q80 38 89 41" stroke="#0f172a" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+                    <path d="M32 54 Q40 62 48 54" stroke="#0f172a" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+                    <path d="M72 54 Q80 62 88 54" stroke="#0f172a" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+                    <path d="M42 74 Q60 86 78 74" stroke="#0f172a" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+                    <ellipse cx="28" cy="65" rx="6" ry="3.5" fill="#fb7185" opacity="0.55"/>
+                    <ellipse cx="92" cy="65" rx="6" ry="3.5" fill="#fb7185" opacity="0.55"/>
+                `,
+                sad: `
+                    <path d="M29 46 Q40 42 49 36" stroke="#0f172a" stroke-width="5" stroke-linecap="round" fill="none"/>
+                    <path d="M71 36 Q80 42 91 46" stroke="#0f172a" stroke-width="5" stroke-linecap="round" fill="none"/>
+                    <circle cx="40" cy="55" r="6" fill="#0f172a"/><circle cx="38" cy="53" r="2" fill="#fff"/>
+                    <circle cx="80" cy="55" r="6" fill="#0f172a"/><circle cx="78" cy="53" r="2" fill="#fff"/>
+                    <path d="M40 84 Q60 67 80 84" stroke="#0f172a" stroke-width="5" stroke-linecap="round" fill="none"/>
+                    <path d="M32 63 Q26 74 32 78 Q38 74 32 63 Z" fill="#38bdf8" stroke="#0284c7" stroke-width="2"/>
+                `,
+                tired: `
+                    <path d="M30 43 L48 45" stroke="#0f172a" stroke-width="4.5" stroke-linecap="round"/>
+                    <path d="M72 45 L90 43" stroke="#0f172a" stroke-width="4.5" stroke-linecap="round"/>
+                    <path d="M31 55 L49 55" stroke="#0f172a" stroke-width="5" stroke-linecap="round"/>
+                    <path d="M71 55 L89 55" stroke="#0f172a" stroke-width="5" stroke-linecap="round"/>
+                    <ellipse cx="60" cy="78" rx="8" ry="10" fill="#9f1239" stroke="#0f172a" stroke-width="3.5"/>
+                    <text x="86" y="30" font-size="16" font-weight="900" fill="#1d4ed8">Zzz</text>
+                `,
+                worried: `
+                    <path d="M29 45 Q40 41 49 35" stroke="#0f172a" stroke-width="5" stroke-linecap="round" fill="none"/>
+                    <path d="M71 35 Q80 41 91 45" stroke="#0f172a" stroke-width="5" stroke-linecap="round" fill="none"/>
+                    <circle cx="40" cy="54" r="7.5" fill="#fff" stroke="#0f172a" stroke-width="3"/>
+                    <circle cx="40" cy="54" r="4" fill="#0f172a"/>
+                    <circle cx="80" cy="54" r="7.5" fill="#fff" stroke="#0f172a" stroke-width="3"/>
+                    <circle cx="80" cy="54" r="4" fill="#0f172a"/>
+                    <path d="M40 79 Q50 72 60 79 Q70 86 80 77" stroke="#0f172a" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+                `,
+                excited: `
+                    <path d="M29 35 Q40 27 51 35" stroke="#0f172a" stroke-width="5" stroke-linecap="round" fill="none"/>
+                    <path d="M69 35 Q80 27 91 35" stroke="#0f172a" stroke-width="5" stroke-linecap="round" fill="none"/>
+                    <path d="M32 53 Q40 42 48 53" stroke="#0f172a" stroke-width="5" stroke-linecap="round" fill="none"/>
+                    <path d="M72 53 Q80 42 88 53" stroke="#0f172a" stroke-width="5" stroke-linecap="round" fill="none"/>
+                    <path d="M35 69 Q60 97 85 69 Z" fill="#e11d48" stroke="#0f172a" stroke-width="4" stroke-linejoin="round"/>
+                    <ellipse cx="26" cy="64" rx="7" ry="4" fill="#fb7185" opacity="0.85"/>
+                    <ellipse cx="94" cy="64" rx="7" ry="4" fill="#fb7185" opacity="0.85"/>
+                `,
+                angry: `
+                    <path d="M28 34 L51 46" stroke="#0f172a" stroke-width="6" stroke-linecap="round"/>
+                    <path d="M92 34 L69 46" stroke="#0f172a" stroke-width="6" stroke-linecap="round"/>
+                    <circle cx="41" cy="54" r="6" fill="#0f172a"/><circle cx="39" cy="52" r="2" fill="#fff"/>
+                    <circle cx="79" cy="54" r="6" fill="#0f172a"/><circle cx="77" cy="52" r="2" fill="#fff"/>
+                    <path d="M40 82 Q60 69 80 82 Z" fill="#fff" stroke="#0f172a" stroke-width="4" stroke-linejoin="round"/>
+                    <ellipse cx="27" cy="64" rx="7.5" ry="4.5" fill="#ef4444" opacity="0.7"/>
+                    <ellipse cx="93" cy="64" rx="7.5" ry="4.5" fill="#ef4444" opacity="0.7"/>
+                `,
+                scared: `
+                    <path d="M28 42 Q40 31 50 36" stroke="#0f172a" stroke-width="5" stroke-linecap="round" fill="none"/>
+                    <path d="M70 36 Q80 31 92 42" stroke="#0f172a" stroke-width="5" stroke-linecap="round" fill="none"/>
+                    <circle cx="40" cy="53" r="9" fill="#fff" stroke="#0f172a" stroke-width="3.2"/>
+                    <circle cx="40" cy="53" r="4" fill="#0f172a"/>
+                    <circle cx="80" cy="53" r="9" fill="#fff" stroke="#0f172a" stroke-width="3.2"/>
+                    <circle cx="80" cy="53" r="4" fill="#0f172a"/>
+                    <ellipse cx="60" cy="79" rx="11" ry="9" fill="#9f1239" stroke="#0f172a" stroke-width="3.8"/>
+                `
+            };
+
+            return `
+                <svg viewBox="0 0 120 120" width="100%" height="100%" aria-hidden="true">
+                    <!-- Ears -->
+                    <circle cx="14" cy="60" r="10" fill="${skin}" stroke="#0f172a" stroke-width="3.5"/>
+                    <circle cx="106" cy="60" r="10" fill="${skin}" stroke="#0f172a" stroke-width="3.5"/>
+                    <!-- Head -->
+                    <circle cx="60" cy="60" r="46" fill="${skin}" stroke="#0f172a" stroke-width="4"/>
+                    <!-- Hair tuft -->
+                    <path d="M22 40 Q38 10 62 14 Q86 10 98 40 Q80 24 60 26 Q38 24 22 40 Z" fill="#1e293b"/>
+                    ${faces[emotionId] || faces.happy}
+                </svg>
+            `;
+        }
+
+        /* ================================================================
+           3. SOOTHING WEB AUDIO SYNTHESIZER & 1-WORD TTS
+           ================================================================ */
+        const state = {
+            mode: 'match',
+            easyTwoCards: true,
+            oneTap: false,
+            voiceOn: true,
+            soundOn: true,
+            stars: parseInt(localStorage.getItem('ab_emotion_stars') || '0', 10),
+            // Mode 1
+            targetEmotion: null,
+            choices: [],
+            roundWon: false,
+            // Mode 2 (Zones)
+            zoneQueue: [],
+            selectedTokenId: null,
+            sortedZones: { green: [], blue: [], yellow: [], red: [] },
+            // Mode 3 (Helper)
+            helperEmotion: null,
+            helperFixed: false,
+            activeToolEmoji: '',
+            // Mode 4 (Check-In)
+            myFeeling: null,
+            bubblesLeft: [true, true, true, true, true],
+            inhaling: false
+        };
+
+        let audioCtx = null;
+        function getAudioCtx() {
+            if (!audioCtx) {
+                const AC = window.AudioContext || window.webkitAudioContext;
+                if (AC) audioCtx = new AC();
+            }
+            if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+            return audioCtx;
+        }
+
+        function playNotes(freqs, type = 'sine', spacing = 0.11, duration = 0.45) {
+            if (!state.soundOn) return;
+            const ctx = getAudioCtx();
+            if (!ctx) return;
+            const now = ctx.currentTime;
+            freqs.forEach((f, idx) => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(f, now + idx * spacing);
+                gain.gain.setValueAtTime(0.001, now + idx * spacing);
+                gain.gain.exponentialRampToValueAtTime(0.22, now + idx * spacing + 0.03);
+                gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * spacing + duration);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start(now + idx * spacing);
+                osc.stop(now + idx * spacing + duration + 0.02);
+            });
+        }
+
+        function playWinChime() {
+            playNotes([523.25, 659.25, 783.99, 1046.50], 'triangle', 0.09, 0.5);
+        }
+
+        function playSoftBump() {
+            playNotes([220, 196], 'sine', 0.1, 0.25);
+        }
+
+        function playPopSound() {
+            playNotes([659.25, 987.77], 'sine', 0.05, 0.2);
+        }
+
+        function speakWord(text) {
+            if (!state.voiceOn || !('speechSynthesis' in window)) return;
+            try {
+                window.speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(text);
+                u.lang = 'en-GB';
+                u.rate = 0.9;
+                u.pitch = 1.05;
+                window.speechSynthesis.speak(u);
+            } catch (e) {}
+        }
+
+        function addStar() {
+            state.stars += 1;
+            localStorage.setItem('ab_emotion_stars', String(state.stars));
+            document.getElementById('star-count').textContent = state.stars;
+            if (typeof confetti === 'function') {
+                confetti({ particleCount: 45, spread: 65, origin: { y: 0.7 } });
+            }
+        }
+
+        /* ================================================================
+           4. HEADER CONTROLS & MODE SWITCHING
+           ================================================================ */
+        function toggleCardCount() {
+            state.easyTwoCards = !state.easyTwoCards;
+            const btn = document.getElementById('btn-card-count');
+            btn.textContent = state.easyTwoCards ? '🃏 2 Cards' : '🃏 3 Cards';
+            btn.classList.toggle('active', state.easyTwoCards);
+            if (state.mode === 'match') setupMatchRound();
+        }
+
+        function toggleOneTap() {
+            state.oneTap = !state.oneTap;
+            const btn = document.getElementById('btn-one-tap');
+            btn.textContent = state.oneTap ? '⚡ 1-Tap: ON' : '⚡ 1-Tap: OFF';
+            btn.classList.toggle('active', state.oneTap);
+        }
+
+        function toggleVoice() {
+            state.voiceOn = !state.voiceOn;
+            const btn = document.getElementById('btn-voice');
+            btn.classList.toggle('active', state.voiceOn);
+            if (state.voiceOn) speakWord('Voice On');
+        }
+
+        function toggleSound() {
+            state.soundOn = !state.soundOn;
+            const btn = document.getElementById('btn-sound');
+            btn.classList.toggle('active', state.soundOn);
+            if (state.soundOn) playWinChime();
+        }
+
+        function setMode(mode) {
+            state.mode = mode;
+            ['match', 'zones', 'helper', 'checkin'].forEach(m => {
+                document.getElementById('tab-' + m).classList.toggle('active', m === mode);
+            });
+
+            if (mode === 'match') {
+                setupMatchRound();
+            } else if (mode === 'zones') {
+                setupZonesRound();
+            } else if (mode === 'helper') {
+                setupHelperRound();
+            } else if (mode === 'checkin') {
+                state.myFeeling = null;
+                renderCheckIn();
+            }
+        }
+
+        /* ================================================================
+           5. MODE 1: 😊 MATCH FACE (ULTRA-VISUAL, 1 WORD)
+           ================================================================ */
+        function setupMatchRound() {
+            state.roundWon = false;
+            const count = state.easyTwoCards ? 2 : 3;
+            const shuffled = [...EMOTIONS].sort(() => Math.random() - 0.5);
+            state.choices = shuffled.slice(0, count);
+            state.targetEmotion = state.choices[Math.floor(Math.random() * state.choices.length)];
+            renderMatchMode();
+            setTimeout(() => speakWord(state.targetEmotion.word), 250);
+        }
+
+        function renderMatchMode() {
+            const box = document.getElementById('stage-content');
+            const t = state.targetEmotion;
+            const colsClass = state.easyTwoCards ? 'cols-2' : 'cols-3';
+
+            box.innerHTML = `
+                <div class="target-banner">
+                    <button type="button" class="btn-speak-big" onclick="speakWord('${t.word}'); playNotes([${t.notes.join(',')}])" aria-label="Speak ${t.word}">
+                        🔊
+                    </button>
+                    <div class="target-word-box zone-${t.zone}">
+                        <span class="target-emoji">${t.emoji}</span>
+                        <span class="target-word">${t.word}</span>
+                    </div>
+                </div>
+
+                <div class="faces-grid ${colsClass}">
+                    ${state.choices.map(item => `
+                        <button type="button"
+                                id="face-card-${item.id}"
+                                class="face-card zone-${item.zone}"
+                                onclick="handleFacePick('${item.id}')">
+                            <span class="face-emoji-corner">${item.emoji}</span>
+                            <div class="face-svg-wrap">
+                                ${renderFaceSVG(item.id, item.skin)}
+                            </div>
+                            <span class="face-label">${item.word}</span>
+                        </button>
+                    `).join('')}
+                </div>
+
+                ${state.roundWon ? `
+                    <div class="win-overlay">
+                        <div class="win-text">
+                            <span>🌟</span>
+                            <span>${t.emoji} ${t.word}!</span>
+                        </div>
+                        <button type="button" class="btn-next-giant" onclick="setupMatchRound()">
+                            Next ➡️
+                        </button>
+                    </div>
+                ` : ''}
+            `;
+        }
+
+        function handleFacePick(pickedId) {
+            if (state.roundWon) return;
+
+            // In 1-Tap Switch Mode, any tap selects the correct target automatically
+            const actualId = state.oneTap ? state.targetEmotion.id : pickedId;
+            const picked = EMOTIONS.find(e => e.id === actualId);
+            const cardEl = document.getElementById('face-card-' + actualId);
+
+            if (actualId === state.targetEmotion.id) {
+                state.roundWon = true;
+                if (cardEl) cardEl.classList.add('pop-win');
+                playWinChime();
+                speakWord(picked.word);
+                addStar();
+                renderMatchMode();
+            } else {
+                if (cardEl) {
+                    cardEl.classList.remove('wiggle');
+                    void cardEl.offsetWidth;
+                    cardEl.classList.add('wiggle');
+                }
+                playSoftBump();
+                speakWord(picked.word);
+            }
+        }
+
+        /* ================================================================
+           6. MODE 2: 🎨 COLOUR ZONES SORTING (TAP OR DRAG)
+           ================================================================ */
+        function setupZonesRound() {
+            state.sortedZones = { green: [], blue: [], yellow: [], red: [] };
+            // Pick 1 face from each of the 4 zones
+            const g = EMOTIONS.filter(e => e.zone === 'green')[Math.floor(Math.random() * 2)];
+            const b = EMOTIONS.filter(e => e.zone === 'blue')[Math.floor(Math.random() * 2)];
+            const y = EMOTIONS.filter(e => e.zone === 'yellow')[Math.floor(Math.random() * 2)];
+            const r = EMOTIONS.filter(e => e.zone === 'red')[Math.floor(Math.random() * 2)];
+            state.zoneQueue = [g, b, y, r].sort(() => Math.random() - 0.5);
+            state.selectedTokenId = state.zoneQueue[0].id;
+            renderZonesMode();
+        }
+
+        function renderZonesMode() {
+            const box = document.getElementById('stage-content');
+            const allDone = state.zoneQueue.length === 0;
+            const activeEmotion = state.zoneQueue.find(e => e.id === state.selectedTokenId);
+
+            box.innerHTML = `
+                <div class="sort-tray">
+                    ${allDone ? `
+                        <div class="win-text">🌟 All Sorted!</div>
+                    ` : state.zoneQueue.map(item => `
+                        <div class="sort-token ${state.selectedTokenId === item.id ? 'selected' : ''}"
+                             draggable="true"
+                             ondragstart="onTokenDragStart(event, '${item.id}')"
+                             onclick="selectSortToken('${item.id}')"
+                             tabindex="0"
+                             role="button"
+                             aria-label="${item.word}">
+                            <div class="token-svg">${renderFaceSVG(item.id, item.skin)}</div>
+                            <span class="token-word">${item.emoji} ${item.word}</span>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div class="buckets-grid">
+                    ${ZONES.map(z => {
+                        const isTarget = activeEmotion && activeEmotion.zone === z.id;
+                        return `
+                            <div class="zone-bucket ${z.css} ${isTarget ? 'highlight-target' : ''}"
+                                 ondragover="event.preventDefault()"
+                                 ondrop="onBucketDrop(event, '${z.id}')"
+                                 onclick="handleBucketTap('${z.id}')"
+                                 tabindex="0"
+                                 role="button"
+                                 aria-label="${z.word} Zone">
+                                <div class="bucket-header">
+                                    <span class="bucket-dot">${z.dot}</span>
+                                    <span class="bucket-title">${z.word}</span>
+                                </div>
+                                <div class="bucket-items">
+                                    ${state.sortedZones[z.id].map(em => `
+                                        <span class="mini-sorted-face" title="${em.word}">${em.emoji}</span>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+
+                ${allDone ? `
+                    <div class="win-overlay">
+                        <div class="win-text">🌈 4 Zones Complete!</div>
+                        <button type="button" class="btn-next-giant" onclick="setupZonesRound()">
+                            Play Again 🔄
+                        </button>
+                    </div>
+                ` : ''}
+            `;
+        }
+
+        function selectSortToken(id) {
+            const em = state.zoneQueue.find(e => e.id === id);
+            if (!em) return;
+            state.selectedTokenId = id;
+            speakWord(em.word);
+            playNotes(em.notes);
+            if (state.oneTap) {
+                handleBucketTap(em.zone);
+                return;
+            }
+            renderZonesMode();
+        }
+
+        function onTokenDragStart(e, id) {
+            state.selectedTokenId = id;
+            e.dataTransfer.setData('text/plain', id);
+        }
+
+        function onBucketDrop(e, zoneId) {
+            e.preventDefault();
+            const id = e.dataTransfer.getData('text/plain') || state.selectedTokenId;
+            state.selectedTokenId = id;
+            handleBucketTap(zoneId);
+        }
+
+        function handleBucketTap(zoneId) {
+            if (!state.selectedTokenId && state.zoneQueue.length > 0) {
+                state.selectedTokenId = state.zoneQueue[0].id;
+            }
+            const em = state.zoneQueue.find(e => e.id === state.selectedTokenId);
+            if (!em) return;
+
+            if (em.zone === zoneId || state.oneTap) {
+                const targetZone = em.zone;
+                state.sortedZones[targetZone].push(em);
+                state.zoneQueue = state.zoneQueue.filter(e => e.id !== em.id);
+                state.selectedTokenId = state.zoneQueue[0] ? state.zoneQueue[0].id : null;
+                playWinChime();
+                speakWord(em.zoneName);
+                if (state.zoneQueue.length === 0) addStar();
+                renderZonesMode();
+            } else {
+                playSoftBump();
+                speakWord(em.zoneName);
+            }
+        }
+
+        /* ================================================================
+           7. MODE 3: 🧘 CALM HELPER (1-TAP VISUAL REGULATION)
+           ================================================================ */
+        function setupHelperRound() {
+            const bigFeelings = EMOTIONS.filter(e => ['sad', 'angry', 'worried', 'scared'].includes(e.id));
+            state.helperEmotion = bigFeelings[Math.floor(Math.random() * bigFeelings.length)];
+            state.helperFixed = false;
+            state.activeToolEmoji = '';
+            renderHelperMode();
+            setTimeout(() => speakWord(state.helperEmotion.word), 250);
+        }
+
+        function renderHelperMode() {
+            const box = document.getElementById('stage-content');
+            const current = state.helperFixed
+                ? EMOTIONS.find(e => e.id === 'calm')
+                : state.helperEmotion;
+
+            box.innerHTML = `
+                <div class="helper-layout">
+                    <!-- Character Card -->
+                    <div class="friend-box zone-${current.zone} ${state.helperFixed ? 'pop-win' : ''}">
+                        <div class="friend-svg-stage">
+                            ${renderFaceSVG(current.id, state.helperEmotion.skin)}
+                        </div>
+                        <span class="face-label">${current.emoji} ${current.word}</span>
+                        ${state.activeToolEmoji ? `<span class="friend-active-tool">${state.activeToolEmoji}</span>` : ''}
+                    </div>
+
+                    <!-- 4 Giant Calm Helper Buttons -->
+                    <div class="tools-grid">
+                        ${CALM_TOOLS.map(tool => `
+                            <button type="button"
+                                    class="tool-btn"
+                                    onclick="useCalmTool('${tool.id}')">
+                                <span class="tool-icon">${tool.emoji}</span>
+                                <span class="tool-word">${tool.word}</span>
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+
+                ${state.helperFixed ? `
+                    <div class="win-overlay">
+                        <div class="win-text">
+                            <span>😌</span>
+                            <span>Calm &amp; Happy!</span>
+                        </div>
+                        <button type="button" class="btn-next-giant" onclick="setupHelperRound()">
+                            Next Friend ➡️
+                        </button>
+                    </div>
+                ` : ''}
+            `;
+        }
+
+        function useCalmTool(toolId) {
+            const tool = CALM_TOOLS.find(t => t.id === toolId);
+            if (!tool) return;
+            state.activeToolEmoji = tool.emoji;
+            playNotes(tool.notes, 'triangle', 0.1, 0.5);
+            speakWord(tool.word);
+
+            if (!state.helperFixed) {
+                state.helperFixed = true;
+                setTimeout(() => {
+                    playWinChime();
+                    addStar();
+                }, 350);
+            }
+            renderHelperMode();
+        }
+
+        /* ================================================================
+           8. MODE 4: 🪞 HOW I FEEL (DAILY CHECK-IN + SENSORY CALM BOX)
+           ================================================================ */
+        function renderCheckIn() {
+            const box = document.getElementById('stage-content');
+            const checkInList = EMOTIONS.filter(e =>
+                ['happy', 'calm', 'sad', 'tired', 'worried', 'angry'].includes(e.id)
+            );
+
+            if (!state.myFeeling) {
+                box.innerHTML = `
+                    <div class="checkin-grid">
+                        ${checkInList.map(item => `
+                            <button type="button"
+                                    class="face-card zone-${item.zone}"
+                                    onclick="pickMyFeeling('${item.id}')">
+                                <span class="face-emoji-corner">${item.emoji}</span>
+                                <div class="face-svg-wrap">
+                                    ${renderFaceSVG(item.id, item.skin)}
+                                </div>
+                                <span class="face-label">${item.word}</span>
+                            </button>
+                        `).join('')}
+                    </div>
+                `;
+                return;
+            }
+
+            const f = state.myFeeling;
+            box.innerHTML = `
+                <div class="target-banner">
+                    <div class="target-word-box zone-${f.zone}">
+                        <span class="target-emoji">${f.emoji}</span>
+                        <span class="target-word">I FEEL ${f.word}</span>
+                    </div>
+                    <button type="button" class="ctrl-btn" onclick="state.myFeeling = null; renderCheckIn();">
+                        🔄 Change
+                    </button>
+                </div>
+
+                <div class="sensory-reward-box">
+                    <!-- Interactive Breathing Circle -->
+                    <button type="button"
+                            id="breath-orb-btn"
+                            class="breath-orb ${state.inhaling ? 'inhale' : ''}"
+                            onclick="triggerBreath()">
+                        <span style="font-size:2.4rem;">🌬️</span>
+                        <span id="breath-label">${state.inhaling ? 'IN...' : 'BREATHE'}</span>
+                    </button>
+
+                    <!-- 5 Sensory Calm Bubbles to Pop -->
+                    <div class="bubble-row">
+                        ${state.bubblesLeft.map((alive, idx) => alive ? `
+                            <button type="button"
+                                    class="calm-bubble"
+                                    onclick="popCheckinBubble(${idx})"
+                                    aria-label="Pop bubble">
+                                🫧
+                            </button>
+                        ` : `
+                            <span style="width:78px;height:78px;display:inline-flex;align-items:center;justify-content:center;font-size:2rem;">✨</span>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function pickMyFeeling(id) {
+            const em = EMOTIONS.find(e => e.id === id);
+            if (!em) return;
+            state.myFeeling = em;
+            state.bubblesLeft = [true, true, true, true, true];
+            playNotes(em.notes);
+            speakWord(em.word);
+            addStar();
+            renderCheckIn();
+        }
+
+        function triggerBreath() {
+            state.inhaling = true;
+            speakWord('Breathe In');
+            playNotes([392.00, 523.25], 'sine', 0.25, 1.2);
+            renderCheckIn();
+            setTimeout(() => {
+                state.inhaling = false;
+                speakWord('Breathe Out');
+                playNotes([523.25, 392.00], 'sine', 0.25, 1.2);
+                if (state.mode === 'checkin' && state.myFeeling) renderCheckIn();
+            }, 2400);
+        }
+
+        function popCheckinBubble(idx) {
+            state.bubblesLeft[idx] = false;
+            playPopSound();
+            speakWord('Pop');
+            if (state.bubblesLeft.every(b => !b)) {
+                setTimeout(() => {
+                    playWinChime();
+                    state.bubblesLeft = [true, true, true, true, true];
+                    if (state.mode === 'checkin') renderCheckIn();
+                }, 600);
+            }
+            renderCheckIn();
+        }
+
+        /* ================================================================
+           9. SPACEBAR / ENTER SWITCH ACCESSIBILITY
+           ================================================================ */
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' || e.code === 'Enter') {
+                if (document.activeElement && document.activeElement.tagName === 'BUTTON') return;
+                e.preventDefault();
+                if (state.mode === 'match') {
+                    if (state.roundWon) setupMatchRound();
+                    else handleFacePick(state.targetEmotion.id);
+                } else if (state.mode === 'zones') {
+                    if (state.zoneQueue.length === 0) setupZonesRound();
+                    else handleBucketTap(state.zoneQueue[0].zone);
+                } else if (state.mode === 'helper') {
+                    if (state.helperFixed) setupHelperRound();
+                    else useCalmTool('breathe');
+                }
+            }
+        });
+
+        // Boot Game
+        document.getElementById('star-count').textContent = state.stars;
+        setupMatchRound();
+    </script>
+</body>
+</html>
