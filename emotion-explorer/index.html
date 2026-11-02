@@ -318,18 +318,70 @@
             border-radius: 999px;
         }
 
-        /* Zone Color Themes for Cards */
-        .zone-green { background: #f0fdf4; border-color: #22c55e; box-shadow: 0 8px 0 #16a34a; color: #14532d; }
-        .zone-green .face-label { background: #dcfce7; color: #14532d; }
+        /* Zone Color Themes for Cards, Frames, Banners & Tokens */
+        .zone-green {
+            background: #f0fdf4 !important;
+            border-color: #22c55e !important;
+            box-shadow: 0 8px 0 #16a34a !important;
+            color: #14532d !important;
+        }
+        .zone-green .face-label, .zone-green .token-zone-pill {
+            background: #dcfce7;
+            color: #14532d;
+            border: 2px solid #22c55e;
+        }
+        .zone-green .face-svg-wrap {
+            background: #dcfce7;
+            border: 5px solid #22c55e;
+        }
 
-        .zone-blue { background: #eff6ff; border-color: #3b82f6; box-shadow: 0 8px 0 #2563eb; color: #1e3a8a; }
-        .zone-blue .face-label { background: #dbeafe; color: #1e3a8a; }
+        .zone-blue {
+            background: #eff6ff !important;
+            border-color: #3b82f6 !important;
+            box-shadow: 0 8px 0 #2563eb !important;
+            color: #1e3a8a !important;
+        }
+        .zone-blue .face-label, .zone-blue .token-zone-pill {
+            background: #dbeafe;
+            color: #1e3a8a;
+            border: 2px solid #3b82f6;
+        }
+        .zone-blue .face-svg-wrap {
+            background: #dbeafe;
+            border: 5px solid #3b82f6;
+        }
 
-        .zone-yellow { background: #fffbeb; border-color: #f59e0b; box-shadow: 0 8px 0 #d97706; color: #78350f; }
-        .zone-yellow .face-label { background: #fef3c7; color: #78350f; }
+        .zone-yellow {
+            background: #fffbeb !important;
+            border-color: #f59e0b !important;
+            box-shadow: 0 8px 0 #d97706 !important;
+            color: #78350f !important;
+        }
+        .zone-yellow .face-label, .zone-yellow .token-zone-pill {
+            background: #fef3c7;
+            color: #78350f;
+            border: 2px solid #f59e0b;
+        }
+        .zone-yellow .face-svg-wrap {
+            background: #fef3c7;
+            border: 5px solid #f59e0b;
+        }
 
-        .zone-red { background: #fef2f2; border-color: #ef4444; box-shadow: 0 8px 0 #dc2626; color: #7f1d1d; }
-        .zone-red .face-label { background: #fee2e2; color: #7f1d1d; }
+        .zone-red {
+            background: #fef2f2 !important;
+            border-color: #ef4444 !important;
+            box-shadow: 0 8px 0 #dc2626 !important;
+            color: #7f1d1d !important;
+        }
+        .zone-red .face-label, .zone-red .token-zone-pill {
+            background: #fee2e2;
+            color: #7f1d1d;
+            border: 2px solid #ef4444;
+        }
+        .zone-red .face-svg-wrap {
+            background: #fee2e2;
+            border: 5px solid #ef4444;
+        }
 
         @keyframes gentleWiggle {
             0%, 100% { transform: translateX(0); }
@@ -361,22 +413,31 @@
 
         .sort-token {
             background: #ffffff;
-            border: 5px solid #475569;
+            border: 6px solid #cbd5e1;
             border-radius: 24px;
-            padding: 10px 16px;
+            padding: 12px 18px;
             cursor: grab;
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 6px;
-            box-shadow: 0 6px 0 #475569;
             transition: transform 0.15s, box-shadow 0.15s;
-            min-width: 135px;
+            min-width: 145px;
         }
         .sort-token.selected {
-            border-color: #2563eb;
-            box-shadow: 0 0 0 6px rgba(37, 99, 235, 0.35), 0 6px 0 #1d4ed8;
-            transform: translateY(-6px) scale(1.05);
+            transform: translateY(-8px) scale(1.07);
+        }
+        .sort-token.zone-green.selected {
+            box-shadow: 0 0 0 7px rgba(34, 197, 94, 0.45), 0 8px 0 #16a34a !important;
+        }
+        .sort-token.zone-blue.selected {
+            box-shadow: 0 0 0 7px rgba(59, 130, 246, 0.45), 0 8px 0 #2563eb !important;
+        }
+        .sort-token.zone-yellow.selected {
+            box-shadow: 0 0 0 7px rgba(245, 158, 11, 0.45), 0 8px 0 #d97706 !important;
+        }
+        .sort-token.zone-red.selected {
+            box-shadow: 0 0 0 7px rgba(239, 68, 68, 0.45), 0 8px 0 #dc2626 !important;
         }
         .sort-token .token-svg {
             width: 86px;
@@ -387,6 +448,13 @@
             font-weight: 900;
             text-transform: uppercase;
         }
+        .token-zone-pill {
+            font-size: 0.9rem;
+            font-weight: 800;
+            padding: 2px 10px;
+            border-radius: 999px;
+            text-transform: uppercase;
+        }
 
         .buckets-grid {
             display: grid;
@@ -395,7 +463,7 @@
         }
 
         .zone-bucket {
-            border-width: 5px;
+            border-width: 6px;
             border-style: solid;
             border-radius: 26px;
             padding: 16px 10px;
@@ -410,7 +478,6 @@
         }
         .zone-bucket.highlight-target {
             transform: translateY(-5px) scale(1.03);
-            box-shadow: 0 0 0 8px rgba(250, 204, 21, 0.65) !important;
         }
         .bucket-header {
             display: flex;
@@ -698,14 +765,14 @@
            1. CORE EMOTIONS DATA (1-WORD LABELS + ZONE COLOURS)
            ================================================================ */
         const EMOTIONS = [
-            { id: 'happy',     word: 'HAPPY',     emoji: '😊', zone: 'green',  zoneName: 'Green',  skin: '#F6C99E', notes: [523.25, 659.25, 783.99] },
-            { id: 'calm',      word: 'CALM',      emoji: '😌', zone: 'green',  zoneName: 'Green',  skin: '#E8B48A', notes: [392.00, 493.88, 587.33] },
-            { id: 'sad',       word: 'SAD',       emoji: '😢', zone: 'blue',   zoneName: 'Blue',   skin: '#F6C99E', notes: [440.00, 392.00, 349.23] },
-            { id: 'tired',     word: 'TIRED',     emoji: '😴', zone: 'blue',   zoneName: 'Blue',   skin: '#D99B72', notes: [349.23, 329.63, 293.66] },
-            { id: 'worried',   word: 'WORRIED',   emoji: '😟', zone: 'yellow', zoneName: 'Yellow', skin: '#F6C99E', notes: [440.00, 466.16, 440.00] },
-            { id: 'excited',   word: 'EXCITED',   emoji: '🤩', zone: 'yellow', zoneName: 'Yellow', skin: '#E8B48A', notes: [587.33, 659.25, 880.00] },
-            { id: 'angry',     word: 'ANGRY',     emoji: '😠', zone: 'red',    zoneName: 'Red',    skin: '#F6C99E', notes: [261.63, 293.66, 261.63] },
-            { id: 'scared',    word: 'SCARED',    emoji: '😨', zone: 'red',    zoneName: 'Red',    skin: '#D99B72', notes: [329.63, 311.13, 329.63] }
+            { id: 'happy',     word: 'HAPPY',     emoji: '😊', zone: 'green',  zoneName: 'Green',  zoneDot: '🟢', skin: '#F6C99E', notes: [523.25, 659.25, 783.99] },
+            { id: 'calm',      word: 'CALM',      emoji: '😌', zone: 'green',  zoneName: 'Green',  zoneDot: '🟢', skin: '#E8B48A', notes: [392.00, 493.88, 587.33] },
+            { id: 'sad',       word: 'SAD',       emoji: '😢', zone: 'blue',   zoneName: 'Blue',   zoneDot: '🔵', skin: '#F6C99E', notes: [440.00, 392.00, 349.23] },
+            { id: 'tired',     word: 'TIRED',     emoji: '😴', zone: 'blue',   zoneName: 'Blue',   zoneDot: '🔵', skin: '#D99B72', notes: [349.23, 329.63, 293.66] },
+            { id: 'worried',   word: 'WORRIED',   emoji: '😟', zone: 'yellow', zoneName: 'Yellow', zoneDot: '🟡', skin: '#F6C99E', notes: [440.00, 466.16, 440.00] },
+            { id: 'excited',   word: 'EXCITED',   emoji: '🤩', zone: 'yellow', zoneName: 'Yellow', zoneDot: '🟡', skin: '#E8B48A', notes: [587.33, 659.25, 880.00] },
+            { id: 'angry',     word: 'ANGRY',     emoji: '😠', zone: 'red',    zoneName: 'Red',    zoneDot: '🔴', skin: '#F6C99E', notes: [261.63, 293.66, 261.63] },
+            { id: 'scared',    word: 'SCARED',    emoji: '😨', zone: 'red',    zoneName: 'Red',    zoneDot: '🔴', skin: '#D99B72', notes: [329.63, 311.13, 329.63] }
         ];
 
         const CALM_TOOLS = [
@@ -973,13 +1040,14 @@
             const colsClass = state.easyTwoCards ? 'cols-2' : 'cols-3';
 
             box.innerHTML = `
-                <div class="target-banner">
-                    <button type="button" class="btn-speak-big" onclick="speakWord('${t.word}'); playNotes([${t.notes.join(',')}])" aria-label="Speak ${t.word}">
+                <div class="target-banner zone-${t.zone}">
+                    <button type="button" class="btn-speak-big zone-${t.zone}" onclick="speakWord('${t.word}'); playNotes([${t.notes.join(',')}])" aria-label="Speak ${t.word}">
                         🔊
                     </button>
                     <div class="target-word-box zone-${t.zone}">
                         <span class="target-emoji">${t.emoji}</span>
                         <span class="target-word">${t.word}</span>
+                        <span class="token-zone-pill">${t.zoneDot} ${t.zoneName} Zone</span>
                     </div>
                 </div>
 
@@ -994,6 +1062,7 @@
                                 ${renderFaceSVG(item.id, item.skin)}
                             </div>
                             <span class="face-label">${item.word}</span>
+                            <span class="token-zone-pill">${item.zoneDot} ${item.zoneName} Zone</span>
                         </button>
                     `).join('')}
                 </div>
@@ -1002,7 +1071,7 @@
                     <div class="win-overlay">
                         <div class="win-text">
                             <span>🌟</span>
-                            <span>${t.emoji} ${t.word}!</span>
+                            <span>${t.emoji} ${t.word} (${t.zoneDot} ${t.zoneName} Zone)!</span>
                         </div>
                         <button type="button" class="btn-next-giant" onclick="setupMatchRound()">
                             Next ➡️
@@ -1063,7 +1132,7 @@
                     ${allDone ? `
                         <div class="win-text">🌟 All Sorted!</div>
                     ` : state.zoneQueue.map(item => `
-                        <div class="sort-token ${state.selectedTokenId === item.id ? 'selected' : ''}"
+                        <div class="sort-token zone-${item.zone} ${state.selectedTokenId === item.id ? 'selected' : ''}"
                              draggable="true"
                              ondragstart="onTokenDragStart(event, '${item.id}')"
                              onclick="selectSortToken('${item.id}')"
@@ -1072,6 +1141,7 @@
                              aria-label="${item.word}">
                             <div class="token-svg">${renderFaceSVG(item.id, item.skin)}</div>
                             <span class="token-word">${item.emoji} ${item.word}</span>
+                            <span class="token-zone-pill">${item.zoneDot} ${item.zoneName} Zone</span>
                         </div>
                     `).join('')}
                 </div>
@@ -1253,6 +1323,7 @@
                                     ${renderFaceSVG(item.id, item.skin)}
                                 </div>
                                 <span class="face-label">${item.word}</span>
+                                <span class="token-zone-pill">${item.zoneDot} ${item.zoneName} Zone</span>
                             </button>
                         `).join('')}
                     </div>
@@ -1262,10 +1333,11 @@
 
             const f = state.myFeeling;
             box.innerHTML = `
-                <div class="target-banner">
+                <div class="target-banner zone-${f.zone}">
                     <div class="target-word-box zone-${f.zone}">
                         <span class="target-emoji">${f.emoji}</span>
                         <span class="target-word">I FEEL ${f.word}</span>
+                        <span class="token-zone-pill">${f.zoneDot} ${f.zoneName} Zone</span>
                     </div>
                     <button type="button" class="ctrl-btn" onclick="state.myFeeling = null; renderCheckIn();">
                         🔄 Change
