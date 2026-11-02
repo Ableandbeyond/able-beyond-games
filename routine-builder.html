@@ -16,6 +16,9 @@
             --next-bg: #fef9c3;
             --next-border: #eab308;
             --next-text: #713f12;
+            --then-bg: #f3e8ff;
+            --then-border: #9333ea;
+            --then-text: #581c87;
             --focus-ring: #facc15;
         }
 
@@ -28,6 +31,11 @@
             padding: 0;
         }
 
+        input {
+            user-select: text;
+            -webkit-user-select: text;
+        }
+
         body {
             font-family: 'Outfit', system-ui, -apple-system, sans-serif;
             background: var(--bg-main);
@@ -38,7 +46,7 @@
             overflow-x: hidden;
         }
 
-        button:focus-visible, .focusable:focus-visible {
+        button:focus-visible, input:focus-visible, .focusable:focus-visible {
             outline: 6px solid var(--focus-ring) !important;
             outline-offset: 4px !important;
             box-shadow: 0 0 0 10px rgba(250, 204, 21, 0.45) !important;
@@ -132,7 +140,7 @@
 
         /* ================= 3 SIMPLE PICTURE TABS ================= */
         .mode-tabs {
-            max-width: 1120px;
+            max-width: 1160px;
             width: 100%;
             margin: 12px auto 0;
             padding: 0 14px;
@@ -173,7 +181,7 @@
         /* ================= MAIN STAGE ================= */
         .stage-wrap {
             flex: 1;
-            max-width: 1120px;
+            max-width: 1160px;
             width: 100%;
             margin: 12px auto 20px;
             padding: 0 14px;
@@ -191,26 +199,76 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            gap: 18px;
+            gap: 16px;
         }
 
-        /* ================= GIANT NOW & NEXT BOARD ================= */
-        .now-next-grid {
+        /* ================= TEACHER LAYOUT & TIMER BAR ================= */
+        .session-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+            background: #f8fafc;
+            border: 3px solid #e2e8f0;
+            border-radius: 22px;
+            padding: 10px 14px;
+        }
+
+        .layout-pills, .timer-pills {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .mini-pill {
+            background: #ffffff;
+            border: 3px solid #94a3b8;
+            border-radius: 14px;
+            padding: 7px 13px;
+            font-family: inherit;
+            font-size: 0.98rem;
+            font-weight: 900;
+            color: #1e293b;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 3px 0 #94a3b8;
+        }
+        .mini-pill.active {
+            background: #dbeafe;
+            border-color: #2563eb;
+            color: #1e3a8a;
+            box-shadow: 0 3px 0 #2563eb;
+        }
+
+        /* ================= GIANT NOW / NEXT / THEN / SESSION BOARD ================= */
+        .board-slots-grid {
             display: grid;
-            grid-template-columns: 1fr auto 1fr;
-            gap: 16px;
+            gap: 14px;
             align-items: stretch;
+        }
+        .board-slots-grid.slots-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .board-slots-grid.slots-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        .board-slots-grid.slots-4 {
+            grid-template-columns: repeat(4, 1fr);
         }
 
         .board-slot {
             border-radius: 28px;
-            padding: 18px;
+            padding: 16px;
             min-height: 225px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
-            gap: 10px;
+            gap: 8px;
             cursor: pointer;
             position: relative;
             transition: transform 0.16s, box-shadow 0.16s;
@@ -230,59 +288,69 @@
             box-shadow: 0 8px 0 #ca8a04;
         }
 
+        .slot-then {
+            background: var(--then-bg);
+            border: 6px solid var(--then-border);
+            color: var(--then-text);
+            box-shadow: 0 8px 0 #7e22ce;
+        }
+
+        .slot-step {
+            background: #eff6ff;
+            border: 6px solid #3b82f6;
+            color: #1e3a8a;
+            box-shadow: 0 8px 0 #2563eb;
+        }
+
         .board-slot.active-target {
             outline: 6px dashed #2563eb;
             outline-offset: 4px;
-            transform: scale(1.02);
+            transform: translateY(-3px);
         }
 
         .slot-badge {
-            font-size: 1.5rem;
+            font-size: 1.35rem;
             font-weight: 900;
-            padding: 6px 24px;
+            padding: 5px 20px;
             border-radius: 999px;
             letter-spacing: 0.04em;
             color: #ffffff;
+            text-transform: uppercase;
         }
         .slot-now .slot-badge { background: #16a34a; }
         .slot-next .slot-badge { background: #ca8a04; }
+        .slot-then .slot-badge { background: #9333ea; }
+        .slot-step .slot-badge { background: #2563eb; }
 
         .slot-card-inner {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
             margin: auto 0;
+            text-align: center;
         }
         .slot-emoji {
-            font-size: clamp(3.6rem, 7vw, 4.8rem);
+            font-size: clamp(3.3rem, 6vw, 4.4rem);
             line-height: 1;
             filter: drop-shadow(0 4px 6px rgba(0,0,0,0.12));
         }
         .slot-word {
-            font-size: clamp(1.7rem, 3.5vw, 2.3rem);
+            font-size: clamp(1.5rem, 3vw, 2.1rem);
             font-weight: 900;
             text-transform: uppercase;
+            word-break: break-word;
         }
 
         .slot-empty-hint {
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             font-weight: 900;
             opacity: 0.65;
             margin: auto 0;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 6px;
-        }
-
-        .board-arrow {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            font-weight: 900;
-            color: #64748b;
+            gap: 4px;
         }
 
         .btn-done-now {
@@ -290,9 +358,9 @@
             color: #ffffff;
             border: 4px solid #14532d;
             border-radius: 18px;
-            padding: 10px 22px;
+            padding: 8px 20px;
             font-family: inherit;
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             font-weight: 900;
             cursor: pointer;
             box-shadow: 0 4px 0 #14532d;
@@ -302,28 +370,133 @@
         }
         .btn-done-now:active { transform: translateY(3px); box-shadow: 0 1px 0 #14532d; }
 
+        /* Visual Countdown Timer Bar inside NOW */
+        .timer-bar-wrap {
+            width: 100%;
+            background: rgba(255,255,255,0.85);
+            border: 3px solid #15803d;
+            border-radius: 999px;
+            height: 28px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .timer-bar-fill {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            background: #4ade80;
+            transition: width 1s linear;
+        }
+        .timer-bar-text {
+            position: relative;
+            z-index: 2;
+            font-size: 0.95rem;
+            font-weight: 900;
+            color: #064e3b;
+        }
+
+        /* ================= TEACHER TYPE & BUILD CUSTOM BAR ================= */
+        .custom-builder-bar {
+            background: #eff6ff;
+            border: 4px solid #93c5fd;
+            border-radius: 24px;
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .builder-top-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .emoji-pick-strip {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .emoji-pick-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            border: 3px solid #cbd5e1;
+            background: #ffffff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.1s, border-color 0.1s;
+        }
+        .emoji-pick-btn.selected {
+            border-color: #2563eb;
+            background: #dbeafe;
+            transform: scale(1.1);
+        }
+
+        .custom-text-input {
+            flex: 1;
+            min-width: 180px;
+            padding: 11px 16px;
+            border-radius: 16px;
+            border: 4px solid #3b82f6;
+            font-family: inherit;
+            font-size: 1.25rem;
+            font-weight: 900;
+            color: #0f172a;
+            background: #ffffff;
+            text-transform: uppercase;
+        }
+
+        .btn-add-custom {
+            background: #2563eb;
+            color: #ffffff;
+            border: 3px solid #1e3a8a;
+            border-radius: 16px;
+            padding: 11px 18px;
+            font-family: inherit;
+            font-size: 1.1rem;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #1e3a8a;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-add-custom:active { transform: translateY(3px); box-shadow: 0 1px 0 #1e3a8a; }
+
         /* ================= PICTURE CARDS TRAY ================= */
         .cards-tray {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
-            gap: 14px;
+            grid-template-columns: repeat(auto-fill, minmax(138px, 1fr));
+            gap: 12px;
         }
 
         .pic-card {
             background: #ffffff;
             border: 5px solid #94a3b8;
-            border-radius: 26px;
-            padding: 16px 10px;
-            min-height: 145px;
+            border-radius: 24px;
+            padding: 14px 8px;
+            min-height: 132px;
             cursor: pointer;
             font-family: inherit;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
             box-shadow: 0 6px 0 #94a3b8;
             transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+            position: relative;
         }
         .pic-card:hover {
             transform: translateY(-4px);
@@ -334,19 +507,35 @@
             transform: translateY(3px);
             box-shadow: 0 2px 0 #94a3b8;
         }
-        .pic-card.used {
-            opacity: 0.45;
-            border-style: dashed;
-        }
         .pic-emoji {
-            font-size: clamp(2.8rem, 5vw, 3.6rem);
+            font-size: clamp(2.5rem, 4.5vw, 3.3rem);
             line-height: 1;
         }
         .pic-word {
-            font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+            font-size: clamp(1.1rem, 2.2vw, 1.35rem);
             font-weight: 900;
             color: #0f172a;
             text-transform: uppercase;
+            text-align: center;
+            word-break: break-word;
+        }
+
+        .delete-card-btn {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: #fee2e2;
+            border: 2px solid #ef4444;
+            color: #991b1b;
+            font-size: 0.85rem;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
         }
 
         /* ================= MODE 2: MY CHOICE BOARD ================= */
@@ -522,10 +711,11 @@
             gap: 10px;
         }
 
-        @media (max-width: 780px) {
+        @media (max-width: 860px) {
             .mode-tabs { grid-template-columns: 1fr; }
-            .now-next-grid { grid-template-columns: 1fr; }
-            .board-arrow { transform: rotate(90deg); }
+            .board-slots-grid.slots-2,
+            .board-slots-grid.slots-3,
+            .board-slots-grid.slots-4 { grid-template-columns: 1fr; }
             .choice-grid { grid-template-columns: repeat(2, 1fr); }
             .steps-3-grid { grid-template-columns: 1fr; }
         }
@@ -545,13 +735,16 @@
         </div>
 
         <div class="top-controls">
+            <button type="button" id="btn-builder-toggle" class="ctrl-btn active" onclick="toggleBuilderBar()" title="Show or Hide Type & Add Card Bar">
+                ✏️ Type Card
+            </button>
             <button type="button" id="btn-voice" class="ctrl-btn active" onclick="toggleVoice()" title="Toggle 1-Word Voice">
                 🗣️ Voice
             </button>
             <button type="button" id="btn-sound" class="ctrl-btn active" onclick="toggleSound()" title="Toggle Musical Sounds">
                 🎵 Sound
             </button>
-            <button type="button" class="ctrl-btn" onclick="clearBoard()" title="Clear Now & Next Board">
+            <button type="button" class="ctrl-btn" onclick="clearBoard()" title="Clear Board">
                 🔄 Clear
             </button>
             <div class="star-pill" aria-label="Stars earned">
@@ -564,7 +757,7 @@
     <nav class="mode-tabs" aria-label="Routine Modes">
         <button type="button" class="mode-tab active" id="tab-board" onclick="setMode('board')">
             <span class="tab-icon">📋</span>
-            <span>1. Now &amp; Next</span>
+            <span>1. Now &amp; Next Board</span>
         </button>
         <button type="button" class="mode-tab" id="tab-choice" onclick="setMode('choice')">
             <span class="tab-icon">🧸</span>
@@ -585,9 +778,9 @@
 
     <script>
         /* ================================================================
-           1. GENERIC, UNIVERSAL SEN ACTIVITIES (1-WORD LABELS)
+           1. DEFAULT UNIVERSAL ACTIVITIES + CUSTOM SAVED CARDS
            ================================================================ */
-        const ACTIVITIES = [
+        const DEFAULT_ACTIVITIES = [
             { id: 'work',    word: 'WORK',    emoji: '✏️' },
             { id: 'book',    word: 'BOOK',    emoji: '📖' },
             { id: 'art',     word: 'ART',     emoji: '🎨' },
@@ -595,9 +788,14 @@
             { id: 'play',    word: 'PLAY',    emoji: '🧩' },
             { id: 'outside', word: 'OUTSIDE', emoji: '🌳' },
             { id: 'music',   word: 'MUSIC',   emoji: '🎵' },
+            { id: 'pe',      word: 'P.E.',    emoji: '⚽' },
+            { id: 'sensory', word: 'SENSORY', emoji: '🫧' },
+            { id: 'ipad',    word: 'TABLET',  emoji: '💻' },
             { id: 'toilet',  word: 'TOILET',  emoji: '🚽' },
             { id: 'home',    word: 'HOME',    emoji: '🏠' }
         ];
+
+        const QUICK_EMOJIS = ['⭐', '🏊', '🚌', '🔤', '🔢', '🥁', '🧁', '🧘', '🛝', '🧸', '🎧', '👟'];
 
         const CHOICES = [
             { id: 'bubbles', word: 'BUBBLES', emoji: '🫧' },
@@ -648,17 +846,40 @@
         };
 
         /* ================================================================
-           2. STATE & WEB AUDIO + 1-WORD TTS
+           2. STATE & LOCALSTORAGE
            ================================================================ */
+        function loadCustomCards() {
+            try {
+                const raw = localStorage.getItem('ab_custom_routine_cards');
+                return raw ? JSON.parse(raw) : [];
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function saveCustomCards(list) {
+            try {
+                localStorage.setItem('ab_custom_routine_cards', JSON.stringify(list));
+            } catch (e) {}
+        }
+
         const state = {
             mode: 'board',
             voiceOn: true,
             soundOn: true,
+            showBuilder: true,
+            selectedEmoji: '⭐',
+            customText: '',
             stars: parseInt(localStorage.getItem('ab_routine_stars') || '0', 10),
-            // Mode 1: Now & Next Board
-            nowItem: ACTIVITIES[0],   // Default: WORK
-            nextItem: ACTIVITIES[4],  // Default: PLAY
-            activeSlot: 'now',        // 'now' or 'next'
+            customCards: loadCustomCards(),
+            // Board Layout: 2 = Now/Next, 3 = Now/Next/Then, 4 = 4-Step Session
+            slotCount: 2,
+            slots: [DEFAULT_ACTIVITIES[0], DEFAULT_ACTIVITIES[4], null, null],
+            activeSlotIndex: 0,
+            // Timer for NOW slot
+            timerTotal: 0,
+            timerLeft: 0,
+            timerInterval: null,
             // Mode 2: Choice
             pickedChoice: null,
             // Mode 3: 1-2-3 Steps
@@ -666,6 +887,13 @@
             stepIndex: 0
         };
 
+        function getAllActivities() {
+            return [...state.customCards, ...DEFAULT_ACTIVITIES];
+        }
+
+        /* ================================================================
+           3. WEB AUDIO & 1-WORD TTS
+           ================================================================ */
         let audioCtx = null;
         function getAudioCtx() {
             if (!audioCtx) {
@@ -726,8 +954,14 @@
         }
 
         /* ================================================================
-           3. HEADER CONTROLS & TABS
+           4. HEADER CONTROLS & TIMERS
            ================================================================ */
+        function toggleBuilderBar() {
+            state.showBuilder = !state.showBuilder;
+            document.getElementById('btn-builder-toggle').classList.toggle('active', state.showBuilder);
+            if (state.mode === 'board') renderBoardMode();
+        }
+
         function toggleVoice() {
             state.voiceOn = !state.voiceOn;
             document.getElementById('btn-voice').classList.toggle('active', state.voiceOn);
@@ -741,10 +975,10 @@
         }
 
         function clearBoard() {
+            stopTimer();
             if (state.mode === 'board') {
-                state.nowItem = null;
-                state.nextItem = null;
-                state.activeSlot = 'now';
+                state.slots = [null, null, null, null];
+                state.activeSlotIndex = 0;
                 renderBoardMode();
             } else if (state.mode === 'choice') {
                 state.pickedChoice = null;
@@ -753,6 +987,46 @@
                 state.stepIndex = 0;
                 renderStepsMode();
             }
+        }
+
+        function setSlotCount(n) {
+            state.slotCount = n;
+            if (state.activeSlotIndex >= n) state.activeSlotIndex = 0;
+            playTapChime();
+            renderBoardMode();
+        }
+
+        function startTimer(seconds) {
+            stopTimer();
+            state.timerTotal = seconds;
+            state.timerLeft = seconds;
+            playTapChime();
+            renderBoardMode();
+
+            state.timerInterval = setInterval(() => {
+                state.timerLeft -= 1;
+                if (state.timerLeft <= 0) {
+                    stopTimer();
+                    playWinChime();
+                    speakWord('Time Finished');
+                }
+                if (state.mode === 'board') renderBoardMode();
+            }, 1000);
+        }
+
+        function stopTimer() {
+            if (state.timerInterval) {
+                clearInterval(state.timerInterval);
+                state.timerInterval = null;
+            }
+            state.timerTotal = 0;
+            state.timerLeft = 0;
+        }
+
+        function formatSeconds(sec) {
+            const m = Math.floor(sec / 60);
+            const s = sec % 60;
+            return `${m}:${s < 10 ? '0' : ''}${s}`;
         }
 
         function setMode(mode) {
@@ -766,74 +1040,153 @@
         }
 
         /* ================================================================
-           4. MODE 1: 📋 NOW & NEXT BOARD (GENERIC & SUPER SIMPLE)
+           5. MODE 1: 📋 FLEXIBLE NOW & NEXT / SESSION BUILDER
            ================================================================ */
+        function getSlotMeta(idx, total) {
+            if (total === 2) {
+                return idx === 0
+                    ? { badge: '🟢 NOW', css: 'slot-now', speakPrefix: 'Now' }
+                    : { badge: '🟡 NEXT', css: 'slot-next', speakPrefix: 'Next' };
+            }
+            if (total === 3) {
+                if (idx === 0) return { badge: '🟢 NOW', css: 'slot-now', speakPrefix: 'Now' };
+                if (idx === 1) return { badge: '🟡 NEXT', css: 'slot-next', speakPrefix: 'Next' };
+                return { badge: '🟣 THEN', css: 'slot-then', speakPrefix: 'Then' };
+            }
+            // 4-Step Session Strip
+            if (idx === 0) return { badge: '1. NOW', css: 'slot-now', speakPrefix: 'Step 1' };
+            if (idx === 1) return { badge: '2. NEXT', css: 'slot-next', speakPrefix: 'Step 2' };
+            if (idx === 2) return { badge: '3. THEN', css: 'slot-then', speakPrefix: 'Step 3' };
+            return { badge: '4. LAST', css: 'slot-step', speakPrefix: 'Step 4' };
+        }
+
         function renderBoardMode() {
             const box = document.getElementById('stage-content');
+            const N = state.slotCount;
+            const activities = getAllActivities();
+            const pct = state.timerTotal > 0 ? Math.round((state.timerLeft / state.timerTotal) * 100) : 0;
 
-            box.innerHTML = `
-                <!-- GIANT NOW & NEXT SLOTS -->
-                <div class="now-next-grid">
-                    <!-- GREEN NOW BOX -->
-                    <div class="board-slot slot-now ${state.activeSlot === 'now' ? 'active-target' : ''}"
-                         onclick="selectBoardSlot('now')"
+            let slotsHTML = '';
+            for (let i = 0; i < N; i++) {
+                const meta = getSlotMeta(i, N);
+                const item = state.slots[i];
+                const isActive = state.activeSlotIndex === i;
+
+                slotsHTML += `
+                    <div class="board-slot ${meta.css} ${isActive ? 'active-target' : ''}"
+                         onclick="selectSlot(${i})"
                          ondragover="event.preventDefault()"
-                         ondrop="onSlotDrop(event, 'now')"
+                         ondrop="onSlotDrop(event, ${i})"
                          tabindex="0"
                          role="button"
-                         aria-label="Now Slot">
-                        <span class="slot-badge">🟢 NOW</span>
+                         aria-label="${meta.badge}">
+                        <span class="slot-badge">${meta.badge}</span>
 
-                        ${state.nowItem ? `
+                        ${item ? `
                             <div class="slot-card-inner">
-                                <span class="slot-emoji">${state.nowItem.emoji}</span>
-                                <span class="slot-word">${state.nowItem.word}</span>
+                                <span class="slot-emoji">${item.emoji}</span>
+                                <span class="slot-word">${item.word}</span>
                             </div>
-                            <button type="button" class="btn-done-now" onclick="finishNowActivity(event)">
-                                ✅ DONE!
-                            </button>
+                            ${i === 0 && state.timerTotal > 0 ? `
+                                <div class="timer-bar-wrap">
+                                    <div class="timer-bar-fill" style="width:${pct}%;"></div>
+                                    <span class="timer-bar-text">⏱️ ${formatSeconds(state.timerLeft)}</span>
+                                </div>
+                            ` : ''}
+                            ${i === 0 ? `
+                                <button type="button" class="btn-done-now" onclick="finishFirstSlot(event)">
+                                    ✅ DONE!
+                                </button>
+                            ` : ''}
                         ` : `
                             <div class="slot-empty-hint">
-                                <span style="font-size:2.6rem;">👆</span>
-                                <span>TAP CARD</span>
+                                <span style="font-size:2.4rem;">👆</span>
+                                <span>TAP OR TYPE</span>
                             </div>
                         `}
                     </div>
+                `;
+            }
 
-                    <div class="board-arrow" aria-hidden="true">➡️</div>
+            box.innerHTML = `
+                <!-- TOP SESSION & TIMER BAR FOR TEACHERS -->
+                <div class="session-toolbar">
+                    <div class="layout-pills">
+                        <button type="button" class="mini-pill ${N === 2 ? 'active' : ''}" onclick="setSlotCount(2)">
+                            2️⃣ Now &amp; Next
+                        </button>
+                        <button type="button" class="mini-pill ${N === 3 ? 'active' : ''}" onclick="setSlotCount(3)">
+                            3️⃣ Now, Next, Then
+                        </button>
+                        <button type="button" class="mini-pill ${N === 4 ? 'active' : ''}" onclick="setSlotCount(4)">
+                            📅 4-Step Session
+                        </button>
+                    </div>
 
-                    <!-- YELLOW NEXT BOX -->
-                    <div class="board-slot slot-next ${state.activeSlot === 'next' ? 'active-target' : ''}"
-                         onclick="selectBoardSlot('next')"
-                         ondragover="event.preventDefault()"
-                         ondrop="onSlotDrop(event, 'next')"
-                         tabindex="0"
-                         role="button"
-                         aria-label="Next Slot">
-                        <span class="slot-badge">🟡 NEXT</span>
-
-                        ${state.nextItem ? `
-                            <div class="slot-card-inner">
-                                <span class="slot-emoji">${state.nextItem.emoji}</span>
-                                <span class="slot-word">${state.nextItem.word}</span>
-                            </div>
-                        ` : `
-                            <div class="slot-empty-hint">
-                                <span style="font-size:2.6rem;">👆</span>
-                                <span>TAP CARD</span>
-                            </div>
-                        `}
+                    <div class="timer-pills">
+                        <button type="button" class="mini-pill ${state.timerTotal === 60 ? 'active' : ''}" onclick="startTimer(60)">
+                            ⏱️ 1m
+                        </button>
+                        <button type="button" class="mini-pill ${state.timerTotal === 120 ? 'active' : ''}" onclick="startTimer(120)">
+                            ⏱️ 2m
+                        </button>
+                        <button type="button" class="mini-pill ${state.timerTotal === 300 ? 'active' : ''}" onclick="startTimer(300)">
+                            ⏱️ 5m
+                        </button>
+                        ${state.timerTotal > 0 ? `
+                            <button type="button" class="mini-pill" onclick="stopTimer(); renderBoardMode();">
+                                ⏹️ Stop
+                            </button>
+                        ` : ''}
                     </div>
                 </div>
 
-                <!-- 9 GENERIC 1-WORD ACTIVITY CARDS -->
+                <!-- GIANT SLOTS BOARD -->
+                <div class="board-slots-grid slots-${N}">
+                    ${slotsHTML}
+                </div>
+
+                <!-- TEACHER / STUDENT TYPE & ADD CUSTOM CARD BAR -->
+                ${state.showBuilder ? `
+                    <div class="custom-builder-bar">
+                        <div class="builder-top-row">
+                            <div class="emoji-pick-strip">
+                                ${QUICK_EMOJIS.map(em => `
+                                    <button type="button"
+                                            class="emoji-pick-btn ${state.selectedEmoji === em ? 'selected' : ''}"
+                                            onclick="pickBuilderEmoji('${em}')">
+                                        ${em}
+                                    </button>
+                                `).join('')}
+                            </div>
+                            <input type="text"
+                                   id="custom-word-input"
+                                   class="custom-text-input"
+                                   placeholder="TYPE ACTIVITY (E.G. SWIM, PHONICS, BUS)..."
+                                   value="${state.customText}"
+                                   oninput="state.customText = this.value"
+                                   onkeydown="if(event.key === 'Enter'){ event.preventDefault(); addCustomActivity(true); }" />
+                            <button type="button" class="btn-add-custom" onclick="addCustomActivity(true)">
+                                ➕ Put on Board
+                            </button>
+                            <button type="button" class="btn-add-custom" style="background:#0d9488;border-color:#115e59;box-shadow:0 4px 0 #115e59;" onclick="addCustomActivity(false)">
+                                💾 Save Card
+                            </button>
+                        </div>
+                    </div>
+                ` : ''}
+
+                <!-- PICTURE CARDS TRAY -->
                 <div class="cards-tray">
-                    ${ACTIVITIES.map(act => `
+                    ${activities.map(act => `
                         <button type="button"
                                 class="pic-card"
                                 draggable="true"
                                 ondragstart="onCardDrag(event, '${act.id}')"
                                 onclick="placeActivityCard('${act.id}')">
+                            ${act.custom ? `
+                                <span class="delete-card-btn" onclick="deleteCustomCard(event, '${act.id}')" title="Delete custom card">✕</span>
+                            ` : ''}
                             <span class="pic-emoji">${act.emoji}</span>
                             <span class="pic-word">${act.word}</span>
                         </button>
@@ -842,14 +1195,55 @@
             `;
         }
 
-        function selectBoardSlot(slot) {
-            state.activeSlot = slot;
-            if (slot === 'now' && state.nowItem) {
-                speakWord('Now ' + state.nowItem.word);
-            } else if (slot === 'next' && state.nextItem) {
-                speakWord('Next ' + state.nextItem.word);
+        function pickBuilderEmoji(em) {
+            state.selectedEmoji = em;
+            playTapChime();
+            renderBoardMode();
+            const inp = document.getElementById('custom-word-input');
+            if (inp) inp.focus();
+        }
+
+        function addCustomActivity(placeImmediately) {
+            const raw = (state.customText || '').trim().toUpperCase();
+            if (!raw) {
+                const inp = document.getElementById('custom-word-input');
+                if (inp) inp.focus();
+                return;
+            }
+            const newCard = {
+                id: 'custom_' + Date.now(),
+                word: raw,
+                emoji: state.selectedEmoji || '⭐',
+                custom: true
+            };
+            state.customCards.unshift(newCard);
+            saveCustomCards(state.customCards);
+            state.customText = '';
+
+            if (placeImmediately) {
+                placeCardObject(newCard);
             } else {
-                speakWord(slot === 'now' ? 'Now' : 'Next');
+                playWinChime();
+                speakWord(newCard.word);
+                renderBoardMode();
+            }
+        }
+
+        function deleteCustomCard(e, id) {
+            e.stopPropagation();
+            state.customCards = state.customCards.filter(c => c.id !== id);
+            saveCustomCards(state.customCards);
+            renderBoardMode();
+        }
+
+        function selectSlot(idx) {
+            state.activeSlotIndex = idx;
+            const meta = getSlotMeta(idx, state.slotCount);
+            const item = state.slots[idx];
+            if (item) {
+                speakWord(meta.speakPrefix + ' ' + item.word);
+            } else {
+                speakWord(meta.speakPrefix);
             }
             playTapChime();
             renderBoardMode();
@@ -859,50 +1253,59 @@
             e.dataTransfer.setData('text/plain', id);
         }
 
-        function onSlotDrop(e, slot) {
+        function onSlotDrop(e, idx) {
             e.preventDefault();
             const id = e.dataTransfer.getData('text/plain');
-            state.activeSlot = slot;
+            state.activeSlotIndex = idx;
             placeActivityCard(id);
         }
 
         function placeActivityCard(id) {
-            const act = ACTIVITIES.find(a => a.id === id);
+            const act = getAllActivities().find(a => a.id === id);
             if (!act) return;
+            placeCardObject(act);
+        }
 
-            if (!state.nowItem || state.activeSlot === 'now') {
-                state.nowItem = act;
-                state.activeSlot = 'next';
-                playTapChime();
-                speakWord('Now ' + act.word);
-            } else {
-                state.nextItem = act;
-                playTapChime();
-                speakWord('Next ' + act.word);
+        function placeCardObject(act) {
+            const N = state.slotCount;
+            const idx = state.activeSlotIndex;
+            state.slots[idx] = act;
+            const meta = getSlotMeta(idx, N);
+            playTapChime();
+            speakWord(meta.speakPrefix + ' ' + act.word);
+
+            // Auto-advance active highlight to next empty or subsequent slot
+            if (idx + 1 < N) {
+                state.activeSlotIndex = idx + 1;
             }
             renderBoardMode();
         }
 
-        function finishNowActivity(e) {
+        function finishFirstSlot(e) {
             e.stopPropagation();
+            stopTimer();
             playWinChime();
             addStar();
 
-            if (state.nextItem) {
-                state.nowItem = state.nextItem;
-                state.nextItem = null;
-                state.activeSlot = 'next';
-                speakWord('Now ' + state.nowItem.word);
+            // Shift all slots left (NEXT becomes NOW, THEN becomes NEXT, etc.)
+            const N = state.slotCount;
+            for (let i = 0; i < N - 1; i++) {
+                state.slots[i] = state.slots[i + 1];
+            }
+            state.slots[N - 1] = null;
+
+            if (state.slots[0]) {
+                speakWord('Now ' + state.slots[0].word);
+                state.activeSlotIndex = N - 1;
             } else {
-                state.nowItem = null;
-                state.activeSlot = 'now';
-                speakWord('Done');
+                speakWord('All Done');
+                state.activeSlotIndex = 0;
             }
             renderBoardMode();
         }
 
         /* ================================================================
-           5. MODE 2: 🧸 MY CHOICE (1-WORD REWARD / BREAK BOARD)
+           6. MODE 2: 🧸 MY CHOICE (1-WORD REWARD / BREAK BOARD)
            ================================================================ */
         function renderChoiceMode() {
             const box = document.getElementById('stage-content');
@@ -940,7 +1343,7 @@
             const ch = CHOICES.find(c => c.id === id);
             if (!ch) return;
             state.pickedChoice = ch;
-            state.nextItem = { id: ch.id, word: ch.word, emoji: ch.emoji };
+            state.slots[1] = { id: ch.id, word: ch.word, emoji: ch.emoji };
             playWinChime();
             speakWord(ch.word);
             addStar();
@@ -948,7 +1351,7 @@
         }
 
         /* ================================================================
-           6. MODE 3: 🧼 1-2-3 STEPS (3 GIANT SELF-CARE CARDS)
+           7. MODE 3: 🧼 1-2-3 STEPS (3 GIANT SELF-CARE CARDS)
            ================================================================ */
         function renderStepsMode() {
             const box = document.getElementById('stage-content');
@@ -956,7 +1359,6 @@
             const allDone = state.stepIndex >= routine.steps.length;
 
             box.innerHTML = `
-                <!-- 4 GENERIC ROUTINE PILLS -->
                 <div class="routine-pills">
                     ${Object.values(MINI_ROUTINES).map(r => `
                         <button type="button"
@@ -967,7 +1369,6 @@
                     `).join('')}
                 </div>
 
-                <!-- 3 GIANT 1-2-3 STEP CARDS -->
                 <div class="steps-3-grid">
                     ${routine.steps.map((st, idx) => {
                         const isDone = idx < state.stepIndex;
@@ -1011,24 +1412,10 @@
 
         function tapStepCard(idx) {
             const routine = MINI_ROUTINES[state.routineKey];
-            if (idx === state.stepIndex) {
-                const st = routine.steps[idx];
+            const st = routine.steps[state.stepIndex] || routine.steps[idx];
+            if (idx <= state.stepIndex || idx > state.stepIndex) {
                 state.stepIndex += 1;
-                speakWord(st.word);
-                if (state.stepIndex >= routine.steps.length) {
-                    playWinChime();
-                    addStar();
-                } else {
-                    playTapChime();
-                }
-                renderStepsMode();
-            } else if (idx < state.stepIndex) {
-                speakWord(routine.steps[idx].word);
-            } else {
-                // If student taps ahead, still advance kindly!
-                const st = routine.steps[state.stepIndex];
-                state.stepIndex += 1;
-                speakWord(st.word);
+                if (st) speakWord(st.word);
                 if (state.stepIndex >= routine.steps.length) {
                     playWinChime();
                     addStar();
@@ -1040,14 +1427,14 @@
         }
 
         /* ================================================================
-           7. SPACEBAR / ENTER SWITCH ACCESSIBILITY
+           8. SPACEBAR / ENTER SWITCH ACCESSIBILITY
            ================================================================ */
         window.addEventListener('keydown', (e) => {
+            if (document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'BUTTON')) return;
             if (e.code === 'Space' || e.code === 'Enter') {
-                if (document.activeElement && document.activeElement.tagName === 'BUTTON') return;
                 e.preventDefault();
                 if (state.mode === 'board') {
-                    if (state.nowItem) finishNowActivity(e);
+                    if (state.slots[0]) finishFirstSlot(e);
                     else placeActivityCard('work');
                 } else if (state.mode === 'choice') {
                     pickChoice('bubbles');
