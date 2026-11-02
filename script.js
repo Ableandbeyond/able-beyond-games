@@ -305,13 +305,11 @@ function navTo(page) {
         window.location.href = 'sandwich-maker.html';
         return;
     } else if (page === 'Bus') {
-        state.bus.stage = 1;
-        state.bus.target = null;
-        clearTimeout(state.bus.timer);
+        window.location.href = 'bus-buddy.html';
+        return;
     } else if (page === 'Pharmacy') {
-        state.pharmacy.stage = 1;
-        state.pharmacy.simpleView = false;
-        playTTS("Welcome to Healthy Hero");
+        window.location.href = 'healthy-hero.html';
+        return;
     } else if (page === 'Zen') {
         window.location.href = 'zen-zone.html';
         return;

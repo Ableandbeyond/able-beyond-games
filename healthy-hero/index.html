@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Healthy Hero 🏥 | Able & Beyond</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --bg-main: #f0fdfa;
+            --text-dark: #0f172a;
+            --focus-ring: #facc15;
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+            background: var(--bg-main);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        button:focus-visible, .focusable:focus-visible {
+            outline: 6px solid var(--focus-ring) !important;
+            outline-offset: 4px !important;
+            box-shadow: 0 0 0 10px rgba(250, 204, 21, 0.45) !important;
+            z-index: 30;
+        }
+
+        /* ================= TOP BAR ================= */
+        .top-bar {
+            background: #ffffff;
+            border-bottom: 4px solid #5eead4;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .btn-home {
+            background: #0f172a;
+            color: #ffffff;
+            border: 3px solid #0f172a;
+            border-radius: 18px;
+            padding: 10px 18px;
+            font-size: 1.15rem;
+            font-weight: 900;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #334155;
+        }
+        .btn-home:active { transform: translateY(3px); box-shadow: 0 1px 0 #334155; }
+
+        .game-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: clamp(1.35rem, 3vw, 2rem);
+            font-weight: 900;
+            color: #115e59;
+        }
+
+        .top-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .ctrl-btn {
+            background: #f1f5f9;
+            color: #0f172a;
+            border: 3px solid #94a3b8;
+            border-radius: 16px;
+            padding: 9px 14px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 0 #94a3b8;
+            transition: all 0.15s;
+        }
+        .ctrl-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #94a3b8; }
+        .ctrl-btn.active {
+            background: #dcfce7;
+            border-color: #16a34a;
+            color: #14532d;
+            box-shadow: 0 4px 0 #16a34a;
+        }
+
+        .star-pill {
+            background: #fef9c3;
+            border: 3px solid #eab308;
+            color: #854d0e;
+            border-radius: 999px;
+            padding: 8px 16px;
+            font-size: 1.2rem;
+            font-weight: 900;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* ================= 3 SIMPLE PICTURE TABS ================= */
+        .mode-tabs {
+            max-width: 1120px;
+            width: 100%;
+            margin: 12px auto 0;
+            padding: 0 14px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .mode-tab {
+            background: #ffffff;
+            border: 4px solid #cbd5e1;
+            border-radius: 22px;
+            padding: 12px 12px;
+            font-family: inherit;
+            font-size: clamp(1.1rem, 2.3vw, 1.4rem);
+            font-weight: 900;
+            color: #334155;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 5px 0 #cbd5e1;
+            transition: all 0.15s;
+        }
+        .mode-tab .tab-icon {
+            font-size: clamp(1.9rem, 4vw, 2.5rem);
+            line-height: 1;
+        }
+        .mode-tab.active {
+            background: #ccfbf1;
+            border-color: #0d9488;
+            color: #115e59;
+            box-shadow: 0 5px 0 #0d9488;
+            transform: translateY(-2px);
+        }
+
+        /* ================= MAIN STAGE ================= */
+        .stage-wrap {
+            flex: 1;
+            max-width: 1120px;
+            width: 100%;
+            margin: 12px auto 20px;
+            padding: 0 14px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stage-card {
+            background: #ffffff;
+            border: 5px solid #5eead4;
+            border-radius: 32px;
+            padding: 20px;
+            box-shadow: 0 12px 30px rgba(17, 94, 89, 0.08);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 18px;
+        }
+
+        /* ================= MODE 1: DOCTOR KIT (CARE & HEAL) ================= */
+        .doctor-layout {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 22px;
+            align-items: center;
+            margin: auto 0;
+        }
+
+        .patient-box {
+            border: 6px solid #cbd5e1;
+            background: #f8fafc;
+            border-radius: 32px;
+            padding: 24px 16px;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            position: relative;
+            transition: all 0.3s;
+        }
+        .patient-box.healed {
+            background: #dcfce7;
+            border-color: #16a34a;
+        }
+
+        .patient-emoji {
+            font-size: clamp(4.8rem, 10vw, 6.4rem);
+            line-height: 1;
+        }
+
+        .patient-word {
+            font-size: clamp(1.7rem, 3.6vw, 2.3rem);
+            font-weight: 900;
+            padding: 6px 22px;
+            border-radius: 999px;
+            background: #ffffff;
+            border: 4px solid #cbd5e1;
+            text-transform: uppercase;
+        }
+
+        .applied-tool-badge {
+            position: absolute;
+            bottom: 18px;
+            right: 18px;
+            font-size: 3.6rem;
+            animation: popSuccess 0.45s ease-out;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .med-tool-btn {
+            background: #ffffff;
+            border: 5px solid #64748b;
+            border-radius: 26px;
+            padding: 20px 12px;
+            cursor: pointer;
+            font-family: inherit;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 7px 0 #64748b;
+            transition: all 0.15s;
+        }
+        .med-tool-btn:hover {
+            transform: translateY(-4px);
+            border-color: #0d9488;
+            background: #f0fdfa;
+        }
+        .med-tool-btn.hint-tool {
+            border-color: #eab308;
+            background: #fefce8;
+            box-shadow: 0 0 0 8px rgba(250, 204, 21, 0.45), 0 7px 0 #ca8a04;
+        }
+
+        /* ================= MODE 2: WHAT HURTS? (BODY CHECK-IN) ================= */
+        .symptoms-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin: auto 0;
+        }
+
+        .symptom-card {
+            background: #ffffff;
+            border: 6px solid #0d9488;
+            border-radius: 28px;
+            padding: 22px 14px;
+            min-height: 195px;
+            cursor: pointer;
+            font-family: inherit;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 8px 0 #115e59;
+            transition: transform 0.15s;
+        }
+        .symptom-card:hover { transform: translateY(-4px); background: #f0fdfa; }
+        .symptom-card.selected-symptom {
+            background: #dcfce7;
+            border-color: #16a34a;
+            box-shadow: 0 8px 0 #15803d;
+        }
+
+        /* ================= MODE 3: PHARMACY & HEALTHY HABITS ================= */
+        .habit-tray {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            min-height: 155px;
+            padding: 14px;
+            background: #f8fafc;
+            border: 4px dashed #94a3b8;
+            border-radius: 26px;
+        }
+
+        .habit-token {
+            background: #ffffff;
+            border: 5px solid #475569;
+            border-radius: 24px;
+            padding: 12px 18px;
+            cursor: grab;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 6px 0 #475569;
+            min-width: 135px;
+        }
+        .habit-token.selected {
+            border-color: #0d9488;
+            box-shadow: 0 0 0 7px rgba(13, 148, 136, 0.35), 0 6px 0 #115e59;
+            transform: translateY(-5px) scale(1.05);
+        }
+
+        .pharmacy-buckets {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .pharm-bucket {
+            border-width: 6px;
+            border-style: solid;
+            border-radius: 28px;
+            padding: 20px;
+            min-height: 210px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+        .pharm-bucket.highlight-pharm {
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 0 0 9px rgba(250, 204, 21, 0.65) !important;
+        }
+
+        @keyframes popSuccess {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+            100% { transform: scale(1); }
+        }
+
+        /* Win Banner */
+        .win-overlay {
+            background: #dcfce7;
+            border: 5px solid #16a34a;
+            border-radius: 26px;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .win-text {
+            font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+            font-weight: 900;
+            color: #14532d;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .btn-next-giant {
+            background: #16a34a;
+            color: #ffffff;
+            border: 4px solid #14532d;
+            border-radius: 20px;
+            padding: 12px 28px;
+            font-family: inherit;
+            font-size: 1.5rem;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #14532d;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        @media (max-width: 780px) {
+            .mode-tabs { grid-template-columns: 1fr; }
+            .doctor-layout { grid-template-columns: 1fr; }
+            .symptoms-grid { grid-template-columns: repeat(2, 1fr); }
+            .pharmacy-buckets { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOP BAR -->
+    <header class="top-bar">
+        <a href="https://games.ableandbeyond.support/index.html" class="btn-home" aria-label="Back to Game Hub">
+            ⬅️ Hub
+        </a>
+
+        <div class="game-title">
+            <span>🏥</span>
+            <span>Healthy Hero</span>
+        </div>
+
+        <div class="top-controls">
+            <button type="button" id="btn-one-tap" class="ctrl-btn" onclick="toggleOneTap()" title="1-Tap & Spacebar Switch Mode">
+                ⚡ 1-Tap: OFF
+            </button>
+            <button type="button" id="btn-voice" class="ctrl-btn active" onclick="toggleVoice()" title="Toggle 1-Word Voice">
+                🗣️ Voice
+            </button>
+            <button type="button" id="btn-sound" class="ctrl-btn active" onclick="toggleSound()" title="Toggle Musical Sounds">
+                🎵 Sound
+            </button>
+            <div class="star-pill" aria-label="Stars earned">
+                ⭐ <span id="star-count">0</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- 3 SIMPLE PICTURE TABS -->
+    <nav class="mode-tabs" aria-label="Health Modes">
+        <button type="button" class="mode-tab active" id="tab-kit" onclick="setMode('kit')">
+            <span class="tab-icon">🩹</span>
+            <span>1. Doctor Kit</span>
+        </button>
+        <button type="button" class="mode-tab" id="tab-body" onclick="setMode('body')">
+            <span class="tab-icon">🩺</span>
+            <span>2. What Hurts?</span>
+        </button>
+        <button type="button" class="mode-tab" id="tab-healthy" onclick="setMode('healthy')">
+            <span class="tab-icon">🍎</span>
+            <span>3. Healthy Sort</span>
+        </button>
+    </nav>
+
+    <!-- MAIN STAGE -->
+    <main class="stage-wrap">
+        <div id="stage-content" class="stage-card">
+            <!-- Populated by JS -->
+        </div>
+    </main>
+
+    <script>
+        /* ================================================================
+           1. PATIENTS, DOCTOR TOOLS & HEALTHY SORT DATA (1-WORD LABELS)
+           ================================================================ */
+        const PATIENTS = [
+            { id: 'knee',  word: 'KNEE',  emoji: '🦵', toolWord: 'PLASTER',  toolEmoji: '🩹' },
+            { id: 'cough', word: 'COUGH', emoji: '🤧', toolWord: 'MEDICINE', toolEmoji: '🥄' },
+            { id: 'head',  word: 'HEAD',  emoji: '🤕', toolWord: 'ICE PACK', toolEmoji: '🧊' },
+            { id: 'hot',   word: 'HOT',   emoji: '🤒', toolWord: 'WATER',    toolEmoji: '💧' },
+            { id: 'tooth', word: 'TOOTH', emoji: '🦷', toolWord: 'BRUSH',    toolEmoji: '🪥' },
+            { id: 'hands', word: 'HANDS', emoji: '🤲', toolWord: 'SOAP',     toolEmoji: '🧼' }
+        ];
+
+        const ALL_TOOLS = [
+            { word: 'PLASTER',  emoji: '🩹' },
+            { word: 'MEDICINE', emoji: '🥄' },
+            { word: 'ICE PACK', emoji: '🧊' },
+            { word: 'WATER',    emoji: '💧' },
+            { word: 'BRUSH',    emoji: '🪥' },
+            { word: 'SOAP',     emoji: '🧼' }
+        ];
+
+        const HEALTHY_ITEMS = [
+            { id: 'apple',  word: 'APPLE',  emoji: '🍎', group: 'food', groupWord: 'HEALTHY FOOD' },
+            { id: 'carrot', word: 'CARROT', emoji: '🥕', group: 'food', groupWord: 'HEALTHY FOOD' },
+            { id: 'water',  word: 'WATER',  emoji: '💧', group: 'food', groupWord: 'HEALTHY FOOD' },
+            { id: 'soap',   word: 'SOAP',   emoji: '🧼', group: 'care', groupWord: 'DOCTOR & CARE' },
+            { id: 'brush',  word: 'BRUSH',  emoji: '🪥', group: 'care', groupWord: 'DOCTOR & CARE' },
+            { id: 'plaster',word: 'PLASTER',emoji: '🩹', group: 'care', groupWord: 'DOCTOR & CARE' }
+        ];
+
+        /* ================================================================
+           2. STATE & WEB AUDIO + 1-WORD TTS
+           ================================================================ */
+        const state = {
+            mode: 'kit',
+            oneTap: false,
+            voiceOn: true,
+            soundOn: true,
+            stars: parseInt(localStorage.getItem('ab_health_stars') || '0', 10),
+            // Mode 1: Doctor Kit
+            patient: null,
+            toolChoices: [],
+            healed: false,
+            appliedEmoji: '',
+            // Mode 2: What Hurts Check-In
+            pickedSymptom: null,
+            // Mode 3: Healthy Sort
+            sortQueue: [],
+            selectedSortId: null,
+            sortedGroups: { food: [], care: [] }
+        };
+
+        let audioCtx = null;
+        function getAudioCtx() {
+            if (!audioCtx) {
+                const AC = window.AudioContext || window.webkitAudioContext;
+                if (AC) audioCtx = new AC();
+            }
+            if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+            return audioCtx;
+        }
+
+        function playNotes(freqs, type = 'triangle', spacing = 0.09, duration = 0.36) {
+            if (!state.soundOn) return;
+            const ctx = getAudioCtx();
+            if (!ctx) return;
+            const now = ctx.currentTime;
+            freqs.forEach((f, idx) => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(f, now + idx * spacing);
+                gain.gain.setValueAtTime(0.001, now + idx * spacing);
+                gain.gain.exponentialRampToValueAtTime(0.24, now + idx * spacing + 0.02);
+                gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * spacing + duration);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start(now + idx * spacing);
+                osc.stop(now + idx * spacing + duration + 0.02);
+            });
+        }
+
+        function playWinChime() {
+            playNotes([523.25, 659.25, 783.99, 1046.50], 'triangle', 0.09, 0.45);
+        }
+
+        function playSoftBump() {
+            playNotes([220, 196], 'sine', 0.1, 0.25);
+        }
+
+        function speakWord(text) {
+            if (!state.voiceOn || !('speechSynthesis' in window)) return;
+            try {
+                window.speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(text);
+                u.lang = 'en-GB';
+                u.rate = 0.92;
+                u.pitch = 1.05;
+                window.speechSynthesis.speak(u);
+            } catch (e) {}
+        }
+
+        function addStar() {
+            state.stars += 1;
+            localStorage.setItem('ab_health_stars', String(state.stars));
+            document.getElementById('star-count').textContent = state.stars;
+            if (typeof confetti === 'function') {
+                confetti({ particleCount: 45, spread: 65, origin: { y: 0.7 } });
+            }
+        }
+
+        /* ================================================================
+           3. HEADER CONTROLS & TABS
+           ================================================================ */
+        function toggleOneTap() {
+            state.oneTap = !state.oneTap;
+            const btn = document.getElementById('btn-one-tap');
+            btn.textContent = state.oneTap ? '⚡ 1-Tap: ON' : '⚡ 1-Tap: OFF';
+            btn.classList.toggle('active', state.oneTap);
+        }
+
+        function toggleVoice() {
+            state.voiceOn = !state.voiceOn;
+            document.getElementById('btn-voice').classList.toggle('active', state.voiceOn);
+            if (state.voiceOn) speakWord('Voice On');
+        }
+
+        function toggleSound() {
+            state.soundOn = !state.soundOn;
+            document.getElementById('btn-sound').classList.toggle('active', state.soundOn);
+            if (state.soundOn) playWinChime();
+        }
+
+        function setMode(mode) {
+            state.mode = mode;
+            ['kit', 'body', 'healthy'].forEach(m => {
+                document.getElementById('tab-' + m).classList.toggle('active', m === mode);
+            });
+            if (mode === 'kit') setupKitRound();
+            else if (mode === 'body') {
+                state.pickedSymptom = null;
+                renderBodyMode();
+            } else {
+                setupHealthySortRound();
+            }
+        }
+
+        /* ================================================================
+           4. MODE 1: 🩹 DOCTOR KIT (MATCH TOOL TO PATIENT)
+           ================================================================ */
+        function setupKitRound() {
+            state.patient = PATIENTS[Math.floor(Math.random() * PATIENTS.length)];
+            state.healed = false;
+            state.appliedEmoji = '';
+
+            const correct = { word: state.patient.toolWord, emoji: state.patient.toolEmoji };
+            const others = ALL_TOOLS.filter(t => t.word !== correct.word).sort(() => Math.random() - 0.5).slice(0, 3);
+            state.toolChoices = [correct, ...others].sort(() => Math.random() - 0.5);
+
+            renderKitMode();
+            setTimeout(() => speakWord(state.patient.word), 250);
+        }
+
+        function renderKitMode() {
+            const box = document.getElementById('stage-content');
+            const p = state.patient;
+
+            box.innerHTML = `
+                <div class="doctor-layout">
+                    <!-- Patient Box -->
+                    <div class="patient-box ${state.healed ? 'healed' : ''}">
+                        <span class="patient-emoji">${state.healed ? '😊' : p.emoji}</span>
+                        <span class="patient-word">${state.healed ? 'ALL BETTER!' : p.word}</span>
+                        ${state.appliedEmoji ? `<span class="applied-tool-badge">${state.appliedEmoji}</span>` : ''}
+                    </div>
+
+                    <!-- 4 Doctor Tools -->
+                    <div class="tools-grid">
+                        ${state.toolChoices.map(tool => {
+                            const isTarget = tool.word === p.toolWord;
+                            return `
+                                <button type="button"
+                                        class="med-tool-btn ${isTarget ? 'hint-tool' : ''}"
+                                        onclick="useDoctorTool('${tool.word}', '${tool.emoji}')">
+                                    <span style="font-size:3.5rem;line-height:1;">${tool.emoji}</span>
+                                    <span style="font-size:1.45rem;font-weight:900;">${tool.word}</span>
+                                </button>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+
+                ${state.healed ? `
+                    <div class="win-overlay">
+                        <div class="win-text">
+                            <span>🌟</span>
+                            <span>${p.toolEmoji} ${p.toolWord}!</span>
+                        </div>
+                        <button type="button" class="btn-next-giant" onclick="setupKitRound()">
+                            Next Patient ➡️
+                        </button>
+                    </div>
+                ` : ''}
+            `;
+        }
+
+        function useDoctorTool(word, emoji) {
+            const p = state.patient;
+            const actualWord = state.oneTap ? p.toolWord : word;
+            const actualEmoji = state.oneTap ? p.toolEmoji : emoji;
+
+            state.appliedEmoji = actualEmoji;
+            state.healed = true;
+            playWinChime();
+            speakWord(actualWord);
+            addStar();
+            renderKitMode();
+        }
+
+        /* ================================================================
+           5. MODE 2: 🩺 WHAT HURTS? (1-WORD COMMUNICATION BOARD)
+           ================================================================ */
+        function renderBodyMode() {
+            const box = document.getElementById('stage-content');
+
+            box.innerHTML = `
+                <div class="symptoms-grid">
+                    ${PATIENTS.map(item => {
+                        const isPicked = state.pickedSymptom && state.pickedSymptom.id === item.id;
+                        return `
+                            <button type="button"
+                                    class="symptom-card ${isPicked ? 'selected-symptom' : ''}"
+                                    onclick="pickSymptomCard('${item.id}')">
+                                <span style="font-size:4rem;line-height:1;">${item.emoji}</span>
+                                <span style="font-size:1.65rem;font-weight:900;">${item.word}</span>
+                            </button>
+                        `;
+                    }).join('')}
+                </div>
+
+                ${state.pickedSymptom ? `
+                    <div class="win-overlay">
+                        <div class="win-text">
+                            <span>${state.pickedSymptom.emoji}</span>
+                            <span>${state.pickedSymptom.word} ➡️ ${state.pickedSymptom.toolEmoji} ${state.pickedSymptom.toolWord}</span>
+                        </div>
+                        <button type="button" class="btn-next-giant" onclick="speakWord('${state.pickedSymptom.toolWord}')">
+                            🔊 Speak
+                        </button>
+                    </div>
+                ` : ''}
+            `;
+        }
+
+        function pickSymptomCard(id) {
+            const item = PATIENTS.find(p => p.id === id);
+            if (!item) return;
+            state.pickedSymptom = item;
+            playWinChime();
+            speakWord(item.word + '. ' + item.toolWord);
+            addStar();
+            renderBodyMode();
+        }
+
+        /* ================================================================
+           6. MODE 3: 🍎 HEALTHY SORT (HEALTHY FOOD vs DOCTOR CARE)
+           ================================================================ */
+        function setupHealthySortRound() {
+            state.sortedGroups = { food: [], care: [] };
+            state.sortQueue = [...HEALTHY_ITEMS].sort(() => Math.random() - 0.5).slice(0, 4);
+            state.selectedSortId = state.sortQueue[0].id;
+            renderHealthySortMode();
+        }
+
+        function renderHealthySortMode() {
+            const box = document.getElementById('stage-content');
+            const allDone = state.sortQueue.length === 0;
+            const activeItem = state.sortQueue.find(i => i.id === state.selectedSortId);
+
+            box.innerHTML = `
+                <div class="habit-tray">
+                    ${allDone ? `
+                        <div class="win-text">🌟 All Sorted!</div>
+                    ` : state.sortQueue.map(it => `
+                        <div class="habit-token ${state.selectedSortId === it.id ? 'selected' : ''}"
+                             draggable="true"
+                             ondragstart="event.dataTransfer.setData('text/plain', '${it.id}'); state.selectedSortId='${it.id}';"
+                             onclick="selectHealthyItem('${it.id}')"
+                             tabindex="0"
+                             role="button">
+                            <span style="font-size:3.4rem;line-height:1;">${it.emoji}</span>
+                            <span style="font-size:1.3rem;font-weight:900;">${it.word}</span>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div class="pharmacy-buckets">
+                    <div class="pharm-bucket ${activeItem && activeItem.group === 'food' ? 'highlight-pharm' : ''}"
+                         style="background:#f0fdf4;border-color:#16a34a;color:#14532d;box-shadow:0 8px 0 #15803d;"
+                         ondragover="event.preventDefault()"
+                         ondrop="onPharmDrop(event, 'food')"
+                         onclick="handlePharmBucket('food')"
+                         tabindex="0"
+                         role="button">
+                        <div style="text-align:center;">
+                            <div style="font-size:3.4rem;">🍎</div>
+                            <div style="font-size:1.7rem;font-weight:900;">FOOD &amp; WATER</div>
+                        </div>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;">
+                            ${state.sortedGroups.food.map(x => `<span style="font-size:2.4rem;">${x.emoji}</span>`).join('')}
+                        </div>
+                    </div>
+
+                    <div class="pharm-bucket ${activeItem && activeItem.group === 'care' ? 'highlight-pharm' : ''}"
+                         style="background:#eff6ff;border-color:#2563eb;color:#1e3a8a;box-shadow:0 8px 0 #1d4ed8;"
+                         ondragover="event.preventDefault()"
+                         ondrop="onPharmDrop(event, 'care')"
+                         onclick="handlePharmBucket('care')"
+                         tabindex="0"
+                         role="button">
+                        <div style="text-align:center;">
+                            <div style="font-size:3.4rem;">🧑‍⚕️</div>
+                            <div style="font-size:1.7rem;font-weight:900;">PHARMACY</div>
+                        </div>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;">
+                            ${state.sortedGroups.care.map(x => `<span style="font-size:2.4rem;">${x.emoji}</span>`).join('')}
+                        </div>
+                    </div>
+                </div>
+
+                ${allDone ? `
+                    <div class="win-overlay">
+                        <div class="win-text">🏥 Healthy Hero!</div>
+                        <button type="button" class="btn-next-giant" onclick="setupHealthySortRound()">
+                            Play Again 🔄
+                        </button>
+                    </div>
+                ` : ''}
+            `;
+        }
+
+        function selectHealthyItem(id) {
+            const it = state.sortQueue.find(x => x.id === id);
+            if (!it) return;
+            state.selectedSortId = id;
+            speakWord(it.word);
+            playNotes([523.25, 659.25]);
+            if (state.oneTap) {
+                handlePharmBucket(it.group);
+                return;
+            }
+            renderHealthySortMode();
+        }
+
+        function onPharmDrop(e, grp) {
+            e.preventDefault();
+            const id = e.dataTransfer.getData('text/plain') || state.selectedSortId;
+            state.selectedSortId = id;
+            handlePharmBucket(grp);
+        }
+
+        function handlePharmBucket(grp) {
+            if (!state.selectedSortId && state.sortQueue.length > 0) {
+                state.selectedSortId = state.sortQueue[0].id;
+            }
+            const it = state.sortQueue.find(x => x.id === state.selectedSortId);
+            if (!it) return;
+
+            if (it.group === grp || state.oneTap) {
+                const target = it.group;
+                state.sortedGroups[target].push(it);
+                state.sortQueue = state.sortQueue.filter(x => x.id !== it.id);
+                state.selectedSortId = state.sortQueue[0] ? state.sortQueue[0].id : null;
+                playWinChime();
+                speakWord(it.word);
+                if (state.sortQueue.length === 0) addStar();
+                renderHealthySortMode();
+            } else {
+                playSoftBump();
+            }
+        }
+
+        /* ================================================================
+           7. SPACEBAR / ENTER SWITCH ACCESSIBILITY
+           ================================================================ */
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' || e.code === 'Enter') {
+                if (document.activeElement && document.activeElement.tagName === 'BUTTON') return;
+                e.preventDefault();
+                if (state.mode === 'kit') {
+                    if (state.healed) setupKitRound();
+                    else useDoctorTool(state.patient.toolWord, state.patient.toolEmoji);
+                } else if (state.mode === 'body') {
+                    pickSymptomCard('head');
+                } else {
+                    if (state.sortQueue.length === 0) setupHealthySortRound();
+                    else handlePharmBucket(state.sortQueue[0].group);
+                }
+            }
+        });
+
+        // Boot
+        document.getElementById('star-count').textContent = state.stars;
+        setupKitRound();
+    </script>
+</body>
+</html>

@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Bus Buddy (London Oyster Edition) | Able & Beyond</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Nunito:wght@800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-top: #E0F2FE;
+      --bg-bottom: #FEF3C7;
+      --london-red: #DC2626;
+      --london-red-dark: #991B1B;
+      --oyster-blue: #0284C7;
+      --oyster-navy: #1E3A8A;
+      --oyster-yellow: #FACC15;
+      --text: #0F172A;
+      --green: #16A34A;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 100%);
+      color: var(--text);
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* TOP BAR */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 18px;
+      background: rgba(255, 255, 255, 0.94);
+      border-bottom: 4px solid #FCA5A5;
+      z-index: 20;
+      flex-shrink: 0;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .back-btn {
+      text-decoration: none;
+      background: #FFFFFF;
+      color: #991B1B;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.15rem;
+      padding: 8px 16px;
+      border-radius: 50px;
+      border: 3px solid #FCA5A5;
+      box-shadow: 0 4px 0 #FCA5A5;
+      transition: transform 0.1s;
+    }
+    .back-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #FCA5A5; }
+
+    .game-title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: clamp(1.3rem, 2.5vw, 1.9rem);
+      color: #B91C1C;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .controls {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .ctrl-btn {
+      background: #FFFFFF;
+      border: 3px solid #CBD5E1;
+      border-radius: 50px;
+      padding: 7px 14px;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1rem;
+      color: var(--text);
+      cursor: pointer;
+      box-shadow: 0 4px 0 #CBD5E1;
+      transition: all 0.15s;
+    }
+    .ctrl-btn.active {
+      background: #DCFCE7;
+      border-color: #22C55E;
+      color: #166534;
+      box-shadow: 0 4px 0 #22C55E;
+    }
+    .ctrl-btn:active { transform: translateY(3px); }
+
+    .star-box {
+      background: #FEF9C3;
+      border: 3px solid #FACC15;
+      border-radius: 50px;
+      padding: 7px 15px;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.15rem;
+      color: #854D0E;
+      box-shadow: 0 4px 0 #FACC15;
+    }
+
+    /* MODE TABS */
+    .mode-bar {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.65);
+      flex-shrink: 0;
+      flex-wrap: wrap;
+    }
+
+    .mode-tab {
+      background: #FFFFFF;
+      border: 4px solid #CBD5E1;
+      border-radius: 50px;
+      padding: 8px 22px;
+      font-family: 'Fredoka', sans-serif;
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      color: #475569;
+      cursor: pointer;
+      box-shadow: 0 5px 0 #CBD5E1;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .mode-tab.active {
+      background: #DC2626;
+      border-color: #991B1B;
+      color: #FFFFFF;
+      box-shadow: 0 5px 0 #991B1B;
+      transform: translateY(-2px);
+    }
+
+    /* STAGE */
+    .stage {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .prompt-banner {
+      background: #FFFFFF;
+      border: 5px solid #DC2626;
+      border-radius: 30px;
+      padding: 10px 26px;
+      box-shadow: 0 8px 0 rgba(220, 38, 38, 0.2);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+      z-index: 5;
+      transition: transform 0.15s;
+    }
+    .prompt-banner:active { transform: scale(0.97); }
+
+    .prompt-emoji { font-size: clamp(2.4rem, 5vw, 3.6rem); line-height: 1; }
+    .prompt-text {
+      font-family: 'Fredoka', sans-serif;
+      font-size: clamp(1.5rem, 3.2vw, 2.3rem);
+      color: #991B1B;
+    }
+
+    /* MAIN INTERACTIVE SCENE */
+    .scene-area {
+      flex: 1;
+      width: 100%;
+      max-width: 960px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+      flex-wrap: wrap;
+      margin: 8px 0;
+    }
+
+    /* MODE 1: LONDON BUS STOP & DOUBLE DECKER BUS */
+    .bus-stop-scene {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 36px;
+      width: 100%;
+      flex-wrap: wrap;
+    }
+
+    .london-stop-post {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .london-stop-post:hover { transform: scale(1.04); }
+    .london-stop-sign {
+      width: 120px;
+      height: 120px;
+      background: #FFFFFF;
+      border: 8px solid #DC2626;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+      position: relative;
+    }
+    .london-stop-bar {
+      width: 100%;
+      background: #0284C7;
+      color: #FFFFFF;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1rem;
+      text-align: center;
+      padding: 3px 0;
+      letter-spacing: 1px;
+    }
+    .london-stop-pole {
+      width: 16px;
+      height: 110px;
+      background: #64748B;
+      border-radius: 4px;
+    }
+
+    .double-decker-card {
+      background: #FFFFFF;
+      border: 6px solid #DC2626;
+      border-radius: 36px;
+      padding: 18px 28px;
+      box-shadow: 0 14px 30px rgba(220, 38, 38, 0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .double-decker-card:hover { transform: scale(1.03); }
+    .double-decker-card.arriving {
+      animation: busDriveIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes busDriveIn {
+      0% { transform: translateX(220px) scale(0.85); opacity: 0.3; }
+      100% { transform: translateX(0) scale(1); opacity: 1; }
+    }
+
+    /* MODE 2: LONDON OYSTER CARD & YELLOW READER */
+    .oyster-reader-machine {
+      width: clamp(230px, 32vw, 290px);
+      background: linear-gradient(180deg, #334155 0%, #1E293B 100%);
+      border: 8px solid #475569;
+      border-radius: 40px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 16px 35px rgba(0,0,0,0.3);
+      position: relative;
+    }
+
+    .reader-screen {
+      width: 100%;
+      background: #0F172A;
+      border: 4px solid #64748B;
+      border-radius: 18px;
+      padding: 10px 14px;
+      text-align: center;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.35rem;
+      color: #38BDF8;
+      letter-spacing: 0.5px;
+      transition: all 0.25s;
+    }
+    .reader-screen.go {
+      background: #14532D;
+      border-color: #4ADE80;
+      color: #4ADE80;
+    }
+
+    .lights-row {
+      display: flex;
+      gap: 14px;
+    }
+    .status-light {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #475569;
+      border: 3px solid #1E293B;
+      transition: all 0.2s;
+    }
+    .status-light.amber { background: #F59E0B; box-shadow: 0 0 12px #F59E0B; }
+    .status-light.green { background: #22C55E; box-shadow: 0 0 18px #22C55E; transform: scale(1.15); }
+
+    .yellow-oyster-pad {
+      width: clamp(145px, 20vw, 175px);
+      height: clamp(145px, 20vw, 175px);
+      background: radial-gradient(circle, #FEF08A 0%, #FACC15 65%, #EAB308 100%);
+      border: 8px solid #CA8A04;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 8px 0 #A16207, 0 0 25px rgba(250, 204, 21, 0.5);
+      transition: transform 0.2s, box-shadow 0.2s;
+      animation: padPulse 1.8s infinite ease-in-out;
+    }
+    @keyframes padPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    .yellow-oyster-pad.drag-over,
+    .yellow-oyster-pad.tapped {
+      background: radial-gradient(circle, #BBF7D0 0%, #4ADE80 70%, #16A34A 100%);
+      border-color: #15803D;
+      box-shadow: 0 8px 0 #166534, 0 0 35px rgba(34, 197, 94, 0.8);
+      transform: scale(1.08);
+    }
+
+    .oyster-pad-label {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.2rem;
+      color: #713F12;
+      text-align: center;
+      line-height: 1.1;
+    }
+
+    /* BLUE LONDON OYSTER CARD */
+    .oyster-card {
+      width: clamp(230px, 32vw, 290px);
+      height: clamp(145px, 20vw, 180px);
+      background: linear-gradient(135deg, #1E3A8A 0%, #0284C7 55%, #38BDF8 100%);
+      border: 6px solid #FFFFFF;
+      border-radius: 26px;
+      padding: 18px 22px;
+      color: #FFFFFF;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: grab;
+      box-shadow: 0 12px 0 #0369A1, 0 16px 30px rgba(2, 132, 199, 0.35);
+      transition: transform 0.2s;
+      touch-action: none;
+      position: relative;
+      overflow: hidden;
+    }
+    .oyster-card:hover { transform: translateY(-4px) scale(1.03); }
+    .oyster-card:active { cursor: grabbing; transform: scale(1.06); }
+
+    .oyster-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .oyster-logo {
+      font-family: 'Fredoka', sans-serif;
+      font-size: clamp(1.6rem, 3vw, 2.1rem);
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tfl-roundel {
+      width: 42px;
+      height: 34px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .tfl-circle {
+      width: 30px;
+      height: 30px;
+      border: 6px solid #FFFFFF;
+      border-radius: 50%;
+    }
+    .tfl-bar {
+      position: absolute;
+      width: 40px;
+      height: 8px;
+      background: #FFFFFF;
+      border-radius: 4px;
+    }
+    .oyster-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.15rem;
+      background: rgba(255,255,255,0.2);
+      padding: 6px 14px;
+      border-radius: 50px;
+    }
+
+    /* MODE 3: LONDON BUS STOP BELL */
+    .bell-pole-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+    .red-stop-bell {
+      width: clamp(160px, 24vw, 200px);
+      height: clamp(200px, 28vw, 240px);
+      background: linear-gradient(180deg, #DC2626 0%, #B91C1C 100%);
+      border: 8px solid #FCA5A5;
+      border-radius: 55px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      cursor: pointer;
+      box-shadow: 0 12px 0 #7F1D1D, 0 16px 30px rgba(185, 28, 28, 0.35);
+      transition: transform 0.15s;
+    }
+    .red-stop-bell:hover { transform: scale(1.05); }
+    .red-stop-bell:active, .red-stop-bell.rung {
+      transform: translateY(8px);
+      box-shadow: 0 4px 0 #7F1D1D;
+      background: linear-gradient(180deg, #22C55E 0%, #15803D 100%);
+      border-color: #86EFAC;
+    }
+    .bell-word {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 2.2rem;
+      color: #FFFFFF;
+      letter-spacing: 2px;
+      background: rgba(0,0,0,0.22);
+      padding: 4px 18px;
+      border-radius: 20px;
+    }
+
+    /* BOTTOM ACTION TRAY */
+    .tray {
+      display: flex;
+      justify-content: center;
+      gap: clamp(14px, 2.5vw, 26px);
+      width: 100%;
+      max-width: 960px;
+      z-index: 10;
+      flex-wrap: wrap;
+    }
+
+    .action-card {
+      background: #FFFFFF;
+      border: 6px solid #CBD5E1;
+      border-radius: 28px;
+      width: clamp(150px, 24vw, 220px);
+      height: clamp(135px, 21vh, 175px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      box-shadow: 0 10px 0 #CBD5E1, 0 12px 24px rgba(0,0,0,0.08);
+      transition: transform 0.15s, border-color 0.2s, box-shadow 0.2s;
+    }
+    .action-card:hover {
+      transform: translateY(-4px);
+      border-color: #DC2626;
+      box-shadow: 0 12px 0 #DC2626;
+    }
+    .action-card:active {
+      transform: translateY(4px);
+      box-shadow: 0 4px 0 #DC2626;
+    }
+    .action-card.correct {
+      background: #DCFCE7;
+      border-color: #16A34A;
+      box-shadow: 0 10px 0 #16A34A;
+      animation: bounceWin 0.6s ease;
+    }
+    .action-card.wrong {
+      opacity: 0.4;
+      transform: scale(0.92);
+    }
+
+    .card-emoji { font-size: clamp(3rem, 6vw, 4.4rem); line-height: 1; }
+    .card-label {
+      font-family: 'Fredoka', sans-serif;
+      font-size: clamp(1.2rem, 2.2vw, 1.55rem);
+      color: var(--text);
+      text-transform: uppercase;
+    }
+
+    @keyframes bounceWin {
+      0%, 100% { transform: scale(1); }
+      40% { transform: scale(1.16) rotate(-4deg); }
+      70% { transform: scale(1.12) rotate(4deg); }
+    }
+
+    #confetti-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 50;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="confetti-canvas"></canvas>
+
+  <header class="top-bar">
+    <a href="https://games.ableandbeyond.support/index.html" class="back-btn">⬅️ Hub</a>
+    <div class="game-title">🚌 London Bus Buddy</div>
+    <div class="controls">
+      <button class="ctrl-btn active" id="one-tap-btn" onclick="toggleOneTap()">⚡ 1-Tap: ON</button>
+      <button class="ctrl-btn active" id="voice-btn" onclick="toggleVoice()">🗣️ Voice: ON</button>
+      <button class="ctrl-btn active" id="sound-btn" onclick="toggleSound()">🎵 Sound: ON</button>
+      <div class="star-box">⭐ <span id="star-count">0</span></div>
+    </div>
+  </header>
+
+  <nav class="mode-bar">
+    <button class="mode-tab active" id="tab-stop" onclick="setMode('stop')">🚏 1. Hail Red Bus</button>
+    <button class="mode-tab" id="tab-oyster" onclick="setMode('oyster')">💳 2. Oyster Card</button>
+    <button class="mode-tab" id="tab-bell" onclick="setMode('bell')">🔔 3. Stop Bell</button>
+  </nav>
+
+  <main class="stage">
+    <div class="prompt-banner" onclick="speakPrompt()">
+      <span class="prompt-emoji" id="prompt-emoji">🚌</span>
+      <span class="prompt-text" id="prompt-text">Tap HAIL BUS!</span>
+      <span style="font-size: 1.7rem;">🔊</span>
+    </div>
+
+    <div class="scene-area" id="scene-area"></div>
+
+    <div class="tray" id="tray"></div>
+  </main>
+
+  <script>
+    let mode = 'stop';
+    let oneTap = true;
+    let voiceOn = true;
+    let soundOn = true;
+    let stars = 0;
+    let locked = false;
+    let stopIndex = 0;
+    let currentPromptSpeech = 'Hail the red London bus!';
+
+    const LONDON_STOPS = [
+      { id: 'school', name: 'SCHOOL', emoji: '🏫', route: '24', speech: 'Ring the bell for School!' },
+      { id: 'park',   name: 'PARK',   emoji: '🌳', route: '38', speech: 'Ring the bell for the Park!' },
+      { id: 'zoo',    name: 'ZOO',    emoji: '🦁', route: '274', speech: 'Ring the bell for the Zoo!' },
+      { id: 'shop',   name: 'SHOP',   emoji: '🛒', route: '73', speech: 'Ring the bell for the Shop!' },
+      { id: 'home',   name: 'HOME',   emoji: '🏠', route: '159', speech: 'Ring the bell for Home!' }
+    ];
+
+    // Audio Context
+    let audioCtx = null;
+    function getAudio() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+
+    // Authentic London Oyster Reader two-tone beep!
+    function playOysterBeep() {
+      if (!soundOn) return;
+      try {
+        const ctx = getAudio();
+        const now = ctx.currentTime;
+        [1760, 2349].forEach((freq, i) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now + i * 0.11);
+          gain.gain.setValueAtTime(0.22, now + i * 0.11);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.11 + 0.14);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + i * 0.11);
+          osc.stop(now + i * 0.11 + 0.15);
+        });
+      } catch (e) {}
+    }
+
+    // London Bus Stop Bell "DING!"
+    function playBusBellDing() {
+      if (!soundOn) return;
+      try {
+        const ctx = getAudio();
+        const now = ctx.currentTime;
+        [1046.5, 1318.5].forEach((freq, i) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now + i * 0.08);
+          gain.gain.setValueAtTime(0.25, now + i * 0.08);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.45);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + i * 0.08);
+          osc.stop(now + i * 0.08 + 0.46);
+        });
+      } catch (e) {}
+    }
+
+    function playWinChime() {
+      if (!soundOn) return;
+      try {
+        const ctx = getAudio();
+        const now = ctx.currentTime;
+        [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now + i * 0.09);
+          gain.gain.setValueAtTime(0.18, now + i * 0.09);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.09 + 0.25);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + i * 0.09);
+          osc.stop(now + i * 0.09 + 0.26);
+        });
+      } catch (e) {}
+    }
+
+    function speak(text) {
+      if (!voiceOn || !('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'en-GB';
+      u.rate = 0.9;
+      u.pitch = 1.08;
+      window.speechSynthesis.speak(u);
+    }
+
+    function speakPrompt() {
+      speak(currentPromptSpeech);
+    }
+
+    function toggleOneTap() {
+      oneTap = !oneTap;
+      const btn = document.getElementById('one-tap-btn');
+      btn.textContent = `⚡ 1-Tap: ${oneTap ? 'ON' : 'OFF'}`;
+      btn.classList.toggle('active', oneTap);
+    }
+
+    function toggleVoice() {
+      voiceOn = !voiceOn;
+      const btn = document.getElementById('voice-btn');
+      btn.textContent = `🗣️ Voice: ${voiceOn ? 'ON' : 'OFF'}`;
+      btn.classList.toggle('active', voiceOn);
+    }
+
+    function toggleSound() {
+      soundOn = !soundOn;
+      const btn = document.getElementById('sound-btn');
+      btn.textContent = `🎵 Sound: ${soundOn ? 'ON' : 'OFF'}`;
+      btn.classList.toggle('active', soundOn);
+    }
+
+    function setMode(newMode) {
+      mode = newMode;
+      ['stop', 'oyster', 'bell'].forEach(m => {
+        document.getElementById(`tab-${m}`).classList.toggle('active', m === mode);
+      });
+      loadRound();
+    }
+
+    function getDoubleDeckerSVG(routeNum, destName) {
+      return `
+        <svg viewBox="0 0 320 200" width="270" height="170" aria-label="Red London Double Decker Bus">
+          <!-- Bus Shadow -->
+          <ellipse cx="160" cy="186" rx="135" ry="10" fill="rgba(0,0,0,0.16)"/>
+          <!-- Red Double Decker Body -->
+          <rect x="20" y="18" width="280" height="150" rx="26" fill="#DC2626" stroke="#991B1B" stroke-width="6"/>
+          <!-- White Stripe -->
+          <rect x="23" y="92" width="274" height="8" fill="#FEF2F2"/>
+          <!-- Top Deck Windows -->
+          <rect x="38" y="32" width="48" height="44" rx="10" fill="#BAE6FD" stroke="#7F1D1D" stroke-width="4"/>
+          <rect x="98" y="32" width="48" height="44" rx="10" fill="#BAE6FD" stroke="#7F1D1D" stroke-width="4"/>
+          <rect x="158" y="32" width="48" height="44" rx="10" fill="#BAE6FD" stroke="#7F1D1D" stroke-width="4"/>
+          <rect x="218" y="32" width="64" height="44" rx="10" fill="#BAE6FD" stroke="#7F1D1D" stroke-width="4"/>
+          <!-- Destination Blind (London style) -->
+          <rect x="105" y="104" width="125" height="28" rx="6" fill="#0F172A" stroke="#FACC15" stroke-width="3"/>
+          <text x="167" y="124" text-anchor="middle" fill="#FACC15" font-family="Fredoka, sans-serif" font-size="16" font-weight="bold">${routeNum} ${destName}</text>
+          <!-- Lower Deck Windows & Door -->
+          <rect x="36" y="106" width="54" height="58" rx="8" fill="#E0F2FE" stroke="#7F1D1D" stroke-width="4"/>
+          <rect x="242" y="104" width="44" height="46" rx="8" fill="#BAE6FD" stroke="#7F1D1D" stroke-width="4"/>
+          <!-- Headlight -->
+          <circle cx="293" cy="152" r="8" fill="#FEF08A" stroke="#CA8A04" stroke-width="3"/>
+          <!-- Wheels -->
+          <circle cx="85" cy="168" r="24" fill="#1E293B" stroke="#475569" stroke-width="6"/>
+          <circle cx="85" cy="168" r="10" fill="#CBD5E1"/>
+          <circle cx="235" cy="168" r="24" fill="#1E293B" stroke="#475569" stroke-width="6"/>
+          <circle cx="235" cy="168" r="10" fill="#CBD5E1"/>
+        </svg>
+      `;
+    }
+
+    function loadRound() {
+      locked = false;
+      const stop = LONDON_STOPS[stopIndex % LONDON_STOPS.length];
+      const scene = document.getElementById('scene-area');
+      const tray = document.getElementById('tray');
+      tray.innerHTML = '';
+
+      if (mode === 'stop') {
+        currentPromptSpeech = `Wave to hail the red London bus to ${stop.name}!`;
+        document.getElementById('prompt-emoji').textContent = '🚏';
+        document.getElementById('prompt-text').textContent = `Hail Bus to ${stop. emoji} ${stop.name}!`;
+
+        scene.innerHTML = `
+          <div class="bus-stop-scene">
+            <div class="london-stop-post" onclick="completeHail()">
+              <div class="london-stop-sign">
+                <div style="font-size:1.8rem;">🚌</div>
+                <div class="london-stop-bar">BUS STOP</div>
+              </div>
+              <div class="london-stop-pole"></div>
+            </div>
+            <div class="double-decker-card arriving" id="bus-card" onclick="completeHail()">
+              ${getDoubleDeckerSVG(stop.route, stop.name)}
+              <div style="font-family:'Fredoka',sans-serif; font-size:1.35rem; color:#B91C1C;">
+                👋 Tap to Hail London Bus!
+              </div>
+            </div>
+          </div>
+        `;
+
+        tray.innerHTML = `
+          <button class="action-card" id="hail-btn" onclick="completeHail()">
+            <div class="card-emoji">👋</div>
+            <div class="card-label">HAIL BUS</div>
+          </button>
+        `;
+      } else if (mode === 'oyster') {
+        currentPromptSpeech = 'Tap your blue Oyster card on the yellow circle reader!';
+        document.getElementById('prompt-emoji').textContent = '💳';
+        document.getElementById('prompt-text').textContent = 'Tap Oyster on Yellow Circle!';
+
+        scene.innerHTML = `
+          <div class="oyster-reader-machine">
+            <div class="reader-screen" id="reader-screen">TOUCH OYSTER</div>
+            <div class="lights-row">
+              <div class="status-light amber" id="light-1"></div>
+              <div class="status-light" id="light-2"></div>
+              <div class="status-light" id="light-3"></div>
+            </div>
+            <div class="yellow-oyster-pad" id="oyster-pad" onclick="if(oneTap) completeOysterTap()">
+              <div style="font-size:2.4rem;">🟡</div>
+              <div class="oyster-pad-label">TAP OYSTER<br>HERE</div>
+            </div>
+          </div>
+
+          <div class="oyster-card" id="oyster-card" onclick="completeOysterTap()">
+            <div class="oyster-top">
+              <div class="oyster-logo">💳 oyster</div>
+              <div class="tfl-roundel">
+                <div class="tfl-circle"></div>
+                <div class="tfl-bar"></div>
+              </div>
+            </div>
+            <div class="oyster-bottom">
+              <span>🇬🇧 LONDON BUS</span>
+              <span>TAP ME ➔</span>
+            </div>
+          </div>
+        `;
+
+        setupOysterDrag();
+      } else if (mode === 'bell') {
+        currentPromptSpeech = stop.speech;
+        document.getElementById('prompt-emoji').textContent = stop.emoji;
+        document.getElementById('prompt-text').textContent = `Next Stop: ${stop.emoji} ${stop.name}`;
+
+        scene.innerHTML = `
+          <div class="double-decker-card" style="padding:14px 22px;">
+            ${getDoubleDeckerSVG(stop.route, stop.name)}
+            <div style="font-family:'Fredoka',sans-serif; font-size:1.3rem; color:#0F172A;">
+              📍 Next Stop: <strong>${stop.emoji} ${stop.name}</strong>
+            </div>
+          </div>
+
+          <div class="bell-pole-box">
+            <button class="red-stop-bell" id="stop-bell-btn" onclick="completeBellRing()">
+              <span style="font-size:4rem; line-height:1;">🔔</span>
+              <span class="bell-word">STOP</span>
+            </button>
+          </div>
+        `;
+
+        // Also offer 2 simple destination cards at the bottom
+        const otherStop = LONDON_STOPS[(stopIndex + 2) % LONDON_STOPS.length];
+        const choices = Math.random() > 0.5 ? [stop, otherStop] : [otherStop, stop];
+        choices.forEach(item => {
+          const card = document.createElement('button');
+          card.className = 'action-card';
+          card.innerHTML = `
+            <div class="card-emoji">${item.emoji}</div>
+            <div class="card-label">${item.name}</div>
+          `;
+          card.onclick = () => {
+            if (item.id === stop.id) {
+              card.classList.add('correct');
+              completeBellRing();
+            } else {
+              card.classList.add('wrong');
+              speak(stop.name);
+            }
+          };
+          tray.appendChild(card);
+        });
+      }
+
+      speak(currentPromptSpeech);
+    }
+
+    function setupOysterDrag() {
+      const card = document.getElementById('oyster-card');
+      const pad = document.getElementById('oyster-pad');
+      if (!card || !pad) return;
+
+      let dragging = false;
+      let startX = 0, startY = 0;
+
+      card.addEventListener('pointerdown', (e) => {
+        if (locked) return;
+        dragging = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        card.setPointerCapture(e.pointerId);
+      });
+
+      card.addEventListener('pointermove', (e) => {
+        if (!dragging || locked) return;
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+        card.style.transform = `translate(${dx}px, ${dy}px) scale(1.06)`;
+
+        const padRect = pad.getBoundingClientRect();
+        const cardRect = card.getBoundingClientRect();
+        const overlap = !(cardRect.right < padRect.left ||
+                          cardRect.left > padRect.right ||
+                          cardRect.bottom < padRect.top ||
+                          cardRect.top > padRect.bottom);
+        pad.classList.toggle('drag-over', overlap);
+      });
+
+      card.addEventListener('pointerup', () => {
+        if (!dragging || locked) return;
+        dragging = false;
+        if (pad.classList.contains('drag-over') || oneTap) {
+          completeOysterTap();
+        } else {
+          card.style.transform = '';
+        }
+      });
+    }
+
+    function completeHail() {
+      if (locked) return;
+      locked = true;
+      const btn = document.getElementById('hail-btn');
+      if (btn) btn.classList.add('correct');
+      playWinChime();
+      speak('Beep beep! The red London bus is here!');
+      rewardAndNext();
+    }
+
+    function completeOysterTap() {
+      if (locked) return;
+      locked = true;
+      const pad = document.getElementById('oyster-pad');
+      const screen = document.getElementById('reader-screen');
+      const l1 = document.getElementById('light-1');
+      const l2 = document.getElementById('light-2');
+      const l3 = document.getElementById('light-3');
+
+      if (pad) {
+        pad.classList.add('tapped');
+        pad.innerHTML = `<div style="font-size:3rem;">✅</div><div class="oyster-pad-label" style="color:#14532D;">BEEP! GO!</div>`;
+      }
+      if (screen) {
+        screen.classList.add('go');
+        screen.textContent = '✅ OYSTER OK!';
+      }
+      [l1, l2, l3].forEach(l => {
+        if (l) {
+          l.className = 'status-light green';
+        }
+      });
+
+      playOysterBeep();
+      setTimeout(() => speak('Beep! Oyster card accepted! Jump on the bus!'), 300);
+      rewardAndNext();
+    }
+
+    function completeBellRing() {
+      if (locked) return;
+      locked = true;
+      const bell = document.getElementById('stop-bell-btn');
+      if (bell) {
+        bell.classList.add('rung');
+        bell.innerHTML = `<span style="font-size:4rem;">✅</span><span class="bell-word">DING!</span>`;
+      }
+      const stop = LONDON_STOPS[stopIndex % LONDON_STOPS.length];
+      playBusBellDing();
+      setTimeout(() => speak(`Ding! Stopping at ${stop.name}!`), 350);
+      stopIndex++;
+      rewardAndNext();
+    }
+
+    function rewardAndNext() {
+      stars++;
+      document.getElementById('star-count').textContent = stars;
+      fireConfetti();
+      setTimeout(() => {
+        if (mode === 'stop') {
+          setMode('oyster');
+        } else if (mode === 'oyster') {
+          setMode('bell');
+        } else {
+          setMode('stop');
+        }
+      }, 2100);
+    }
+
+    // Confetti
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function fireConfetti() {
+      const colors = ['#DC2626', '#0284C7', '#FACC15', '#22C55E', '#A855F7'];
+      for (let i = 0; i < 45; i++) {
+        particles.push({
+          x: window.innerWidth / 2,
+          y: window.innerHeight / 2,
+          vx: (Math.random() - 0.5) * 16,
+          vy: (Math.random() - 0.8) * 16,
+          size: Math.random() * 10 + 6,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          life: 65
+        });
+      }
+      requestAnimationFrame(updateConfetti);
+    }
+
+    function updateConfetti() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles = particles.filter(p => p.life > 0);
+      particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.35;
+        p.life--;
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size / 2, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      if (particles.length > 0) requestAnimationFrame(updateConfetti);
+    }
+
+    window.addEventListener('DOMContentLoaded', loadRound);
+  </script>
+</body>
+</html>
