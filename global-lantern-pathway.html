@@ -2,50 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Global Lantern Pathway | Able &amp; Beyond</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Comic+Neue:wght@700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Global Lanterns Sensory | Able &amp; Beyond</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
-        :root {
-            --bg-cream: #FAF6F0;
-            --bg-card: #FFFFFF;
-            --bg-panel: #F3ECE1;
-            --sage-main: #4A7C59;
-            --sage-light: #E6F0E9;
-            --sage-border: #8FB399;
-            --gold-main: #C88A2B;
-            --gold-light: #FEF6E4;
-            --gold-border: #E5B869;
-            --earth-main: #B85D3B;
-            --earth-light: #FCEEE9;
-            --text-dark: #1E2923;
-            --text-muted: #4A5D52;
-            --border-soft: #D5CBB8;
-            --focus-scan: #F59E0B;
-            --font-scale: 1;
-            --font-family: 'Outfit', system-ui, -apple-system, sans-serif;
-            --letter-space: 0em;
-            --word-space: 0em;
-            --line-height: 1.45;
-        }
-
-        body.dyslexia-mode {
-            --bg-cream: #FDFBF7;
-            --bg-card: #FFFDF9;
-            --bg-panel: #F4EFE6;
-            --font-family: 'Comic Neue', 'Outfit', Verdana, Tahoma, sans-serif;
-            --letter-space: 0.055em;
-            --word-space: 0.14em;
-            --line-height: 1.7;
-        }
-
-        body.xlarge-text {
-            --font-scale: 1.22;
-        }
-
         * {
             box-sizing: border-box;
-            max-width: 100%;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         html, body {
@@ -54,620 +20,425 @@
             width: 100%;
             min-height: 100vh;
             overflow-x: hidden;
-            background-color: var(--bg-cream);
-            color: var(--text-dark);
-            font-family: var(--font-family);
-            letter-spacing: var(--letter-space);
-            word-spacing: var(--word-space);
-            line-height: var(--line-height);
-            font-size: calc(16px * var(--font-scale));
-            transition: background-color 0.25s ease, color 0.25s ease;
+            font-family: 'Outfit', system-ui, sans-serif;
+            background: #FAF6F0;
+            color: #1E293B;
+            transition: background 0.4s ease;
         }
 
-        /* High-Visibility Assistive & Switch Scan Highlight */
         button:focus-visible,
-        input:focus-visible,
-        textarea:focus-visible,
-        [tabindex="0"]:focus-visible,
-        .scan-active {
-            outline: 5px solid var(--focus-scan) !important;
-            outline-offset: 3px !important;
-            box-shadow: 0 0 0 8px rgba(245, 158, 11, 0.38) !important;
-            transform: translateY(-2px);
-            z-index: 20;
+        [tabindex="0"]:focus-visible {
+            outline: 6px solid #F59E0B !important;
+            outline-offset: 4px !important;
+            box-shadow: 0 0 0 10px rgba(245, 158, 11, 0.35) !important;
         }
 
-        .app-wrapper {
-            width: 100%;
-            max-width: 1280px;
+        .app {
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 14px 18px 48px 18px;
+            padding: 14px 18px 28px 18px;
             display: flex;
             flex-direction: column;
             gap: 16px;
+            min-height: 100vh;
         }
 
-        /* --- Top Navigation & Low-Arousal Accessibility Bar --- */
+        /* --- Simple Top Bar --- */
         .top-bar {
-            background: var(--bg-card);
-            border: 3px solid var(--border-soft);
-            border-radius: 22px;
-            padding: 14px 18px;
             display: flex;
-            flex-wrap: wrap;
             align-items: center;
             justify-content: space-between;
             gap: 12px;
-            box-shadow: 0 6px 18px rgba(30, 41, 35, 0.05);
-        }
-
-        .brand-Cluster {
-            display: flex;
-            align-items: center;
-            gap: 14px;
             flex-wrap: wrap;
         }
 
-        .hub-back-btn {
-            min-height: 68px;
-            padding: 12px 20px;
-            border-radius: 16px;
-            background: var(--bg-panel);
-            color: var(--text-dark);
-            border: 3px solid var(--border-soft);
+        .back-btn {
+            min-height: 76px;
+            padding: 12px 26px;
+            border-radius: 22px;
+            background: #FFFFFF;
+            color: #0F172A;
+            border: 4px solid #CBD5E1;
             font-family: inherit;
-            font-size: 1.05rem;
+            font-size: 1.5rem;
             font-weight: 800;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            box-shadow: 0 4px 0 var(--border-soft);
-        }
-
-        .hub-back-btn:active {
-            transform: translateY(3px);
-            box-shadow: 0 1px 0 var(--border-soft);
-        }
-
-        .brand-heading h1 {
-            margin: 0;
-            font-size: 1.55rem;
-            font-weight: 800;
-            color: var(--sage-main);
-            word-break: break-word;
-        }
-
-        .brand-heading p {
-            margin: 2px 0 0 0;
-            font-size: 0.95rem;
-            color: var(--text-muted);
-            font-weight: 600;
-        }
-
-        .a11y-toolbar {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            align-items: center;
-        }
-
-        .a11y-btn {
-            min-height: 68px;
-            padding: 10px 14px;
-            border-radius: 16px;
-            background: var(--bg-panel);
-            color: var(--text-dark);
-            border: 3px solid var(--border-soft);
-            font-family: inherit;
-            font-size: 0.92rem;
-            font-weight: 800;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 3px;
-            box-shadow: 0 4px 0 var(--border-soft);
-            text-align: center;
-        }
-
-        .a11y-btn.active-toggle {
-            background: var(--sage-main);
-            color: #FFFFFF;
-            border-color: #2E5239;
-            box-shadow: 0 4px 0 #2E5239;
-        }
-
-        /* --- Mode Switcher: Festival Hubs vs 14-Stage Curriculum Pathway --- */
-        .primary-nav-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 10px;
-        }
-
-        .nav-pill-btn {
-            min-height: 76px;
-            padding: 12px 16px;
-            border-radius: 18px;
-            background: var(--bg-card);
-            color: var(--text-dark);
-            border: 3px solid var(--border-soft);
-            font-family: inherit;
-            font-size: 1.05rem;
-            font-weight: 800;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
             gap: 12px;
-            text-align: left;
-            box-shadow: 0 5px 0 var(--border-soft);
-            transition: all 0.15s ease;
-        }
-
-        .nav-pill-btn.active {
-            background: var(--sage-main);
-            color: #FFFFFF;
-            border-color: #2E5239;
-            box-shadow: 0 5px 0 #2E5239;
-        }
-
-        .nav-pill-icon {
-            font-size: 2rem;
-            flex-shrink: 0;
-        }
-
-        /* --- Spoken Prompt & Switch Helper Bar --- */
-        .prompt-banner {
-            background: var(--gold-light);
-            border: 3px solid var(--gold-border);
-            border-radius: 20px;
-            padding: 14px 18px;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            gap: 14px;
-        }
-
-        .prompt-left {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            flex: 1;
-            min-width: 240px;
-        }
-
-        .speak-icon-btn {
-            min-width: 68px;
-            min-height: 68px;
-            border-radius: 16px;
-            background: var(--gold-main);
-            color: #FFFFFF;
-            border: 3px solid #966316;
-            font-size: 1.8rem;
             cursor: pointer;
-            box-shadow: 0 4px 0 #966316;
-            flex-shrink: 0;
+            box-shadow: 0 6px 0 #94A3B8;
         }
 
-        .prompt-title {
-            font-size: 1.25rem;
-            font-weight: 800;
-            color: var(--text-dark);
-            word-break: break-word;
-        }
-
-        .prompt-subtitle {
-            font-size: 0.95rem;
-            color: var(--text-muted);
-            font-weight: 600;
-            margin-top: 2px;
-        }
-
-        .pathway-badge {
-            background: var(--sage-light);
-            color: var(--sage-main);
-            border: 2px solid var(--sage-border);
-            padding: 8px 16px;
-            border-radius: 14px;
-            font-weight: 800;
-            font-size: 0.95rem;
-        }
-
-        /* --- Main Interactive Stage Container --- */
-        .workspace-card {
-            background: var(--bg-card);
-            border: 3px solid var(--border-soft);
-            border-radius: 24px;
-            padding: 22px;
-            box-shadow: 0 10px 26px rgba(30, 41, 35, 0.05);
-            overflow: hidden;
-        }
-
-        .sub-tabs-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 18px;
-            padding-bottom: 14px;
-            border-bottom: 2px solid var(--bg-panel);
-        }
-
-        .sub-tab-btn {
-            min-height: 60px;
-            padding: 10px 18px;
-            border-radius: 14px;
-            background: var(--bg-panel);
-            color: var(--text-dark);
-            border: 3px solid var(--border-soft);
-            font-family: inherit;
-            font-size: 1rem;
-            font-weight: 800;
-            cursor: pointer;
-        }
-
-        .sub-tab-btn.active {
-            background: var(--gold-main);
-            color: #FFFFFF;
-            border-color: #966316;
-        }
-
-        /* --- Interactive Cards & Grids --- */
-        .interactive-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 16px;
-            margin-top: 14px;
-        }
-
-        .sensory-tile {
-            min-height: 145px;
-            background: var(--bg-cream);
-            color: var(--text-dark);
-            border: 4px solid var(--border-soft);
-            border-radius: 22px;
-            padding: 18px;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            gap: 8px;
-            font-family: inherit;
-            box-shadow: 0 6px 0 var(--border-soft);
-            transition: transform 0.15s ease, background-color 0.2s ease, border-color 0.2s ease;
-            word-break: break-word;
-        }
-
-        .sensory-tile:hover {
-            border-color: var(--sage-main);
-        }
-
-        .sensory-tile:active {
+        .back-btn:active {
             transform: translateY(4px);
-            box-shadow: 0 2px 0 var(--border-soft);
+            box-shadow: 0 2px 0 #94A3B8;
         }
 
-        .sensory-tile.activated {
-            background: var(--sage-light);
-            border-color: var(--sage-main);
-            box-shadow: 0 6px 0 var(--sage-main);
-        }
-
-        .sensory-tile.gold-glow {
-            background: var(--gold-light);
-            border-color: var(--gold-main);
-            box-shadow: 0 0 22px rgba(200, 138, 43, 0.45);
-        }
-
-        .tile-emoji {
-            font-size: 3.3rem;
-            line-height: 1.1;
-        }
-
-        .tile-title {
-            font-size: 1.2rem;
-            font-weight: 800;
-        }
-
-        .tile-desc {
-            font-size: 0.95rem;
-            color: var(--text-muted);
-            font-weight: 600;
-        }
-
-        /* --- 14-Stage Curriculum Pathway Grid --- */
-        .band-section {
-            margin-bottom: 22px;
-            background: var(--bg-cream);
-            border: 3px solid var(--border-soft);
-            border-radius: 20px;
-            padding: 16px;
-        }
-
-        .band-header {
-            font-size: 1.2rem;
-            font-weight: 800;
-            color: var(--sage-main);
-            margin: 0 0 12px 0;
-        }
-
-        .levels-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(195px, 1fr));
-            gap: 10px;
-        }
-
-        .level-card-btn {
-            min-height: 82px;
-            padding: 12px 14px;
-            border-radius: 16px;
-            background: var(--bg-card);
-            color: var(--text-dark);
-            border: 3px solid var(--border-soft);
-            font-family: inherit;
-            font-size: 0.98rem;
-            font-weight: 800;
-            cursor: pointer;
-            text-align: left;
+        .top-controls {
             display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            gap: 4px;
-            box-shadow: 0 4px 0 var(--border-soft);
-        }
-
-        .level-card-btn.current-lvl {
-            background: var(--gold-light);
-            border-color: var(--gold-main);
-            box-shadow: 0 4px 0 var(--gold-main);
-        }
-
-        .level-card-btn.done-lvl {
-            background: var(--sage-light);
-            border-color: var(--sage-main);
-        }
-
-        /* --- Christmas Tree & Rangoli SVG Canvases --- */
-        .visual-stage-box {
-            display: flex;
-            flex-direction: column;
+            gap: 12px;
             align-items: center;
-            justify-content: center;
-            background: var(--bg-cream);
-            border: 3px solid var(--border-soft);
-            border-radius: 22px;
-            padding: 20px;
-            margin-top: 14px;
-            text-align: center;
         }
 
-        .action-pill-btn {
-            min-height: 74px;
-            padding: 14px 26px;
-            border-radius: 18px;
-            background: var(--sage-main);
-            color: #FFFFFF;
-            border: 3px solid #2E5239;
+        .icon-toggle-btn {
+            min-height: 76px;
+            padding: 12px 22px;
+            border-radius: 22px;
+            background: #FFFFFF;
+            color: #0F172A;
+            border: 4px solid #CBD5E1;
             font-family: inherit;
-            font-size: 1.15rem;
+            font-size: 1.35rem;
             font-weight: 800;
             cursor: pointer;
-            box-shadow: 0 5px 0 #2E5239;
-            margin: 8px;
             display: inline-flex;
             align-items: center;
             gap: 10px;
+            box-shadow: 0 6px 0 #94A3B8;
         }
 
-        .action-pill-btn.gold {
-            background: var(--gold-main);
-            border-color: #8A5A14;
-            box-shadow: 0 5px 0 #8A5A14;
+        .icon-toggle-btn.active {
+            background: #DCFCE7;
+            border-color: #22C55E;
+            color: #14532D;
+            box-shadow: 0 6px 0 #16A34A;
         }
 
-        .custom-text-input {
-            width: 100%;
-            max-width: 520px;
-            min-height: 68px;
-            padding: 14px 18px;
+        /* --- 4 Giant Picture Tabs --- */
+        .hub-tabs {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+
+        .hub-tab {
+            min-height: 110px;
+            border-radius: 26px;
+            background: #FFFFFF;
+            color: #1E293B;
+            border: 5px solid #CBD5E1;
             font-family: inherit;
-            font-size: 1.15rem;
-            font-weight: 700;
-            border-radius: 16px;
-            border: 3px solid var(--border-soft);
-            background: var(--bg-card);
-            color: var(--text-dark);
-            margin: 10px 0;
+            font-size: 1.65rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            box-shadow: 0 8px 0 #94A3B8;
+            transition: transform 0.15s ease, background 0.2s ease;
         }
 
-        /* Pulse ripple animation for gongs & lights */
-        @keyframes softPulse {
+        .hub-tab:active {
+            transform: translateY(5px);
+            box-shadow: 0 3px 0 #94A3B8;
+        }
+
+        .hub-tab-emoji {
+            font-size: 3.4rem;
+            line-height: 1;
+        }
+
+        .hub-tab.active-harvest {
+            background: #FEF3C7;
+            border-color: #D97706;
+            color: #78350F;
+            box-shadow: 0 8px 0 #B45309;
+        }
+
+        .hub-tab.active-diwali {
+            background: #EDE9FE;
+            border-color: #7C3AED;
+            color: #4C1D95;
+            box-shadow: 0 8px 0 #5B21B6;
+        }
+
+        .hub-tab.active-christmas {
+            background: #DCFCE7;
+            border-color: #16A34A;
+            color: #14532D;
+            box-shadow: 0 8px 0 #15803D;
+        }
+
+        .hub-tab.active-roots {
+            background: #FEE2E2;
+            border-color: #E11D48;
+            color: #881337;
+            box-shadow: 0 8px 0 #BE123C;
+        }
+
+        /* --- Giant Sensory Stage --- */
+        .stage-canvas {
+            flex: 1;
+            background: #FFFFFF;
+            border-radius: 32px;
+            border: 5px solid #CBD5E1;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 520px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
+            transition: background 0.4s ease, border-color 0.4s ease;
+        }
+
+        .stage-grid-2 {
+            width: 100%;
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            align-items: center;
+        }
+
+        /* --- Giant Interactive Picture Cards --- */
+        .big-pic-card {
+            background: #F8FAFC;
+            border: 5px solid #CBD5E1;
+            border-radius: 28px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            cursor: pointer;
+            min-height: 200px;
+            box-shadow: 0 8px 0 #94A3B8;
+            transition: transform 0.15s cubic-bezier(0.18, 1.3, 0.4, 1), background 0.25s;
+            font-family: inherit;
+        }
+
+        .big-pic-card:hover {
+            transform: scale(1.03);
+        }
+
+        .big-pic-card:active {
+            transform: scale(0.96) translateY(4px);
+        }
+
+        .big-pic-card.lit {
+            background: #FEF9C3;
+            border-color: #EAB308;
+            box-shadow: 0 8px 0 #CA8A04, 0 0 30px rgba(250, 204, 21, 0.5);
+        }
+
+        .giant-emoji {
+            font-size: 5.5rem;
+            line-height: 1.05;
+            filter: drop-shadow(0 6px 8px rgba(0,0,0,0.12));
+        }
+
+        .card-word {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #0F172A;
+            text-align: center;
+        }
+
+        /* Gong Animation */
+        .gong-button {
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, #FDE047 0%, #F59E0B 55%, #B45309 100%);
+            border: 10px solid #78350F;
+            box-shadow: 0 14px 30px rgba(120, 53, 15, 0.35), inset 0 0 30px rgba(255,255,255,0.5);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: transform 0.15s ease;
+        }
+
+        .gong-button:active {
+            transform: scale(0.93);
+        }
+
+        @keyframes gongRipple {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.75); }
+            70% { transform: scale(1.08); box-shadow: 0 0 0 55px rgba(245, 158, 11, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+        }
+
+        .gong-ringing {
+            animation: gongRipple 0.75s ease-out;
+        }
+
+        /* Diwali Night Sky */
+        .diwali-sky {
+            background: linear-gradient(180deg, #1E1B4B 0%, #311042 100%) !important;
+            border-color: #F59E0B !important;
+            color: #FFFFFF;
+        }
+
+        .diya-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+            gap: 20px;
+            width: 100%;
+            margin: auto 0;
+        }
+
+        .diya-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 28px;
+            padding: 20px 12px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 230px;
+            transition: all 0.25s ease;
+        }
+
+        .diya-btn.diya-lit {
+            background: radial-gradient(circle at 50% 35%, rgba(254, 240, 138, 0.38), rgba(245, 158, 11, 0.18));
+            border-color: #FACC15;
+            box-shadow: 0 0 35px rgba(250, 204, 21, 0.55);
+            transform: translateY(-4px);
+        }
+
+        @keyframes flameFlicker {
+            0% { transform: scale(1) rotate(-2deg); }
+            50% { transform: scale(1.1, 1.16) rotate(2deg); }
+            100% { transform: scale(0.97, 1.05) rotate(-1deg); }
+        }
+
+        .flame-anim {
+            transform-origin: 50% 85%;
+            animation: flameFlicker 0.6s infinite alternate ease-in-out;
+        }
+
+        /* Drum Bounce */
+        @keyframes drumBounce {
             0% { transform: scale(1); }
-            50% { transform: scale(1.06); }
+            35% { transform: scale(1.16) rotate(-3deg); }
             100% { transform: scale(1); }
         }
 
-        .pulse-once {
-            animation: softPulse 0.45s ease-out;
+        .drum-hit {
+            animation: drumBounce 0.35s ease-out;
         }
 
-        @media (max-width: 768px) {
-            .app-wrapper {
-                padding: 10px 12px 36px 12px;
+        /* Bottom Action Helper */
+        .bottom-bar {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 14px;
+        }
+
+        .big-action-pill {
+            min-height: 82px;
+            padding: 14px 32px;
+            border-radius: 24px;
+            background: #2563EB;
+            color: #FFFFFF;
+            border: 4px solid #1E3A8A;
+            font-family: inherit;
+            font-size: 1.55rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 6px 0 #1E3A8A;
+        }
+
+        .big-action-pill:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #1E3A8A;
+        }
+
+        @media (max-width: 820px) {
+            .hub-tabs {
+                grid-template-columns: repeat(2, 1fr);
             }
-            .top-bar, .workspace-card {
-                padding: 14px;
+            .stage-grid-2 {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
-    <div class="app-wrapper">
-        <!-- Accessible Low-Arousal Top Header -->
-        <header class="top-bar" role="banner">
-            <div class="brand-Cluster">
-                <a href="https://games.ableandbeyond.support/index.html" onclick="goBackHub(event)" class="hub-back-btn" data-scan="true">
-                    <span>⬅️</span>
-                    <span>Back to Hub</span>
-                </a>
-                <div class="brand-heading">
-                    <h1>🏮 The Global Lantern Pathway</h1>
-                    <p>Community, Environment &amp; the Wider World • Multisensory SEN Curriculum</p>
-                </div>
-            </div>
+    <div class="app">
+        <!-- Simple, Clean Top Bar -->
+        <header class="top-bar">
+            <a href="https://games.ableandbeyond.support/index.html" onclick="goHome(event)" class="back-btn">
+                <span>⬅️</span>
+                <span>Home</span>
+            </a>
 
-            <div class="a11y-toolbar" role="toolbar" aria-label="Accessibility Controls">
-                <button class="a11y-btn" id="btn-dyslexia" onclick="toggleDyslexiaMode()" data-scan="true" aria-pressed="false">
-                    <span style="font-size:1.4rem;">📖</span>
-                    <span>Dyslexia Font</span>
+            <div class="top-controls">
+                <button id="voice-btn" class="icon-toggle-btn active" onclick="toggleVoice()">
+                    <span id="voice-emoji">🔊</span>
+                    <span id="voice-text">Words: ON</span>
                 </button>
-                <button class="a11y-btn" id="btn-xlarge" onclick="toggleXLargeText()" data-scan="true" aria-pressed="false">
-                    <span style="font-size:1.4rem;">🔍</span>
-                    <span>Large Text</span>
-                </button>
-                <button class="a11y-btn" id="btn-scan" onclick="toggleSwitchScan()" data-scan="true" aria-pressed="false">
-                    <span style="font-size:1.4rem;">🎯</span>
-                    <span id="scan-label">Switch Scan: OFF</span>
-                </button>
-                <button class="a11y-btn active-toggle" id="btn-voice" onclick="toggleVoice()" data-scan="true" aria-pressed="true">
-                    <span style="font-size:1.4rem;" id="voice-icon">🔊</span>
-                    <span id="voice-label">Voice: ON</span>
+                <button class="icon-toggle-btn" onclick="resetCurrentScene()">
+                    <span>🔄</span>
+                    <span>Reset</span>
                 </button>
             </div>
         </header>
 
-        <!-- Primary Navigation: 4 Cultural Hubs + 14-Stage Curriculum Map -->
-        <nav class="primary-nav-grid" role="navigation" aria-label="Festival Hubs and Curriculum Map">
-            <button class="nav-pill-btn active" id="nav-pathway" onclick="openMainView('pathway')" data-scan="true">
-                <span class="nav-pill-icon">🗺️</span>
-                <div>
-                    <div>14-Stage Pathway</div>
-                    <div style="font-size:0.82rem; opacity:0.85;">Levels 1–14 Curriculum</div>
-                </div>
+        <!-- 4 Giant Picture Tabs (1 Word Each) -->
+        <nav class="hub-tabs" aria-label="Festivals">
+            <button id="tab-harvest" class="hub-tab active-harvest" onclick="openScene('harvest')">
+                <span class="hub-tab-emoji">🌾</span>
+                <span>Harvest</span>
             </button>
-            <button class="nav-pill-btn" id="nav-harvest" onclick="openMainView('harvest')" data-scan="true">
-                <span class="nav-pill-icon">🌾</span>
-                <div>
-                    <div>Hub 1: Harvest</div>
-                    <div style="font-size:0.82rem; opacity:0.85;">Grains &amp; Acoustic Gongs</div>
-                </div>
+            <button id="tab-diwali" class="hub-tab" onclick="openScene('diwali')">
+                <span class="hub-tab-emoji">🪔</span>
+                <span>Diwali</span>
             </button>
-            <button class="nav-pill-btn" id="nav-diwali" onclick="openMainView('diwali')" data-scan="true">
-                <span class="nav-pill-icon">🪔</span>
-                <div>
-                    <div>Hub 2: Diwali</div>
-                    <div style="font-size:0.82rem; opacity:0.85;">Diyas &amp; Rangoli Symmetry</div>
-                </div>
+            <button id="tab-christmas" class="hub-tab" onclick="openScene('christmas')">
+                <span class="hub-tab-emoji">🎄</span>
+                <span>Christmas</span>
             </button>
-            <button class="nav-pill-btn" id="nav-christmas" onclick="openMainView('christmas')" data-scan="true">
-                <span class="nav-pill-icon">🎄</span>
-                <div>
-                    <div>Hub 3: Christmas</div>
-                    <div style="font-size:0.82rem; opacity:0.85;">Baking, Tree &amp; Kindness</div>
-                </div>
-            </button>
-            <button class="nav-pill-btn" id="nav-roots" onclick="openMainView('roots')" data-scan="true">
-                <span class="nav-pill-icon">🥁</span>
-                <div>
-                    <div>Hub 4: Roots &amp; Rhythms</div>
-                    <div style="font-size:0.82rem; opacity:0.85;">Drumming &amp; Heritage Art</div>
-                </div>
+            <button id="tab-roots" class="hub-tab" onclick="openScene('roots')">
+                <span class="hub-tab-emoji">🥁</span>
+                <span>Drums</span>
             </button>
         </nav>
 
-        <!-- Spoken Instruction & Predictive Coding Banner -->
-        <section class="prompt-banner" aria-live="polite">
-            <div class="prompt-left">
-                <button class="speak-icon-btn" onclick="speakCurrentPrompt()" data-scan="true" aria-label="Read Prompt Aloud">🔊</button>
-                <div>
-                    <div class="prompt-title" id="prompt-title">Welcome to The Global Lantern Pathway!</div>
-                    <div class="prompt-subtitle" id="prompt-subtitle">Touch any card, use Arrow keys, or press Spacebar in Switch Scan mode to explore.</div>
-                </div>
-            </div>
-            <div class="pathway-badge" id="progress-badge">🌟 Stages Completed: 0 / 14</div>
-        </section>
-
-        <!-- Dynamic Interactive Workspace -->
-        <main id="workspace" class="workspace-card" role="main">
-            <!-- Rendered dynamically by JS -->
+        <!-- Giant Visual Stage -->
+        <main id="stage" class="stage-canvas" role="main">
+            <!-- Populated by JS -->
         </main>
     </div>
 
     <script>
-        // ============================================================================
-        // 1. STATE & LOCALSTORAGE MANAGEMENT
-        // ============================================================================
         const state = {
-            view: 'pathway', // 'pathway' | 'harvest' | 'diwali' | 'christmas' | 'roots'
-            currentLevel: 1,
-            completedLevels: [],
-            dyslexiaMode: false,
-            xlargeText: false,
+            scene: 'harvest', // 'harvest' | 'diwali' | 'christmas' | 'roots'
             voiceOn: true,
-            switchScanOn: false,
-            scanIndex: 0,
-            scanTimer: null,
-            // Hub-specific sub-states
-            harvestSub: 'gong', // 'gong' | 'sort'
-            harvestSorted: [],
-            diwaliSub: 'candles', // 'candles' | 'rangoli'
-            diyasLit: [false, false, false, false, false, false],
-            rangoliColors: ['#C88A2B', '#E11D48', '#0D9488', '#4A7C59', '#7C3AED', '#F59E0B'],
-            rangoliSelectedColor: '#C88A2B',
-            rangoliPetals: ['#F3ECE1', '#F3ECE1', '#F3ECE1', '#F3ECE1', '#F3ECE1', '#F3ECE1', '#F3ECE1', '#F3ECE1'],
-            christmasSub: 'baking', // 'baking' | 'tree' | 'textures' | 'hope'
-            bakingRecipe: 'mince', // 'mince' | 'fairy'
-            bakingStep: 0,
-            treeLightsOn: true,
-            treeLightTheme: 0,
-            treeOrnaments: [],
-            winterSorted: [],
-            hopeStars: [
-                { author: 'Community Star', text: 'Sharing warm smiles and kindness with friends' }
-            ],
-            rootsSub: 'drums', // 'drums' | 'art'
-            rootsTempoCount: 0,
-            rootsCanvasStripes: ['#E11D48', '#FACC15', '#16A34A', '#FACC15']
+            // Harvest
+            cropsInBasket: [false, false, false, false],
+            // Diwali
+            diwaliMode: 'lamps', // 'lamps' | 'flower'
+            lamps: [false, false, false, false, false],
+            flowerRings: ['#FDE68A', '#FBCFE8', '#A7F3D0', '#DDD6FE', '#FED7AA'],
+            // Christmas
+            christmasMode: 'tree', // 'tree' | 'pie'
+            treeLightColorIdx: 0,
+            treeBaubles: ['🔴', '🔔', '🌟'],
+            pieStep: 0,
+            // Roots
+            drumColors: ['#FEE2E2', '#FEF9C3', '#DCFCE7']
         };
 
-        function loadSavedState() {
-            try {
-                const savedLevels = localStorage.getItem('ab_lantern_completed');
-                if (savedLevels) state.completedLevels = JSON.parse(savedLevels);
-                if (localStorage.getItem('ab_lantern_dyslexia') === 'true') {
-                    state.dyslexiaMode = true;
-                    document.body.classList.add('dyslexia-mode');
-                    document.getElementById('btn-dyslexia').classList.add('active-toggle');
-                }
-                if (localStorage.getItem('ab_lantern_xlarge') === 'true') {
-                    state.xlargeText = true;
-                    document.body.classList.add('xlarge-text');
-                    document.getElementById('btn-xlarge').classList.add('active-toggle');
-                }
-            } catch (e) {}
-            updateProgressBadge();
-        }
-
-        function markLevelComplete(lvl) {
-            if (!state.completedLevels.includes(lvl)) {
-                state.completedLevels.push(lvl);
-                try {
-                    localStorage.setItem('ab_lantern_completed', JSON.stringify(state.completedLevels));
-                } catch (e) {}
-            }
-            updateProgressBadge();
-        }
-
-        function updateProgressBadge() {
-            const el = document.getElementById('progress-badge');
-            if (el) el.textContent = `🌟 Stages Completed: ${state.completedLevels.length} / 14`;
-        }
-
-        function goBackHub(e) {
+        function goHome(e) {
             if (window.location.hostname === 'games.ableandbeyond.support' || window.location.protocol === 'file:') {
                 e.preventDefault();
                 if (window.location.pathname.includes('/global-lantern-pathway/')) {
@@ -678,1087 +449,477 @@
             }
         }
 
-        // ============================================================================
-        // 2. WEB AUDIO SYNTHESIZER (GONGS, CHIMES, TALKING DRUMS, REGGAE PULSE)
-        // ============================================================================
+        // --- Web Audio API Synthesizer (Rich Musical Sounds) ---
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
         const audioCtx = AudioCtx ? new AudioCtx() : null;
 
-        function playSound(type, pitch = 440) {
+        function playSound(type, freq = 440) {
             if (!audioCtx) return;
             if (audioCtx.state === 'suspended') audioCtx.resume();
             const now = audioCtx.currentTime;
 
             if (type === 'gong') {
-                // Rich harmonic singing bowl / bronze gong
-                [pitch, pitch * 1.5, pitch * 2.02].forEach((freq, idx) => {
+                [220, 330, 443].forEach((f, idx) => {
                     const osc = audioCtx.createOscillator();
                     const gain = audioCtx.createGain();
                     osc.type = idx === 0 ? 'sine' : 'triangle';
-                    osc.frequency.setValueAtTime(freq, now);
-                    gain.gain.setValueAtTime(0.22 / (idx + 1), now);
-                    gain.gain.exponentialRampToValueAtTime(0.0008, now + 1.8);
+                    osc.frequency.setValueAtTime(f, now);
+                    gain.gain.setValueAtTime(0.28 / (idx + 1), now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 1.9);
                     osc.connect(gain);
                     gain.connect(audioCtx.destination);
                     osc.start(now);
-                    osc.stop(now + 1.85);
+                    osc.stop(now + 1.95);
                 });
-            } else if (type === 'chime') {
+            } else if (type === 'pop') {
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
                 osc.type = 'sine';
-                osc.frequency.setValueAtTime(pitch, now);
-                osc.frequency.exponentialRampToValueAtTime(pitch * 1.25, now + 0.18);
-                gain.gain.setValueAtTime(0.2, now);
-                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+                osc.frequency.setValueAtTime(freq, now);
+                osc.frequency.exponentialRampToValueAtTime(freq * 1.45, now + 0.12);
+                gain.gain.setValueAtTime(0.26, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
                 osc.start(now);
-                osc.stop(now + 0.36);
-            } else if (type === 'drum-bass' || type === 'drum-tone' || type === 'drum-slap') {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = type === 'drum-slap' ? 'triangle' : 'sine';
-                const startFreq = type === 'drum-bass' ? 115 : (type === 'drum-tone' ? 220 : 340);
-                const endFreq = type === 'drum-bass' ? 55 : (type === 'drum-tone' ? 140 : 180);
-                osc.frequency.setValueAtTime(startFreq, now);
-                osc.frequency.exponentialRampToValueAtTime(endFreq, now + 0.22);
-                gain.gain.setValueAtTime(0.32, now);
-                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.24);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start(now);
-                osc.stop(now + 0.25);
-            } else if (type === 'reggae-skank') {
-                // Warm triad chord pulse
-                [261.63, 329.63, 392.00].forEach((freq) => {
+                osc.stop(now + 0.17);
+            } else if (type === 'sparkle') {
+                [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => {
                     const osc = audioCtx.createOscillator();
                     const gain = audioCtx.createGain();
                     osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(freq, now);
-                    gain.gain.setValueAtTime(0.12, now);
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+                    osc.frequency.setValueAtTime(f, now + i * 0.06);
+                    gain.gain.setValueAtTime(0.22, now + i * 0.06);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.06 + 0.28);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now + i * 0.06);
+                    osc.stop(now + i * 0.06 + 0.3);
+                });
+            } else if (type === 'drum') {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, now);
+                osc.frequency.exponentialRampToValueAtTime(freq * 0.42, now + 0.24);
+                gain.gain.setValueAtTime(0.38, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.26);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.27);
+            } else if (type === 'reggae') {
+                [261.63, 329.63, 392.00].forEach(f => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(f, now);
+                    gain.gain.setValueAtTime(0.16, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
                     osc.connect(gain);
                     gain.connect(audioCtx.destination);
                     osc.start(now);
-                    osc.stop(now + 0.24);
-                });
-            } else if (type === 'celebrate') {
-                [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
-                    const osc = audioCtx.createOscillator();
-                    const gain = audioCtx.createGain();
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(freq, now + i * 0.09);
-                    gain.gain.setValueAtTime(0.22, now + i * 0.09);
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.09 + 0.35);
-                    osc.connect(gain);
-                    gain.connect(audioCtx.destination);
-                    osc.start(now + i * 0.09);
-                    osc.stop(now + i * 0.09 + 0.36);
+                    osc.stop(now + 0.26);
                 });
             }
         }
 
-        function speakText(text) {
+        // Short 1-2 Word Speech Only!
+        function sayWord(word) {
             if (!state.voiceOn) return;
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
-                const u = new SpeechSynthesisUtterance(text);
+                const u = new SpeechSynthesisUtterance(word);
                 u.rate = 0.9;
-                u.pitch = 1.02;
+                u.pitch = 1.05;
                 window.speechSynthesis.speak(u);
             }
         }
 
-        function setPrompt(title, subtitle, shouldSpeak = true) {
-            document.getElementById('prompt-title').textContent = title;
-            if (subtitle !== undefined) {
-                document.getElementById('prompt-subtitle').textContent = subtitle;
-            }
-            if (shouldSpeak) speakText(title);
-        }
-
-        function speakCurrentPrompt() {
-            playSound('chime', 520);
-            speakText(document.getElementById('prompt-title').textContent);
-        }
-
-        // ============================================================================
-        // 3. ACCESSIBILITY & SINGLE-SWITCH AUTO-SCAN ENGINE
-        // ============================================================================
-        function toggleDyslexiaMode() {
-            state.dyslexiaMode = !state.dyslexiaMode;
-            document.body.classList.toggle('dyslexia-mode', state.dyslexiaMode);
-            const btn = document.getElementById('btn-dyslexia');
-            btn.classList.toggle('active-toggle', state.dyslexiaMode);
-            btn.setAttribute('aria-pressed', String(state.dyslexiaMode));
-            try { localStorage.setItem('ab_lantern_dyslexia', String(state.dyslexiaMode)); } catch (e) {}
-            playSound('chime', 480);
-            setPrompt(state.dyslexiaMode ? 'Dyslexia-friendly font and spacing enabled.' : 'Standard font enabled.');
-        }
-
-        function toggleXLargeText() {
-            state.xlargeText = !state.xlargeText;
-            document.body.classList.toggle('xlarge-text', state.xlargeText);
-            const btn = document.getElementById('btn-xlarge');
-            btn.classList.toggle('active-toggle', state.xlargeText);
-            btn.setAttribute('aria-pressed', String(state.xlargeText));
-            try { localStorage.setItem('ab_lantern_xlarge', String(state.xlargeText)); } catch (e) {}
-            playSound('chime', 540);
-            setPrompt(state.xlargeText ? 'Extra-large text scaling enabled.' : 'Standard text size enabled.');
-        }
-
         function toggleVoice() {
             state.voiceOn = !state.voiceOn;
-            const btn = document.getElementById('btn-voice');
-            btn.classList.toggle('active-toggle', state.voiceOn);
-            btn.setAttribute('aria-pressed', String(state.voiceOn));
-            document.getElementById('voice-icon').textContent = state.voiceOn ? '🔊' : '🔇';
-            document.getElementById('voice-label').textContent = state.voiceOn ? 'Voice: ON' : 'Voice: OFF';
+            const btn = document.getElementById('voice-btn');
+            btn.classList.toggle('active', state.voiceOn);
+            document.getElementById('voice-emoji').textContent = state.voiceOn ? '🔊' : '🔇';
+            document.getElementById('voice-text').textContent = state.voiceOn ? 'Words: ON' : 'Words: OFF';
             if (!state.voiceOn && 'speechSynthesis' in window) window.speechSynthesis.cancel();
-            else speakText('Voice narration enabled');
         }
 
-        function toggleSwitchScan() {
-            state.switchScanOn = !state.switchScanOn;
-            const btn = document.getElementById('btn-scan');
-            btn.classList.toggle('active-toggle', state.switchScanOn);
-            btn.setAttribute('aria-pressed', String(state.switchScanOn));
-            document.getElementById('scan-label').textContent = state.switchScanOn ? 'Switch Scan: ON' : 'Switch Scan: OFF';
+        function openScene(sceneName) {
+            state.scene = sceneName;
+            playSound('pop', 440);
 
-            if (state.switchScanOn) {
-                state.scanIndex = 0;
-                startScanLoop();
-                setPrompt('Single-Switch Auto-Scan is ON! Press Spacebar or Enter when your choice glows gold.');
+            const tabs = ['harvest', 'diwali', 'christmas', 'roots'];
+            tabs.forEach(t => {
+                const el = document.getElementById(`tab-${t}`);
+                el.className = 'hub-tab' + (t === sceneName ? ` active-${t}` : '');
+            });
+
+            renderScene();
+        }
+
+        function resetCurrentScene() {
+            playSound('pop', 380);
+            if (state.scene === 'harvest') state.cropsInBasket = [false, false, false, false];
+            else if (state.scene === 'diwali') state.lamps = [false, false, false, false, false];
+            else if (state.scene === 'christmas') { state.treeBaubles = ['🔴', '🔔']; state.pieStep = 0; }
+            renderScene();
+        }
+
+        function renderScene() {
+            const stage = document.getElementById('stage');
+            stage.classList.toggle('diwali-sky', state.scene === 'diwali' && state.diwaliMode === 'lamps');
+
+            if (state.scene === 'harvest') renderHarvest(stage);
+            else if (state.scene === 'diwali') renderDiwali(stage);
+            else if (state.scene === 'christmas') renderChristmas(stage);
+            else if (state.scene === 'roots') renderRoots(stage);
+        }
+
+        // ============================================================================
+        // SCENE 1: HARVEST (GIANT GONG + 4 HUGE CROPS)
+        // ============================================================================
+        const CROPS = [
+            { emoji: '🎃', word: 'Pumpkin', pitch: 350 },
+            { emoji: '🌽', word: 'Corn', pitch: 420 },
+            { emoji: '🍎', word: 'Apple', pitch: 490 },
+            { emoji: '🌾', word: 'Wheat', pitch: 560 }
+        ];
+
+        function renderHarvest(stage) {
+            const cropsHtml = CROPS.map((c, idx) => {
+                const picked = state.cropsInBasket[idx];
+                return `
+                    <button class="big-pic-card ${picked ? 'lit' : ''}" onclick="tapHarvestCrop(${idx})">
+                        <span class="giant-emoji">${picked ? '🧺' + c.emoji : c.emoji}</span>
+                        <span class="card-word">${c.word}</span>
+                    </button>
+                `;
+            }).join('');
+
+            stage.innerHTML = `
+                <div class="stage-grid-2">
+                    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px;">
+                        <button id="gong-btn" class="gong-button" onclick="hitGong()" aria-label="Ring Golden Gong">
+                            <span style="font-size:5.5rem;">🔔</span>
+                            <span style="font-size:2rem; font-weight:800; color:#451A03;">GONG</span>
+                        </button>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; width:100%;">
+                        ${cropsHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        function hitGong() {
+            const btn = document.getElementById('gong-btn');
+            if (btn) {
+                btn.classList.remove('gong-ringing');
+                void btn.offsetWidth;
+                btn.classList.add('gong-ringing');
+            }
+            playSound('gong');
+            sayWord('Gong!');
+        }
+
+        function tapHarvestCrop(idx) {
+            state.cropsInBasket[idx] = !state.cropsInBasket[idx];
+            const c = CROPS[idx];
+            playSound('pop', c.pitch);
+            sayWord(c.word);
+
+            if (state.cropsInBasket.every(Boolean)) {
+                playSound('sparkle');
+                if (typeof confetti === 'function') confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+            }
+            renderScene();
+        }
+
+        // ============================================================================
+        // SCENE 2: DIWALI (5 GIANT GLOWING CLAY LAMPS + GIANT RANGOLI FLOWER)
+        // ============================================================================
+        function renderDiwali(stage) {
+            if (state.diwaliMode === 'lamps') {
+                const lampsHtml = state.lamps.map((isLit, idx) => `
+                    <button class="diya-btn ${isLit ? 'diya-lit' : ''}" onclick="tapDiya(${idx})" aria-label="Lamp ${idx + 1}">
+                        <svg viewBox="0 0 140 150" style="width:130px; height:140px; overflow:visible;">
+                            ${isLit ? `
+                                <!-- Glowing Aura & Flame -->
+                                <circle cx="70" cy="42" r="36" fill="rgba(250, 204, 21, 0.32)"/>
+                                <g class="flame-anim">
+                                    <path d="M 70 6 Q 94 38 70 64 Q 46 38 70 6 Z" fill="#F97316"/>
+                                    <path d="M 70 18 Q 84 40 70 58 Q 56 40 70 18 Z" fill="#FDE047"/>
+                                </g>
+                            ` : `
+                                <!-- Unlit Wick -->
+                                <line x1="70" y1="52" x2="70" y2="66" stroke="#94A3B8" stroke-width="5" stroke-linecap="round"/>
+                            `}
+                            <!-- Clay Bowl -->
+                            <path d="M 16 66 Q 70 82 124 66 L 106 116 Q 70 132 34 116 Z" fill="#D97706" stroke="#FDE68A" stroke-width="4"/>
+                            <path d="M 28 88 Q 70 100 112 88" fill="none" stroke="#FACC15" stroke-width="4"/>
+                        </svg>
+                        <span style="font-size:1.7rem; font-weight:800; color:#FFFFFF; margin-top:8px;">
+                            ${isLit ? '✨ Lit!' : 'Tap Lamp'}
+                        </span>
+                    </button>
+                `).join('');
+
+                stage.innerHTML = `
+                    <div class="diya-grid">${lampsHtml}</div>
+                    <div class="bottom-bar">
+                        <button class="big-action-pill" style="background:#F59E0B; border-color:#B45309; color:#0F172A;" onclick="lightAllLamps()">
+                            <span>✨ Light All</span>
+                        </button>
+                        <button class="big-action-pill" style="background:#EC4899; border-color:#9D174D;" onclick="state.diwaliMode='flower'; renderScene();">
+                            <span>🌸 Paint Flower</span>
+                        </button>
+                    </div>
+                `;
             } else {
-                stopScanLoop();
-                setPrompt('Switch Auto-Scan turned off.');
+                const r = state.flowerRings;
+                stage.innerHTML = `
+                    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; flex:1; width:100%;">
+                        <svg viewBox="0 0 340 340" style="width:320px; height:320px; cursor:pointer;" onclick="paintNextFlowerRing()">
+                            <circle cx="170" cy="170" r="158" fill="${r[0]}" stroke="#7C3AED" stroke-width="6"/>
+                            <polygon points="170,18 275,65 322,170 275,275 170,322 65,275 18,170 65,65" fill="${r[1]}" stroke="#7C3AED" stroke-width="6"/>
+                            <circle cx="170" cy="170" r="110" fill="${r[2]}" stroke="#7C3AED" stroke-width="6"/>
+                            <polygon points="170,65 242,98 275,170 242,242 170,275 98,242 65,170 98,98" fill="${r[3]}" stroke="#7C3AED" stroke-width="6"/>
+                            <circle cx="170" cy="170" r="55" fill="${r[4]}" stroke="#7C3AED" stroke-width="6"/>
+                        </svg>
+                    </div>
+                    <div class="bottom-bar">
+                        <button class="big-action-pill" style="background:#8B5CF6; border-color:#4C1D95;" onclick="paintNextFlowerRing()">
+                            <span>🎨 Tap to Colour</span>
+                        </button>
+                        <button class="big-action-pill" style="background:#F59E0B; border-color:#B45309; color:#0F172A;" onclick="state.diwaliMode='lamps'; renderScene();">
+                            <span>🪔 Back to Lamps</span>
+                        </button>
+                    </div>
+                `;
             }
         }
 
-        function getScannableElements() {
-            return Array.from(document.querySelectorAll('#workspace button:not(:disabled), #workspace [data-scan="true"], .primary-nav-grid button'))
-                .filter(el => el.offsetParent !== null);
+        function tapDiya(idx) {
+            state.lamps[idx] = !state.lamps[idx];
+            playSound('pop', 440 + idx * 65);
+            sayWord('Light!');
+            if (state.lamps.every(Boolean)) {
+                playSound('sparkle');
+                if (typeof confetti === 'function') confetti({ particleCount: 150, spread: 90, origin: { y: 0.5 } });
+            }
+            renderScene();
         }
 
-        function startScanLoop() {
-            stopScanLoop();
-            const items = getScannableElements();
-            if (items.length > 0) highlightScanItem(items, 0);
-
-            state.scanTimer = setInterval(() => {
-                const currentItems = getScannableElements();
-                if (!currentItems.length) return;
-                state.scanIndex = (state.scanIndex + 1) % currentItems.length;
-                highlightScanItem(currentItems, state.scanIndex);
-            }, 2200);
+        function lightAllLamps() {
+            state.lamps = [true, true, true, true, true];
+            playSound('sparkle');
+            sayWord('Bright lights!');
+            if (typeof confetti === 'function') confetti({ particleCount: 150, spread: 90, origin: { y: 0.5 } });
+            renderScene();
         }
 
-        function highlightScanItem(items, idx) {
-            document.querySelectorAll('.scan-active').forEach(el => el.classList.remove('scan-active'));
-            const target = items[idx];
-            if (target) {
-                target.classList.add('scan-active');
-                target.focus({ preventScroll: false });
+        const BRIGHT_COLORS = ['#F43F5E', '#FACC15', '#10B981', '#38BDF8', '#A855F7', '#FB923C'];
+        let colorCursor = 0;
+
+        function paintNextFlowerRing() {
+            colorCursor = (colorCursor + 1) % BRIGHT_COLORS.length;
+            state.flowerRings.unshift(BRIGHT_COLORS[colorCursor]);
+            state.flowerRings.pop();
+            playSound('sparkle');
+            sayWord('Colours!');
+            renderScene();
+        }
+
+        // ============================================================================
+        // SCENE 3: CHRISTMAS (GIANT INTERACTIVE TREE + 3-TAP PIE MAKER)
+        // ============================================================================
+        function renderChristmas(stage) {
+            if (state.christmasMode === 'tree') {
+                const lightPalettes = [
+                    ['#FACC15', '#EF4444', '#38BDF8'],
+                    ['#34D399', '#FDE047', '#F472B6'],
+                    ['#A855F7', '#38BDF8', '#FACC15']
+                ];
+                const cols = lightPalettes[state.treeLightColorIdx];
+                const coords = [
+                    { x: 160, y: 120 }, { x: 125, y: 168 }, { x: 192, y: 165 },
+                    { x: 108, y: 218 }, { x: 160, y: 212 }, { x: 210, y: 220 },
+                    { x: 92, y: 268 }, { x: 148, y: 272 }, { x: 205, y: 268 }, { x: 235, y: 262 }
+                ];
+
+                const baublesSvg = state.treeBaubles.map((b, i) => {
+                    const pt = coords[i % coords.length];
+                    return `<text x="${pt.x}" y="${pt.y}" font-size="32" text-anchor="middle">${b}</text>`;
+                }).join('');
+
+                stage.innerHTML = `
+                    <div class="stage-grid-2">
+                        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer;" onclick="decorateTree('🌟', 'Star!')">
+                            <svg viewBox="0 0 320 330" style="width:100%; max-width:340px; height:auto; filter:drop-shadow(0 10px 16px rgba(0,0,0,0.12));">
+                                <!-- Trunk -->
+                                <rect x="138" y="280" width="44" height="44" rx="6" fill="#78350F"/>
+                                <!-- Pine Branches -->
+                                <polygon points="160,22 235,125 85,125" fill="#15803D" stroke="#14532D" stroke-width="4" stroke-linejoin="round"/>
+                                <polygon points="160,78 265,205 55,205" fill="#16A34A" stroke="#14532D" stroke-width="4" stroke-linejoin="round"/>
+                                <polygon points="160,142 290,285 30,285" fill="#22C55E" stroke="#14532D" stroke-width="4" stroke-linejoin="round"/>
+                                <!-- Giant Top Star -->
+                                <polygon points="160,2 168,20 188,22 173,35 177,54 160,44 143,54 147,35 132,22 152,20" fill="#FACC15" stroke="#CA8A04" stroke-width="3"/>
+                                <!-- Twinkling Lights -->
+                                <circle cx="145" cy="95" r="8" fill="${cols[0]}"/>
+                                <circle cx="180" cy="102" r="8" fill="${cols[1]}"/>
+                                <circle cx="115" cy="155" r="9" fill="${cols[2]}"/>
+                                <circle cx="162" cy="150" r="9" fill="${cols[0]}"/>
+                                <circle cx="205" cy="158" r="9" fill="${cols[1]}"/>
+                                <circle cx="85" cy="238" r="9" fill="${cols[1]}"/>
+                                <circle cx="135" cy="245" r="9" fill="${cols[2]}"/>
+                                <circle cx="185" cy="240" r="9" fill="${cols[0]}"/>
+                                <circle cx="235" cy="235" r="9" fill="${cols[2]}"/>
+                                ${baublesSvg}
+                            </svg>
+                        </div>
+
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; width:100%;">
+                            <button class="big-pic-card lit" onclick="switchTreeLights()">
+                                <span class="giant-emoji">💡</span>
+                                <span class="card-word">Lights</span>
+                            </button>
+                            <button class="big-pic-card" onclick="decorateTree('🔴', 'Bauble!')">
+                                <span class="giant-emoji">🔴</span>
+                                <span class="card-word">Bauble</span>
+                            </button>
+                            <button class="big-pic-card" onclick="decorateTree('🔔', 'Bell!')">
+                                <span class="giant-emoji">🔔</span>
+                                <span class="card-word">Bell</span>
+                            </button>
+                            <button class="big-pic-card" style="background:#FEF3C7; border-color:#F59E0B;" onclick="state.christmasMode='pie'; renderScene();">
+                                <span class="giant-emoji">🥧</span>
+                                <span class="card-word">Bake Pie</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            } else {
+                const pieStages = [
+                    { emoji: '🥣', word: '1. Mix Bowl' },
+                    { emoji: '🍇', word: '2. Add Fruit' },
+                    { emoji: '🥧✨', word: '3. Yummy Pie!' }
+                ];
+                stage.innerHTML = `
+                    <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:20px; width:100%; flex:1; align-items:center;">
+                        ${pieStages.map((p, idx) => `
+                            <button class="big-pic-card ${idx <= state.pieStep ? 'lit' : ''}" style="min-height:280px;" onclick="tapPieStep(${idx})">
+                                <span class="giant-emoji" style="font-size:6.5rem;">${p.emoji}</span>
+                                <span class="card-word">${p.word}</span>
+                            </button>
+                        `).join('')}
+                    </div>
+                    <div class="bottom-bar">
+                        <button class="big-action-pill" style="background:#16A34A; border-color:#14532D;" onclick="state.christmasMode='tree'; renderScene();">
+                            <span>🎄 Back to Tree</span>
+                        </button>
+                    </div>
+                `;
             }
         }
 
-        function stopScanLoop() {
-            if (state.scanTimer) {
-                clearInterval(state.scanTimer);
-                state.scanTimer = null;
-            }
-            document.querySelectorAll('.scan-active').forEach(el => el.classList.remove('scan-active'));
+        function switchTreeLights() {
+            state.treeLightColorIdx = (state.treeLightColorIdx + 1) % 3;
+            playSound('sparkle');
+            sayWord('Lights!');
+            renderScene();
         }
 
+        function decorateTree(ornament, spoken) {
+            if (state.treeBaubles.length >= 10) state.treeBaubles = [];
+            state.treeBaubles.push(ornament);
+            playSound('pop', 500 + state.treeBaubles.length * 35);
+            sayWord(spoken);
+            if (state.treeBaubles.length % 5 === 0 && typeof confetti === 'function') {
+                confetti({ particleCount: 90, spread: 70, origin: { y: 0.6 } });
+            }
+            renderScene();
+        }
+
+        function tapPieStep(idx) {
+            state.pieStep = idx;
+            if (idx === 2) {
+                playSound('sparkle');
+                sayWord('Yummy Pie!');
+                if (typeof confetti === 'function') confetti({ particleCount: 140, spread: 80, origin: { y: 0.6 } });
+            } else {
+                playSound('pop', 420 + idx * 90);
+                sayWord(idx === 0 ? 'Mix!' : 'Fruit!');
+            }
+            renderScene();
+        }
+
+        // ============================================================================
+        // SCENE 4: ROOTS & RHYTHMS (3 GIANT DRUMS THAT BOUNCE & PLAY MUSIC)
+        // ============================================================================
+        function renderRoots(stage) {
+            stage.innerHTML = `
+                <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:22px; width:100%; flex:1; align-items:center;">
+                    <button id="drum-1" class="big-pic-card" style="min-height:320px; background:#FEE2E2; border-color:#E11D48; box-shadow:0 10px 0 #BE123C;"
+                            onclick="hitDrum('drum-1', 'drum', 115, 'Big Drum!')">
+                        <span class="giant-emoji" style="font-size:7rem;">🥁</span>
+                        <span class="card-word" style="color:#881337;">Big Drum</span>
+                    </button>
+
+                    <button id="drum-2" class="big-pic-card" style="min-height:320px; background:#FEF9C3; border-color:#EAB308; box-shadow:0 10px 0 #CA8A04;"
+                            onclick="hitDrum('drum-2', 'drum', 230, 'Talking Drum!')">
+                        <span class="giant-emoji" style="font-size:7rem;">🪘</span>
+                        <span class="card-word" style="color:#713F12;">Talking Drum</span>
+                    </button>
+
+                    <button id="drum-3" class="big-pic-card" style="min-height:320px; background:#DCFCE7; border-color:#16A34A; box-shadow:0 10px 0 #15803D;"
+                            onclick="hitDrum('drum-3', 'reggae', 330, 'Music!')">
+                        <span class="giant-emoji" style="font-size:7rem;">🎶</span>
+                        <span class="card-word" style="color:#14532D;">Reggae Music</span>
+                    </button>
+                </div>
+            `;
+        }
+
+        function hitDrum(btnId, soundType, freq, word) {
+            const el = document.getElementById(btnId);
+            if (el) {
+                el.classList.remove('drum-hit');
+                void el.offsetWidth;
+                el.classList.add('drum-hit');
+            }
+            playSound(soundType, freq);
+            sayWord(word);
+        }
+
+        // --- Single-Switch / Spacebar Instant Action Support ---
         window.addEventListener('keydown', (e) => {
-            if (document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA')) {
-                return;
-            }
-            if (state.switchScanOn && (e.key === ' ' || e.key === 'Enter')) {
-                const activeScanEl = document.querySelector('.scan-active');
-                if (activeScanEl) {
-                    e.preventDefault();
-                    activeScanEl.click();
-                    return;
-                }
-            }
-            if (['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp'].includes(e.key)) {
-                const items = getScannableElements();
-                if (!items.length) return;
+            if (e.key === ' ' || e.key === 'Enter') {
                 e.preventDefault();
-                const currentIdx = items.indexOf(document.activeElement);
-                if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-                    const next = currentIdx >= 0 ? (currentIdx + 1) % items.length : 0;
-                    items[next].focus();
-                } else {
-                    const prev = currentIdx > 0 ? currentIdx - 1 : items.length - 1;
-                    items[prev].focus();
+                if (state.scene === 'harvest') {
+                    hitGong();
+                } else if (state.scene === 'diwali') {
+                    if (state.diwaliMode === 'lamps') {
+                        const nextUnlit = state.lamps.indexOf(false);
+                        if (nextUnlit !== -1) tapDiya(nextUnlit);
+                        else { state.lamps = [false, false, false, false, false]; tapDiya(0); }
+                    } else {
+                        paintNextFlowerRing();
+                    }
+                } else if (state.scene === 'christmas') {
+                    decorateTree('🌟', 'Star!');
+                } else if (state.scene === 'roots') {
+                    const pick = Math.floor(Math.random() * 3) + 1;
+                    if (pick === 1) hitDrum('drum-1', 'drum', 115, 'Big Drum!');
+                    else if (pick === 2) hitDrum('drum-2', 'drum', 230, 'Talking Drum!');
+                    else hitDrum('drum-3', 'reggae', 330, 'Music!');
                 }
             }
         });
 
-        // ============================================================================
-        // 4. THE 14-STAGE CURRICULUM PATHWAY DEFINITIONS
-        // ============================================================================
-        const CURRICULUM_STAGES = [
-            // Levels 1-3: Experience, Exploration, Response (Pre-Formal PMLD & Explorers)
-            {
-                lvl: 1, band: 'Levels 1–3: Experience, Exploration & Response (Pre-Formal / Explorers)',
-                stageName: 'Level 1: Experience',
-                title: 'Warm Lantern Light & Glow',
-                prompt: 'Level 1 (Experience): Tap or press your switch to glow the warm winter lanterns and hear calm harmonic chimes.',
-                items: [
-                    { emoji: '🏮', title: 'Golden Paper Lantern', desc: 'Warm amber glow & soft chime', sound: 'gong', pitch: 293.66 },
-                    { emoji: '🕯️', title: 'Calm Candlelight', desc: 'Gentle flickering warmth', sound: 'gong', pitch: 349.23 },
-                    { emoji: '✨', title: 'Starlight Twinkle', desc: 'Soft night sky shimmer', sound: 'gong', pitch: 440.00 }
-                ]
-            },
-            {
-                lvl: 2, band: 'Levels 1–3: Experience, Exploration & Response (Pre-Formal / Explorers)',
-                stageName: 'Level 2: Exploration',
-                title: 'Festival Aromas, Textures & Acoustic Gongs',
-                prompt: 'Level 2 (Exploration): Explore the sensory scents, textures, and singing bowls of autumn and winter festivals!',
-                items: [
-                    { emoji: '🔔', title: 'Harvest Bronze Gong', desc: 'Deep resonant acoustic vibration', sound: 'gong', pitch: 220 },
-                    { emoji: '🫚', title: 'Warm Cinnamon & Spices', desc: 'Sweet, cozy festive aroma', sound: 'chime', pitch: 493.88 },
-                    { emoji: '🌲', title: 'Fresh Pine Needles', desc: 'Crisp winter forest scent & texture', sound: 'chime', pitch: 587.33 },
-                    { emoji: '🌾', title: 'Golden Wheat Sheaf', desc: 'Dry, rustling harvest grain', sound: 'chime', pitch: 659.25 }
-                ]
-            },
-            {
-                lvl: 3, band: 'Levels 1–3: Experience, Exploration & Response (Pre-Formal / Explorers)',
-                stageName: 'Level 3: Response',
-                title: 'Participatory Rhythm & Movement Pulse',
-                prompt: 'Level 3 (Response): Join the celebration! Tap any drum or bell to create an instant rhythm and movement response.',
-                items: [
-                    { emoji: '🥁', title: 'Nigerian Talking Drum', desc: 'Warm bass beat — Sway side to side!', sound: 'drum-bass', pitch: 120 },
-                    { emoji: '🪇', title: 'Festival Maracas', desc: 'Shake and tap your hands!', sound: 'drum-slap', pitch: 340 },
-                    { emoji: '🎶', title: 'Reggae Rhythm Pulse', desc: 'Calm upbeat island chord', sound: 'reggae-skank', pitch: 300 }
-                ]
-            },
-            // Levels 4-6: Anticipation, Initiation, Persistence (Discoverers)
-            {
-                lvl: 4, band: 'Levels 4–6: Anticipation, Initiation & Persistence (Discoverers)',
-                stageName: 'Level 4: Anticipation',
-                title: 'Predictable 1-2-3 Lantern Countdown',
-                prompt: 'Level 4 (Anticipation): Tap 1, then 2, then 3 in predictable order to launch the big Festival Lantern!',
-                items: [
-                    { emoji: '1️⃣', title: 'Step 1: Ready...', desc: 'Low chime — Getting ready!', sound: 'chime', pitch: 330 },
-                    { emoji: '2️⃣', title: 'Step 2: Steady...', desc: 'Middle chime — Almost there!', sound: 'chime', pitch: 440 },
-                    { emoji: '3️⃣', title: 'Step 3: Glow! 🏮', desc: 'High celebration gong!', sound: 'celebrate', pitch: 660 }
-                ]
-            },
-            {
-                lvl: 5, band: 'Levels 4–6: Anticipation, Initiation & Persistence (Discoverers)',
-                stageName: 'Level 5: Initiation',
-                title: 'Switch-Activated Chime & Fairy Light Loop',
-                prompt: 'Level 5 (Initiation): Initiate the lights! Tap each fairy light strand to light up the community tree.',
-                items: [
-                    { emoji: '💛', title: 'Warm Gold Fairy Lights', desc: 'Light up the bottom branches', sound: 'chime', pitch: 440 },
-                    { emoji: '💚', title: 'Sage Mint Fairy Lights', desc: 'Light up the middle branches', sound: 'chime', pitch: 554.37 },
-                    { emoji: '🌟', title: 'Shining Top Star', desc: 'Crown the tree with light!', sound: 'celebrate', pitch: 659.25 }
-                ]
-            },
-            {
-                lvl: 6, band: 'Levels 4–6: Anticipation, Initiation & Persistence (Discoverers)',
-                stageName: 'Level 6: Persistence',
-                title: 'Independent Festival Sensory Choice Board',
-                prompt: 'Level 6 (Persistence): Make an independent choice! Which festival sensory experience would you like to explore?',
-                items: [
-                    { emoji: '🪔', title: 'I choose Diwali Diyas', desc: 'Warm clay lamps & Rangoli art', sound: 'gong', pitch: 392 },
-                    { emoji: '🥧', title: 'I choose Festive Baking', desc: 'Sweet mince pies & fairy cakes', sound: 'chime', pitch: 523.25 },
-                    { emoji: '🥁', title: 'I choose Roots Drumming', desc: 'Rhythmic African & Reggae beats', sound: 'drum-tone', pitch: 220 }
-                ]
-            },
-            // Levels 7-10: Realisation, Classification, Application, Consolidation (Investigators)
-            {
-                lvl: 7, band: 'Levels 7–10: Realisation, Classification, Application & Consolidation (Investigators)',
-                stageName: 'Level 7: Realisation',
-                title: 'Matching Candles to Diwali & Dates to Eid',
-                prompt: 'Level 7 (Realisation): Tap each cultural artifact to match it with its celebration!',
-                items: [
-                    { emoji: '🪔', title: 'Clay Diya Candle ➔ Diwali', desc: 'Symbolizes light triumphing over darkness in Diwali', sound: 'chime', pitch: 523.25 },
-                    { emoji: '🌴', title: 'Sweet Dates & Lantern ➔ Eid', desc: 'Shared with family and friends to break the fast at Eid', sound: 'chime', pitch: 587.33 },
-                    { emoji: '🌙', title: 'Crescent Moon & Star ➔ Eid', desc: 'Marks the sighting of the new moon for Eid celebrations', sound: 'chime', pitch: 659.25 }
-                ]
-            },
-            {
-                lvl: 8, band: 'Levels 7–10: Realisation, Classification, Application & Consolidation (Investigators)',
-                stageName: 'Level 8: Classification',
-                title: 'Sorting Harvest Grains & Christmas Traditions',
-                prompt: 'Level 8 (Classification): Classify each festival symbol into Harvest Festival or Christmas!',
-                items: [
-                    { emoji: '🌾', title: 'Wheat & Vegetable Basket ➔ Harvest', desc: 'Celebrating autumn crops and food from the earth', sound: 'gong', pitch: 349.23 },
-                    { emoji: '🧦', title: 'Festive Stocking ➔ Christmas', desc: 'Hung up for winter holiday gifts and treats', sound: 'chime', pitch: 523.25 },
-                    { emoji: '🥧', title: 'Spiced Mince Pies ➔ Christmas', desc: 'Traditional sweet winter pastry shared in December', sound: 'chime', pitch: 659.25 },
-                    { emoji: '🎄', title: 'Evergreen Tree & Lights ➔ Christmas', desc: 'Decorated with ornaments and glowing fairy lights', sound: 'celebrate', pitch: 783.99 }
-                ]
-            },
-            {
-                lvl: 9, band: 'Levels 7–10: Realisation, Classification, Application & Consolidation (Investigators)',
-                stageName: 'Level 9: Application',
-                title: 'Hands-On Festival Creation (Baking & Rangoli)',
-                prompt: 'Level 9 (Application): Apply your skills! Jump into our Diwali Rangoli Studio or Christmas Baking Kitchen.',
-                items: [
-                    { emoji: '🌸', title: 'Open Rangoli Symmetry Studio', desc: 'Create symmetrical Diwali floor art', actionHub: 'diwali' },
-                    { emoji: '🧁', title: 'Open Festive Baking Kitchen', desc: 'Bake mince pies and fairy cakes step by step', actionHub: 'christmas' },
-                    { emoji: '🥁', title: 'Open Roots & Rhythms Studio', desc: 'Play Nigerian drums and create Red-Gold-Green art', actionHub: 'roots' }
-                ]
-            },
-            {
-                lvl: 10, band: 'Levels 7–10: Realisation, Classification, Application & Consolidation (Investigators)',
-                stageName: 'Level 10: Consolidation',
-                title: 'Global Celebrations Symbol Match',
-                prompt: 'Level 10 (Consolidation): Review all four global celebrations and how communities celebrate together!',
-                items: [
-                    { emoji: '🌾', title: 'Harvest: Thankfulness for Food', desc: 'Grains, pumpkins, and sharing produce', sound: 'gong', pitch: 330 },
-                    { emoji: '🪔', title: 'Diwali: Festival of Lights', desc: 'Diyas, Rangoli patterns, and family joy', sound: 'chime', pitch: 440 },
-                    { emoji: '🎄', title: 'Christmas: Winter Light & Giving', desc: 'Evergreen trees, mince pies, and kindness', sound: 'chime', pitch: 554.37 },
-                    { emoji: '🥁', title: 'Roots & Rhythms: Heritage & Unity', desc: 'Nigerian drumming, reggae tempo, and Red-Gold-Green art', sound: 'reggae-skank', pitch: 440 }
-                ]
-            },
-            // Levels 11-14: Reasoning, Connection, Justification, Generalisation (Apprentices)
-            {
-                lvl: 11, band: 'Levels 11–14: Reasoning, Connection, Justification & Generalisation (Apprentices)',
-                stageName: 'Level 11: Reasoning',
-                title: 'Why Do Cultures Light Lanterns in Winter?',
-                prompt: 'Level 11 (Reasoning): Why do so many festivals around the world use candles, lanterns, and fairy lights during autumn and winter?',
-                items: [
-                    { emoji: '☀️', title: 'Bringing Warmth When Days Are Short', desc: 'In winter the sun sets early, so lights help us feel warm and safe', sound: 'chime', pitch: 493.88 },
-                    { emoji: '🤝', title: 'Welcoming Friends & Neighbours', desc: 'A glowing lantern in the window shows everyone is welcome', sound: 'chime', pitch: 587.33 },
-                    { emoji: '🌟', title: 'Symbol of Hope & Kindness', desc: 'Light reminds communities of hope and new beginnings', sound: 'celebrate', pitch: 659.25 }
-                ]
-            },
-            {
-                lvl: 12, band: 'Levels 11–14: Reasoning, Connection, Justification & Generalisation (Apprentices)',
-                stageName: 'Level 12: Connection',
-                title: 'Connecting My Family Traditions to the World',
-                prompt: 'Level 12 (Connection): How do your own home celebrations (like birthdays, winter meals, or gifting) connect to global festivals?',
-                items: [
-                    { emoji: '🎂', title: 'Birthday Candles & Diwali Diyas', desc: 'Both use glowing flames to celebrate special moments with people we love!', sound: 'chime', pitch: 523.25 },
-                    { emoji: '🍽️', title: 'Family Meals & Harvest / Eid Feasts', desc: 'Sharing special food brings families and communities together', sound: 'chime', pitch: 587.33 },
-                    { emoji: '🎁', title: 'Giving Gifts & Acts of Kindness', desc: 'Thoughtful presents and helping others spread joy all year round', sound: 'celebrate', pitch: 659.25 }
-                ]
-            },
-            {
-                lvl: 13, band: 'Levels 11–14: Reasoning, Connection, Justification & Generalisation (Apprentices)',
-                stageName: 'Level 13: Justification',
-                title: 'Communicating & Justifying My Festival Preference',
-                prompt: 'Level 13 (Justification): Which festival activity do you enjoy most, and why? Select a symbol card or type your own reason below!',
-                hasCustomInput: true,
-                items: [
-                    { emoji: '🎶', title: 'I like Music & Drumming best', desc: '"Because rhythmic beats make me feel happy and energized."', sound: 'reggae-skank', pitch: 440 },
-                    { emoji: '🕯️', title: 'I like Calm Lights & Lanterns best', desc: '"Because soft glowing lights help my body feel calm and peaceful."', sound: 'gong', pitch: 392 },
-                    { emoji: '🧁', title: 'I like Festive Baking & Food best', desc: '"Because I enjoy mixing ingredients and sharing treats with friends."', sound: 'chime', pitch: 523.25 }
-                ]
-            },
-            {
-                lvl: 14, band: 'Levels 11–14: Reasoning, Connection, Justification & Generalisation (Apprentices)',
-                stageName: 'Level 14: Generalisation',
-                title: 'Community Day of Hope — Share a Kindness Star',
-                prompt: 'Level 14 (Generalisation): Apply what we learned about global unity! Create a Star of Hope to share kindness with your community.',
-                hasCustomInput: true,
-                items: [
-                    { emoji: '🌟', title: 'Share a Kind Word', desc: '"I will say good morning and smile at someone today."', sound: 'celebrate', pitch: 523.25 },
-                    { emoji: '🤲', title: 'Help a Classmate or Family Member', desc: '"I will help tidy up and share our classroom resources."', sound: 'celebrate', pitch: 659.25 },
-                    { emoji: '🌍', title: 'Celebrate Everyone\'s Culture', desc: '"I will listen and learn about my friends\' traditions."', sound: 'celebrate', pitch: 783.99 }
-                ]
-            }
-        ];
-
-        // ============================================================================
-        // 5. MAIN VIEW ROUTER
-        // ============================================================================
-        function openMainView(viewKey) {
-            state.view = viewKey;
-            playSound('chime', 480);
-
-            ['pathway', 'harvest', 'diwali', 'christmas', 'roots'].forEach(k => {
-                const btn = document.getElementById(`nav-${k}`);
-                if (btn) btn.classList.toggle('active', k === viewKey);
-            });
-
-            if (viewKey === 'pathway') renderPathwayView();
-            else if (viewKey === 'harvest') renderHarvestHub();
-            else if (viewKey === 'diwali') renderDiwaliHub();
-            else if (viewKey === 'christmas') renderChristmasHub();
-            else if (viewKey === 'roots') renderRootsHub();
-
-            if (state.switchScanOn) startScanLoop();
-        }
-
-        // ============================================================================
-        // VIEW 1: THE 14-STAGE CURRICULUM PATHWAY
-        // ============================================================================
-        function renderPathwayView() {
-            const ws = document.getElementById('workspace');
-            const activeStage = CURRICULUM_STAGES.find(s => s.lvl === state.currentLevel) || CURRICULUM_STAGES[0];
-
-            setPrompt(
-                `${activeStage.stageName} — ${activeStage.title}`,
-                activeStage.prompt,
-                false
-            );
-
-            // Group stages by band
-            const bands = [];
-            CURRICULUM_STAGES.forEach(s => {
-                let b = bands.find(x => x.name === s.band);
-                if (!b) {
-                    b = { name: s.band, stages: [] };
-                    bands.push(b);
-                }
-                b.stages.push(s);
-            });
-
-            const activeCardsHtml = activeStage.items.map((item, idx) => `
-                <button class="sensory-tile" onclick="triggerStageItem(${activeStage.lvl}, ${idx})" data-scan="true">
-                    <span class="tile-emoji">${item.emoji}</span>
-                    <span class="tile-title">${item.title}</span>
-                    <span class="tile-desc">${item.desc}</span>
-                </button>
-            `).join('');
-
-            const customInputHtml = activeStage.hasCustomInput ? `
-                <div class="visual-stage-box">
-                    <label for="stage-custom-input" style="font-weight:800; font-size:1.15rem;">✍️ Or type your own personal thought / tradition below:</label>
-                    <input id="stage-custom-input" type="text" class="custom-text-input" placeholder="Type your message or preference here..." />
-                    <button class="action-pill-btn gold" onclick="speakCustomInput(${activeStage.lvl})" data-scan="true">
-                        <span>🗣️ Speak &amp; Save My Connection</span>
-                    </button>
-                </div>
-            ` : '';
-
-            const bandsHtml = bands.map(b => `
-                <div class="band-section">
-                    <div class="band-header">${b.name}</div>
-                    <div class="levels-row">
-                        ${b.stages.map(st => {
-                            const isDone = state.completedLevels.includes(st.lvl);
-                            const isCurr = st.lvl === state.currentLevel;
-                            return `
-                                <button class="level-card-btn ${isCurr ? 'current-lvl' : ''} ${isDone ? 'done-lvl' : ''}"
-                                        onclick="selectCurriculumLevel(${st.lvl})" data-scan="true">
-                                    <div style="display:flex; justify-content:space-between; width:100%;">
-                                        <span style="color:var(--sage-main);">${st.stageName}</span>
-                                        <span>${isDone ? '✅' : (isCurr ? '👉' : '⚪')}</span>
-                                    </div>
-                                    <div style="font-size:1.02rem;">${st.title}</div>
-                                </button>
-                            `;
-                        }).join('')}
-                    </div>
-                </div>
-            `).join('');
-
-            ws.innerHTML = `
-                <div style="background:var(--bg-panel); border:3px solid var(--gold-border); border-radius:22px; padding:20px; margin-bottom:24px;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-                        <div>
-                            <span style="background:var(--gold-main); color:#FFF; padding:4px 12px; border-radius:10px; font-weight:800; font-size:0.9rem;">ACTIVE STAGE (${activeStage.lvl} OF 14)</span>
-                            <h2 style="margin:8px 0 4px 0; font-size:1.6rem;">${activeStage.stageName}: ${activeStage.title}</h2>
-                            <p style="margin:0; color:var(--text-muted); font-weight:600;">${activeStage.prompt}</p>
-                        </div>
-                        <div style="display:flex; gap:8px;">
-                            ${activeStage.lvl > 1 ? `<button class="sub-tab-btn" onclick="selectCurriculumLevel(${activeStage.lvl - 1})" data-scan="true">⬅️ Prev Level</button>` : ''}
-                            ${activeStage.lvl < 14 ? `<button class="sub-tab-btn active" onclick="selectCurriculumLevel(${activeStage.lvl + 1})" data-scan="true">Next Level ➔</button>` : ''}
-                        </div>
-                    </div>
-
-                    <div class="interactive-grid">${activeCardsHtml}</div>
-                    ${customInputHtml}
-                </div>
-
-                <h3 style="font-size:1.35rem; margin:0 0 12px 0;">🗺️ Complete 14-Stage SEN Curriculum Map (Click any stage to jump):</h3>
-                ${bandsHtml}
-            `;
-        }
-
-        function selectCurriculumLevel(lvl) {
-            state.currentLevel = lvl;
-            const st = CURRICULUM_STAGES.find(s => s.lvl === lvl);
-            playSound('chime', 440 + lvl * 20);
-            renderPathwayView();
-            if (st) speakText(`${st.stageName}: ${st.title}. ${st.prompt}`);
-        }
-
-        function triggerStageItem(lvl, itemIdx) {
-            const st = CURRICULUM_STAGES.find(s => s.lvl === lvl);
-            if (!st) return;
-            const item = st.items[itemIdx];
-            if (!item) return;
-
-            markLevelComplete(lvl);
-
-            if (item.actionHub) {
-                openMainView(item.actionHub);
-                return;
-            }
-
-            playSound(item.sound || 'chime', item.pitch || 523.25);
-            setPrompt(`${item.title} — ${item.desc}`, `Stage ${lvl} progress recorded!`, true);
-            renderPathwayView();
-        }
-
-        function speakCustomInput(lvl) {
-            const inp = document.getElementById('stage-custom-input');
-            const val = inp && inp.value.trim() ? inp.value.trim() : 'I love celebrating with my community!';
-            markLevelComplete(lvl);
-            playSound('celebrate');
-            setPrompt(`My Personal Connection: "${val}"`, 'Saved and celebrated!', true);
-            renderPathwayView();
-        }
-
-        // ============================================================================
-        // HUB 1: HARVEST FESTIVAL (GRAIN & VEGETABLE SORTING + ACOUSTIC GONGS)
-        // ============================================================================
-        const HARVEST_CROPS = [
-            { id: 'wheat', emoji: '🌾', name: 'Golden Wheat Sheaf', basket: 'Dry & Rustling Grain', soundPitch: 392 },
-            { id: 'pumpkin', emoji: '🎃', name: 'Autumn Pumpkin', basket: 'Firm & Smooth Harvest Veg', soundPitch: 330 },
-            { id: 'corn', emoji: '🌽', name: 'Sweet Corn Cob', basket: 'Bumpy Kernel Texture', soundPitch: 440 },
-            { id: 'carrot', emoji: '🥕', name: 'Crunchy Root Carrot', basket: 'Earthy Soil Vegetable', soundPitch: 523.25 }
-        ];
-
-        function renderHarvestHub() {
-            const ws = document.getElementById('workspace');
-            setPrompt(
-                'Hub 1: Harvest Festival (October & November) 🌾',
-                'Explore resonant acoustic harvest gongs and sort autumn grains and vegetables by texture.',
-                false
-            );
-
-            let bodyHtml = '';
-            if (state.harvestSub === 'gong') {
-                const gongs = [
-                    { name: 'Deep Earth Gong', note: 'Warm Low Resonance (220 Hz)', freq: 220, emoji: '🔔' },
-                    { name: 'Golden Sun Gong', note: 'Calm Mid Resonance (293 Hz)', freq: 293.66, emoji: '🟡' },
-                    { name: 'Sage Wind Singing Bowl', note: 'Gentle Harmonic Chime (392 Hz)', freq: 392.00, emoji: '🥣' },
-                    { name: 'Harvest Moon Bell', note: 'Bright Peace Tone (523 Hz)', freq: 523.25, emoji: '✨' }
-                ];
-                bodyHtml = `
-                    <p style="font-weight:600; color:var(--text-muted);">Tap any acoustic gong or singing bowl to experience calm, resonant vibrations:</p>
-                    <div class="interactive-grid">
-                        ${gongs.map(g => `
-                            <button class="sensory-tile gold-glow" onclick="strikeHarvestGong('${g.name}', ${g.freq}, this)" data-scan="true">
-                                <span class="tile-emoji">${g.emoji}</span>
-                                <span class="tile-title">${g.name}</span>
-                                <span class="tile-desc">${g.note}</span>
-                            </button>
-                        `).join('')}
-                    </div>
-                `;
-            } else {
-                bodyHtml = `
-                    <p style="font-weight:600; color:var(--text-muted);">Tap each harvest crop to feel its texture and sort it into the Harvest Basket (${state.harvestSorted.length} / ${HARVEST_CROPS.length} Sorted):</p>
-                    <div class="interactive-grid">
-                        ${HARVEST_CROPS.map(c => {
-                            const done = state.harvestSorted.includes(c.id);
-                            return `
-                                <button class="sensory-tile ${done ? 'activated' : ''}" onclick="sortHarvestCrop('${c.id}')" data-scan="true">
-                                    <span class="tile-emoji">${done ? '✅' : c.emoji}</span>
-                                    <span class="tile-title">${c.name}</span>
-                                    <span class="tile-desc">${done ? 'Sorted in Basket: ' + c.basket : 'Texture: ' + c.basket}</span>
-                                </button>
-                            `;
-                        }).join('')}
-                    </div>
-                    <div style="text-align:center; margin-top:18px;">
-                        <button class="action-pill-btn" onclick="state.harvestSorted=[]; renderHarvestHub();" data-scan="true">🔄 Reset Harvest Basket</button>
-                    </div>
-                `;
-            }
-
-            ws.innerHTML = `
-                <div class="sub-tabs-row">
-                    <button class="sub-tab-btn ${state.harvestSub === 'gong' ? 'active' : ''}" onclick="state.harvestSub='gong'; renderHarvestHub();" data-scan="true">🔔 1A. Acoustic Gongs &amp; Singing Bowls</button>
-                    <button class="sub-tab-btn ${state.harvestSub === 'sort' ? 'active' : ''}" onclick="state.harvestSub='sort'; renderHarvestHub();" data-scan="true">🌾 1B. Grain &amp; Vegetable Texture Sorter</button>
-                </div>
-                ${bodyHtml}
-            `;
-        }
-
-        function strikeHarvestGong(name, freq, btnEl) {
-            playSound('gong', freq);
-            if (btnEl) {
-                btnEl.classList.remove('pulse-once');
-                void btnEl.offsetWidth;
-                btnEl.classList.add('pulse-once');
-            }
-            markLevelComplete(2);
-            setPrompt(`${name} resonating... Feel the calm sound waves.`, 'Levels 1–3 Multisensory Exploration');
-        }
-
-        function sortHarvestCrop(cropId) {
-            const crop = HARVEST_CROPS.find(c => c.id === cropId);
-            if (!crop) return;
-            if (!state.harvestSorted.includes(cropId)) {
-                state.harvestSorted.push(cropId);
-            }
-            playSound('chime', crop.soundPitch);
-            markLevelComplete(8);
-            setPrompt(
-                `Sorted ${crop.name}! Texture: ${crop.basket}.`,
-                `${state.harvestSorted.length} of ${HARVEST_CROPS.length} harvest items sorted.`
-            );
-            if (state.harvestSorted.length === HARVEST_CROPS.length) {
-                playSound('celebrate');
-            }
-            renderHarvestHub();
-        }
-
-        // ============================================================================
-        // HUB 2: DIWALI & FESTIVAL OF LIGHTS (CANDLE SEQUENCE & RANGOLI SYMMETRY)
-        // ============================================================================
-        function renderDiwaliHub() {
-            const ws = document.getElementById('workspace');
-            setPrompt(
-                'Hub 2: Diwali — Festival of Lights (November) 🪔',
-                'Light the clay Diya candles in sequence and paint symmetrical Rangoli patterns.',
-                false
-            );
-
-            let content = '';
-            if (state.diwaliSub === 'candles') {
-                const litCount = state.diyasLit.filter(Boolean).length;
-                content = `
-                    <p style="font-weight:600; color:var(--text-muted);">Tap each clay Diya lamp to light its warm flame (${litCount} / 6 Lit):</p>
-                    <div class="interactive-grid">
-                        ${state.diyasLit.map((isLit, idx) => `
-                            <button class="sensory-tile ${isLit ? 'gold-glow' : ''}" onclick="toggleDiyaCandle(${idx})" data-scan="true">
-                                <span class="tile-emoji">${isLit ? '🪔✨' : '🏺'}</span>
-                                <span class="tile-title">Diya Lamp ${idx + 1}</span>
-                                <span class="tile-desc">${isLit ? 'Glowing brightly with warm light!' : 'Tap to light the candle wick'}</span>
-                            </button>
-                        `).join('')}
-                    </div>
-                    <div style="text-align:center; margin-top:18px;">
-                        <button class="action-pill-btn gold" onclick="lightAllDiyas()" data-scan="true">✨ Light All Diyas Together</button>
-                        <button class="action-pill-btn" onclick="state.diyasLit=[false,false,false,false,false,false]; renderDiwaliHub();" data-scan="true">🔄 Reset Lamps</button>
-                    </div>
-                `;
-            } else {
-                const paletteHtml = state.rangoliColors.map(col => `
-                    <button class="sub-tab-btn" style="background:${col}; color:#FFF; border-color:${ state.rangoliSelectedColor === col ? '#000' : 'transparent'}; transform:${state.rangoliSelectedColor === col ? 'scale(1.12)' : 'scale(1)'};"
-                            onclick="selectRangoliColor('${col}')" data-scan="true" aria-label="Select Color ${col}">
-                        🎨 Paint
-                    </button>
-                `).join('');
-
-                const petalButtonsHtml = state.rangoliPetals.map((col, idx) => `
-                    <button class="sub-tab-btn" style="background:${col}; color:#1E2923; border:3px solid #966316;"
-                            onclick="paintRangoliRing(${idx})" data-scan="true">
-                        🌸 Symmetry Ring ${idx + 1}
-                    </button>
-                `).join('');
-
-                content = `
-                    <div class="visual-stage-box">
-                        <h3 style="margin:0 0 10px 0;">🌸 Symmetrical Rangoli Lotus Studio</h3>
-                        <p style="margin:0 0 12px 0; color:var(--text-muted); font-weight:600;">Choose a festival colour, then tap any Symmetry Ring (or petal on the mandala) to paint matching symmetrical patterns!</p>
-                        <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-bottom:14px;">
-                            ${paletteHtml}
-                        </div>
-
-                        <svg viewBox="0 0 320 320" style="width:280px; height:280px; cursor:pointer;">
-                            <circle cx="160" cy="160" r="145" fill="${state.rangoliPetals[0]}" stroke="#966316" stroke-width="4" onclick="paintRangoliRing(0)"/>
-                            <polygon points="160,22 258,62 298,160 258,258 160,298 62,258 22,160 62,62" fill="${state.rangoliPetals[1]}" stroke="#966316" stroke-width="4" onclick="paintRangoliRing(1)"/>
-                            <circle cx="160" cy="160" r="102" fill="${state.rangoliPetals[2]}" stroke="#966316" stroke-width="4" onclick="paintRangoliRing(2)"/>
-                            <polygon points="160,65 225,95 255,160 225,225 160,255 95,225 65,160 95,95" fill="${state.rangoliPetals[3]}" stroke="#966316" stroke-width="4" onclick="paintRangoliRing(3)"/>
-                            <circle cx="160" cy="160" r="62" fill="${state.rangoliPetals[4]}" stroke="#966316" stroke-width="4" onclick="paintRangoliRing(4)"/>
-                            <circle cx="160" cy="160" r="28" fill="${state.rangoliPetals[5]}" stroke="#966316" stroke-width="4" onclick="paintRangoliRing(5)"/>
-                        </svg>
-
-                        <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-top:14px;">
-                            ${petalButtonsHtml.slice(0, 6)}
-                        </div>
-                    </div>
-                `;
-            }
-
-            ws.innerHTML = `
-                <div class="sub-tabs-row">
-                    <button class="sub-tab-btn ${state.diwaliSub === 'candles' ? 'active' : ''}" onclick="state.diwaliSub='candles'; renderDiwaliHub();" data-scan="true">🪔 2A. Diya Candle Lighting Sequence</button>
-                    <button class="sub-tab-btn ${state.diwaliSub === 'rangoli' ? 'active' : ''}" onclick="state.diwaliSub='rangoli'; renderDiwaliHub();" data-scan="true">🌸 2B. Symmetrical Rangoli Studio</button>
-                </div>
-                ${content}
-            `;
-        }
-
-        function toggleDiyaCandle(idx) {
-            state.diyasLit[idx] = !state.diyasLit[idx];
-            const litCount = state.diyasLit.filter(Boolean).length;
-            playSound('chime', 392 + idx * 45);
-            markLevelComplete(4);
-            markLevelComplete(7);
-            if (litCount === 6) {
-                playSound('celebrate');
-                setPrompt('All 6 Diwali Diyas are shining brightly! Happy Diwali!', 'Complete sequence achieved!');
-            } else {
-                setPrompt(`Diya Lamp ${idx + 1} is ${state.diyasLit[idx] ? 'lit with a warm golden flame!' : 'resting.'}`, `${litCount} of 6 lamps glowing.`);
-            }
-            renderDiwaliHub();
-        }
-
-        function lightAllDiyas() {
-            state.diyasLit = [true, true, true, true, true, true];
-            playSound('celebrate');
-            markLevelComplete(4);
-            setPrompt('All 6 Diwali Diyas are glowing together in warm harmony!', 'Festival of Lights celebration');
-            renderDiwaliHub();
-        }
-
-        function selectRangoliColor(col) {
-            state.rangoliSelectedColor = col;
-            playSound('chime', 520);
-            renderDiwaliHub();
-        }
-
-        function paintRangoliRing(ringIdx) {
-            state.rangoliPetals[ringIdx] = state.rangoliSelectedColor;
-            playSound('chime', 440 + ringIdx * 50);
-            markLevelComplete(9);
-            setPrompt(`Painted Symmetry Ring ${ringIdx + 1} with vibrant festival colour!`, 'Symmetrical pattern updated.');
-            renderDiwaliHub();
-        }
-
-        // ============================================================================
-        // HUB 3: CHRISTMAS & WINTER FESTIVALS (BAKING, TREE, TEXTURES & HOPE STARS)
-        // ============================================================================
-        const BAKING_STEPS = {
-            mince: {
-                title: 'Spiced Winter Mince Pies 🥧',
-                steps: [
-                    { emoji: '🥣', name: 'Step 1: Mix golden pastry flour & butter', desc: 'Rub the soft butter into the flour until crumbly' },
-                    { emoji: '🍇', name: 'Step 2: Spoon sweet spiced fruit & cinnamon', desc: 'Smell the warm cinnamon, nutmeg, and raisins!' },
-                    { emoji: '🔥', name: 'Step 3: Bake in the warm kitchen oven', desc: 'Watch the star-shaped pastry tops turn golden brown' },
-                    { emoji: '🥧', name: 'Step 4: Dust with snowy icing sugar & share!', desc: 'Delicious festive mince pies ready for the community!' }
-                ]
-            },
-            fairy: {
-                title: 'Festive Vanilla Fairy Cakes 🧁',
-                steps: [
-                    { emoji: '🥚', name: 'Step 1: Whisk butter, sugar & eggs', desc: 'Stir smoothly in the mixing bowl' },
-                    { emoji: '🍦', name: 'Step 2: Add sweet vanilla & spoon into cases', desc: 'Fill the paper cases evenly' },
-                    { emoji: '⏲️', name: 'Step 3: Bake until light, fluffy & golden', desc: 'Warm, sweet bakery aroma fills the room!' },
-                    { emoji: '🧁', name: 'Step 4: Swirl icing & add festive stars!', desc: 'Fairy cakes are ready to share with friends!' }
-                ]
-            }
-        };
-
-        const WINTER_SENSORY_ITEMS = [
-            { id: 'pine', emoji: '🌲', name: 'Evergreen Pine Branch', category: 'Prickly Texture & Fresh Forest Scent' },
-            { id: 'snow', emoji: '❄️', name: 'Soft Cotton Snow', category: 'Fluffy, Soft & Cool Touch' },
-            { id: 'bauble', emoji: '🔴', name: 'Shiny Tree Bauble', category: 'Smooth, Round & Reflective' },
-            { id: 'spice', emoji: '🫚', name: 'Cinnamon & Ginger Spice', category: 'Warm, Cozy Winter Aroma' }
-        ];
-
-        function renderChristmasHub() {
-            const ws = document.getElementById('workspace');
-            setPrompt(
-                'Hub 3: Christmas & Winter Festivals (December) 🎄',
-                'Bake mince pies and fairy cakes, decorate the community tree, sort winter textures, and create a Star of Hope.',
-                false
-            );
-
-            let content = '';
-            if (state.christmasSub === 'baking') {
-                const rec = BAKING_STEPS[state.bakingRecipe];
-                content = `
-                    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px;">
-                        <button class="sub-tab-btn ${state.bakingRecipe === 'mince' ? 'active' : ''}" onclick="state.bakingRecipe='mince'; state.bakingStep=0; renderChristmasHub();" data-scan="true">🥧 Bake Mince Pies</button>
-                        <button class="sub-tab-btn ${state.bakingRecipe === 'fairy' ? 'active' : ''}" onclick="state.bakingRecipe='fairy'; state.bakingStep=0; renderChristmasHub();" data-scan="true">🧁 Bake Fairy Cakes</button>
-                    </div>
-                    <h3 style="margin:0 0 12px 0;">👩‍🍳 ${rec.title} (Step ${Math.min(state.bakingStep + 1, 4)} of 4)</h3>
-                    <div class="interactive-grid">
-                        ${rec.steps.map((st, idx) => {
-                            const isDone = idx < state.bakingStep;
-                            const isCurrent = idx === state.bakingStep;
-                            return `
-                                <button class="sensory-tile ${isDone ? 'activated' : ''} ${isCurrent ? 'gold-glow' : ''}"
-                                        onclick="advanceBakingStep(${idx})" data-scan="true">
-                                    <span class="tile-emoji">${isDone ? '✅' : st.emoji}</span>
-                                    <span class="tile-title">${st.name}</span>
-                                    <span class="tile-desc">${st.desc}</span>
-                                </button>
-                            `;
-                        }).join('')}
-                    </div>
-                `;
-            } else if (state.christmasSub === 'tree') {
-                const lightColors = [
-                    ['#FACC15', '#FEF08A', '#F59E0B'],
-                    ['#34D399', '#A7F3D0', '#6EE7B7'],
-                    ['#FB7185', '#FDE047', '#38BDF8']
-                ][state.treeLightTheme];
-
-                const ornamentsSvg = state.treeOrnaments.map((orn, i) => {
-                    const positions = [
-                        { x: 160, y: 115 }, { x: 130, y: 155 }, { x: 188, y: 160 },
-                        { x: 112, y: 205 }, { x: 160, y: 198 }, { x: 205, y: 208 },
-                        { x: 100, y: 250 }, { x: 155, y: 252 }, { x: 215, y: 248 }
-                    ];
-                    const pos = positions[i % positions.length];
-                    return `<text x="${pos.x}" y="${pos.y}" font-size="26" text-anchor="middle">${orn}</text>`;
-                }).join('');
-
-                content = `
-                    <div class="visual-stage-box">
-                        <h3 style="margin:0 0 8px 0;">🎄 Community Christmas Tree Decorator</h3>
-                        <p style="margin:0 0 14px 0; color:var(--text-muted); font-weight:600;">Tap or switch-activate the buttons below to toggle twinkling fairy lights and hang ornaments!</p>
-
-                        <svg viewBox="0 0 320 310" style="width:290px; height:280px;">
-                            <!-- Tree Trunk -->
-                            <rect x="142" y="265" width="36" height="40" rx="4" fill="#78350F"/>
-                            <!-- Evergreen Layers -->
-                            <polygon points="160,18 225,115 95,115" fill="#2E5239" stroke="#1E3A2F" stroke-width="3"/>
-                            <polygon points="160,72 250,190 70,190" fill="#3B6E4C" stroke="#1E3A2F" stroke-width="3"/>
-                            <polygon points="160,135 275,268 45,268" fill="#4A7C59" stroke="#1E3A2F" stroke-width="3"/>
-                            <!-- Top Star -->
-                            <polygon points="160,4 166,18 182,20 170,30 173,45 160,37 147,45 150,30 138,20 154,18" fill="${state.treeLightsOn ? '#FACC15' : '#D5CBB8'}" stroke="#CA8A04" stroke-width="2"/>
-                            <!-- Fairy Lights -->
-                            ${state.treeLightsOn ? `
-                                <circle cx="145" cy="88" r="6" fill="${lightColors[0]}"/>
-                                <circle cx="178" cy="96" r="6" fill="${lightColors[1]}"/>
-                                <circle cx="122" cy="145" r="7" fill="${lightColors[2]}"/>
-                                <circle cx="162" cy="152" r="7" fill="${lightColors[0]}"/>
-                                <circle cx="198" cy="142" r="7" fill="${lightColors[1]}"/>
-                                <circle cx="95" cy="222" r="7" fill="${lightColors[1]}"/>
-                                <circle cx="138" cy="230" r="7" fill="${lightColors[2]}"/>
-                                <circle cx="184" cy="226" r="7" fill="${lightColors[0]}"/>
-                                <circle cx="226" cy="218" r="7" fill="${lightColors[2]}"/>
-                            ` : ''}
-                            ${ornamentsSvg}
-                        </svg>
-
-                        <div style="display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:12px;">
-                            <button class="action-pill-btn gold" onclick="cycleTreeLights()" data-scan="true">💡 Switch Fairy Light Colours</button>
-                            <button class="action-pill-btn" onclick="addTreeOrnament('🔴')" data-scan="true">🔴 Add Red Bauble</button>
-                            <button class="action-pill-btn" onclick="addTreeOrnament('🔔')" data-scan="true">🔔 Add Golden Bell</button>
-                            <button class="action-pill-btn" onclick="addTreeOrnament('❄️')" data-scan="true">❄️ Add Snowflake</button>
-                            <button class="action-pill-btn" onclick="addTreeOrnament('🎀')" data-scan="true">🎀 Add Festive Bow</button>
-                        </div>
-                    </div>
-                `;
-            } else if (state.christmasSub === 'textures') {
-                content = `
-                    <p style="font-weight:600; color:var(--text-muted);">Tap each winter item to explore its seasonal texture and aroma (${state.winterSorted.length} / ${WINTER_SENSORY_ITEMS.length} Explored):</p>
-                    <div class="interactive-grid">
-                        ${WINTER_SENSORY_ITEMS.map(item => {
-                            const done = state.winterSorted.includes(item.id);
-                            return `
-                                <button class="sensory-tile ${done ? 'activated' : ''}" onclick="exploreWinterTexture('${item.id}')" data-scan="true">
-                                    <span class="tile-emoji">${done ? '✅' : item.emoji}</span>
-                                    <span class="tile-title">${item.name}</span>
-                                    <span class="tile-desc">${item.category}</span>
-                                </button>
-                            `;
-                        }).join('')}
-                    </div>
-                `;
-            } else {
-                content = `
-                    <div class="visual-stage-box">
-                        <h3 style="margin:0 0 8px 0;">🌟 Community Day of Hope — Acts of Kindness Star Creator</h3>
-                        <p style="margin:0 0 14px 0; color:var(--text-muted); font-weight:600;">Choose a kindness pledge below or type your own to place a glowing Star of Hope in our community sky!</p>
-
-                        <div style="display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-bottom:14px;">
-                            <button class="action-pill-btn" onclick="addHopeStar('Sharing a warm smile and greeting with my classmates')" data-scan="true">😊 Share a Warm Smile</button>
-                            <button class="action-pill-btn" onclick="addHopeStar('Helping tidy up our classroom and caring for our environment')" data-scan="true">🤝 Help Tidy &amp; Care</button>
-                            <button class="action-pill-btn" onclick="addHopeStar('Including everyone in games and celebrating our differences')" data-scan="true">💛 Include Everyone</button>
-                        </div>
-
-                        <input id="custom-hope-input" type="text" class="custom-text-input" placeholder="Or type your own Act of Kindness here..." />
-                        <button class="action-pill-btn gold" onclick="submitCustomHopeStar()" data-scan="true">🌟 Launch My Star of Hope</button>
-
-                        <div class="interactive-grid" style="width:100%; margin-top:18px;">
-                            ${state.hopeStars.map((st, i) => `
-                                <div class="sensory-tile gold-glow" onclick="speakText('${st.text}')">
-                                    <span class="tile-emoji">🌟</span>
-                                    <span class="tile-title">Star of Hope #${i + 1}</span>
-                                    <span class="tile-desc">"${st.text}"</span>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                `;
-            }
-
-            ws.innerHTML = `
-                <div class="sub-tabs-row">
-                    <button class="sub-tab-btn ${state.christmasSub === 'baking' ? 'active' : ''}" onclick="state.christmasSub='baking'; renderChristmasHub();" data-scan="true">🥧 3A. Festive Baking</button>
-                    <button class="sub-tab-btn ${state.christmasSub === 'tree' ? 'active' : ''}" onclick="state.christmasSub='tree'; renderChristmasHub();" data-scan="true">🎄 3B. Community Christmas Tree</button>
-                    <button class="sub-tab-btn ${state.christmasSub === 'textures' ? 'active' : ''}" onclick="state.christmasSub='textures'; renderChristmasHub();" data-scan="true">🌲 3C. Winter Textures &amp; Aromas</button>
-                    <button class="sub-tab-btn ${state.christmasSub === 'hope' ? 'active' : ''}" onclick="state.christmasSub='hope'; renderChristmasHub();" data-scan="true">🌟 3D. Day of Hope Stars</button>
-                </div>
-                ${content}
-            `;
-        }
-
-        function advanceBakingStep(idx) {
-            const rec = BAKING_STEPS[state.bakingRecipe];
-            if (idx === state.bakingStep) {
-                state.bakingStep++;
-                playSound('chime', 440 + state.bakingStep * 60);
-                markLevelComplete(9);
-                if (state.bakingStep === rec.steps.length) {
-                    playSound('celebrate');
-                    setPrompt(`Delicious! Your ${rec.title} are baked and ready to share!`, 'Task analysis complete!');
-                } else {
-                    setPrompt(`Great job! Next is ${rec.steps[state.bakingStep].name}`, rec.steps[state.bakingStep].desc);
-                }
-                renderChristmasHub();
-            } else {
-                const needed = rec.steps[state.bakingStep] || rec.steps[0];
-                playSound('chime', 330);
-                setPrompt(`Let's tap ${needed.name} next!`, needed.desc);
-            }
-        }
-
-        function cycleTreeLights() {
-            state.treeLightsOn = true;
-            state.treeLightTheme = (state.treeLightTheme + 1) % 3;
-            playSound('chime', 587.33);
-            markLevelComplete(5);
-            setPrompt('Twinkling fairy lights switched! Look at the warm colours on the tree.', 'Switch-activated light sequence');
-            renderChristmasHub();
-        }
-
-        function addTreeOrnament(emoji) {
-            if (state.treeOrnaments.length >= 9) state.treeOrnaments = [];
-            state.treeOrnaments.push(emoji);
-            playSound('chime', 523.25 + state.treeOrnaments.length * 30);
-            markLevelComplete(5);
-            setPrompt(`Added ${emoji} ornament to the community Christmas tree!`, `${state.treeOrnaments.length} ornaments on the tree.`);
-            renderChristmasHub();
-        }
-
-        function exploreWinterTexture(id) {
-            const item = WINTER_SENSORY_ITEMS.find(x => x.id === id);
-            if (!item) return;
-            if (!state.winterSorted.includes(id)) state.winterSorted.push(id);
-            playSound('gong', 392);
-            markLevelComplete(8);
-            setPrompt(`${item.name}: ${item.category}`, 'Seasonal sensory sorting');
-            renderChristmasHub();
-        }
-
-        function addHopeStar(text) {
-            state.hopeStars.unshift({ author: 'Kindness Star', text });
-            playSound('celebrate');
-            markLevelComplete(14);
-            setPrompt(`Star of Hope launched: "${text}"`, 'Community Day of Hope celebration!');
-            renderChristmasHub();
-        }
-
-        function submitCustomHopeStar() {
-            const inp = document.getElementById('custom-hope-input');
-            const val = inp && inp.value.trim() ? inp.value.trim() : 'Spreading peace, kindness, and friendship to everyone!';
-            addHopeStar(val);
-        }
-
-        // ============================================================================
-        // HUB 4: ROOTS & RHYTHMS (NIGERIAN DRUMMING, REGGAE TEMPO & HERITAGE ART)
-        // ============================================================================
-        function renderRootsHub() {
-            const ws = document.getElementById('workspace');
-            setPrompt(
-                'Hub 4: Roots & Rhythms Cultural Celebration (November) 🥁',
-                'Play Nigerian talking drums, tap along to a calm Reggae tempo, and create Red-Gold-Green heritage art.',
-                false
-            );
-
-            let content = '';
-            if (state.rootsSub === 'drums') {
-                content = `
-                    <p style="font-weight:600; color:var(--text-muted);">Tap the West African drum pads or Reggae tempo buttons to create rhythmic beats (Beats tapped: ${state.rootsTempoCount}):</p>
-                    <div class="interactive-grid">
-                        <button class="sensory-tile" style="border-color:#E11D48; background:#FFF1F2;" onclick="playRootsDrum('drum-bass', 'Nigerian Djembe Bass Beat — Deep Gun tone!')" data-scan="true">
-                            <span class="tile-emoji">🥁</span>
-                            <span class="tile-title">Djembe Bass ("Gun")</span>
-                            <span class="tile-desc">Deep resonant center drum beat</span>
-                        </button>
-                        <button class="sensory-tile" style="border-color:#CA8A04; background:#FEF9C3;" onclick="playRootsDrum('drum-tone', 'Talking Drum Open Tone — Warm melodic pitch!')" data-scan="true">
-                            <span class="tile-emoji">🪘</span>
-                            <span class="tile-title">Talking Drum ("Go")</span>
-                            <span class="tile-desc">Warm Nigerian talking drum tone</span>
-                        </button>
-                        <button class="sensory-tile" style="border-color:#16A34A; background:#DCFCE7;" onclick="playRootsDrum('drum-slap', 'Crisp Rim Slap — High rhythmic accent!')" data-scan="true">
-                            <span class="tile-emoji">👐</span>
-                            <span class="tile-title">Rhythm Slap ("Pa")</span>
-                            <span class="tile-desc">Crisp rim percussion tap</span>
-                        </button>
-                        <button class="sensory-tile gold-glow" onclick="playRootsDrum('reggae-skank', 'Reggae One-Drop Skank Chord — One Love steady tempo!')" data-scan="true">
-                            <span class="tile-emoji">🎶</span>
-                            <span class="tile-title">Reggae Tempo Chord</span>
-                            <span class="tile-desc">Warm island off-beat guitar &amp; organ pulse</span>
-                        </button>
-                    </div>
-                `;
-            } else {
-                const heritageColors = [
-                    { name: 'Heritage Red', hex: '#E11D48' },
-                    { name: 'Lion Gold', hex: '#FACC15' },
-                    { name: 'Earth Green', hex: '#16A34A' },
-                    { name: 'Warm Ebony', hex: '#1E2923' }
-                ];
-
-                content = `
-                    <div class="visual-stage-box">
-                        <h3 style="margin:0 0 8px 0;">🎨 Red-Gold-Green Heritage Banner Studio</h3>
-                        <p style="margin:0 0 14px 0; color:var(--text-muted); font-weight:600;">Tap any band on the Unity Banner below to cycle through Red, Gold, and Green heritage patterns!</p>
-
-                        <svg viewBox="0 0 360 220" style="width:100%; max-width:420px; height:auto; border-radius:18px; border:4px solid #1E2923; overflow:hidden; cursor:pointer;">
-                            ${state.rootsCanvasStripes.map((col, idx) => `
-                                <rect x="0" y="${idx * 55}" width="360" height="55" fill="${col}" onclick="cycleHeritageStripe(${idx})"/>
-                            `).join('')}
-                            <!-- Center Unity Star -->
-                            <polygon points="180,55 194,92 234,94 202,118 212,156 180,134 148,156 158,118 126,94 166,92" fill="#FACC15" stroke="#1E2923" stroke-width="4" onclick="playRootsDrum('reggae-skank', 'Unity Star shining brightly!')"/>
-                        </svg>
-
-                        <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:16px;">
-                            ${state.rootsCanvasStripes.map((_, idx) => `
-                                <button class="action-pill-btn" onclick="cycleHeritageStripe(${idx})" data-scan="true">
-                                    🎨 Change Band ${idx + 1} Colour
-                                </button>
-                            `).join('')}
-                        </div>
-                    </div>
-                `;
-            }
-
-            ws.innerHTML = `
-                <div class="sub-tabs-row">
-                    <button class="sub-tab-btn ${state.rootsSub === 'drums' ? 'active' : ''}" onclick="state.rootsSub='drums'; renderRootsHub();" data-scan="true">🥁 4A. Nigerian Drumming &amp; Reggae Tempo</button>
-                    <button class="sub-tab-btn ${state.rootsSub === 'art' ? 'active' : ''}" onclick="state.rootsSub='art'; renderRootsHub();" data-scan="true">🎨 4B. Red-Gold-Green Visual Art</button>
-                </div>
-                ${content}
-            `;
-        }
-
-        function playRootsDrum(soundType, label) {
-            state.rootsTempoCount++;
-            playSound(soundType);
-            markLevelComplete(3);
-            markLevelComplete(10);
-            setPrompt(label, `Rhythm pulse count: ${state.rootsTempoCount}`);
-            renderRootsHub();
-        }
-
-        function cycleHeritageStripe(idx) {
-            const palette = ['#E11D48', '#FACC15', '#16A34A', '#1E2923'];
-            const curr = state.rootsCanvasStripes[idx];
-            const next = palette[(palette.indexOf(curr) + 1) % palette.length];
-            state.rootsCanvasStripes[idx] = next;
-            playSound('reggae-skank');
-            markLevelComplete(9);
-            setPrompt(`Updated Banner Band ${idx + 1} with vibrant heritage colour!`, 'Red-Gold-Green visual art creation');
-            renderRootsHub();
-        }
-
-        // Boot Module
-        loadSavedState();
-        renderPathwayView();
+        // Boot straight into Harvest Visual Scene
+        renderScene();
     </script>
 </body>
 </html>
