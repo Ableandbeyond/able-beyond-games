@@ -246,7 +246,7 @@ function renderHome() {
                 </div>
             </div>
 
-            <div class="grid-2">
+            <div class="grid-3">
                 <div class="game-tile-wrapper">
                     <button style="margin-top:0;" onclick="navToExternal('sensory-room.html')">Sensory Room ✨</button>
                     <div class="under-game-note under-game-note-locked">${lockNote}</div>
@@ -254,6 +254,10 @@ function renderHome() {
                 <div class="game-tile-wrapper">
                     <button style="margin-top:0;" onclick="navToExternal('whos-in-my-space/')">Who's In My Space? 🏫</button>
                     <div class="under-game-note under-game-note-locked">${lockNote}</div>
+                </div>
+                <div class="game-tile-wrapper">
+                    <button style="margin-top:0;" onclick="window.location.href='global-lantern-pathway.html'">Global Lantern Pathway 🏮</button>
+                    <div class="under-game-note under-game-note-free">🔓 14-Stage SEN Curriculum Module</div>
                 </div>
             </div>
         </div>
