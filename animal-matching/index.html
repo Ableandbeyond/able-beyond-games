@@ -2,83 +2,991 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Animal Matching & Identification</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
-    <!-- Font OpenDyslexic fallback if available locally, otherwise Comic Neue is good for SEN -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Animal Matching 🦁 | Able & Beyond</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --bg-main: #f0fdf4;
+            --text-dark: #0f172a;
+            --focus-ring: #facc15;
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+            background: var(--bg-main);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        button:focus-visible, .focusable:focus-visible {
+            outline: 6px solid var(--focus-ring) !important;
+            outline-offset: 4px !important;
+            box-shadow: 0 0 0 10px rgba(250, 204, 21, 0.45) !important;
+            z-index: 30;
+        }
+
+        /* ================= TOP BAR ================= */
+        .top-bar {
+            background: #ffffff;
+            border-bottom: 4px solid #86efac;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .btn-home {
+            background: #0f172a;
+            color: #ffffff;
+            border: 3px solid #0f172a;
+            border-radius: 18px;
+            padding: 10px 18px;
+            font-size: 1.15rem;
+            font-weight: 900;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #334155;
+        }
+        .btn-home:active { transform: translateY(3px); box-shadow: 0 1px 0 #334155; }
+
+        .game-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: clamp(1.35rem, 3vw, 2rem);
+            font-weight: 900;
+            color: #14532d;
+        }
+
+        .top-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .ctrl-btn {
+            background: #f1f5f9;
+            color: #0f172a;
+            border: 3px solid #94a3b8;
+            border-radius: 16px;
+            padding: 9px 14px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 0 #94a3b8;
+            transition: all 0.15s;
+        }
+        .ctrl-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #94a3b8; }
+        .ctrl-btn.active {
+            background: #dcfce7;
+            border-color: #16a34a;
+            color: #14532d;
+            box-shadow: 0 4px 0 #16a34a;
+        }
+
+        .star-pill {
+            background: #fef9c3;
+            border: 3px solid #eab308;
+            color: #854d0e;
+            border-radius: 999px;
+            padding: 8px 16px;
+            font-size: 1.2rem;
+            font-weight: 900;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* ================= 4 SIMPLE PICTURE TABS ================= */
+        .mode-tabs {
+            max-width: 1120px;
+            width: 100%;
+            margin: 12px auto 0;
+            padding: 0 14px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .mode-tab {
+            background: #ffffff;
+            border: 4px solid #cbd5e1;
+            border-radius: 22px;
+            padding: 12px 10px;
+            font-family: inherit;
+            font-size: clamp(1rem, 2.1vw, 1.3rem);
+            font-weight: 900;
+            color: #334155;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 5px 0 #cbd5e1;
+            transition: all 0.15s;
+        }
+        .mode-tab .tab-icon {
+            font-size: clamp(1.8rem, 3.8vw, 2.3rem);
+            line-height: 1;
+        }
+        .mode-tab.active {
+            background: #dcfce7;
+            border-color: #16a34a;
+            color: #14532d;
+            box-shadow: 0 5px 0 #16a34a;
+            transform: translateY(-2px);
+        }
+
+        /* ================= MAIN STAGE ================= */
+        .stage-wrap {
+            flex: 1;
+            max-width: 1120px;
+            width: 100%;
+            margin: 12px auto 20px;
+            padding: 0 14px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stage-card {
+            background: #ffffff;
+            border: 5px solid #86efac;
+            border-radius: 32px;
+            padding: 20px;
+            box-shadow: 0 12px 30px rgba(20, 83, 45, 0.08);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 18px;
+        }
+
+        /* ================= TARGET BANNER ================= */
+        .target-banner {
+            background: #f8fafc;
+            border: 4px solid #94a3b8;
+            border-radius: 26px;
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        .btn-speak-big {
+            width: 74px;
+            height: 74px;
+            border-radius: 22px;
+            background: #16a34a;
+            color: #ffffff;
+            border: 4px solid #14532d;
+            font-size: 2.3rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 0 #14532d;
+        }
+        .btn-speak-big:active { transform: translateY(3px); box-shadow: 0 2px 0 #14532d; }
+
+        /* ================= ANIMAL CARDS GRID ================= */
+        .animals-grid {
+            display: grid;
+            gap: 20px;
+            margin: auto 0;
+        }
+        .animals-grid.cols-2 {
+            grid-template-columns: repeat(2, 1fr);
+            max-width: 720px;
+            width: 100%;
+            margin: auto;
+        }
+        .animals-grid.cols-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .animal-card {
+            background: #ffffff;
+            border: 6px solid #cbd5e1;
+            border-radius: 30px;
+            padding: 24px 16px;
+            min-height: 245px;
+            cursor: pointer;
+            font-family: inherit;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            box-shadow: 0 8px 0 #cbd5e1;
+            transition: transform 0.16s, border-color 0.16s, box-shadow 0.16s;
+            position: relative;
+        }
+        .animal-card:hover { transform: translateY(-4px); }
+        .animal-card:active { transform: translateY(4px); }
+
+        .animal-emoji {
+            font-size: clamp(4.2rem, 9vw, 5.8rem);
+            line-height: 1;
+            filter: drop-shadow(0 6px 10px rgba(0,0,0,0.12));
+        }
+
+        .animal-word {
+            font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+            font-weight: 900;
+            color: #0f172a;
+            text-transform: uppercase;
+            padding: 6px 20px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.9);
+        }
+
+        .animal-sound-badge {
+            position: absolute;
+            top: 12px;
+            right: 14px;
+            font-size: 1.1rem;
+            font-weight: 900;
+            padding: 4px 12px;
+            border-radius: 999px;
+            background: #fef9c3;
+            border: 3px solid #eab308;
+            color: #713f12;
+        }
+
+        @keyframes gentleWiggle {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+        .wiggle { animation: gentleWiggle 0.4s ease-in-out; }
+
+        @keyframes popSuccess {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+            100% { transform: scale(1); }
+        }
+        .pop-win { animation: popSuccess 0.45s ease-out; }
+
+        /* ================= MODE 3: ANIMAL HOMES SORTING ================= */
+        .habitat-tray {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            min-height: 155px;
+            padding: 14px;
+            background: #f8fafc;
+            border: 4px dashed #94a3b8;
+            border-radius: 26px;
+        }
+
+        .animal-token {
+            background: #ffffff;
+            border: 5px solid #475569;
+            border-radius: 24px;
+            padding: 12px 18px;
+            cursor: grab;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 6px 0 #475569;
+            transition: transform 0.15s;
+            min-width: 135px;
+        }
+        .animal-token.selected {
+            border-color: #16a34a;
+            box-shadow: 0 0 0 7px rgba(34, 197, 94, 0.35), 0 6px 0 #15803d;
+            transform: translateY(-6px) scale(1.05);
+        }
+
+        .habitats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+
+        .habitat-box {
+            border-width: 6px;
+            border-style: solid;
+            border-radius: 26px;
+            padding: 16px 10px;
+            min-height: 195px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+        .habitat-box.highlight-habitat {
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 0 0 9px rgba(250, 204, 21, 0.65) !important;
+        }
+
+        /* ================= MODE 4: FEED THE ANIMAL ================= */
+        .feed-layout {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 22px;
+            align-items: center;
+            margin: auto 0;
+        }
+
+        .hungry-animal-box {
+            border: 6px solid #16a34a;
+            background: #f0fdf4;
+            border-radius: 32px;
+            padding: 24px 16px;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            position: relative;
+        }
+
+        .fed-food-badge {
+            position: absolute;
+            bottom: 18px;
+            right: 20px;
+            font-size: 3.6rem;
+            animation: popSuccess 0.45s ease-out;
+        }
+
+        .foods-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .food-btn {
+            background: #ffffff;
+            border: 5px solid #64748b;
+            border-radius: 26px;
+            padding: 20px 12px;
+            cursor: pointer;
+            font-family: inherit;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 7px 0 #64748b;
+            transition: all 0.15s;
+        }
+        .food-btn:hover {
+            transform: translateY(-4px);
+            border-color: #16a34a;
+            background: #f0fdf4;
+        }
+        .food-btn.hint-food {
+            border-color: #eab308;
+            background: #fefce8;
+            box-shadow: 0 0 0 7px rgba(250, 204, 21, 0.45), 0 7px 0 #ca8a04;
+        }
+
+        /* Win Banner */
+        .win-overlay {
+            background: #dcfce7;
+            border: 5px solid #16a34a;
+            border-radius: 26px;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .win-text {
+            font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+            font-weight: 900;
+            color: #14532d;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .btn-next-giant {
+            background: #16a34a;
+            color: #ffffff;
+            border: 4px solid #14532d;
+            border-radius: 20px;
+            padding: 12px 28px;
+            font-family: inherit;
+            font-size: 1.5rem;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #14532d;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        @media (max-width: 780px) {
+            .mode-tabs { grid-template-columns: repeat(2, 1fr); }
+            .animals-grid.cols-2, .animals-grid.cols-3 { grid-template-columns: repeat(2, 1fr); }
+            .habitats-grid { grid-template-columns: repeat(2, 1fr); }
+            .feed-layout { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 <body>
-<div class="ab-back-home-wrapper">
-<style>
-.ab-back-home-wrapper {
-    width: 100%;
-    text-align: left;
-    padding: 10px;
-    z-index: 99999;
-    position: relative;
-    flex-shrink: 0;
-    box-sizing: border-box;
-    background: transparent;
-}
-.back-home-btn {
-    padding: 0.5rem 1rem;
-    font-size: 1.1rem;
-    color: #3b82f6;
-    background-color: white;
-    border: 2px solid #3b82f6;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    text-decoration: none;
-    transition: all 0.2s;
-    display: inline-block;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-.back-home-btn:hover {
-    background-color: #3b82f6;
-    color: white;
-}
-</style>
-<button class="back-home-btn" onclick="window.location.href='../'">⬅️ Hub</button></div>
 
+    <!-- TOP BAR -->
+    <header class="top-bar">
+        <a href="https://games.ableandbeyond.support/index.html" class="btn-home" aria-label="Back to Game Hub">
+            ⬅️ Hub
+        </a>
 
-    <header class="toolbar" role="banner">
-
-        <div class="toolbar-left">
-            <h1 class="visually-hidden">Animal Matching Game</h1>
-            <button id="btn-home" class="btn-icon" aria-label="Home" title="Home">🏠</button>
+        <div class="game-title">
+            <span>🦁</span>
+            <span>Animal Matching</span>
         </div>
-        <div class="toolbar-right">
-            <button id="btn-mute" class="btn-icon" aria-label="Toggle Animal Sounds" aria-pressed="false" title="Animal Sounds">🔊</button>
-            <button id="btn-tts" class="btn-icon" aria-label="Toggle Text to Speech" aria-pressed="true" title="Text to Speech">🗣️</button>
-            <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="0.5" aria-label="Master Volume" title="Master Volume">
-            <button id="btn-theme" class="btn-icon" aria-label="Toggle Dark Theme" aria-pressed="false" title="Dark Theme">🌙</button>
-            <button id="btn-contrast" class="btn-icon" aria-label="Toggle High Contrast" aria-pressed="false" title="High Contrast">◑</button>
-            <button id="btn-fullscreen" class="btn-icon" aria-label="Toggle Fullscreen" aria-pressed="false" title="Fullscreen">⛶</button>
+
+        <div class="top-controls">
+            <button type="button" id="btn-card-count" class="ctrl-btn active" onclick="toggleCardCount()" title="Switch between 2 Cards (Easy) or 3 Cards">
+                🃏 2 Cards
+            </button>
+            <button type="button" id="btn-one-tap" class="ctrl-btn" onclick="toggleOneTap()" title="1-Tap & Spacebar Switch Mode">
+                ⚡ 1-Tap: OFF
+            </button>
+            <button type="button" id="btn-voice" class="ctrl-btn active" onclick="toggleVoice()" title="Toggle 1-Word Voice">
+                🗣️ Voice
+            </button>
+            <button type="button" id="btn-sound" class="ctrl-btn active" onclick="toggleSound()" title="Toggle Musical Sounds">
+                🎵 Sound
+            </button>
+            <div class="star-pill" aria-label="Stars earned">
+                ⭐ <span id="star-count">0</span>
+            </div>
         </div>
     </header>
 
-    <main class="game-container" role="main">
-        <div class="panels">
-            <section class="panel panel-left" aria-label="Animal Images">
-                <!-- Animal cards injected here -->
-                <div id="image-container" class="card-grid"></div>
-            </section>
-            
-            <section class="panel panel-right" aria-label="Animal Names">
-                <!-- Word cards injected here -->
-                <div id="word-container" class="card-grid"></div>
-            </section>
-        </div>
+    <!-- 4 SIMPLE PICTURE TABS -->
+    <nav class="mode-tabs" aria-label="Animal Modes">
+        <button type="button" class="mode-tab active" id="tab-match" onclick="setMode('match')">
+            <span class="tab-icon">🦁</span>
+            <span>1. Match Animal</span>
+        </button>
+        <button type="button" class="mode-tab" id="tab-sound" onclick="setMode('sound')">
+            <span class="tab-icon">🔊</span>
+            <span>2. Animal Sound</span>
+        </button>
+        <button type="button" class="mode-tab" id="tab-homes" onclick="setMode('homes')">
+            <span class="tab-icon">🏡</span>
+            <span>3. Animal Homes</span>
+        </button>
+        <button type="button" class="mode-tab" id="tab-feed" onclick="setMode('feed')">
+            <span class="tab-icon">🍎</span>
+            <span>4. Feed Animal</span>
+        </button>
+    </nav>
 
-        <nav class="pagination" aria-label="Pagination">
-            <button id="btn-prev" class="btn-nav" aria-label="Previous page" disabled>◀ Previous</button>
-            <button id="btn-next" class="btn-nav" aria-label="Next page">Next ▶</button>
-        </nav>
+    <!-- MAIN STAGE -->
+    <main class="stage-wrap">
+        <div id="stage-content" class="stage-card">
+            <!-- Populated by JS -->
+        </div>
     </main>
 
-    <!-- App Scripts -->
-    <script type="module" src="app.js"></script>
+    <script>
+        /* ================================================================
+           1. ANIMALS, SOUNDS, HABITATS & FOODS DATA (1-WORD LABELS)
+           ================================================================ */
+        const ANIMALS = [
+            // Farm
+            { id: 'cow',      word: 'COW',      emoji: '🐄', soundWord: 'MOO',    home: 'farm',   homeWord: 'FARM',   bg: '#f0fdf4', border: '#22c55e', foodEmoji: '🌿', foodWord: 'GRASS',  notes: [261.63, 196.00] },
+            { id: 'pig',      word: 'PIG',      emoji: '🐷', soundWord: 'OINK',   home: 'farm',   homeWord: 'FARM',   bg: '#fdf2f8', border: '#ec4899', foodEmoji: '🍎', foodWord: 'APPLE',  notes: [349.23, 392.00] },
+            { id: 'sheep',    word: 'SHEEP',    emoji: '🐑', soundWord: 'BAA',    home: 'farm',   homeWord: 'FARM',   bg: '#eff6ff', border: '#3b82f6', foodEmoji: '🌿', foodWord: 'GRASS',  notes: [440.00, 392.00] },
+            { id: 'duck',     word: 'DUCK',     emoji: '🦆', soundWord: 'QUACK',  home: 'farm',   homeWord: 'FARM',   bg: '#fefce8', border: '#eab308', foodEmoji: '🌽', foodWord: 'CORN',   notes: [587.33, 587.33] },
+            // Jungle
+            { id: 'lion',     word: 'LION',     emoji: '🦁', soundWord: 'ROAR',   home: 'jungle', homeWord: 'JUNGLE', bg: '#fffbeb', border: '#f59e0b', foodEmoji: '🥩', foodWord: 'MEAT',   notes: [196.00, 146.83] },
+            { id: 'monkey',   word: 'MONKEY',   emoji: '🐒', soundWord: 'OO-OO',  home: 'jungle', homeWord: 'JUNGLE', bg: '#fff7ed', border: '#f97316', foodEmoji: '🍌', foodWord: 'BANANA', notes: [523.25, 659.25] },
+            { id: 'elephant', word: 'ELEPHANT', emoji: '🐘', soundWord: 'TOOT',   home: 'jungle', homeWord: 'JUNGLE', bg: '#f1f5f9', border: '#64748b', foodEmoji: '🍎', foodWord: 'APPLE',  notes: [220.00, 329.63] },
+            { id: 'frog',     word: 'FROG',     emoji: '🐸', soundWord: 'RIBBIT', home: 'jungle', homeWord: 'JUNGLE', bg: '#f0fdf4', border: '#16a34a', foodEmoji: '🪰', foodWord: 'FLY',    notes: [392.00, 523.25] },
+            // Ocean
+            { id: 'dolphin',  word: 'DOLPHIN',  emoji: '🐬', soundWord: 'SPLASH', home: 'ocean',  homeWord: 'OCEAN',  bg: '#eff6ff', border: '#0284c7', foodEmoji: '🐟', foodWord: 'FISH',   notes: [659.25, 783.99] },
+            { id: 'octopus',  word: 'OCTOPUS',  emoji: '🐙', soundWord: 'BUBBLE', home: 'ocean',  homeWord: 'OCEAN',  bg: '#f5f3ff', border: '#8b5cf6', foodEmoji: '🦀', foodWord: 'CRAB',   notes: [440.00, 523.25] },
+            { id: 'whale',    word: 'WHALE',    emoji: '🐋', soundWord: 'WHOOSH', home: 'ocean',  homeWord: 'OCEAN',  bg: '#e0f2fe', border: '#0369a1', foodEmoji: '🐟', foodWord: 'FISH',   notes: [196.00, 261.63] },
+            // Pets
+            { id: 'dog',      word: 'DOG',      emoji: '🐶', soundWord: 'WOOF',   home: 'pets',   homeWord: 'PETS',   bg: '#fffbeb', border: '#d97706', foodEmoji: '🦴', foodWord: 'BONE',   notes: [392.00, 329.63] },
+            { id: 'cat',      word: 'CAT',      emoji: '🐱', soundWord: 'MEOW',   home: 'pets',   homeWord: 'PETS',   bg: '#fdf2f8', border: '#db2777', foodEmoji: '🐟', foodWord: 'FISH',   notes: [587.33, 523.25] },
+            { id: 'rabbit',   word: 'RABBIT',   emoji: '🐰', soundWord: 'HOP',    home: 'pets',   homeWord: 'PETS',   bg: '#f5f3ff', border: '#7c3aed', foodEmoji: '🥕', foodWord: 'CARROT', notes: [523.25, 698.46] }
+        ];
+
+        const HABITATS = [
+            { id: 'farm',   word: 'FARM',   icon: '🚜', bg: '#fef2f2', border: '#ef4444', text: '#991b1b' },
+            { id: 'jungle', word: 'JUNGLE', icon: '🌴', bg: '#f0fdf4', border: '#16a34a', text: '#14532d' },
+            { id: 'ocean',  word: 'OCEAN',  icon: '🌊', bg: '#eff6ff', border: '#2563eb', text: '#1e3a8a' },
+            { id: 'pets',   word: 'PETS',   icon: '🏠', bg: '#fefce8', border: '#eab308', text: '#713f12' }
+        ];
+
+        const FEED_FOODS = [
+            { word: 'BANANA', emoji: '🍌' },
+            { word: 'CARROT', emoji: '🥕' },
+            { word: 'BONE',   emoji: '🦴' },
+            { word: 'GRASS',  emoji: '🌿' },
+            { word: 'FISH',   emoji: '🐟' },
+            { word: 'APPLE',  emoji: '🍎' }
+        ];
+
+        /* ================================================================
+           2. STATE & WEB AUDIO + 1-WORD TTS
+           ================================================================ */
+        const state = {
+            mode: 'match',
+            easyTwoCards: true,
+            oneTap: false,
+            voiceOn: true,
+            soundOn: true,
+            stars: parseInt(localStorage.getItem('ab_animals_stars') || '0', 10),
+            // Mode 1 & 2: Match / Sound
+            targetAnimal: null,
+            choices: [],
+            roundWon: false,
+            // Mode 3: Animal Homes
+            homeQueue: [],
+            selectedAnimalId: null,
+            sortedHomes: { farm: [], jungle: [], ocean: [], pets: [] },
+            // Mode 4: Feed Animal
+            hungryAnimal: null,
+            foodChoices: [],
+            isFed: false,
+            fedEmoji: ''
+        };
+
+        let audioCtx = null;
+        function getAudioCtx() {
+            if (!audioCtx) {
+                const AC = window.AudioContext || window.webkitAudioContext;
+                if (AC) audioCtx = new AC();
+            }
+            if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+            return audioCtx;
+        }
+
+        function playNotes(freqs, type = 'triangle', spacing = 0.09, duration = 0.36) {
+            if (!state.soundOn) return;
+            const ctx = getAudioCtx();
+            if (!ctx) return;
+            const now = ctx.currentTime;
+            freqs.forEach((f, idx) => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(f, now + idx * spacing);
+                gain.gain.setValueAtTime(0.001, now + idx * spacing);
+                gain.gain.exponentialRampToValueAtTime(0.24, now + idx * spacing + 0.02);
+                gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * spacing + duration);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start(now + idx * spacing);
+                osc.stop(now + idx * spacing + duration + 0.02);
+            });
+        }
+
+        function playWinChime() {
+            playNotes([523.25, 659.25, 783.99, 1046.50], 'triangle', 0.09, 0.45);
+        }
+
+        function playSoftBump() {
+            playNotes([220, 196], 'sine', 0.1, 0.25);
+        }
+
+        function speakWord(text) {
+            if (!state.voiceOn || !('speechSynthesis' in window)) return;
+            try {
+                window.speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(text);
+                u.lang = 'en-GB';
+                u.rate = 0.92;
+                u.pitch = 1.05;
+                window.speechSynthesis.speak(u);
+            } catch (e) {}
+        }
+
+        function addStar() {
+            state.stars += 1;
+            localStorage.setItem('ab_animals_stars', String(state.stars));
+            document.getElementById('star-count').textContent = state.stars;
+            if (typeof confetti === 'function') {
+                confetti({ particleCount: 45, spread: 65, origin: { y: 0.7 } });
+            }
+        }
+
+        /* ================================================================
+           3. HEADER CONTROLS & TABS
+           ================================================================ */
+        function toggleCardCount() {
+            state.easyTwoCards = !state.easyTwoCards;
+            const btn = document.getElementById('btn-card-count');
+            btn.textContent = state.easyTwoCards ? '🃏 2 Cards' : '🃏 3 Cards';
+            btn.classList.toggle('active', state.easyTwoCards);
+            if (state.mode === 'match' || state.mode === 'sound') setupMatchOrSoundRound();
+        }
+
+        function toggleOneTap() {
+            state.oneTap = !state.oneTap;
+            const btn = document.getElementById('btn-one-tap');
+            btn.textContent = state.oneTap ? '⚡ 1-Tap: ON' : '⚡ 1-Tap: OFF';
+            btn.classList.toggle('active', state.oneTap);
+        }
+
+        function toggleVoice() {
+            state.voiceOn = !state.voiceOn;
+            document.getElementById('btn-voice').classList.toggle('active', state.voiceOn);
+            if (state.voiceOn) speakWord('Voice On');
+        }
+
+        function toggleSound() {
+            state.soundOn = !state.soundOn;
+            document.getElementById('btn-sound').classList.toggle('active', state.soundOn);
+            if (state.soundOn) playWinChime();
+        }
+
+        function setMode(mode) {
+            state.mode = mode;
+            ['match', 'sound', 'homes', 'feed'].forEach(m => {
+                document.getElementById('tab-' + m).classList.toggle('active', m === mode);
+            });
+            if (mode === 'match' || mode === 'sound') setupMatchOrSoundRound();
+            else if (mode === 'homes') setupHomesRound();
+            else setupFeedRound();
+        }
+
+        /* ================================================================
+           4. MODE 1 (MATCH ANIMAL) & MODE 2 (ANIMAL SOUND)
+           ================================================================ */
+        function setupMatchOrSoundRound() {
+            state.roundWon = false;
+            const count = state.easyTwoCards ? 2 : 3;
+            const pool = [...ANIMALS].sort(() => Math.random() - 0.5).slice(0, count);
+            state.choices = pool;
+            state.targetAnimal = pool[Math.floor(Math.random() * pool.length)];
+            renderMatchOrSoundMode();
+
+            setTimeout(() => {
+                if (state.mode === 'sound') {
+                    playNotes(state.targetAnimal.notes);
+                    speakWord(state.targetAnimal.soundWord);
+                } else {
+                    speakWord(state.targetAnimal.word);
+                }
+            }, 250);
+        }
+
+        function renderMatchOrSoundMode() {
+            const box = document.getElementById('stage-content');
+            const t = state.targetAnimal;
+            const colsClass = state.easyTwoCards ? 'cols-2' : 'cols-3';
+            const isSoundMode = state.mode === 'sound';
+
+            box.innerHTML = `
+                <div class="target-banner">
+                    <button type="button"
+                            class="btn-speak-big"
+                            onclick="playNotes([${t.notes.join(',')}]); speakWord('${isSoundMode ? t.soundWord + ', ' + t.word : t.word}')"
+                            aria-label="Listen">
+                        🔊
+                    </button>
+                    ${isSoundMode ? `
+                        <span style="font-size:clamp(2.2rem, 5vw, 3.2rem);font-weight:900;color:#14532d;">
+                            "${t.soundWord}!" 🐾
+                        </span>
+                    ` : `
+                        <span style="font-size:3.8rem;line-height:1;">${t.emoji}</span>
+                        <span style="font-size:clamp(2.1rem, 5vw, 3.1rem);font-weight:900;color:#14532d;">${t.word}</span>
+                    `}
+                </div>
+
+                <div class="animals-grid ${colsClass}">
+                    ${state.choices.map(an => `
+                        <button type="button"
+                                id="animal-card-${an.id}"
+                                class="animal-card"
+                                style="background:${an.bg};border-color:${an.border};box-shadow:0 8px 0 ${an.border};"
+                                onclick="pickAnimalCard('${an.id}')">
+                            <span class="animal-sound-badge">🔊 ${an.soundWord}</span>
+                            <span class="animal-emoji">${an.emoji}</span>
+                            <span class="animal-word">${an.word}</span>
+                        </button>
+                    `).join('')}
+                </div>
+
+                ${state.roundWon ? `
+                    <div class="win-overlay">
+                        <div class="win-text">
+                            <span>${t.emoji}</span>
+                            <span>${t.soundWord}! ${t.word}!</span>
+                        </div>
+                        <button type="button" class="btn-next-giant" onclick="setupMatchOrSoundRound()">
+                            Next ➡️
+                        </button>
+                    </div>
+                ` : ''}
+            `;
+        }
+
+        function pickAnimalCard(id) {
+            if (state.roundWon) return;
+            const actualId = state.oneTap ? state.targetAnimal.id : id;
+            const picked = ANIMALS.find(a => a.id === actualId);
+            if (actualId === state.targetAnimal.id) {
+                state.roundWon = true;
+                playWinChime();
+                speakWord(picked.soundWord + '! ' + picked.word);
+                addStar();
+                renderMatchOrSoundMode();
+            } else {
+                const el = document.getElementById('animal-card-' + id);
+                if (el) {
+                    el.classList.remove('wiggle');
+                    void el.offsetWidth;
+                    el.classList.add('wiggle');
+                }
+                playSoftBump();
+                if (picked) speakWord(picked.word);
+            }
+        }
+
+        /* ================================================================
+           5. MODE 3: 🏡 ANIMAL HOMES (FARM, JUNGLE, OCEAN, PETS)
+           ================================================================ */
+        function setupHomesRound() {
+            state.sortedHomes = { farm: [], jungle: [], ocean: [], pets: [] };
+            const f = ANIMALS.filter(a => a.home === 'farm')[Math.floor(Math.random() * 4)];
+            const j = ANIMALS.filter(a => a.home === 'jungle')[Math.floor(Math.random() * 4)];
+            const o = ANIMALS.filter(a => a.home === 'ocean')[Math.floor(Math.random() * 3)];
+            const p = ANIMALS.filter(a => a.home === 'pets')[Math.floor(Math.random() * 3)];
+            state.homeQueue = [f, j, o, p].sort(() => Math.random() - 0.5);
+            state.selectedAnimalId = state.homeQueue[0].id;
+            renderHomesMode();
+        }
+
+        function renderHomesMode() {
+            const box = document.getElementById('stage-content');
+            const allDone = state.homeQueue.length === 0;
+            const activeAnimal = state.homeQueue.find(a => a.id === state.selectedAnimalId);
+
+            box.innerHTML = `
+                <div class="habitat-tray">
+                    ${allDone ? `
+                        <div class="win-text">🌟 All Animals Home!</div>
+                    ` : state.homeQueue.map(an => `
+                        <div class="animal-token ${state.selectedAnimalId === an.id ? 'selected' : ''}"
+                             draggable="true"
+                             ondragstart="event.dataTransfer.setData('text/plain', '${an.id}'); state.selectedAnimalId='${an.id}';"
+                             onclick="selectHomeAnimal('${an.id}')"
+                             tabindex="0"
+                             role="button">
+                            <span style="font-size:3.4rem;line-height:1;">${an.emoji}</span>
+                            <span style="font-size:1.3rem;font-weight:900;">${an.word}</span>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div class="habitats-grid">
+                    ${HABITATS.map(h => {
+                        const isTarget = activeAnimal && activeAnimal.home === h.id;
+                        return `
+                            <div class="habitat-box ${isTarget ? 'highlight-habitat' : ''}"
+                                 style="background:${h.bg};border-color:${h.border};color:${h.text};box-shadow:0 7px 0 ${h.border};"
+                                 ondragover="event.preventDefault()"
+                                 ondrop="onHabitatDrop(event, '${h.id}')"
+                                 onclick="handleHabitatTap('${h.id}')"
+                                 tabindex="0"
+                                 role="button">
+                                <div style="text-align:center;">
+                                    <div style="font-size:3rem;">${h.icon}</div>
+                                    <div style="font-size:1.5rem;font-weight:900;">${h.word}</div>
+                                </div>
+                                <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;">
+                                    ${state.sortedHomes[h.id].map(an => `
+                                        <span style="font-size:2.3rem;">${an.emoji}</span>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+
+                ${allDone ? `
+                    <div class="win-overlay">
+                        <div class="win-text">🏡 Great Sorting!</div>
+                        <button type="button" class="btn-next-giant" onclick="setupHomesRound()">
+                            Play Again 🔄
+                        </button>
+                    </div>
+                ` : ''}
+            `;
+        }
+
+        function selectHomeAnimal(id) {
+            const an = state.homeQueue.find(a => a.id === id);
+            if (!an) return;
+            state.selectedAnimalId = id;
+            playNotes(an.notes);
+            speakWord(an.word);
+            if (state.oneTap) {
+                handleHabitatTap(an.home);
+                return;
+            }
+            renderHomesMode();
+        }
+
+        function onHabitatDrop(e, homeId) {
+            e.preventDefault();
+            const id = e.dataTransfer.getData('text/plain') || state.selectedAnimalId;
+            state.selectedAnimalId = id;
+            handleHabitatTap(homeId);
+        }
+
+        function handleHabitatTap(homeId) {
+            if (!state.selectedAnimalId && state.homeQueue.length > 0) {
+                state.selectedAnimalId = state.homeQueue[0].id;
+            }
+            const an = state.homeQueue.find(a => a.id === state.selectedAnimalId);
+            if (!an) return;
+
+            if (an.home === homeId || state.oneTap) {
+                const target = an.home;
+                state.sortedHomes[target].push(an);
+                state.homeQueue = state.homeQueue.filter(a => a.id !== an.id);
+                state.selectedAnimalId = state.homeQueue[0] ? state.homeQueue[0].id : null;
+                playWinChime();
+                speakWord(an.homeWord);
+                if (state.homeQueue.length === 0) addStar();
+                renderHomesMode();
+            } else {
+                playSoftBump();
+            }
+        }
+
+        /* ================================================================
+           6. MODE 4: 🍎 FEED THE ANIMAL
+           ================================================================ */
+        function setupFeedRound() {
+            const feeders = ANIMALS.filter(a => ['monkey', 'rabbit', 'dog', 'cow', 'cat', 'elephant'].includes(a.id));
+            state.hungryAnimal = feeders[Math.floor(Math.random() * feeders.length)];
+            state.isFed = false;
+            state.fedEmoji = '';
+
+            const correctFood = { word: state.hungryAnimal.foodWord, emoji: state.hungryAnimal.foodEmoji };
+            const others = FEED_FOODS.filter(f => f.word !== correctFood.word).sort(() => Math.random() - 0.5).slice(0, 3);
+            state.foodChoices = [correctFood, ...others].sort(() => Math.random() - 0.5);
+
+            renderFeedMode();
+            setTimeout(() => speakWord(state.hungryAnimal.word), 250);
+        }
+
+        function renderFeedMode() {
+            const box = document.getElementById('stage-content');
+            const an = state.hungryAnimal;
+
+            box.innerHTML = `
+                <div class="feed-layout">
+                    <div class="hungry-animal-box ${state.isFed ? 'pop-win' : ''}">
+                        <span style="font-size:6.5rem;line-height:1;">${an.emoji}</span>
+                        <span class="animal-word">${an.word}</span>
+                        ${state.fedEmoji ? `<span class="fed-food-badge">${state.fedEmoji} 😋</span>` : ''}
+                    </div>
+
+                    <div class="foods-grid">
+                        ${state.foodChoices.map(food => {
+                            const isBest = food.word === an.foodWord;
+                            return `
+                                <button type="button"
+                                        class="food-btn ${isBest ? 'hint-food' : ''}"
+                                        onclick="feedAnimal('${food.word}', '${food.emoji}')">
+                                    <span style="font-size:3.5rem;line-height:1;">${food.emoji}</span>
+                                    <span style="font-size:1.45rem;font-weight:900;">${food.word}</span>
+                                </button>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+
+                ${state.isFed ? `
+                    <div class="win-overlay">
+                        <div class="win-text">
+                            <span>😋</span>
+                            <span>Yum! ${an.foodWord}!</span>
+                        </div>
+                        <button type="button" class="btn-next-giant" onclick="setupFeedRound()">
+                            Next Animal ➡️
+                        </button>
+                    </div>
+                ` : ''}
+            `;
+        }
+
+        function feedAnimal(word, emoji) {
+            const an = state.hungryAnimal;
+            const chosenWord = state.oneTap ? an.foodWord : word;
+            const chosenEmoji = state.oneTap ? an.foodEmoji : emoji;
+
+            state.fedEmoji = chosenEmoji;
+            state.isFed = true;
+            playWinChime();
+            speakWord(chosenWord);
+            addStar();
+            renderFeedMode();
+        }
+
+        /* ================================================================
+           7. SPACEBAR / ENTER SWITCH ACCESSIBILITY
+           ================================================================ */
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' || e.code === 'Enter') {
+                if (document.activeElement && document.activeElement.tagName === 'BUTTON') return;
+                e.preventDefault();
+                if (state.mode === 'match' || state.mode === 'sound') {
+                    if (state.roundWon) setupMatchOrSoundRound();
+                    else pickAnimalCard(state.targetAnimal.id);
+                } else if (state.mode === 'homes') {
+                    if (state.homeQueue.length === 0) setupHomesRound();
+                    else handleHabitatTap(state.homeQueue[0].home);
+                } else {
+                    if (state.isFed) setupFeedRound();
+                    else feedAnimal(state.hungryAnimal.foodWord, state.hungryAnimal.foodEmoji);
+                }
+            }
+        });
+
+        // Boot
+        document.getElementById('star-count').textContent = state.stars;
+        setupMatchOrSoundRound();
+    </script>
 </body>
 </html>
