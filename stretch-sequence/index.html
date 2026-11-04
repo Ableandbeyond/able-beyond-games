@@ -1,0 +1,1681 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Stretch & Sequence: Mind & Body Break | Able & Beyond</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-cream: #FDFBF7;
+      --bg-linen: #F4F1EA;
+      --bg-linen-deep: #EAE5D9;
+      --sage: #7A9A8B;
+      --sage-dark: #5A7A6C;
+      --sage-light: #E6EFEA;
+      --sage-border: #C5D8CE;
+      --terracotta: #D4A373;
+      --terracotta-light: #F9EFE4;
+      --charcoal: #2C3E50;
+      --slate: #596A7A;
+      --white: #FFFFFF;
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --shadow-soft: 0 10px 30px rgba(44, 62, 80, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-cream);
+      color: var(--charcoal);
+      min-height: 100vh;
+      width: 100vw;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.5;
+    }
+
+    /* TOP NAVIGATION BAR */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 22px;
+      background: rgba(253, 251, 247, 0.95);
+      border-bottom: 3px solid var(--bg-linen-deep);
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .hub-btn {
+      text-decoration: none;
+      background: var(--white);
+      color: var(--charcoal);
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      padding: 9px 18px;
+      border-radius: 50px;
+      border: 3px solid var(--sage-border);
+      box-shadow: 0 4px 0 var(--sage-border);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform 0.15s, background 0.2s;
+    }
+    .hub-btn:hover { background: var(--sage-light); }
+    .hub-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--sage-border); }
+
+    .brand-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Fredoka', sans-serif;
+      font-size: clamp(1.25rem, 2.4vw, 1.7rem);
+      color: var(--charcoal);
+    }
+
+    .brand-pill {
+      background: var(--sage-light);
+      color: var(--sage-dark);
+      border: 2px solid var(--sage-border);
+      font-size: 0.9rem;
+      padding: 4px 12px;
+      border-radius: 50px;
+      font-weight: 700;
+    }
+
+    .top-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .toggle-btn {
+      background: var(--white);
+      color: var(--charcoal);
+      border: 2.5px solid var(--bg-linen-deep);
+      border-radius: 50px;
+      padding: 8px 15px;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 0.98rem;
+      cursor: pointer;
+      box-shadow: 0 3px 0 var(--bg-linen-deep);
+      transition: all 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .toggle-btn.active {
+      background: var(--sage-light);
+      border-color: var(--sage);
+      color: var(--sage-dark);
+      box-shadow: 0 3px 0 var(--sage);
+    }
+    .toggle-btn:active { transform: translateY(2px); }
+
+    /* MAIN CONTAINER */
+    .main-stage {
+      flex: 1;
+      max-width: 1120px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 18px 20px 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .hidden { display: none !important; }
+
+    /* ================= SCREEN 1: WELCOME MENU ================= */
+    .welcome-card {
+      background: var(--bg-linen);
+      border: 3px solid var(--bg-linen-deep);
+      border-radius: var(--radius-xl);
+      padding: clamp(22px, 4vw, 38px);
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 24px;
+    }
+
+    .welcome-hero-badge {
+      background: var(--sage-light);
+      color: var(--sage-dark);
+      border: 2px solid var(--sage-border);
+      padding: 6px 18px;
+      border-radius: 50px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      letter-spacing: 0.4px;
+    }
+
+    .welcome-title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: clamp(1.9rem, 4vw, 2.8rem);
+      color: var(--charcoal);
+      line-height: 1.15;
+    }
+
+    .welcome-sub {
+      max-width: 660px;
+      font-size: clamp(1.05rem, 1.8vw, 1.2rem);
+      color: var(--slate);
+      font-weight: 600;
+    }
+
+    .mode-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      width: 100%;
+      max-width: 960px;
+    }
+
+    .mode-select-card {
+      background: var(--white);
+      border: 4px solid var(--sage-border);
+      border-radius: var(--radius-xl);
+      padding: 24px 22px;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 16px;
+      cursor: pointer;
+      box-shadow: 0 8px 0 var(--sage-border);
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+    .mode-select-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--sage);
+      box-shadow: 0 10px 0 var(--sage);
+    }
+    .mode-select-card.hard-card {
+      border-color: #D8C3A5;
+      box-shadow: 0 8px 0 #D8C3A5;
+    }
+    .mode-select-card.hard-card:hover {
+      border-color: var(--terracotta);
+      box-shadow: 0 10px 0 var(--terracotta);
+    }
+
+    .mode-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 0.95rem;
+      padding: 5px 14px;
+      border-radius: 50px;
+      background: var(--sage-light);
+      color: var(--sage-dark);
+      width: fit-content;
+    }
+    .hard-card .mode-tag {
+      background: var(--terracotta-light);
+      color: #8C5828;
+    }
+
+    .mode-card-title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.55rem;
+      color: var(--charcoal);
+    }
+
+    .mode-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      color: var(--slate);
+      font-weight: 600;
+      font-size: 1rem;
+    }
+    .mode-features li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .start-pill-btn {
+      width: 100%;
+      background: var(--sage);
+      color: var(--white);
+      border: none;
+      border-radius: 16px;
+      padding: 14px;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.25rem;
+      text-align: center;
+      box-shadow: 0 5px 0 var(--sage-dark);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .hard-card .start-pill-btn {
+      background: var(--terracotta);
+      box-shadow: 0 5px 0 #A67346;
+    }
+
+    /* POSE GALLERY PREVIEW STRIP ON WELCOME */
+    .pose-preview-strip {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      width: 100%;
+      padding-top: 8px;
+    }
+    .pose-mini-chip {
+      background: var(--white);
+      border: 2px solid var(--bg-linen-deep);
+      border-radius: 50px;
+      padding: 6px 14px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--slate);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ================= SCREEN 2: HARD MODE MEMORIZE PHASE ================= */
+    .memorize-card {
+      background: var(--bg-linen);
+      border: 3px solid var(--bg-linen-deep);
+      border-radius: var(--radius-xl);
+      padding: 28px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .memorize-timer-bar {
+      width: 100%;
+      max-width: 520px;
+      height: 16px;
+      background: var(--white);
+      border-radius: 50px;
+      border: 2px solid var(--sage-border);
+      overflow: hidden;
+    }
+    .memorize-timer-fill {
+      height: 100%;
+      background: var(--sage);
+      width: 100%;
+      transition: width 0.25s linear;
+    }
+
+    .sequence-preview-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+      gap: 16px;
+      width: 100%;
+    }
+
+    .seq-step-card {
+      background: var(--white);
+      border: 3px solid var(--sage-border);
+      border-radius: 22px;
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+      box-shadow: 0 6px 0 var(--sage-border);
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .seq-step-card.clickable {
+      cursor: pointer;
+    }
+    .seq-step-card.clickable:hover {
+      transform: translateY(-4px);
+      border-color: var(--sage);
+    }
+    .seq-step-card.picked {
+      background: var(--sage-light);
+      border-color: var(--sage-dark);
+      opacity: 0.55;
+      pointer-events: none;
+    }
+    .seq-step-badge {
+      background: var(--sage);
+      color: var(--white);
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1rem;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ================= SCREEN 3: ACTIVE ROUTINE ================= */
+    .routine-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      width: 100%;
+    }
+
+    /* TOP PROGRESS + NOW & NEXT STRIP */
+    .routine-top-row {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .progress-card {
+      background: var(--bg-linen);
+      border: 3px solid var(--bg-linen-deep);
+      border-radius: var(--radius-lg);
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.2rem;
+      color: var(--charcoal);
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 16px;
+      background: var(--white);
+      border-radius: 50px;
+      border: 2px solid var(--sage-border);
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--sage);
+      border-radius: 50px;
+      transition: width 0.4s ease;
+    }
+
+    /* NOW & NEXT VISUAL BOX */
+    .now-next-strip {
+      background: var(--bg-linen);
+      border: 3px solid var(--bg-linen-deep);
+      border-radius: var(--radius-lg);
+      padding: 12px 18px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nn-slot {
+      background: var(--white);
+      border: 3px solid var(--sage-border);
+      border-radius: 16px;
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .nn-slot.now-slot {
+      background: var(--sage-light);
+      border-color: var(--sage);
+      box-shadow: 0 4px 0 var(--sage-border);
+    }
+    .nn-tag {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      padding: 2px 8px;
+      border-radius: 50px;
+      background: var(--sage);
+      color: var(--white);
+    }
+    .next-slot .nn-tag {
+      background: var(--terracotta);
+    }
+    .nn-name {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.08rem;
+      color: var(--charcoal);
+    }
+
+    /* MAIN WORKSPACE: POSE ILLUSTRATION + COUNTDOWN TIMER */
+    .routine-main-grid {
+      display: grid;
+      grid-template-columns: 1.25fr 1fr;
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .pose-showcase-card {
+      background: var(--bg-linen);
+      border: 3px solid var(--bg-linen-deep);
+      border-radius: var(--radius-xl);
+      padding: 22px 26px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      text-align: center;
+      gap: 14px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .pose-svg-frame {
+      width: 100%;
+      max-width: 390px;
+      height: 235px;
+      background: var(--white);
+      border: 3px solid var(--sage-border);
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      overflow: hidden;
+    }
+
+    /* Gentle Low-Arousal Breathing Pulse on the SVG Illustration */
+    .pose-svg-frame svg {
+      width: 100%;
+      height: 100%;
+      animation: gentleFloat 4s infinite ease-in-out;
+    }
+    @keyframes gentleFloat {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-4px) scale(1.015); }
+    }
+
+    .pose-title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      color: var(--charcoal);
+    }
+
+    .pose-instruction {
+      font-size: clamp(1.05rem, 1.9vw, 1.25rem);
+      font-weight: 700;
+      color: var(--slate);
+      background: var(--white);
+      padding: 10px 20px;
+      border-radius: 16px;
+      border: 2px solid var(--bg-linen-deep);
+      width: 100%;
+    }
+
+    /* RIGHT SIDE: COUNTDOWN RING & CONTROLS */
+    .timer-panel-card {
+      background: var(--bg-linen);
+      border: 3px solid var(--bg-linen-deep);
+      border-radius: var(--radius-xl);
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .timer-ring-wrap {
+      position: relative;
+      width: 210px;
+      height: 210px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .timer-ring-svg {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .timer-ring-bg {
+      fill: var(--white);
+      stroke: var(--bg-linen-deep);
+      stroke-width: 14;
+    }
+
+    .timer-ring-progress {
+      fill: none;
+      stroke: var(--sage);
+      stroke-width: 14;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.55s ease;
+    }
+
+    .timer-center-label {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .timer-big-num {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 4.1rem;
+      line-height: 1;
+      color: var(--charcoal);
+      transition: transform 0.25s ease;
+    }
+    .timer-big-num.pulse {
+      transform: scale(1.14);
+      color: var(--sage-dark);
+    }
+
+    .timer-sub-unit {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--slate);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 4px;
+    }
+
+    /* 10-DOT VISUAL STEP TRACKER */
+    .ten-dots-row {
+      display: flex;
+      gap: 7px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .step-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--white);
+      border: 2.5px solid var(--sage-border);
+      transition: all 0.25s;
+    }
+    .step-dot.lit {
+      background: var(--sage);
+      border-color: var(--sage-dark);
+      transform: scale(1.12);
+    }
+
+    .timer-controls-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      width: 100%;
+    }
+
+    .action-ctrl-btn {
+      background: var(--white);
+      color: var(--charcoal);
+      border: 3px solid var(--sage-border);
+      border-radius: 18px;
+      padding: 12px 10px;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.05rem;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      box-shadow: 0 5px 0 var(--sage-border);
+      transition: all 0.15s;
+    }
+    .action-ctrl-btn:hover {
+      background: var(--sage-light);
+      border-color: var(--sage);
+    }
+    .action-ctrl-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 var(--sage-border);
+    }
+    .action-ctrl-btn.primary-sage {
+      background: var(--sage);
+      color: var(--white);
+      border-color: var(--sage-dark);
+      box-shadow: 0 5px 0 var(--sage-dark);
+    }
+
+    /* ================= SCREEN 4: MID-SESSION CALMING BREATH (15s) ================= */
+    .breath-screen-card {
+      background: var(--bg-linen);
+      border: 3px solid var(--sage-border);
+      border-radius: var(--radius-xl);
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 22px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .breath-orb-stage {
+      width: 240px;
+      height: 240px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .breath-halo {
+      position: absolute;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: rgba(122, 154, 139, 0.18);
+      border: 3px solid rgba(122, 154, 139, 0.35);
+      transition: transform 3.6s ease-in-out;
+    }
+    .breath-halo.inhale {
+      transform: scale(1.58);
+    }
+
+    .breath-circle {
+      width: 145px;
+      height: 145px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #96B5A6 0%, var(--sage) 65%, var(--sage-dark) 100%);
+      color: var(--white);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.45rem;
+      box-shadow: 0 12px 30px rgba(90, 122, 108, 0.3);
+      transition: transform 3.6s ease-in-out;
+      z-index: 2;
+    }
+    .breath-circle.inhale {
+      transform: scale(1.32);
+    }
+
+    /* ================= SCREEN 5: COMPLETION SCREEN ================= */
+    .completion-card {
+      background: var(--bg-linen);
+      border: 4px solid var(--sage-border);
+      border-radius: var(--radius-xl);
+      padding: 36px 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 20px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .completed-poses-row {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .completed-pose-pill {
+      background: var(--white);
+      border: 3px solid var(--sage-border);
+      border-radius: 20px;
+      padding: 10px 18px;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.1rem;
+      color: var(--sage-dark);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .completion-actions {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 8px;
+    }
+
+    .big-Menu-btn {
+      background: var(--sage);
+      color: var(--white);
+      border: 3px solid var(--sage-dark);
+      border-radius: 50px;
+      padding: 14px 32px;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.3rem;
+      cursor: pointer;
+      box-shadow: 0 6px 0 var(--sage-dark);
+      transition: transform 0.15s;
+    }
+    .big-Menu-btn.secondary {
+      background: var(--white);
+      color: var(--charcoal);
+      border-color: var(--sage-border);
+      box-shadow: 0 6px 0 var(--sage-border);
+    }
+    .big-Menu-btn:active { transform: translateY(3px); }
+
+    @media (max-width: 860px) {
+      .routine-top-row,
+      .routine-main-grid {
+        grid-template-columns: 1fr;
+      }
+      .now-next-strip {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP HEADER BAR -->
+  <header class="top-bar">
+    <a href="https://games.ableandbeyond.support/index.html" class="hub-btn">⬅️ Hub</a>
+
+    <div class="brand-header">
+      <span>🌿</span>
+      <span>Stretch &amp; Sequence</span>
+      <span class="brand-pill" id="header-mode-pill">Mind &amp; Body Break</span>
+    </div>
+
+    <div class="top-controls">
+      <button class="toggle-btn active" id="voice-toggle" onclick="toggleVoice()">🗣️ Voice: ON</button>
+      <button class="toggle-btn active" id="chime-toggle" onclick="toggleChime()">🎵 Chimes: ON</button>
+      <button class="toggle-btn" id="menu-return-btn" onclick="showWelcomeScreen()" style="display:none;">🏠 Modes</button>
+    </div>
+  </header>
+
+  <!-- MAIN STAGE -->
+  <main class="main-stage">
+
+    <!-- ================= 1. WELCOME SCREEN ================= -->
+    <section id="screen-welcome" class="welcome-card">
+      <div class="welcome-hero-badge">🧘 LOW-AROUSAL MOVEMENT &amp; SEQUENCING STUDIO</div>
+      <h1 class="welcome-title">Stretch &amp; Sequence: Mind &amp; Body Break</h1>
+      <p class="welcome-sub">
+        Roll out your mat, take a gentle breath, and follow the calm movement sequence at your own pace.
+      </p>
+
+      <div class="mode-cards-grid">
+        <!-- SIMPLE MODE -->
+        <div class="mode-select-card" onclick="startSession('simple')">
+          <div>
+            <div class="mode-tag">🌱 Lower Cognitive Load</div>
+            <h2 class="mode-card-title" style="margin-top:10px;">Simple Mode (3 Stretches)</h2>
+            <ul class="mode-features" style="margin-top:12px;">
+              <li>✅ <strong>3 Gentle Stretches</strong> on the mat</li>
+              <li>✅ <strong>Relaxed 1 to 10 Count</strong> with soft visual chimes</li>
+              <li>✅ <strong>Clear "Now &amp; Next"</strong> visual guidance strip</li>
+              <li>✅ <strong>Mid-Session Breathing Break</strong> (15s)</li>
+            </ul>
+          </div>
+          <button class="start-pill-btn">Start Simple Routine 🌿</button>
+        </div>
+
+        <!-- HARD MODE -->
+        <div class="mode-select-card hard-card" onclick="startSession('hard')">
+          <div>
+            <div class="mode-tag">🧠 Sequencing &amp; Working Memory</div>
+            <h2 class="mode-card-title" style="margin-top:10px;">Hard Mode (4–5 Stretches)</h2>
+            <ul class="mode-features" style="margin-top:12px;">
+              <li>🌟 <strong>4 to 5 Stretches</strong> including advanced poses</li>
+              <li>🌟 <strong>5-Second "Memorize the Order"</strong> challenge</li>
+              <li>🌟 <strong>Recall Check</strong> before starting your stretches</li>
+              <li>🌟 <strong>Mid-Session Breathing Break</strong> (15s)</li>
+            </ul>
+          </div>
+          <button class="start-pill-btn">Start Memory &amp; Stretch 🧠</button>
+        </div>
+      </div>
+
+      <div class="pose-preview-strip">
+        <span class="pose-mini-chip">🌳 Tall Tree</span>
+        <span class="pose-mini-chip">🤗 The Hug</span>
+        <span class="pose-mini-chip">🦋 Butterfly</span>
+        <span class="pose-mini-chip">⭐ Starfish</span>
+        <span class="pose-mini-chip">🔄 Seated Twist</span>
+        <span class="pose-mini-chip">🐱 Cat-Bridge</span>
+        <span class="pose-mini-chip">🌈 Side Reach</span>
+        <span class="pose-mini-chip">🦁 The Sphinx</span>
+      </div>
+    </section>
+
+    <!-- ================= 2. HARD MODE: MEMORIZE THE ORDER SCREEN ================= -->
+    <section id="screen-memorize" class="memorize-card hidden">
+      <div class="welcome-hero-badge" id="mem-badge">🧠 STEP 1: MEMORIZE THE SEQUENCE</div>
+      <h2 class="welcome-title" id="mem-title" style="font-size:2rem;">Remember This Stretch Order!</h2>
+      <p class="welcome-sub" id="mem-sub">Look carefully at the 4 stretches below before they hide...</p>
+
+      <div class="memorize-timer-bar" id="mem-bar-wrap">
+        <div class="memorize-timer-fill" id="mem-bar-fill"></div>
+      </div>
+
+      <!-- Sequence Cards -->
+      <div class="sequence-preview-row" id="mem-cards-row"></div>
+
+      <!-- Recall Progress Slots (Shown when cards are hidden/shuffled) -->
+      <div class="completed-poses-row hidden" id="recall-slots-row"></div>
+
+      <button class="big-Menu-btn" id="mem-skip-btn" onclick="beginActiveStretches()">
+        Skip Memory &amp; Start Stretches ➡️
+      </button>
+    </section>
+
+    <!-- ================= 3. ACTIVE ROUTINE SCREEN ================= -->
+    <section id="screen-routine" class="routine-layout hidden">
+      <!-- Top Row: Progress + Now & Next -->
+      <div class="routine-top-row">
+        <div class="progress-card">
+          <div class="progress-header">
+            <span id="stretch-step-label">Stretch 1 of 3</span>
+            <span id="mode-indicator-badge" class="brand-pill">Simple Mode</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" id="routine-progress-fill" style="width: 33%;"></div>
+          </div>
+        </div>
+
+        <div class="now-next-strip">
+          <div class="nn-slot now-slot">
+            <span class="nn-tag">NOW</span>
+            <span class="nn-name" id="now-pose-name">🌳 The Tall Tree</span>
+          </div>
+          <div style="font-size:1.5rem; color:var(--sage-dark); font-weight:800;">➔</div>
+          <div class="nn-slot next-slot">
+            <span class="nn-tag">NEXT</span>
+            <span class="nn-name" id="next-pose-name">🤗 The Hug</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Grid: Pose SVG Showcase + 1-to-10 Countdown Ring -->
+      <div class="routine-main-grid">
+        <div class="pose-showcase-card">
+          <div class="pose-svg-frame" id="pose-svg-container"></div>
+          <h2 class="pose-title" id="active-pose-title">🌳 The Tall Tree</h2>
+          <p class="pose-instruction" id="active-pose-desc">
+            Sit tall or lie flat on your mat, and reach both arms gently up toward the sky.
+          </p>
+        </div>
+
+        <div class="timer-panel-card">
+          <div style="font-family:'Fredoka',sans-serif; font-size:1.25rem; color:var(--slate);">
+            Hold Pose &amp; Count Gently to 10
+          </div>
+
+          <div class="timer-ring-wrap">
+            <svg class="timer-ring-svg" viewBox="0 0 200 200">
+              <circle class="timer-ring-bg" cx="100" cy="100" r="82"></circle>
+              <circle class="timer-ring-progress" id="timer-ring-circle" cx="100" cy="100" r="82"
+                      stroke-dasharray="515.22" stroke-dashoffset="515.22"></circle>
+            </svg>
+            <div class="timer-center-label">
+              <div class="timer-big-num" id="timer-count-num">1</div>
+              <div class="timer-sub-unit" id="timer-status-text">of 10</div>
+            </div>
+          </div>
+
+          <!-- 10 Visual Dots -->
+          <div class="ten-dots-row" id="ten-dots-row"></div>
+
+          <!-- Control Buttons: Pause, Replay Count, Skip -->
+          <div class="timer-controls-grid">
+            <button class="action-ctrl-btn primary-sage" id="pause-btn" onclick="togglePauseTimer()">
+              <span style="font-size:1.4rem;" id="pause-icon">⏸️</span>
+              <span id="pause-label">Pause</span>
+            </button>
+            <button class="action-ctrl-btn" onclick="replayCurrentStretch()">
+              <span style="font-size:1.4rem;">🔄</span>
+              <span>Replay 1–10</span>
+            </button>
+            <button class="action-ctrl-btn" onclick="skipCurrentStretch()">
+              <span style="font-size:1.4rem;">⏭️</span>
+              <span>Next Pose</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 4. MID-SESSION BREATHING MICRO-BREAK (15s) ================= -->
+    <section id="screen-breath" class="breath-screen-card hidden">
+      <div class="welcome-hero-badge">🌬️ MID-SESSION MINDFULNESS BREAK (15 SECONDS)</div>
+      <h2 class="welcome-title" style="font-size:2.1rem;">Calming Breath Break</h2>
+      <p class="welcome-sub" id="breath-instruction-text">
+        Follow the gentle sage circle as it grows and shrinks...
+      </p>
+
+      <div class="breath-orb-stage">
+        <div class="breath-halo" id="breath-halo"></div>
+        <div class="breath-circle" id="breath-circle">
+          <span style="font-size:2.2rem;">🌿</span>
+          <span id="breath-phase-word">Breathe In...</span>
+        </div>
+      </div>
+
+      <div style="font-family:'Fredoka',sans-serif; font-size:1.25rem; color:var(--sage-dark);">
+        Continuing routine in <span id="breath-seconds-left">15</span>s
+      </div>
+
+      <button class="big-Menu-btn secondary" onclick="finishBreathingBreak()">
+        Continue to Next Stretch ➡️
+      </button>
+    </section>
+
+    <!-- ================= 5. COMPLETION SCREEN ================= -->
+    <section id="screen-complete" class="completion-card hidden">
+      <div style="font-size:4.2rem; line-height:1;">🌿✨🧘</div>
+      <h2 class="welcome-title">Great Job Completing Your Sequence!</h2>
+      <p class="welcome-sub">
+        Your body and mind took a wonderful, calm movement break today.
+      </p>
+
+      <div class="completed-poses-row" id="completed-summary-row"></div>
+
+      <div class="completion-actions">
+        <button class="big-Menu-btn" onclick="replaySameMode()">
+          🔄 Play Again
+        </button>
+        <button class="big-Menu-btn secondary" onclick="showWelcomeScreen()">
+          🎛️ Change Mode
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    /* ============================================================================
+       1. BESPOKE SVG POSE ILLUSTRATIONS (CALM CHILD ON A SAGE YOGA MAT)
+       ============================================================================ */
+    function getPoseSVG(poseId) {
+      const mat = `<rect x="35" y="168" width="250" height="16" rx="8" fill="#A3BFA8" stroke="#7A9A8B" stroke-width="3"/>`;
+      const head = (cx, cy) => `
+        <circle cx="${cx}" cy="${cy}" r="18" fill="#F5D0B5" stroke="#2C3E50" stroke-width="3.2"/>
+        <path d="M ${cx - 16} ${cy - 4} Q ${cx} ${cy - 22} ${cx + 16} ${cy - 4}" fill="#4A3728"/>
+        <path d="M ${cx - 7} ${cy - 1} Q ${cx - 4} ${cy + 2} ${cx - 1} ${cy - 1}" fill="none" stroke="#2C3E50" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M ${cx + 1} ${cy - 1} Q ${cx + 4} ${cy + 2} ${cx + 7} ${cy - 1}" fill="none" stroke="#2C3E50" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M ${cx - 5} ${cy + 7} Q ${cx} ${cy + 11} ${cx + 5} ${cy + 7}" fill="none" stroke="#2C3E50" stroke-width="2.4" stroke-linecap="round"/>
+      `;
+
+      const illustrations = {
+        // 1. The Tall Tree: Sitting upright, reaching both arms overhead
+        tree: `
+          <svg viewBox="0 0 320 200" aria-label="The Tall Tree Stretch">
+            ${mat}
+            <!-- Crossed Legs on Mat -->
+            <path d="M 122 166 Q 160 150 198 166" fill="none" stroke="#5A7A6C" stroke-width="18" stroke-linecap="round"/>
+            <!-- Upright Torso -->
+            <rect x="142" y="96" width="36" height="62" rx="16" fill="#7A9A8B" stroke="#2C3E50" stroke-width="3.2"/>
+            <!-- Arms Reaching High Overhead -->
+            <path d="M 146 104 Q 126 62 140 24" fill="none" stroke="#F5D0B5" stroke-width="11" stroke-linecap="round"/>
+            <path d="M 174 104 Q 194 62 180 24" fill="none" stroke="#F5D0B5" stroke-width="11" stroke-linecap="round"/>
+            ${head(160, 74)}
+            <!-- Gentle Leaf Icons Above Hands -->
+            <text x="150" y="20" font-size="18">🌿</text>
+          </svg>
+        `,
+        // 2. The Hug: Wrapping arms around shoulders / knees to chest
+        hug: `
+          <svg viewBox="0 0 320 200" aria-label="The Gentle Hug Stretch">
+            ${mat}
+            <!-- Seated Legs -->
+            <path d="M 126 165 Q 160 152 194 165" fill="none" stroke="#5A7A6C" stroke-width="18" stroke-linecap="round"/>
+            <!-- Torso -->
+            <rect x="138" y="94" width="44" height="64" rx="18" fill="#D4A373" stroke="#2C3E50" stroke-width="3.2"/>
+            ${head(160, 70)}
+            <!-- Arms Wrapped Across Chest in Self-Hug -->
+            <path d="M 138 112 Q 160 128 180 108" fill="none" stroke="#F5D0B5" stroke-width="11" stroke-linecap="round"/>
+            <path d="M 182 118 Q 160 134 140 114" fill="none" stroke="#F5D0B5" stroke-width="11" stroke-linecap="round"/>
+            <text x="151" y="42" font-size="18">💛</text>
+          </svg>
+        `,
+        // 3. The Butterfly: Soles of feet together, knees dropped wide
+        butterfly: `
+          <svg viewBox="0 0 320 200" aria-label="The Butterfly Stretch">
+            ${mat}
+            <!-- Butterfly Knees Wide Out -->
+            <path d="M 155 154 L 106 144 L 152 166" fill="none" stroke="#5A7A6C" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M 165 154 L 214 144 L 168 166" fill="none" stroke="#5A7A6C" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
+            <!-- Soles of Feet Together in Center -->
+            <ellipse cx="160" cy="165" rx="12" ry="7" fill="#F5D0B5" stroke="#2C3E50" stroke-width="2.5"/>
+            <!-- Torso -->
+            <rect x="142" y="92" width="36" height="60" rx="16" fill="#7A9A8B" stroke="#2C3E50" stroke-width="3.2"/>
+            <!-- Arms Resting Gently Toward Feet -->
+            <path d="M 144 106 L 154 156" stroke="#F5D0B5" stroke-width="10" stroke-linecap="round"/>
+            <path d="M 176 106 L 166 156" stroke="#F5D0B5" stroke-width="10" stroke-linecap="round"/>
+            ${head(160, 70)}
+            <text x="95" y="122" font-size="18">🦋</text>
+          </svg>
+        `,
+        // 4. The Starfish: Lying flat, arms and legs spread wide like a star
+        starfish: `
+          <svg viewBox="0 0 320 200" aria-label="The Starfish Stretch">
+            <!-- Top-Down Soft Mat View -->
+            <rect x="65" y="22" width="190" height="156" rx="28" fill="#E6EFEA" stroke="#7A9A8B" stroke-width="3.5"/>
+            <!-- Wide Starfish Legs -->
+            <line x1="150" y1="112" x2="112" y2="160" stroke="#5A7A6C" stroke-width="15" stroke-linecap="round"/>
+            <line x1="170" y1="112" x2="208" y2="160" stroke="#5A7A6C" stroke-width="15" stroke-linecap="round"/>
+            <!-- Wide Starfish Arms -->
+            <line x1="146" y1="84" x2="98" y2="54" stroke="#F5D0B5" stroke-width="12" stroke-linecap="round"/>
+            <line x1="174" y1="84" x2="222" y2="54" stroke="#F5D0B5" stroke-width="12" stroke-linecap="round"/>
+            <!-- Torso -->
+            <rect x="142" y="72" width="36" height="50" rx="16" fill="#D4A373" stroke="#2C3E50" stroke-width="3.2"/>
+            ${head(160, 48)}
+            <text x="78" y="48" font-size="18">⭐</text>
+          </svg>
+        `,
+        // 5. The Seated Twist: Gentle seated torso twist left & right
+        twist: `
+          <svg viewBox="0 0 320 200" aria-label="The Seated Twist Stretch">
+            ${mat}
+            <path d="M 122 165 Q 160 150 198 165" fill="none" stroke="#5A7A6C" stroke-width="18" stroke-linecap="round"/>
+            <rect x="142" y="94" width="36" height="62" rx="16" fill="#7A9A8B" stroke="#2C3E50" stroke-width="3.2"/>
+            <!-- One Arm Across to Opposite Knee, Other Behind -->
+            <path d="M 144 108 Q 168 132 186 156" fill="none" stroke="#F5D0B5" stroke-width="10" stroke-linecap="round"/>
+            <path d="M 178 108 L 204 162" fill="none" stroke="#F5D0B5" stroke-width="10" stroke-linecap="round"/>
+            ${head(164, 70)}
+            <text x="206" y="94" font-size="20">🔄</text>
+          </svg>
+        `,
+        // 6. The Cat-Stretch / Bridge: Gentle arched back on the mat
+        catbridge: `
+          <svg viewBox="0 0 320 200" aria-label="The Cat Stretch on Mat">
+            ${mat}
+            <!-- Knees & Lower Legs on Mat -->
+            <path d="M 105 126 L 105 166 L 78 166" fill="none" stroke="#5A7A6C" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+            <!-- Gently Arched Cat Back -->
+            <path d="M 108 124 Q 152 84 198 124" fill="none" stroke="#7A9A8B" stroke-width="24" stroke-linecap="round"/>
+            <!-- Front Arms Supporting on Mat -->
+            <line x1="198" y1="124" x2="198" y2="166" stroke="#F5D0B5" stroke-width="11" stroke-linecap="round"/>
+            ${head(218, 126)}
+            <text x="145" y="72" font-size="18">🐱</text>
+          </svg>
+        `,
+        // 7. The Side Reach: Sitting cross-legged reaching one arm overhead like a rainbow
+        sidereach: `
+          <svg viewBox="0 0 320 200" aria-label="The Side Reach Stretch">
+            ${mat}
+            <path d="M 122 165 Q 160 150 198 165" fill="none" stroke="#5A7A6C" stroke-width="18" stroke-linecap="round"/>
+            <!-- Slightly Tilted Torso -->
+            <rect x="142" y="94" width="36" height="62" rx="16" transform="rotate(8 160 140)" fill="#D4A373" stroke="#2C3E50" stroke-width="3.2"/>
+            <!-- Left Hand Supporting on Mat -->
+            <line x1="142" y1="112" x2="112" y2="164" stroke="#F5D0B5" stroke-width="10" stroke-linecap="round"/>
+            <!-- Right Arm Arcing Overhead -->
+            <path d="M 178 106 Q 192 42 132 34" fill="none" stroke="#F5D0B5" stroke-width="11" stroke-linecap="round"/>
+            ${head(164, 72)}
+            <text x="108" y="42" font-size="18">🌈</text>
+          </svg>
+        `,
+        // 8. The Sphinx: Lying on stomach, propping upper body on forearms
+        sphinx: `
+          <svg viewBox="0 0 320 200" aria-label="The Sphinx Stretch">
+            ${mat}
+            <!-- Legs Extended Flat on Mat -->
+            <line x1="72" y1="160" x2="148" y2="158" stroke="#5A7A6C" stroke-width="16" stroke-linecap="round"/>
+            <!-- Gently Lifted Chest/Torso -->
+            <path d="M 144 158 Q 178 148 198 112" fill="none" stroke="#7A9A8B" stroke-width="24" stroke-linecap="round"/>
+            <!-- Forearms Propped on Mat -->
+            <path d="M 200 116 L 200 164 L 234 164" fill="none" stroke="#F5D0B5" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+            ${head(206, 86)}
+            <text x="235" y="95" font-size="18">🦁</text>
+          </svg>
+        `
+      };
+
+      return illustrations[poseId] || illustrations.tree;
+    }
+
+    /* ============================================================================
+       2. EXERCISE DATABASE (8 SAFE MAT-BASED STRETCHES)
+       ============================================================================ */
+    const SIMPLE_STRETCHES = [
+      {
+        id: 'tree',
+        name: 'The Tall Tree',
+        emoji: '🌳',
+        cue: 'Sit tall or lie flat on your mat, and reach both arms gently overhead like tall tree branches.'
+      },
+      {
+        id: 'hug',
+        name: 'The Hug',
+        emoji: '🤗',
+        cue: 'Wrap your arms warmly around your shoulders, or hug your knees gently toward your chest.'
+      },
+      {
+        id: 'butterfly',
+        name: 'The Butterfly',
+        emoji: '🦋',
+        cue: 'Sit with the soles of your feet together and let your knees rest gently like butterfly wings.'
+      },
+      {
+        id: 'starfish',
+        name: 'The Starfish',
+        emoji: '⭐',
+        cue: 'Lie flat on your back on the mat and spread your arms and legs wide like a peaceful starfish.'
+      }
+    ];
+
+    const HARD_STRETCHES = [
+      ...SIMPLE_STRETCHES,
+      {
+        id: 'twist',
+        name: 'The Seated Twist',
+        emoji: '🔄',
+        cue: 'Sit tall on your mat and gently twist your shoulders to look softly to the side.'
+      },
+      {
+        id: 'catbridge',
+        name: 'The Cat-Stretch',
+        emoji: '🐱',
+        cue: 'Rest on your hands and knees (or back) and gently arch and round your spine.'
+      },
+      {
+        id: 'sidereach',
+        name: 'The Side Reach',
+        emoji: '🌈',
+        cue: 'Sit cross-legged, rest one hand on the mat, and reach your other arm up and over like a rainbow.'
+      },
+      {
+        id: 'sphinx',
+        name: 'The Sphinx',
+        emoji: '🦁',
+        cue: 'Lie on your tummy and gently prop your upper body up on your forearms, looking forward.'
+      }
+    ];
+
+    /* ============================================================================
+       3. STATE & SOOTHING SINGING-BOWL AUDIO / VOICE ENGINE
+       ============================================================================ */
+    let currentMode = 'simple'; // 'simple' | 'hard'
+    let sessionSequence = [];
+    let currentStretchIndex = 0;
+    let countValue = 1;
+    let isPaused = false;
+    let didMidSessionBreath = false;
+    let countInterval = null;
+    let breathInterval = null;
+    let memorizeInterval = null;
+    let recallTargetIndex = 0;
+    let shuffledMemorizePool = [];
+
+    let voiceEnabled = true;
+    let chimeEnabled = true;
+    let audioCtx = null;
+
+    function getAudio() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+
+    // Soft wooden marimba / singing-bowl tick for each second
+    function playGentleTick(stepNum) {
+      if (!chimeEnabled) return;
+      try {
+        const ctx = getAudio();
+        const now = ctx.currentTime;
+        const scale = [392.00, 440.00, 493.88, 523.25, 587.33, 659.25, 698.46, 783.99, 880.00, 1046.50];
+        const freq = scale[(stepNum - 1) % scale.length];
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now);
+        gain.gain.setValueAtTime(0.001, now);
+        gain.gain.exponentialRampToValueAtTime(0.12, now + 0.03);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.45);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.48);
+      } catch (e) {}
+    }
+
+    // Warm harmonic chord when a stretch or routine finishes
+    function playSoothingChime() {
+      if (!chimeEnabled) return;
+      try {
+        const ctx = getAudio();
+        const now = ctx.currentTime;
+        [523.25, 659.25, 783.99].forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now + idx * 0.14);
+          gain.gain.setValueAtTime(0.001, now + idx * 0.14);
+          gain.gain.exponentialRampToValueAtTime(0.14, now + idx * 0.14 + 0.05);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.14 + 0.9);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + idx * 0.14);
+          osc.stop(now + idx * 0.14 + 0.95);
+        });
+      } catch (e) {}
+    }
+
+    window._activeUtterance = null;
+    function speakCalm(text, onDone = null) {
+      if (!voiceEnabled || !('speechSynthesis' in window)) {
+        if (onDone) setTimeout(onDone, 900);
+        return;
+      }
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      window._activeUtterance = u;
+      u.lang = 'en-GB';
+      u.rate = 0.88;
+      u.pitch = 1.02;
+
+      let called = false;
+      const finish = () => {
+        if (called) return;
+        called = true;
+        if (onDone) onDone();
+      };
+      u.onend = () => setTimeout(finish, 350);
+      u.onerror = () => setTimeout(finish, 350);
+      setTimeout(finish, Math.max(2200, text.length * 85));
+
+      window.speechSynthesis.speak(u);
+    }
+
+    function toggleVoice() {
+      voiceEnabled = !voiceEnabled;
+      const btn = document.getElementById('voice-toggle');
+      btn.textContent = `🗣️ Voice: ${voiceEnabled ? 'ON' : 'OFF'}`;
+      btn.classList.toggle('active', voiceEnabled);
+      if (!voiceEnabled && 'speechSynthesis' in window) window.speechSynthesis.cancel();
+    }
+
+    function toggleChime() {
+      chimeEnabled = !chimeEnabled;
+      const btn = document.getElementById('chime-toggle');
+      btn.textContent = `🎵 Chimes: ${chimeEnabled ? 'ON' : 'OFF'}`;
+      btn.classList.toggle('active', chimeEnabled);
+      if (chimeEnabled) playSoothingChime();
+    }
+
+    function clearAllTimers() {
+      if (countInterval) { clearInterval(countInterval); countInterval = null; }
+      if (breathInterval) { clearInterval(breathInterval); breathInterval = null; }
+      if (memorizeInterval) { clearInterval(memorizeInterval); memorizeInterval = null; }
+    }
+
+    function showOnlyScreen(screenId) {
+      ['screen-welcome', 'screen-memorize', 'screen-routine', 'screen-breath', 'screen-complete'].forEach(id => {
+        document.getElementById(id).classList.toggle('hidden', id !== screenId);
+      });
+      document.getElementById('menu-return-btn').style.display = screenId === 'screen-welcome' ? 'none' : 'inline-flex';
+    }
+
+    function showWelcomeScreen() {
+      clearAllTimers();
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      document.getElementById('header-mode-pill').textContent = 'Mind & Body Break';
+      showOnlyScreen('screen-welcome');
+    }
+
+    /* ============================================================================
+       4. SESSION INITIALIZATION (SIMPLE vs HARD MODE)
+       ============================================================================ */
+    function startSession(mode) {
+      clearAllTimers();
+      currentMode = mode;
+      currentStretchIndex = 0;
+      didMidSessionBreath = false;
+      isPaused = false;
+
+      if (mode === 'simple') {
+        // Pick 3 Beginner Stretches
+        const pool = [...SIMPLE_STRETCHES].sort(() => Math.random() - 0.5);
+        sessionSequence = pool.slice(0, 3);
+        document.getElementById('header-mode-pill').textContent = '🌱 Simple Mode (3 Stretches)';
+        beginActiveStretches();
+      } else {
+        // Hard Mode: Pick 4 Stretches from full 8-pose pool + launch 5-second Memorize Phase!
+        const pool = [...HARD_STRETCHES].sort(() => Math.random() - 0.5);
+        sessionSequence = pool.slice(0, 4);
+        document.getElementById('header-mode-pill').textContent = '🧠 Hard Mode (4 Stretches)';
+        startMemorizePhase();
+      }
+    }
+
+    function replaySameMode() {
+      startSession(currentMode);
+    }
+
+    /* ============================================================================
+       5. HARD MODE: 5-SECOND "MEMORIZE THE ORDER" PHASE
+       ============================================================================ */
+    function startMemorizePhase() {
+      showOnlyScreen('screen-memorize');
+      document.getElementById('mem-badge').textContent = '🧠 STEP 1: MEMORIZE THE SEQUENCE (5 SECONDS)';
+      document.getElementById('mem-title').textContent = 'Remember This Stretch Order!';
+      document.getElementById('mem-sub').textContent = 'Look closely at the 4 poses in order from 1 to 4...';
+      document.getElementById('mem-bar-wrap').classList.remove('hidden');
+      document.getElementById('recall-slots-row').classList.add('hidden');
+
+      const row = document.getElementById('mem-cards-row');
+      row.innerHTML = sessionSequence.map((pose, idx) => `
+        <div class="seq-step-card">
+          <div class="seq-step-badge">${idx + 1}</div>
+          <div style="width:120px;height:82px;">${getPoseSVG(pose.id)}</div>
+          <div style="font-family:'Fredoka',sans-serif;font-size:1.15rem;color:var(--charcoal);">
+            ${pose.emoji} ${pose.name}
+          </div>
+        </div>
+      `).join('');
+
+      speakCalm('Look closely and remember the order of your four stretches.');
+
+      let elapsed = 0;
+      const totalMs = 5000;
+      const fillEl = document.getElementById('mem-bar-fill');
+      fillEl.style.width = '100%';
+
+      memorizeInterval = setInterval(() => {
+        elapsed += 100;
+        const pct = Math.max(0, 100 - (elapsed / totalMs) * 100);
+        fillEl.style.width = pct + '%';
+        if (elapsed >= totalMs) {
+          clearInterval(memorizeInterval);
+          memorizeInterval = null;
+          showMemorizeRecallChallenge();
+        }
+      }, 100);
+    }
+
+    function showMemorizeRecallChallenge() {
+      recallTargetIndex = 0;
+      document.getElementById('mem-badge').textContent = '🧩 STEP 2: TAP THE STRETCHES IN ORDER!';
+      document.getElementById('mem-title').textContent = 'Which Stretch Comes Next?';
+      document.getElementById('mem-sub').textContent = 'Tap the cards below in the order you remembered (1 ➔ 2 ➔ 3 ➔ 4)!';
+      document.getElementById('mem-bar-wrap').classList.add('hidden');
+
+      const slotsRow = document.getElementById('recall-slots-row');
+      slotsRow.classList.remove('hidden');
+      slotsRow.innerHTML = sessionSequence.map((_, i) => `
+        <div class="completed-pose-pill" id="recall-slot-${i}" style="opacity:0.55;">
+          ${i + 1}. ❓
+        </div>
+      `).join('');
+
+      shuffledMemorizePool = [...sessionSequence].sort(() => Math.random() - 0.5);
+      const row = document.getElementById('mem-cards-row');
+      row.innerHTML = shuffledMemorizePool.map((pose, cIdx) => `
+        <div class="seq-step-card clickable" id="recall-card-${cIdx}" onclick="handleRecallPick(${cIdx}, '${pose.id}')">
+          <div class="seq-step-badge">?</div>
+          <div style="width:120px;height:82px;">${getPoseSVG(pose.id)}</div>
+          <div style="font-family:'Fredoka',sans-serif;font-size:1.15rem;color:var(--charcoal);">
+            ${pose.emoji} ${pose.name}
+          </div>
+        </div>
+      `).join('');
+
+      speakCalm('Tap the stretches in the order you saw them!');
+    }
+
+    function handleRecallPick(cardIdx, poseId) {
+      const expectedPose = sessionSequence[recallTargetIndex];
+      const cardEl = document.getElementById(`recall-card-${cardIdx}`);
+
+      if (poseId === expectedPose.id) {
+        playGentleTick(recallTargetIndex + 3);
+        if (cardEl) cardEl.classList.add('picked');
+        const slotEl = document.getElementById(`recall-slot-${recallTargetIndex}`);
+        if (slotEl) {
+          slotEl.style.opacity = '1';
+          slotEl.innerHTML = `✅ ${recallTargetIndex + 1}. ${expectedPose.emoji} ${expectedPose.name}`;
+        }
+        recallTargetIndex++;
+
+        if (recallTargetIndex >= sessionSequence.length) {
+          playSoothingChime();
+          speakCalm('Wonderful memory! Now let us begin our stretches.', () => {
+            beginActiveStretches();
+          });
+        }
+      } else {
+        // Gentle low-arousal hint—no harsh buzzer
+        speakCalm(`Try finding ${expectedPose.name} next.`);
+      }
+    }
+
+    /* ============================================================================
+       6. ACTIVE STRETCH ROUTINE & 1–10 COUNTDOWN RING
+       ============================================================================ */
+    function beginActiveStretches() {
+      clearAllTimers();
+      currentStretchIndex = 0;
+      loadCurrentStretch();
+    }
+
+    function loadCurrentStretch() {
+      clearAllTimers();
+      showOnlyScreen('screen-routine');
+
+      const total = sessionSequence.length;
+      const currentPose = sessionSequence[currentStretchIndex];
+      const nextPose = currentStretchIndex + 1 < total
+        ? sessionSequence[currentStretchIndex + 1]
+        : null;
+
+      // Update Header & Progress Bar
+      document.getElementById('stretch-step-label').textContent = `Stretch ${currentStretchIndex + 1} of ${total}`;
+      document.getElementById('mode-indicator-badge').textContent = currentMode === 'simple' ? 'Simple Mode' : 'Hard Mode';
+      document.getElementById('routine-progress-fill').style.width = `${((currentStretchIndex + 1) / total) * 100}%`;
+
+      // Update Now & Next Visual Box
+      document.getElementById('now-pose-name').textContent = `${currentPose.emoji} ${currentPose.name}`;
+      document.getElementById('next-pose-name').textContent = nextPose
+        ? `${nextPose.emoji} ${nextPose.name}`
+        : '🏁 All Finished!';
+
+      // Update Pose SVG & Cue
+      document.getElementById('pose-svg-container').innerHTML = getPoseSVG(currentPose.id);
+      document.getElementById('active-pose-title').textContent = `${currentPose.emoji} ${currentPose.name}`;
+      document.getElementById('active-pose-desc').textContent = currentPose.cue;
+
+      // Build 10 Visual Dots
+      const dotsRow = document.getElementById('ten-dots-row');
+      dotsRow.innerHTML = Array.from({ length: 10 }, (_, i) =>
+        `<div class="step-dot ${i === 0 ? 'lit' : ''}" id="dot-${i + 1}"></div>`
+      ).join('');
+
+      countValue = 1;
+      isPaused = false;
+      updatePauseButtonUI();
+      updateTimerVisuals(1);
+
+      speakCalm(`${currentPose.name}. ${currentPose.cue}`, () => {
+        if (!isPaused) startCountLoop();
+      });
+    }
+
+    function startCountLoop() {
+      if (countInterval) clearInterval(countInterval);
+      // Simple Mode uses a slower, extra-relaxed 1300ms interval; Hard Mode uses 1050ms
+      const stepMs = currentMode === 'simple' ? 1300 : 1050;
+
+      playGentleTick(countValue);
+      updateTimerVisuals(countValue);
+
+      countInterval = setInterval(() => {
+        if (isPaused) return;
+        countValue++;
+
+        if (countValue <= 10) {
+          playGentleTick(countValue);
+          updateTimerVisuals(countValue);
+        } else {
+          clearInterval(countInterval);
+          countInterval = null;
+          playSoothingChime();
+          document.getElementById('timer-status-text').textContent = 'Complete!';
+          setTimeout(() => advanceAfterStretch(), 950);
+        }
+      }, stepMs);
+    }
+
+    function updateTimerVisuals(val) {
+      const numEl = document.getElementById('timer-count-num');
+      numEl.textContent = val;
+      numEl.classList.add('pulse');
+      setTimeout(() => numEl.classList.remove('pulse'), 260);
+
+      document.getElementById('timer-status-text').textContent = 'of 10';
+
+      const circumference = 515.22; // 2 * PI * 82
+      const offset = circumference - (val / 10) * circumference;
+      document.getElementById('timer-ring-circle').style.strokeDashoffset = offset;
+
+      for (let i = 1; i <= 10; i++) {
+        const d = document.getElementById(`dot-${i}`);
+        if (d) d.classList.toggle('lit', i <= val);
+      }
+    }
+
+    function togglePauseTimer() {
+      isPaused = !isPaused;
+      updatePauseButtonUI();
+      if (!isPaused && !countInterval) {
+        startCountLoop();
+      }
+    }
+
+    function updatePauseButtonUI() {
+      document.getElementById('pause-icon').textContent = isPaused ? '▶️' : '⏸️';
+      document.getElementById('pause-label').textContent = isPaused ? 'Resume' : 'Pause';
+    }
+
+    function replayCurrentStretch() {
+      clearAllTimers();
+      countValue = 1;
+      isPaused = false;
+      updatePauseButtonUI();
+      updateTimerVisuals(1);
+      startCountLoop();
+    }
+
+    function skipCurrentStretch() {
+      clearAllTimers();
+      advanceAfterStretch();
+    }
+
+    function advanceAfterStretch() {
+      const halfwayIndex = Math.floor(sessionSequence.length / 2) - 1;
+      // Trigger the 15-second Mid-Session Calming Breath at the halfway point!
+      if (!didMidSessionBreath && currentStretchIndex === halfwayIndex) {
+        didMidSessionBreath = true;
+        startBreathingBreak();
+        return;
+      }
+
+      currentStretchIndex++;
+      if (currentStretchIndex < sessionSequence.length) {
+        loadCurrentStretch();
+      } else {
+        showCompletionScreen();
+      }
+    }
+
+    /* ============================================================================
+       7. MID-SESSION 15-SECOND CALMING BREATH MICRO-BREAK
+       ============================================================================ */
+    function startBreathingBreak() {
+      clearAllTimers();
+      showOnlyScreen('screen-breath');
+
+      let secondsLeft = 15;
+      let inhaling = true;
+      const secEl = document.getElementById('breath-seconds-left');
+      const wordEl = document.getElementById('breath-phase-word');
+      const circleEl = document.getElementById('breath-circle');
+      const haloEl = document.getElementById('breath-halo');
+
+      secEl.textContent = secondsLeft;
+      wordEl.textContent = 'Breathe In...';
+      circleEl.classList.add('inhale');
+      haloEl.classList.add('inhale');
+      speakCalm('Time for a gentle calming breath. Breathe in slowly... and breathe out.');
+
+      breathInterval = setInterval(() => {
+        secondsLeft--;
+        secEl.textContent = Math.max(0, secondsLeft);
+
+        // Toggle Inhale / Exhale every 4 seconds
+        if ((15 - secondsLeft) % 4 === 0 && secondsLeft > 0) {
+          inhaling = !inhaling;
+          wordEl.textContent = inhaling ? 'Breathe In...' : 'Breathe Out...';
+          circleEl.classList.toggle('inhale', inhaling);
+          haloEl.classList.toggle('inhale', inhaling);
+          playGentleTick(inhaling ? 5 : 2);
+        }
+
+        if (secondsLeft <= 0) {
+          finishBreathingBreak();
+        }
+      }, 1000);
+    }
+
+    function finishBreathingBreak() {
+      clearAllTimers();
+      currentStretchIndex++;
+      if (currentStretchIndex < sessionSequence.length) {
+        loadCurrentStretch();
+      } else {
+        showCompletionScreen();
+      }
+    }
+
+    /* ============================================================================
+       8. COMPLETION SCREEN
+       ============================================================================ */
+    function showCompletionScreen() {
+      clearAllTimers();
+      showOnlyScreen('screen-complete');
+      playSoothingChime();
+
+      const summaryRow = document.getElementById('completed-summary-row');
+      summaryRow.innerHTML = sessionSequence.map((pose, i) => `
+        <div class="completed-pose-pill">
+          <span>✅ ${i + 1}.</span>
+          <span>${pose.emoji} ${pose.name}</span>
+        </div>
+      `).join('');
+
+      speakCalm('Great job completing your stretch sequence! Your mind and body are calm and ready.');
+    }
+  </script>
+</body>
+</html>

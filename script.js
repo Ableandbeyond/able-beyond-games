@@ -246,13 +246,17 @@ function renderHome() {
                 </div>
             </div>
 
-            <div class="grid-3">
+            <div class="grid-4">
                 <div class="game-tile-wrapper">
                     <button style="margin-top:0;" onclick="navToExternal('sensory-room.html')">Sensory Room ✨</button>
                     <div class="under-game-note under-game-note-locked">${lockNote}</div>
                 </div>
                 <div class="game-tile-wrapper">
                     <button style="margin-top:0;" onclick="navToExternal('whos-in-my-space/')">Who's In My Space? 🏫</button>
+                    <div class="under-game-note under-game-note-locked">${lockNote}</div>
+                </div>
+                <div class="game-tile-wrapper">
+                    <button style="margin-top:0;" onclick="navToExternal('stretch-sequence.html')">Stretch &amp; Sequence 🧘</button>
                     <div class="under-game-note under-game-note-locked">${lockNote}</div>
                 </div>
                 <div class="game-tile-wrapper">
